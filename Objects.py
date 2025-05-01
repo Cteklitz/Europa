@@ -16,7 +16,7 @@ class Valve:
 
         if in_range and self.activated_time == -1:
             self.image = Assets.valveSprites[1]
-            self.action
+            self.action()
             self.activated_time = pygame.time.get_ticks()
 
     def update(self):
@@ -58,3 +58,6 @@ class Door:
         self.y = ypos
         self.image = image
         self.rect = self.image.get_rect(topleft=(xpos, ypos))
+
+def getPipeDungeonInfo():
+        return Area.getPipeDungeonInfo()

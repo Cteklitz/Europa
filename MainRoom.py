@@ -1,27 +1,7 @@
 import pygame
-import math
 import Assets
 import Objects
 from shapely.geometry import Point, Polygon
-
-def draw_polygon(surface, start_pos, numSides, length, color, width=1, fill=False):
-    points = []
-    angle_degrees = 360/numSides
-    angle_radians = math.radians(angle_degrees)
-    for i in range (numSides):
-        end_x = start_pos[0] + length * math.cos(angle_radians)
-        end_y = start_pos[1] - length * math.sin(angle_radians)
-        end_pos = (end_x, end_y)
-        points.append(start_pos)
-        start_pos = end_pos
-        angle_radians += math.radians(angle_degrees)
-    
-    if fill:
-        pygame.draw.polygon(surface, color, points)
-    else:
-        pygame.draw.polygon(surface, color, points, width)
-
-    return points
 
 virtual_res = (480, 480)
 virtual_screen = pygame.Surface(virtual_res)
@@ -29,7 +9,7 @@ dark_overlay = pygame.Surface(virtual_screen.get_size(), pygame.SRCALPHA)
 
 player_pos = pygame.Vector2(240, 340)
 
-bounds = draw_polygon(virtual_screen, (320,430), 8, 160, "gray")
+bounds = Assets.draw_polygon(virtual_screen, (320,430), 8, 160, "gray")
 octagon = Polygon(bounds)
 
 lights = [
@@ -54,8 +34,8 @@ def inBounds(x, y):
 
     if ctrlRmRect.collidepoint((x,y)):
         return 0
-    #elif pinkDoor.rect.collidepoint((x,y)):
-        #return 1
+    elif pinkDoor.rect.collidepoint((x,y)):
+        return 1
     elif ctrlRmWallRect.collidepoint((x,y)):
         return False
     elif not octagon.contains(Point(x,y)):
@@ -65,23 +45,11 @@ def inBounds(x, y):
 def Room(screen, screen_res, events):
     virtual_screen.fill((105,105,105))
     dark_overlay.fill((0, 0, 0, 150))
-    octagon1 = draw_polygon(virtual_screen, (336,470), 8, 192, "gray", 1, True)
-    octagon1 = draw_polygon(virtual_screen, (336,470), 8, 192, "black")
-    octagon2 = draw_polygon(virtual_screen, (320,430), 8, 160, "black")
+    octagon1 = Assets.draw_polygon(virtual_screen, (336,470), 8, 192, "gray", 1, True)
+    octagon1 = Assets.draw_polygon(virtual_screen, (336,470), 8, 192, "black")
+    octagon2 = Assets.draw_polygon(virtual_screen, (320,430), 8, 160, "black")
     for i in range(8):
         pygame.draw.line(virtual_screen, "black", octagon1[i], octagon2[i], 1)
-
-    for y in range(44, 236, 32):
-        virtual_screen.blit(Assets.pipes[7], (224, y))
-
-    for y in range(238, 406, 32):
-        virtual_screen.blit(Assets.pipes[7], (224, y))
-
-    for x in range(47, 241, 32):
-        virtual_screen.blit(Assets.pipes[10], (x, 224))
-
-    for x in range(241, 431, 32):
-        virtual_screen.blit(Assets.pipes[10], (x, 224))
 
     Done = False
 
@@ -106,12 +74,24 @@ def Room(screen, screen_res, events):
             Assets.punch_light_hole(virtual_screen, dark_overlay, (light.x + 16, light.y + 16), 23, light.color)
         virtual_screen.blit(light.image, light.rect)
 
+    Assets.punch_light_hole(virtual_screen, dark_overlay, (240,240), 23, (239,228,176))
+
+    for y in range(44, 236, 32):
+        virtual_screen.blit(Assets.pipes[7], (224, y))
+
+    for y in range(238, 406, 32):
+        virtual_screen.blit(Assets.pipes[7], (224, y))
+
+    for x in range(47, 241, 32):
+        virtual_screen.blit(Assets.pipes[10], (x, 224))
+
+    for x in range(241, 431, 32):
+        virtual_screen.blit(Assets.pipes[10], (x, 224))
+
     virtual_screen.blit(pinkDoor.image, pinkDoor.rect)
     virtual_screen.blit(blueDoor.image, blueDoor.rect)
     virtual_screen.blit(greenDoor.image, greenDoor.rect)
     virtual_screen.blit(orangeDoor.image, orangeDoor.rect)
-
-    Assets.punch_light_hole(virtual_screen, dark_overlay, (240,240), 23, (239,228,176))
 
     if player_pos.y < 240:
         pygame.draw.circle(virtual_screen, "red", player_pos, 16)

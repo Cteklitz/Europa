@@ -1,6 +1,6 @@
 import ControlRoom
 import MainRoom
-#import PinkRoom
+import PinkRoom
 
 def getPipeDungeonInfo():
         return ControlRoom.level, ControlRoom.power
@@ -19,6 +19,7 @@ class Area:
 PipeDungeon = Area(
     roomLayout = {
             ControlRoom: [MainRoom],
-            MainRoom: [ControlRoom]
+            MainRoom: [ControlRoom, PinkRoom],
+            PinkRoom: [MainRoom]
     }
 )

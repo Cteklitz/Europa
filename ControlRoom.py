@@ -239,7 +239,6 @@ def Room(screen, screen_res, events):
                             if switch2 != switch:
                                 switch2.image = switch2.tileset[0]
 
-
     # fill the screen with a color to wipe away anything from last frame
     virtual_screen.fill("gray")
     floor = pygame.image.load("Assets/floor.png").convert_alpha()

@@ -1,4 +1,25 @@
 import pygame
+import math
+
+#Draws polygon from lower-right corner
+def draw_polygon(surface, start_pos, numSides, length, color, width=1, fill=False):
+    points = []
+    angle_degrees = 360/numSides
+    angle_radians = math.radians(angle_degrees)
+    for i in range (numSides):
+        end_x = start_pos[0] + length * math.cos(angle_radians)
+        end_y = start_pos[1] - length * math.sin(angle_radians)
+        end_pos = (end_x, end_y)
+        points.append(start_pos)
+        start_pos = end_pos
+        angle_radians += math.radians(angle_degrees)
+    
+    if fill:
+        pygame.draw.polygon(surface, color, points)
+    else:
+        pygame.draw.polygon(surface, color, points, width)
+
+    return points
 
 def punch_light_hole(surface, overlay, position, radius, color):
     light = pygame.Surface((radius*2, radius*2), pygame.SRCALPHA)
@@ -37,5 +58,10 @@ orangeDoorSouth = pygame.transform.flip(orangeDoorNorth, False, True)
 greenDoorNorth = pygame.transform.flip(greenDoorSouth, False, True)
 pinkDoorEast = pygame.transform.flip(pinkDoorWest, True, False)
 blueDoorWest = pygame.transform.flip(blueDoorEast, True, False)
+
+grayDoorEast = pygame.image.load("Assets/GrayDoor.png")
+grayDoorWest = pygame.transform.flip(grayDoorEast, True, False)
+grayDoorNorth = pygame.transform.rotate(grayDoorEast, 90)
+grayDoorSouth = pygame.transform.rotate(grayDoorEast, -90)
 
 ctrlRoomDoor = pygame.image.load("Assets/CtrlRoomDoor.png")
