@@ -6,7 +6,6 @@ from shapely.geometry import Point, Polygon
 virtual_res = (256, 256)
 virtual_screen = pygame.Surface(virtual_res)
 dark_overlay = pygame.Surface(virtual_screen.get_size(), pygame.SRCALPHA)
-dark_overlay.fill((0, 0, 0, 150))
 
 player_pos = pygame.Vector2(192, 128)
 
@@ -60,6 +59,7 @@ def Room(screen, screen_res, events):
                 valve.check_collision(player_pos)
 
     virtual_screen.fill((105,105,105))
+    dark_overlay.fill((0, 0, 0, 150))
     outer = Assets.draw_polygon(virtual_screen, (240, 240), 4, 224, "gray", 1, True)
     outer = Assets.draw_polygon(virtual_screen, (240, 240), 4, 224, "black")
     inner = Assets.draw_polygon(virtual_screen, (208, 208), 4, 160, "black")
@@ -81,9 +81,6 @@ def Room(screen, screen_res, events):
                 upperWingLight.image = Assets.dimTiles[1]
                 shadowRect = pygame.Rect(0,0,112,112)
                 shadow = virtual_screen.subsurface(shadowRect).copy()
-            if not power or level != 1:
-                lowerWingLight.image = Assets.dimTiles[1]
-                upperWingLight.image = Assets.dimTiles[1]
             Assets.punch_light_hole(virtual_screen, dark_overlay, (112, 112), 300, (255, 0, 255))
             virtual_screen.blit(shadow, shadowRect)
             Done = True
@@ -96,6 +93,10 @@ def Room(screen, screen_res, events):
     virtual_screen.blit(Assets.pipes[7], (112,80))
     virtual_screen.blit(Assets.pipes[7], (112,144)) 
     virtual_screen.blit(Assets.pipes[7], (112,176))
+
+    if not power or level != 1:
+        lowerWingLight.image = Assets.dimTiles[1]
+        upperWingLight.image = Assets.dimTiles[1]
 
     virtual_screen.blit(upperWingLight.image, upperWingLight.rect)
     virtual_screen.blit(lowerWingLight.image, lowerWingLight.rect)
