@@ -49,6 +49,8 @@ blueSwitch= load_tileset("Assets/BlueSwitch.png", 32, 32)
 greenSwitch= load_tileset("Assets/GreenSwitch.png", 32, 32)
 valveSprites = load_tileset("Assets/Valve.png", 32, 32)
 
+ctrlRoomDoor = pygame.image.load("Assets/CtrlRoomDoor.png")
+
 orangeDoorNorth = pygame.image.load("Assets/OrangeDoor.png")
 greenDoorSouth = pygame.image.load("Assets/GreenDoor.png")
 pinkDoorWest = pygame.image.load("Assets/PinkDoor.png")
@@ -64,4 +66,21 @@ grayDoorWest = pygame.transform.flip(grayDoorEast, True, False)
 grayDoorNorth = pygame.transform.rotate(grayDoorEast, 90)
 grayDoorSouth = pygame.transform.rotate(grayDoorEast, -90)
 
-ctrlRoomDoor = pygame.image.load("Assets/CtrlRoomDoor.png")
+bigBoygGrayDoorNorth = pygame.transform.scale(grayDoorNorth, (80,32))
+
+squishedTiles = []
+for i in range(5):
+    squished = pygame.transform.scale(tiles[i], (80, 8))
+    squishedTiles.append(squished)
+
+squishedDimTiles = []
+for i in range(5):
+    squished = pygame.transform.scale(dimTiles[i], (80, 8))
+    squishedDimTiles.append(squished)
+
+squishedPipes = []
+for i in range(12):
+    squished = pygame.transform.scale(pipes[i], (80, 8))
+    squishedPipes.append(squished)
+
+tooDark = pygame.image.load("Assets/TooDark.png")

@@ -223,8 +223,10 @@ switches = {
     4: Switch(256, 224, Assets.orangeSwitch, orangeSquares),
 }
 
+floor = pygame.image.load("Assets/floor.png")
+
 def Room(screen, screen_res, events):
-    global level
+    global level, floor
     # poll for events
     # pygame.QUIT event means the user clicked X to close your window
     for event in events:
@@ -241,7 +243,6 @@ def Room(screen, screen_res, events):
 
     # fill the screen with a color to wipe away anything from last frame
     virtual_screen.fill("gray")
-    floor = pygame.image.load("Assets/floor.png").convert_alpha()
     virtual_screen.blit(floor, (0, 256))
     pygame.draw.line(virtual_screen, (0,0,0), (64, 0), (64, 256), 1)
     pygame.draw.line(virtual_screen, (0,0,0), (288, 0), (288, 256), 1)
@@ -272,4 +273,4 @@ def Room(screen, screen_res, events):
     scaled = pygame.transform.scale(virtual_screen, screen_res)
     screen.blit(scaled, (0, 0))
 
-    return player_pos
+    return player_pos, screen.get_width()/virtual_screen.get_width(), screen.get_height()/virtual_screen.get_height()

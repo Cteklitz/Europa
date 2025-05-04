@@ -52,6 +52,31 @@ class Light:
             self.image = Assets.dimTiles[self.type]
             return False
         
+class SquishedLight:
+    def __init__(self, xpos, ypos, type):
+        self.x = xpos
+        self.y = ypos
+        self.image = Assets.squishedDimTiles[type]
+        self.type = type
+        self.rect = self.image.get_rect(topleft=(xpos, ypos))
+        if type == 1:
+            self.color = (255, 0, 255)
+        elif type == 2:
+            self.color = (0, 162, 232)
+        elif type == 3:
+            self.color = (181, 230, 29)
+        elif type == 4:
+            self.color = (255, 201, 14)
+
+    def update(self):
+        level, power = Area.getPipeDungeonInfo()
+        if level == self.type and power:
+            self.image = Assets.squishedTiles[self.type]
+            return True
+        else:
+            self.image = Assets.squishedDimTiles[self.type]
+            return False
+
 class Door:
     def __init__(self, xpos, ypos, image):
         self.x = xpos
@@ -59,5 +84,25 @@ class Door:
         self.image = image
         self.rect = self.image.get_rect(topleft=(xpos, ypos))
 
+class briefText:
+    def __init__(self, screen, image, xpos, ypos):
+        self.x = xpos
+        self.y = ypos
+        self.image = image
+        self.rect = self.image.get_rect(topleft=(xpos, ypos))
+        self.screen = screen
+        self.activated_time = -1
+
+    def update(self):
+        if self.activated_time != -1:
+            self.screen.blit(self.image, self.rect)
+            seconds = (pygame.time.get_ticks() - self.activated_time) / 1000
+
+            if seconds > 3:
+                self.activated_time = -1
+
 def getPipeDungeonInfo():
         return Area.getPipeDungeonInfo()
+
+def getPinkWingInfo():
+        return Area.getPinkWingInfo()

@@ -105,4 +105,4 @@ def Room(screen, screen_res, events):
     scaled = pygame.transform.scale(virtual_screen, screen_res)
     screen.blit(scaled, (0, 0))
 
-    return player_pos
+    return player_pos, screen.get_width()/virtual_screen.get_width(), screen.get_height()/virtual_screen.get_height()

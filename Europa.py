@@ -24,38 +24,46 @@ def updateRoom(room):
 
 while running:
     events = pygame.event.get()
-    player_pos = area.getPos(screen, screen_res, events, Room)
+    player_pos, xSpeedScale, ySpeedScale = area.getPos(screen, screen_res, events, Room)
     for event in events:
         if event.type == pygame.QUIT:
                 running = False
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
                 running = False
+            if event.key == pygame.K_BACKSPACE:
+                check = Room.inBounds(player_pos.x, y)
+                if type(check) == int:
+                    updateRoom(area.getRoom(Room, check))
+            if event.key == pygame.K_e:
+                check = Room.inBounds(player_pos.x, y)
+                if type(check) == int:
+                    updateRoom(area.getRoom(Room, check))
 
     keys = pygame.key.get_pressed()
     if keys[pygame.K_w]:
-        y = player_pos.y - 150 * dt
+        y = player_pos.y - 325 * dt / ySpeedScale
         check = Room.inBounds(player_pos.x, y)
         if type(check) == int:
             updateRoom(area.getRoom(Room, check))
         elif check:
             player_pos.y = y
     if keys[pygame.K_s]:
-        y = player_pos.y + 150 * dt
+        y = player_pos.y + 325 * dt / ySpeedScale
         check = Room.inBounds(player_pos.x, y)
         if type(check) == int:
             updateRoom(area.getRoom(Room, check))
         elif check:
             player_pos.y = y
     if keys[pygame.K_a]:
-        x = player_pos.x - 150 * dt
+        x = player_pos.x - 325 * dt / xSpeedScale
         check = Room.inBounds(x, player_pos.y)
         if type(check) == int:
             updateRoom(area.getRoom(Room, check))
         elif check:
             player_pos.x = x
     if keys[pygame.K_d]:
-        x = player_pos.x + 150 * dt
+        x = player_pos.x + 325 * dt / xSpeedScale
         check = Room.inBounds(x, player_pos.y)
         if type(check) == int:
             updateRoom(area.getRoom(Room, check))

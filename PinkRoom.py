@@ -43,6 +43,8 @@ valve = Objects.Valve(96, 112, divertWater)
 def inBounds(x, y):
     if pinkDoor.rect.collidepoint((x,y)):
         return 0
+    if southDoor.rect.collidepoint((x,y)):
+        return 1
     elif not outline.contains(Point(x,y)):
         return False
     return True
@@ -51,7 +53,7 @@ def Room(screen, screen_res, events):
     global upperWingPower, lowerWingPower
     level, power = Objects.getPipeDungeonInfo()
     if not upperWingPower and not lowerWingPower and level == 1 and power:
-        upperWingPower = True
+        lowerWingPower = True
 
     for event in events:
         if event.type == pygame.KEYDOWN:
@@ -81,7 +83,7 @@ def Room(screen, screen_res, events):
                 upperWingLight.image = Assets.dimTiles[1]
                 shadowRect = pygame.Rect(0,0,112,112)
                 shadow = virtual_screen.subsurface(shadowRect).copy()
-            Assets.punch_light_hole(virtual_screen, dark_overlay, (112, 112), 300, (255, 0, 255))
+            Assets.punch_light_hole(virtual_screen, dark_overlay, (112, 112), 300, (100, 0, 100))
             virtual_screen.blit(shadow, shadowRect)
             Done = True
         virtual_screen.blit(light.image, light.rect)
@@ -119,4 +121,4 @@ def Room(screen, screen_res, events):
     scaled = pygame.transform.scale(virtual_screen, screen_res)
     screen.blit(scaled, (0, 0))
 
-    return player_pos
+    return player_pos, screen.get_width()/virtual_screen.get_width(), screen.get_height()/virtual_screen.get_height()
