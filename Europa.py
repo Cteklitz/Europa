@@ -5,11 +5,13 @@ import os
 script_dir = os.path.dirname(os.path.abspath(__file__))
 os.chdir(script_dir)
 
+# pygame setup
+pygame.init()
+pygame.mixer.init()
+
 import Area
 import MainRoom
 
-# pygame setup
-pygame.init()
 screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
 screen_res = screen.get_size()
 clock = pygame.time.Clock()
@@ -32,43 +34,68 @@ while running:
             if event.key == pygame.K_ESCAPE:
                 running = False
             if event.key == pygame.K_BACKSPACE:
-                check = Room.inBounds(player_pos.x, y)
+                check = Room.inBounds(player_pos.x, player_pos.y)
                 if type(check) == int:
+                    cameFrom = Room
                     updateRoom(area.getRoom(Room, check))
+                    Room.positionDeterminer(cameFrom.__name__)
             if event.key == pygame.K_e:
-                check = Room.inBounds(player_pos.x, y)
+                check = Room.inBounds(player_pos.x, player_pos.y)
                 if type(check) == int:
+                    cameFrom = Room
                     updateRoom(area.getRoom(Room, check))
+                    Room.positionDeterminer(cameFrom.__name__)
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+            if event.button == 1:
+                check = Room.inBounds(player_pos.x, player_pos.y)
+                if type(check) == int:
+                    cameFrom = Room
+                    updateRoom(area.getRoom(Room, check))
+                    Room.positionDeterminer(cameFrom.__name__)
 
     keys = pygame.key.get_pressed()
     if keys[pygame.K_w]:
         y = player_pos.y - 325 * dt / ySpeedScale
         check = Room.inBounds(player_pos.x, y)
         if type(check) == int:
+            cameFrom = Room
             updateRoom(area.getRoom(Room, check))
+            Room.positionDeterminer(cameFrom.__name__)
         elif check:
             player_pos.y = y
     if keys[pygame.K_s]:
         y = player_pos.y + 325 * dt / ySpeedScale
         check = Room.inBounds(player_pos.x, y)
         if type(check) == int:
+            cameFrom = Room
             updateRoom(area.getRoom(Room, check))
+            Room.positionDeterminer(cameFrom.__name__)
         elif check:
             player_pos.y = y
     if keys[pygame.K_a]:
         x = player_pos.x - 325 * dt / xSpeedScale
         check = Room.inBounds(x, player_pos.y)
         if type(check) == int:
+            cameFrom = Room
             updateRoom(area.getRoom(Room, check))
+            Room.positionDeterminer(cameFrom.__name__)
         elif check:
             player_pos.x = x
     if keys[pygame.K_d]:
         x = player_pos.x + 325 * dt / xSpeedScale
         check = Room.inBounds(x, player_pos.y)
         if type(check) == int:
+            cameFrom = Room
             updateRoom(area.getRoom(Room, check))
+            Room.positionDeterminer(cameFrom.__name__)
         elif check:
             player_pos.x = x
+
+    check = Room.inBounds(player_pos.x, player_pos.y)
+    if type(check) == int:
+        cameFrom = Room
+        updateRoom(area.getRoom(Room, check))
+        Room.positionDeterminer(cameFrom.__name__)
 
     # flip() the display to put your work on screen
     pygame.display.flip()

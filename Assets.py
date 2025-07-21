@@ -83,4 +83,13 @@ for i in range(12):
     squished = pygame.transform.scale(pipes[i], (80, 8))
     squishedPipes.append(squished)
 
-tooDark = pygame.image.load("Assets/TooDark.png")
+squishedPipes2 = []
+for i in range(12):
+    squished = pygame.transform.scale(pipes[i], (41, 8))
+    squishedPipes2.append(squished)
+
+tooDarkRead = pygame.image.load("Assets/TooDark.png")
+tooDarkSee = pygame.image.load("Assets/TooDarkSee.png")
+
+letterTiles = load_tileset("Assets/letters.png", 21, 41)
+numberTiles = load_tileset("Assets/numbers.png", 21, 41)

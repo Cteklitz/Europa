@@ -2,6 +2,7 @@ import pygame
 import Assets
 import Objects
 from shapely.geometry import Point, Polygon
+import Sounds
 
 virtual_res = (480, 480)
 virtual_screen = pygame.Surface(virtual_res)
@@ -28,13 +29,21 @@ blueDoor = Objects.Door(433, 224, Assets.blueDoorEast)
 greenDoor = Objects.Door(224, 430, Assets.greenDoorSouth)
 orangeDoor = Objects.Door(224, 12, Assets.orangeDoorNorth)
 
+Sounds.ominousAmb.play(-1)
+
 def inBounds(x, y):
     ctrlRmRect = pygame.Rect(220, 252, 36, 4)
     ctrlRmWallRect = pygame.Rect(208, 224, 63, 28)
 
     if ctrlRmRect.collidepoint((x,y)):
+        pygame.mixer.music.load("Audio/electricbuzz.wav")
+        pygame.mixer.music.play(-1)
         return 0
     elif pinkDoor.rect.collidepoint((x,y)):
+        level, power = Objects.getPipeDungeonInfo()
+        if power and level == 1 or Objects.getPinkPower():
+            Sounds.ominousAmb.stop()
+            Sounds.powerAmb.play(-1)
         return 1
     elif ctrlRmWallRect.collidepoint((x,y)):
         return False
@@ -42,6 +51,14 @@ def inBounds(x, y):
         return False
     return True
 
+def positionDeterminer(cameFrom):
+    global player_pos
+    ctrlRmRect = pygame.Rect(220, 252, 36, 4)
+    if cameFrom == "ControlRoom":
+        player_pos = pygame.Vector2(ctrlRmRect.x + ctrlRmRect.width/2, ctrlRmRect.y + ctrlRmRect.height+5)
+    if cameFrom == "PinkRoom":
+        player_pos = pygame.Vector2(pinkDoor.x + pinkDoor.rect.width+5, pinkDoor.y + pinkDoor.rect.height/2)
+                                    
 def Room(screen, screen_res, events):
     virtual_screen.fill((105,105,105))
     dark_overlay.fill((0, 0, 0, 150))

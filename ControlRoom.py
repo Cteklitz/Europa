@@ -88,9 +88,11 @@ def checkSolution(pipePuzzle, solution):
 
 
 def rotatePipes(pipePuzzle):
+    changed = False
     for row in range(5):
         for col in range(5):
             if activeSquares[row][col] != 0:
+                changed = True
                 val = pipePuzzle[row][col]
                 if val == 1:
                     pipePuzzle[row][col] = 2
@@ -105,6 +107,8 @@ def rotatePipes(pipePuzzle):
                 elif val == 6:
                     pipePuzzle[row][col] = 3
 
+    return changed
+
 TILE_W, TILE_H = 32, 32
 
 def draw_map(screen, tiles, map_data, xpos, ypos):
@@ -114,6 +118,10 @@ def draw_map(screen, tiles, map_data, xpos, ypos):
             x = xpos + col_idx * TILE_W
             y = ypos + row_idx * TILE_H
             screen.blit(tile_surf, (x, y))
+
+pipeSound = pygame.mixer.Sound("Audio/pipe.wav")
+valveSound = pygame.mixer.Sound("Audio/valve.wav")
+switchSound = pygame.mixer.Sound("Audio/switch.wav")
 
 class Valve:
     def __init__(self, xpos, ypos, action):
@@ -128,9 +136,12 @@ class Valve:
         in_range = (self.x - 8 < player_pos.x < self.x + 40) and (self.y - 8 < player_pos.y < self.y + 40)
 
         if in_range and self.activated_time == -1:
+            valveSound.play()
             self.image = Assets.valveSprites[1]
             if not solved:
-                rotatePipes(pipePuzzle)
+                changed = rotatePipes(pipePuzzle)
+                if changed:
+                    pipeSound.play()
                 checkSolution(pipePuzzle, solution)
             else:
                 self.action()
@@ -157,6 +168,7 @@ class Switch:
         global activeSquares, level
         in_range = (self.x - 8 < player_pos.x < self.x + 40) and (self.y - 8 < player_pos.y < self.y + 40)
         if in_range:
+            switchSound.play()
             if self.image == self.tileset[0]:
                 self.image = self.tileset[1]
                 if not solved:
@@ -182,6 +194,7 @@ class Switch:
     
 def inBounds(x, y):
     if y > 384:
+        pygame.mixer.music.stop()
         return 0
     if x < 16 or x > 336:
         return False
@@ -225,10 +238,14 @@ switches = {
 
 floor = pygame.image.load("Assets/floor.png")
 
+def positionDeterminer(cameFrom):
+    global player_pos
+    player_pos = pygame.Vector2(175, 340)
+
 def Room(screen, screen_res, events):
     global level, floor
+
     # poll for events
-    # pygame.QUIT event means the user clicked X to close your window
     for event in events:
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_e:

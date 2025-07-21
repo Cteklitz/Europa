@@ -2,6 +2,7 @@ import pygame
 import Assets
 import Objects
 from shapely.geometry import Point, Polygon
+import Sounds
 
 virtual_res = (256, 256)
 virtual_screen = pygame.Surface(virtual_res)
@@ -41,13 +42,34 @@ def divertWater():
 valve = Objects.Valve(96, 112, divertWater)
 
 def inBounds(x, y):
+    level, power = Objects.getPipeDungeonInfo()
     if pinkDoor.rect.collidepoint((x,y)):
+        if level == 1 and power or Objects.getPinkPower():
+            Sounds.powerAmb.stop()
+            Sounds.ominousAmb.play(-1)
         return 0
-    if southDoor.rect.collidepoint((x,y)):
+    elif southDoor.rect.collidepoint((x,y)):
+        if level == 1 and power and not lowerWingPower and not Objects.getPinkPower():
+            Sounds.powerAmb.stop()
+            Sounds.ominousAmb.play(-1)
         return 1
+    elif northDoor.rect.collidepoint((x,y)):
+        if level == 1 and power and not upperWingPower and not Objects.getPinkPower():
+            Sounds.powerAmb.stop()
+            Sounds.ominousAmb.play(-1)
+        return 2
     elif not outline.contains(Point(x,y)):
         return False
     return True
+
+def positionDeterminer(cameFrom):
+    global player_pos
+    if cameFrom == "MainRoom":
+        player_pos = pygame.Vector2(pinkDoor.x - 5, pinkDoor.y + pinkDoor.rect.height/2)
+    if cameFrom == "PinkUpperWing":
+        player_pos = pygame.Vector2(northDoor.x + northDoor.rect.width/2, northDoor.y + northDoor.rect.height + 5)
+    if cameFrom == "PinkLowerWing":
+        player_pos = pygame.Vector2(southDoor.x + southDoor.rect.width/2, southDoor.y - 5)
 
 def Room(screen, screen_res, events):
     global upperWingPower, lowerWingPower
@@ -70,23 +92,34 @@ def Room(screen, screen_res, events):
 
     Done = False
 
-    for light in lights:
-        lit = light.update()
-        if not Done and lit:
-            if upperWingPower:
+    if not Objects.getPinkPower():
+        for light in lights:
+            lit = light.update()
+            if not Done and lit:
+                if upperWingPower:
+                    upperWingLight.image = Assets.tiles[1]
+                    lowerWingLight.image = Assets.dimTiles[1]
+                    shadowRect = pygame.Rect(0,144,112,112)
+                    shadow = virtual_screen.subsurface(shadowRect).copy()
+                elif lowerWingPower:
+                    lowerWingLight.image = Assets.tiles[1]
+                    upperWingLight.image = Assets.dimTiles[1]
+                    shadowRect = pygame.Rect(0,0,112,112)
+                    shadow = virtual_screen.subsurface(shadowRect).copy()
+                Assets.punch_light_hole(virtual_screen, dark_overlay, (112, 112), 300, (100, 0, 100))
+                virtual_screen.blit(shadow, shadowRect)
+                Done = True
+            virtual_screen.blit(light.image, light.rect)
+    else:
+        for light in lights:
+            light.update()
+            if not Done:
                 upperWingLight.image = Assets.tiles[1]
-                lowerWingLight.image = Assets.dimTiles[1]
-                shadowRect = pygame.Rect(0,144,112,112)
-                shadow = virtual_screen.subsurface(shadowRect).copy()
-            elif lowerWingPower:
                 lowerWingLight.image = Assets.tiles[1]
-                upperWingLight.image = Assets.dimTiles[1]
-                shadowRect = pygame.Rect(0,0,112,112)
-                shadow = virtual_screen.subsurface(shadowRect).copy()
-            Assets.punch_light_hole(virtual_screen, dark_overlay, (112, 112), 300, (100, 0, 100))
-            virtual_screen.blit(shadow, shadowRect)
-            Done = True
-        virtual_screen.blit(light.image, light.rect)
+                Assets.punch_light_hole(virtual_screen, dark_overlay, (112, 112), 300, (100, 0, 100))
+                Done = True
+            virtual_screen.blit(light.image, light.rect)
+
 
     virtual_screen.blit(Assets.pipes[11], (112,112))
     virtual_screen.blit(Assets.pipes[10], (144,112))
@@ -96,7 +129,7 @@ def Room(screen, screen_res, events):
     virtual_screen.blit(Assets.pipes[7], (112,144)) 
     virtual_screen.blit(Assets.pipes[7], (112,176))
 
-    if not power or level != 1:
+    if (not power or level != 1) and not Objects.getPinkPower():
         lowerWingLight.image = Assets.dimTiles[1]
         upperWingLight.image = Assets.dimTiles[1]
 
