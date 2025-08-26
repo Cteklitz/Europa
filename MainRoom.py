@@ -68,9 +68,14 @@ def Room(screen, screen_res, events):
     for i in range(8):
         pygame.draw.line(virtual_screen, "black", octagon1[i], octagon2[i], 1)
 
-    Done = False
+    lastType = 0
 
     for light in lights:
+        if light.type != lastType:
+            Done = False
+        else:
+            Done = True
+        lastType = light.type
         lit = light.update()
         if lit:
             if light.type == 1:
@@ -87,8 +92,6 @@ def Room(screen, screen_res, events):
                 y = 12 + 16
             if not Done:
                 Assets.punch_light_hole(virtual_screen, dark_overlay, (x, y), 100, light.color)
-                Done = True
-            Assets.punch_light_hole(virtual_screen, dark_overlay, (light.x + 16, light.y + 16), 23, light.color)
         virtual_screen.blit(light.image, light.rect)
 
     Assets.punch_light_hole(virtual_screen, dark_overlay, (240,240), 23, (239,228,176))

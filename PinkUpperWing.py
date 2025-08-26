@@ -51,6 +51,9 @@ tripuzzle = pygame.image.load("Assets/tripuzzle.png")
 tripuzzlesolved = pygame.image.load("Assets/tripuzzlesolved.png")
 tripuzzlehints = pygame.image.load("Assets/tripuzzlehints.png")
 mscopetable = pygame.image.load("Assets/mscopetable.png")
+smolRed = pygame.image.load("Assets/smolRed.png")
+smolYellow = pygame.image.load("Assets/smolYellow.png")
+smolBlue = pygame.image.load("Assets/smolBlue.png")
 tableWidth = mscopetable.get_width()/3
 tableHeight = mscopetable.get_height()/3
 mscopetableScale = pygame.transform.scale(mscopetable, (tableWidth, tableHeight))
@@ -188,6 +191,15 @@ def Room(screen, screen_res, events):
             virtual_screen.blit(beakercase, (10, 70))
 
     virtual_screen2.blit(whiteboardzoom, (20,20))
+
+    red, yellow, blue = Objects.getColors()
+
+    if red:
+        virtual_screen.blit(smolRed, (150, 121))
+    if yellow:
+        virtual_screen.blit(smolYellow, (160, 120))
+    if blue:
+        virtual_screen.blit(smolBlue, (157, 124))
 
     virtual_screen.blit(dark_overlay, (0, 0))
     virtual_screen2.blit(dark_overlay2, (0, 0))
