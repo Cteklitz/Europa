@@ -3,6 +3,7 @@ import Assets
 import Objects
 from shapely.geometry import Point, Polygon
 import Sounds
+import Items
 
 virtual_res = (480, 480)
 virtual_screen = pygame.Surface(virtual_res)
@@ -28,6 +29,8 @@ pinkDoor = Objects.Door(15, 224, Assets.pinkDoorWest)
 blueDoor = Objects.Door(433, 224, Assets.blueDoorEast)
 greenDoor = Objects.Door(224, 430, Assets.greenDoorSouth)
 orangeDoor = Objects.Door(224, 12, Assets.orangeDoorNorth)
+
+pinkKeycard = Objects.groundItem(150, 150, Items.pinkKeycard)
 
 Sounds.ominousAmb.play(-1)
 
@@ -65,8 +68,17 @@ def Room(screen, screen_res, events):
     octagon1 = Assets.draw_polygon(virtual_screen, (336,470), 8, 192, "gray", 1, True)
     octagon1 = Assets.draw_polygon(virtual_screen, (336,470), 8, 192, "black")
     octagon2 = Assets.draw_polygon(virtual_screen, (320,430), 8, 160, "black")
+
     for i in range(8):
         pygame.draw.line(virtual_screen, "black", octagon1[i], octagon2[i], 1)
+
+    if (pinkKeycard.collected == False):
+        virtual_screen.blit(pinkKeycard.item.ground_sprite, pinkKeycard.rect)
+
+    for event in events:
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_e:
+                pinkKeycard.check_collision(player_pos)
 
     lastType = 0
 
