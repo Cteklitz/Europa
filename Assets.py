@@ -93,3 +93,7 @@ tooDarkSee = pygame.image.load("Assets/TooDarkSee.png")
 
 letterTiles = load_tileset("Assets/letters.png", 21, 41)
 numberTiles = load_tileset("Assets/numbers.png", 21, 41)
+
+### ITEMS
+pinkKeycard = load_tileset("Assets/pink_keycard.png", 22, 14)
+pinkKeycardGround = load_tileset("Assets/pink_keycard_ground.png", 7, 5)
