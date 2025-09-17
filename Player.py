@@ -11,21 +11,16 @@ def addItem(item):
     else:
         return False
     
-# checks if an item is in the inventory (can check based on item object, id, or name); Probably try to use id mostly?
+# checks if an item is in the inventory (can check based on item object or id); Probably try to use id mostly?
 def checkItem(_item):
     if (type(_item) is Items.Item):
         for item in inventory:
-            if _item == item:
+            if _item.id == item.id:
                 return True
-        return False # return false if item not found
-    elif (type(_item) is int):
-        for item in inventory:
-                if _item.id == item.id:
-                    return True
         return False # return false if item not found
     elif (type(_item) is str):
         for item in inventory:
-                if _item.name == item.name:
+                if _item == item.id:
                     return True
         return False # return false if item not found
     else:
