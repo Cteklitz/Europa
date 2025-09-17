@@ -1,6 +1,7 @@
 import pygame
 import Items
 
+health = 100
 inventory = []
 
 # adds an item to iventory
@@ -47,4 +48,21 @@ def removeItem(_item):
         print("ERROR: Item type not valid")
         return False
         
-# TODO: Consume item
+# Consumes the item at the input index in the player inventory. Will activate any global effects here
+def consumeItem(index):
+    if index in range(len(inventory)):
+        item = inventory[index]
+
+        match item:
+            case Items.bandage:
+                health += 15
+                if health >= 100:
+                    health = 100
+                inventory.pop(index)
+                return True
+            case _:
+                print(item.name + " cannot be consumed")
+                return False
+    else:
+        print(str(index) + " is not a valid inventory value")
+        return False
