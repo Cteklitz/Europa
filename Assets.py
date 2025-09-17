@@ -97,3 +97,6 @@ numberTiles = load_tileset("Assets/numbers.png", 21, 41)
 ### ITEMS
 pinkKeycard = load_tileset("Assets/pink_keycard.png", 22, 14)
 pinkKeycardGround = load_tileset("Assets/pink_keycard_ground.png", 7, 5)
+
+redPetri = load_tileset("Assets/redpetri.png", 11, 6)
+redPetriGround = load_tileset("Assets/smolRed.png", 7, 3)
