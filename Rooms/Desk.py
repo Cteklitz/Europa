@@ -3,6 +3,8 @@ import Assets
 import Objects
 from shapely.geometry import Point, Polygon
 import Sounds
+import Player
+import Items
 
 virtual_res = (2000,1254)
 virtual_screen = pygame.Surface(virtual_res)
@@ -41,8 +43,10 @@ def Room(screen, screen_res, events):
                     mouse_x, mouse_y = pygame.mouse.get_pos()
                     mouse_pos = (mouse_x/xScale, mouse_y/yScale)
                     if not blueFound and petriRect.collidepoint(mouse_pos):
-                        Sounds.glass1.play()
-                        blueFound = True
+                        # add blue petri to inventory
+                        if (Player.addItem(Items.bluePetri)):
+                            Sounds.glass1.play()
+                            blueFound = True
 
     virtual_screen.blit(desk, (0,0))
 
