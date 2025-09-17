@@ -10,7 +10,7 @@ pygame.init()
 pygame.mixer.init()
 
 import Area
-import MainRoom
+from Rooms import MainRoom
 import Player
 
 screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
