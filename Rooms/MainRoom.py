@@ -31,6 +31,7 @@ greenDoor = Objects.Door(224, 430, Assets.greenDoorSouth)
 orangeDoor = Objects.Door(224, 12, Assets.orangeDoorNorth)
 
 pinkKeycard = Objects.groundItem(150, 150, Items.pinkKeycard)
+bandage = Objects.groundItem(300, 265, Items.bandage)
 
 Sounds.ominousAmb.play(-1)
 
@@ -72,13 +73,15 @@ def Room(screen, screen_res, events):
     for i in range(8):
         pygame.draw.line(virtual_screen, "black", octagon1[i], octagon2[i], 1)
 
-    if (pinkKeycard.collected == False):
-        virtual_screen.blit(pinkKeycard.item.ground_sprite, pinkKeycard.rect)
+    # draw ground items
+    Objects.groundItem.draw(pinkKeycard, virtual_screen)
+    Objects.groundItem.draw(bandage, virtual_screen)
 
     for event in events:
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_e:
                 pinkKeycard.check_collision(player_pos)
+                bandage.check_collision(player_pos)
 
     lastType = 0
 

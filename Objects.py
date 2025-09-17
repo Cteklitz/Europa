@@ -23,6 +23,10 @@ class groundItem:
                 print("Inventory is full!")
                 # TODO: Add proper inventory is full msg
 
+    def draw(self, virtual_screen):
+        if (self.collected == False):
+            virtual_screen.blit(self.item.ground_sprite, self.rect)
+
 class Valve:
     def __init__(self, xpos, ypos, action):
         self.x = xpos
