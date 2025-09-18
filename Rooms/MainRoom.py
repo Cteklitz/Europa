@@ -3,6 +3,7 @@ import Assets
 import Objects
 from shapely.geometry import Point, Polygon
 import Sounds
+import Items
 
 virtual_res = (480, 480)
 virtual_screen = pygame.Surface(virtual_res)
@@ -28,6 +29,9 @@ pinkDoor = Objects.Door(15, 224, Assets.pinkDoorWest)
 blueDoor = Objects.Door(433, 224, Assets.blueDoorEast)
 greenDoor = Objects.Door(224, 430, Assets.greenDoorSouth)
 orangeDoor = Objects.Door(224, 12, Assets.orangeDoorNorth)
+
+pinkKeycard = Objects.groundItem(150, 150, Items.pinkKeycard)
+bandage = Objects.groundItem(300, 265, Items.bandage)
 
 Sounds.ominousAmb.play(-1)
 
@@ -60,11 +64,11 @@ def inBounds(x, y):
 def positionDeterminer(cameFrom):
     global player_pos
     ctrlRmRect = pygame.Rect(220, 252, 36, 4)
-    if cameFrom == "ControlRoom":
+    if cameFrom == "Rooms.ControlRoom":
         player_pos = pygame.Vector2(ctrlRmRect.x + ctrlRmRect.width/2, ctrlRmRect.y + ctrlRmRect.height+5)
-    if cameFrom == "PinkRoom":
+    if cameFrom == "Rooms.PinkRoom":
         player_pos = pygame.Vector2(pinkDoor.x + pinkDoor.rect.width+5, pinkDoor.y + pinkDoor.rect.height/2)
-    if cameFrom == "BlueRoom":
+    if cameFrom == "Rooms.BlueRoom":
         player_pos = pygame.Vector2(blueDoor.x - 5, blueDoor.y + blueDoor.rect.height/2)
                                     
 def Room(screen, screen_res, events):
@@ -73,8 +77,19 @@ def Room(screen, screen_res, events):
     octagon1 = Assets.draw_polygon(virtual_screen, (336,470), 8, 192, "gray", 1, True)
     octagon1 = Assets.draw_polygon(virtual_screen, (336,470), 8, 192, "black")
     octagon2 = Assets.draw_polygon(virtual_screen, (320,430), 8, 160, "black")
+
     for i in range(8):
         pygame.draw.line(virtual_screen, "black", octagon1[i], octagon2[i], 1)
+
+    # draw ground items
+    Objects.groundItem.draw(pinkKeycard, virtual_screen)
+    Objects.groundItem.draw(bandage, virtual_screen)
+
+    for event in events:
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_e:
+                pinkKeycard.check_collision(player_pos)
+                bandage.check_collision(player_pos)
 
     lastType = 0
 

@@ -101,7 +101,7 @@ def inBounds(x, y):
 
 def positionDeterminer(cameFrom):
     global player_pos
-    if cameFrom == "PinkRoom":
+    if cameFrom == "Rooms.PinkRoom":
         player_pos = pygame.Vector2(exitWalk.centerx + 2, exitWalk.centery - 5)
 
 def Room(screen, screen_res, events):

@@ -10,7 +10,8 @@ pygame.init()
 pygame.mixer.init()
 
 import Area
-import MainRoom
+from Rooms import MainRoom
+import Player
 
 screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
 screen_res = screen.get_size()
@@ -45,6 +46,10 @@ while running:
                     cameFrom = Room
                     updateRoom(area.getRoom(Room, check))
                     Room.positionDeterminer(cameFrom.__name__)
+            # Open inventory
+            if event.key == pygame.K_TAB: 
+                for item in Player.inventory:
+                    print(item)
         elif event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == 1:
                 check = Room.inBounds(player_pos.x, player_pos.y)

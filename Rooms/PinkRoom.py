@@ -64,11 +64,11 @@ def inBounds(x, y):
 
 def positionDeterminer(cameFrom):
     global player_pos
-    if cameFrom == "MainRoom":
+    if cameFrom == "Rooms.MainRoom":
         player_pos = pygame.Vector2(pinkDoor.x - 5, pinkDoor.y + pinkDoor.rect.height/2)
-    if cameFrom == "PinkUpperWing":
+    if cameFrom == "Rooms.PinkUpperWing":
         player_pos = pygame.Vector2(northDoor.x + northDoor.rect.width/2, northDoor.y + northDoor.rect.height + 5)
-    if cameFrom == "PinkLowerWing":
+    if cameFrom == "Rooms.PinkLowerWing":
         player_pos = pygame.Vector2(southDoor.x + southDoor.rect.width/2, southDoor.y - 5)
 
 def Room(screen, screen_res, events):

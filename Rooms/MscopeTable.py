@@ -4,6 +4,8 @@ import Objects
 from shapely.geometry import Point, Polygon
 import Sounds
 import random
+import Player
+import Items
 
 virtual_res = (213, 134)
 virtual_screen = pygame.Surface(virtual_res)
@@ -90,9 +92,11 @@ def Room(screen, screen_res, events):
             if event.button == 1:
                 mouse_x, mouse_y = pygame.mouse.get_pos()
                 mouse_pos = (mouse_x/xScale, mouse_y/yScale)
-                if luckyRect.collidepoint(mouse_pos) and visible:
-                    Sounds.glass1.play()
-                    redFound = True
+                # player clicks red petri
+                if luckyRect.collidepoint(mouse_pos) and visible:           
+                    if (Player.addItem(Items.redPetri)):
+                        Sounds.glass1.play()
+                        redFound = True
                 elif redRect.collidepoint(mouse_pos) and redFound:
                     selected = "Red"
                 elif yellowRect.collidepoint(mouse_pos) and yellowFound:
@@ -132,6 +136,8 @@ def Room(screen, screen_res, events):
                 virtual_screen.blit(redpetri, luckyRect, area=pygame.Rect(0, 0, 11, 5))
         count -= 1
 
+
+    # TODO: Add a way for player to place petri dishs from inventory
     if not redFound or selected == "Red":
         virtual_screen.blit(Cover, redRect)
         if selected == "Red":

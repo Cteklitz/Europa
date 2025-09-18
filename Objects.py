@@ -2,6 +2,30 @@ import pygame
 import Assets
 import Area
 import Sounds
+import Items
+import Player
+
+class groundItem:
+    def __init__(self, xpos, ypos, item):
+        self.x = xpos
+        self.y = ypos
+        self.item = item
+        self.rect = item.ground_sprite.get_rect(topleft=(xpos, ypos))
+        self.collected = False
+
+    def check_collision(self, player_pos):
+        in_range = (self.x - 8 < player_pos.x < self.x + 8) and (self.y - 8 < player_pos.y < self.y + 8)
+
+        if in_range and not self.collected:
+            if (Player.addItem(self.item)):
+                self.collected = True
+            else:
+                print("Inventory is full!")
+                # TODO: Add proper inventory is full msg
+
+    def draw(self, virtual_screen):
+        if (self.collected == False):
+            virtual_screen.blit(self.item.ground_sprite, self.rect)
 
 class Valve:
     def __init__(self, xpos, ypos, action):

@@ -36,7 +36,7 @@ def inBounds(x, y):
 
 def positionDeterminer(cameFrom):
     global player_pos
-    if cameFrom == "MainRoom":
+    if cameFrom == "Rooms.MainRoom":
         player_pos = pygame.Vector2(blueDoor.x + 37, blueDoor.y + blueDoor.rect.height/2)
 
 def Room(screen, screen_res, events):

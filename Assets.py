@@ -98,3 +98,17 @@ tooDarkSee = pygame.image.load("Assets/TooDarkSee.png")
 
 letterTiles = load_tileset("Assets/letters.png", 21, 41)
 numberTiles = load_tileset("Assets/numbers.png", 21, 41)
+
+### ITEMS
+pinkKeycard = pygame.image.load("Assets/pink_keycard.png")
+pinkKeycardGround = pygame.image.load("Assets/pink_keycard_ground.png")
+
+bandage = pygame.image.load("Assets/bandage.png")
+bandageGround = pygame.image.load("Assets/bandage_ground.png")
+
+redPetri = pygame.image.load("Assets/redpetri.png")
+redPetriGround = pygame.image.load("Assets/smolRed.png")
+bluePetri = pygame.image.load("Assets/bluePetri.png")
+bluePetriGround = pygame.image.load("Assets/smolblue.png")
+yellowPetri = pygame.image.load("Assets/yellowPetri.png")
+yellowPetriGround = pygame.image.load("Assets/smolyellow.png")

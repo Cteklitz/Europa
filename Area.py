@@ -1,21 +1,6 @@
-import ControlRoom
-import MainRoom
-import PinkRoom
-import PinkLowerWing
-import BookcaseView
-import OrangeYellow
-import Safe
-import PinkUpperWing
-import TrianglePuzzle
-import TriangleSolution
-import BeakerPuzzle
-import MscopeTable
-import Microscope
-import LockedDoor
-import Desk
-import SpotDiffs
-import PinkPower
-import BlueRoom
+from Rooms import ControlRoom, MainRoom, PinkRoom, PinkLowerWing, BookcaseView, OrangeYellow, \
+Safe, PinkUpperWing, TrianglePuzzle, TriangleSolution, BeakerPuzzle, MscopeTable, Microscope, \
+LockedDoor, Desk, SpotDiffs, PinkPower, BlueRoom
 
 def getPipeDungeonInfo():
     return ControlRoom.level, ControlRoom.power
