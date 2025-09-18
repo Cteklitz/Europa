@@ -20,6 +20,9 @@ glass2 = pygame.mixer.Sound("Audio/glass2.wav")
 magnets = [magnet1, magnet2, magnet3]
 glass = [glass1, glass2]
 
+for magnet in magnets:
+    magnet.set_volume(0.75)
+
 draweropen = pygame.mixer.Sound("Audio/draweropen.wav")
 drawerclose = pygame.mixer.Sound("Audio/drawerclose.wav")
 

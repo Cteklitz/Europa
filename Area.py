@@ -15,6 +15,7 @@ import LockedDoor
 import Desk
 import SpotDiffs
 import PinkPower
+import BlueRoom
 
 def getPipeDungeonInfo():
     return ControlRoom.level, ControlRoom.power
@@ -72,7 +73,7 @@ class Area:
 PipeDungeon = Area(
     roomLayout = {
             ControlRoom: [MainRoom],
-            MainRoom: [ControlRoom, PinkRoom],
+            MainRoom: [ControlRoom, PinkRoom, BlueRoom],
             PinkRoom: [MainRoom, PinkLowerWing, PinkUpperWing],
             PinkLowerWing: [PinkRoom, BookcaseView, LockedDoor, Desk, SpotDiffs, PinkPower],
             BookcaseView: [PinkLowerWing, OrangeYellow, Safe],
@@ -87,6 +88,8 @@ PipeDungeon = Area(
             BeakerPuzzle: [PinkUpperWing], 
             MscopeTable: [PinkUpperWing, Microscope],
             Microscope: [MscopeTable],
-            PinkPower: [PinkLowerWing]
+            PinkPower: [PinkLowerWing],
+            BlueRoom: [MainRoom]
     }
 )
+

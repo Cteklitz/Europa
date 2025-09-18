@@ -45,6 +45,12 @@ def inBounds(x, y):
             Sounds.ominousAmb.stop()
             Sounds.powerAmb.play(-1)
         return 1
+    elif blueDoor.rect.collidepoint((x,y)):
+        level, power = Objects.getPipeDungeonInfo()
+        if power and level == 2:
+            Sounds.ominousAmb.stop()
+            Sounds.powerAmb.play(-1)
+        return 2
     elif ctrlRmWallRect.collidepoint((x,y)):
         return False
     elif not octagon.contains(Point(x,y)):
@@ -58,6 +64,8 @@ def positionDeterminer(cameFrom):
         player_pos = pygame.Vector2(ctrlRmRect.x + ctrlRmRect.width/2, ctrlRmRect.y + ctrlRmRect.height+5)
     if cameFrom == "PinkRoom":
         player_pos = pygame.Vector2(pinkDoor.x + pinkDoor.rect.width+5, pinkDoor.y + pinkDoor.rect.height/2)
+    if cameFrom == "BlueRoom":
+        player_pos = pygame.Vector2(blueDoor.x - 5, blueDoor.y + blueDoor.rect.height/2)
                                     
 def Room(screen, screen_res, events):
     virtual_screen.fill((105,105,105))

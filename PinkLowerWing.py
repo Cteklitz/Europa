@@ -106,6 +106,8 @@ def positionDeterminer(cameFrom):
     bigBoyRect = pygame.Rect(600,80,80,20)
     if cameFrom == "PinkPower":
         player_pos = pygame.Vector2(lockedDoorRect.x + lockedDoorRect.width + 20, lockedDoorRect.y + (lockedDoorRect.height*3/4))
+    if cameFrom == "LockedDoor":
+        player_pos = pygame.Vector2(lockedDoorRect.x + lockedDoorRect.width + 20, lockedDoorRect.y + (lockedDoorRect.height*3/4))
     if cameFrom == "PinkRoom":
         player_pos = pygame.Vector2(bigBoyRect.x + bigBoyRect.width/2, bigBoyRect.y + bigBoyRect.height + 5)
 
@@ -130,7 +132,8 @@ def Room(screen, screen_res, events):
                 if bookcaseRange.collidepoint(player_pos):
                     bookcase = True
                 if lockedDoorRange.collidepoint(player_pos):
-                    lDoor = True
+                    if not Objects.getOpen():
+                        lDoor = True
                 if deskRange.collidepoint(player_pos):
                     if level == 1 and power and lowerWingPower or Objects.getPinkPower():
                         desk = True

@@ -49,6 +49,7 @@ expected = pygame.image.load("Assets/expected.png")
 
 opentriangleSound = pygame.mixer.Sound("Audio/opentriangle.wav")
 girlLaughing = pygame.mixer.Sound("Audio/girlLaughing.wav")
+girlLaughing.set_volume(0.5)
 clapping = pygame.mixer.Sound("Audio/clapping.wav")
 
 giveupRect = pygame.Rect(190, 410, giveup.get_width(), giveup.get_height())
