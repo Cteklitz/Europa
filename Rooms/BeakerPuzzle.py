@@ -4,6 +4,8 @@ import Objects
 from shapely.geometry import Point, Polygon
 import Sounds
 import random
+import Player
+import Items
 
 virtual_res = (750,500)
 virtual_screen = pygame.Surface(virtual_res)
@@ -125,8 +127,9 @@ def Room(screen, screen_res, events):
                                 if solved:
                                     Sounds.letter.play()
                 elif letterRect.collidepoint(mouse_pos):
-                    Sounds.letter.play()
-                    collected = True
+                    if (Player.addItem(Items.letterTile)):
+                        Sounds.letter.play()
+                        collected = True
 
                     
     virtual_screen.fill((195, 195, 195))

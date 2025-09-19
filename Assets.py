@@ -112,3 +112,5 @@ bluePetri = pygame.image.load("Assets/bluePetri.png")
 bluePetriGround = pygame.image.load("Assets/smolblue.png")
 yellowPetri = pygame.image.load("Assets/yellowPetri.png")
 yellowPetriGround = pygame.image.load("Assets/smolyellow.png")
+
+letterTile = pygame.image.load("Assets/letter_tile.png")
