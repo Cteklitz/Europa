@@ -3,6 +3,8 @@ import Assets
 import Objects
 from shapely.geometry import Point, Polygon
 import Sounds
+import Player
+import Items
 
 virtual_res = (389,189)
 virtual_screen = pygame.Surface(virtual_res)
@@ -97,8 +99,9 @@ def Room(screen, screen_res, events):
                                 backgroundDiff = True
                                 found += 1
                     elif letterRect.collidepoint(mouse_pos) and chestOpen and not collected:
-                        Sounds.letter.play()
-                        collected = True
+                        if (Player.addItem(Items.letterTile)):
+                            Sounds.letter.play()
+                            collected = True
                     if found == 6:
                         chestOpen = True
                         if not played:

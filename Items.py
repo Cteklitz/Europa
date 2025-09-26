@@ -22,4 +22,6 @@ redPetri = Item("redPetri", "Petri Dish", "A petri dish containing red droplets"
 bluePetri = Item("bluePetri", "Petri Dish", "A petri dish containing blue blobs", bluePetriInv, Assets.bluePetriGround)
 yellowPetri = Item("yellowPetri", "Petri Dish", "A petri dish containing yellow particles", yellowPetriInv, Assets.yellowPetriGround)
 
+letterTile = Item("letterTile", "Tile", "A ceramic tile with a letter incribed on it", Assets.letterTile, Assets.letterTile)
+
 
