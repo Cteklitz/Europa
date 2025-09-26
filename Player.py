@@ -3,10 +3,11 @@ import Items
 
 health = 100
 inventory = []
+MaxInventorySize = 7
 
-# adds an item to iventory
+# adds an item to inventory
 def addItem(item):
-    if (len(inventory) < 7):
+    if (len(inventory) < MaxInventorySize):
         inventory.append(item)
         return True
     else:
@@ -28,7 +29,7 @@ def checkItem(_item):
         print("ERROR: Item type not valid")
         return False
 
-# removes an item from the iventory, takes either id or item object
+# removes an item from the inventory, takes either id or item object
 # this is for removing items that dont have a global effect, like placing a quest item or dropping an item
 # use consumeItem for consumable items that should do something
 def removeItem(_item):
