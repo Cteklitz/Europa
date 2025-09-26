@@ -40,6 +40,27 @@ def load_tileset(path, tile_width, tile_height):
             tiles.append(image)
     return tiles
 
+def draw_text(surface, text, color, rect, font):
+    words = text.split(' ')
+    lines = []
+    current_line = ""
+
+    for word in words:
+        test_line = current_line + word + " "
+
+        if font.size(test_line)[0] <= rect.width:
+            current_line = test_line
+        else:
+            lines.append(current_line)
+            current_line = word + " "
+    lines.append(current_line)
+
+    y_offset = 0
+    for line in lines:
+        line_surf = font.render(line, True, color)
+        surface.blit(line_surf, (rect.x, rect.y + y_offset))
+        y_offset += font.get_height()
+
 tiles = load_tileset("Assets/Grid.png", 32, 32)
 dimTiles = load_tileset("Assets/DimGrid.png", 32, 32)
 pipes = load_tileset("Assets/PipeSet.png", 32, 32)

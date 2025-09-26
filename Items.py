@@ -14,7 +14,7 @@ redPetriInv = pygame.image.load("Assets/redpetriInv.png")
 bluePetriInv = pygame.image.load("Assets/bluepetriInv.png")
 yellowPetriInv = pygame.image.load("Assets/yellowpetriInv.png")
 
-pinkKeycard = Item("pinkKeycard", "Pink Keycard", "Seems to be a keycard for a pink area", Assets.pinkKeycardGround, Assets.pinkKeycardGround)
+pinkKeycard = Item("pinkKeycard", "Pink Keycard", "Seems to be a keycard for a pink area", Assets.pinkKeycard, Assets.pinkKeycardGround)
 
 bandage = Item("bandage", "Bandage", "A roll of gauze used for covering wounds to stop bleeding", Assets.bandage, Assets.bandageGround)
 
