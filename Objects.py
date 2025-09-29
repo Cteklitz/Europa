@@ -167,8 +167,8 @@ def getTriangleSolved():
 def getBeakerSolved():
     return Area.getBeakerSolved()
 
-def getSpotDiffsSolved():
-    return Area.getSpotDiffsSolved()
+def getLockboxSolved():
+    return Area.getLockboxSolved()
 
 def getColors():
     return Area.getColors()

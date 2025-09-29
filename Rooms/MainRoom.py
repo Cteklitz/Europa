@@ -137,11 +137,9 @@ def Room(screen, screen_res, events):
     virtual_screen.blit(orangeDoor.image, orangeDoor.rect)
 
     if player_pos.y < 240:
-        pygame.draw.circle(virtual_screen, "red", player_pos, 16)
         virtual_screen.blit(Assets.ctrlRoomDoor, (220, 224))
     else:
         virtual_screen.blit(Assets.ctrlRoomDoor, (220, 224))
-        pygame.draw.circle(virtual_screen, "red", player_pos, 16)
 
     virtual_screen.blit(dark_overlay, (0, 0))
 

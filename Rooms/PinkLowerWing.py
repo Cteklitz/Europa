@@ -124,7 +124,7 @@ def Room(screen, screen_res, events):
 
     _, _, blueFound = Objects.getColors()
 
-    spotdiffssolved = Objects.getSpotDiffsSolved()
+    LockboxSolved = Objects.getLockboxSolved()
 
     for event in events:
         if event.type == pygame.KEYDOWN:
@@ -230,19 +230,13 @@ def Room(screen, screen_res, events):
     lockedDoor = pygame.image.load(f"Assets/LockedDoor{letterCount+1}.png")
     virtual_screen.blit(lockedDoor, (31, 95, lockedDoor.get_width(),lockedDoor.get_height()))
 
-    circle_surface = pygame.Surface((32, 32), pygame.SRCALPHA)
-    pygame.draw.circle(circle_surface, "red", (16, 16), 16)
-
-    scaled_circle = pygame.transform.scale(circle_surface, (80, 32))
-
     if(player_pos.y >= 143):
-        if not spotdiffssolved:
+        if not LockboxSolved:
             virtual_screen.blit(scaledTable, (220,65))
         else:
             virtual_screen.blit(scaledTable2, (220,65))
 
     if(player_pos.y < 148):
-        virtual_screen.blit(scaled_circle, (player_pos.x - 40, player_pos.y - 16))
         if not Objects.getCutscene():
             virtual_screen.blit(Bookcase, (800,100,96,96))
         else:
@@ -252,10 +246,9 @@ def Room(screen, screen_res, events):
             virtual_screen.blit(Bookcase, (800,100,96,96))
         else:
             virtual_screen.blit(Bookcase2, (800,100,96,96))
-        virtual_screen.blit(scaled_circle, (player_pos.x - 40, player_pos.y - 16))
 
     if(player_pos.y < 143):
-        if not spotdiffssolved:
+        if not LockboxSolved:
             virtual_screen.blit(scaledTable, (220,65))
         else:
             virtual_screen.blit(scaledTable2, (220,65))

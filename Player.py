@@ -1,8 +1,126 @@
 import pygame
 import Items
+import os
 
 health = 100
 inventory = []
+
+# Sprite animation handling
+sprites = {
+    'idle': None,
+    'walk_right': [],
+    'walk_left': [],
+    'walk_up': [],
+    'walk_down': []
+}
+
+current_frame = 0
+animation_timer = 0
+ANIMATION_DELAY = 100  # milliseconds between frames
+facing = 'right'
+is_moving = False
+
+def load_sprites():
+    global sprites
+    sprite_dir = os.path.join('Assets', 'player')
+    
+    # Load all walking animations
+    # You'll need to place your scuba diver images in the Assets/player folder
+    for i in range(1, 21):  # Assuming you have 20 frames
+        try:
+            img = pygame.image.load(os.path.join(sprite_dir, f'scuba_walk_{i}.png')).convert_alpha()
+            # Add the sprite to the appropriate direction list
+            frame_index = (i - 1) // 5  # Assuming 5 frames per direction
+            if frame_index == 0:
+                sprites['walk_right'].append(img)
+            elif frame_index == 1:
+                sprites['walk_left'].append(pygame.transform.flip(img, True, False))
+            elif frame_index == 2:
+                sprites['walk_up'].append(img)
+            elif frame_index == 3:
+                sprites['walk_down'].append(img)
+        except pygame.error as e:
+            print(f"Couldn't load sprite frame {i}: {e}")
+    
+    # Set idle sprite as the first frame of walk_right if no specific idle sprite
+    if sprites['walk_right']:
+        sprites['idle'] = sprites['walk_right'][0]
+
+def get_current_sprite():
+    global current_frame, animation_timer
+    
+    if not is_moving:
+        return sprites['idle']
+    
+    # Update animation frame
+    current_time = pygame.time.get_ticks()
+    if current_time - animation_timer > ANIMATION_DELAY:
+        animation_timer = current_time
+        current_frame = (current_frame + 1) % len(sprites[f'walk_{facing}'])
+    
+    return sprites[f'walk_{facing}'][current_frame]
+
+def update_movement(dx, dy):
+    global facing, is_moving
+    
+    is_moving = dx != 0 or dy != 0
+    
+    if dx > 0:
+        facing = 'right'
+    elif dx < 0:
+        facing = 'left'
+    elif dy > 0:
+        facing = 'down'
+    elif dy < 0:
+        facing = 'up'
+
+def load_sprites():
+    global sprites
+    sprite_dir = os.path.join('Assets', 'player')
+    
+    # Load right walking animations (2 frames)
+    for i in range(1, 3):
+        try:
+            img = pygame.image.load(os.path.join(sprite_dir, f'walk_right_{i}.png')).convert_alpha()
+            sprites['walk_right'].append(img)
+        except pygame.error as e:
+            print(f"Couldn't load right walk frame {i}: {e}")
+    
+    # Load left walking animations (2 frames)
+    for i in range(1, 3):
+        try:
+            img = pygame.image.load(os.path.join(sprite_dir, f'walk_left_{i}.png')).convert_alpha()
+            sprites['walk_left'].append(img)
+        except pygame.error as e:
+            print(f"Couldn't load left walk frame {i}: {e}")
+
+def get_current_sprite():
+    global current_frame, animation_timer
+    
+    if not is_moving:
+        # When not moving, show frame 0 of current facing direction
+        return sprites[f'walk_{facing}'][0]
+    
+    # Update animation frame
+    current_time = pygame.time.get_ticks()
+    if current_time - animation_timer > ANIMATION_DELAY:
+        animation_timer = current_time
+        current_frame = (current_frame + 1) % len(sprites[f'walk_{facing}'])
+    
+    # Return current animation frame for the facing direction
+    return sprites[f'walk_{facing}'][current_frame]
+
+def update_movement(dx, dy):
+    global facing, is_moving
+    
+    is_moving = dx != 0 or dy != 0
+    
+    # Only update facing direction for horizontal movement
+    if dx > 0:
+        facing = 'right'
+    elif dx < 0:
+        facing = 'left'
+    # For vertical movement (dx == 0), keep the last facing direction
 
 # adds an item to iventory
 def addItem(item):

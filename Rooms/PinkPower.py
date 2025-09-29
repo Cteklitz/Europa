@@ -185,7 +185,7 @@ def Room(screen, screen_res, events):
 
     virtual_screen.blit(door, (300,208))
 
-    pygame.draw.circle(virtual_screen, "red", player_pos, 16)
+    # Player drawn by Area.py
 
     virtual_screen.blit(dark_overlay, (0, 0))
 

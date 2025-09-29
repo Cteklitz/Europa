@@ -143,11 +143,9 @@ def Room(screen, screen_res, events):
     valve.update()
 
     if player_pos.y < 124:
-        pygame.draw.circle(virtual_screen, "red", player_pos, 16)
         virtual_screen.blit(valve.image, valve.rect)
     else:
         virtual_screen.blit(valve.image, valve.rect)
-        pygame.draw.circle(virtual_screen, "red", player_pos, 16)
 
     virtual_screen.blit(dark_overlay, (0, 0))
 

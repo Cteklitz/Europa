@@ -75,7 +75,7 @@ def Room(screen, screen_res, events):
     
     virtual_screen.blit(lockedDoor.image, lockedDoor.rect)
 
-    pygame.draw.circle(virtual_screen, "red", player_pos, 16)
+    # Player drawn by Area.py
 
     virtual_screen.blit(dark_overlay, (0, 0))
 

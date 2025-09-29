@@ -181,9 +181,7 @@ def Room(screen, screen_res, events):
             virtual_screen.blit(beakercase2, (10, 70))
         else:
             virtual_screen.blit(beakercase, (10, 70))
-        pygame.draw.circle(virtual_screen, "red", player_pos, 16)
     else:
-        pygame.draw.circle(virtual_screen, "red", player_pos, 16)
         virtual_screen.blit(mscopetableScale, (105, 100))
         if Objects.getBeakerSolved():
             virtual_screen.blit(beakercase2, (10, 70))

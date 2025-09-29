@@ -280,9 +280,7 @@ def Room(screen, screen_res, events):
 
     if player_pos.y > 300:
         virtual_screen.blit(valve.image, valve.rect)
-        pygame.draw.circle(virtual_screen, "red", player_pos, 16)
     else:
-        pygame.draw.circle(virtual_screen, "red", player_pos, 16)
         virtual_screen.blit(valve.image, valve.rect)
 
     virtual_screen.blit(dark_overlay, (0, 0))

@@ -10,16 +10,58 @@ pygame.init()
 pygame.mixer.init()
 
 import Area
-from Rooms import MainRoom
 import Player
+
+# Load player sprites
+Player.load_sprites()
+from Rooms import ControlRoom, MainRoom, PinkRoom, PinkLowerWing, BookcaseView, OrangeYellow, \
+    Safe, PinkUpperWing, TrianglePuzzle, TriangleSolution, BeakerPuzzle, MscopeTable, Microscope, \
+    LockedDoor, Desk, Lockbox_puzzle, PinkPower, BlueRoom, Fishtank_puzzle
+import Player
+
+
+import sys
+
+room_dict = {
+    "ControlRoom": ControlRoom,
+    "MainRoom": MainRoom,
+    "PinkRoom": PinkRoom,
+    "PinkLowerWing": PinkLowerWing,
+    "BookcaseView": BookcaseView,
+    "OrangeYellow": OrangeYellow,
+    "Safe": Safe,
+    "PinkUpperWing": PinkUpperWing,
+    "TrianglePuzzle": TrianglePuzzle,
+    "TriangleSolution": TriangleSolution,
+    "BeakerPuzzle": BeakerPuzzle,
+    "MscopeTable": MscopeTable,
+    "Microscope": Microscope,
+    "LockedDoor": LockedDoor,
+    "Desk": Desk,
+    "Lockbox_puzzle": Lockbox_puzzle,
+    "PinkPower": PinkPower,
+    "BlueRoom": BlueRoom,
+    "Fishtank_puzzle": Fishtank_puzzle
+}
+
+debug_room = None
+for i, arg in enumerate(sys.argv):
+    if arg == "--debug" and i + 1 < len(sys.argv):
+        debug_room = sys.argv[i + 1]
+        break
+
+if debug_room and debug_room in room_dict:
+    Room = room_dict[debug_room]
+else:
+    Room = MainRoom  # Default
+
+area = Area.PipeDungeon
 
 screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
 screen_res = screen.get_size()
 clock = pygame.time.Clock()
 running = True
 dt = 0
-area = Area.PipeDungeon
-Room = MainRoom
 
 def updateRoom(room):
     global Room
@@ -59,6 +101,8 @@ while running:
                     Room.positionDeterminer(cameFrom.__name__)
 
     keys = pygame.key.get_pressed()
+    dx = dy = 0
+    
     if keys[pygame.K_w]:
         y = player_pos.y - 325 * dt / ySpeedScale
         check = Room.inBounds(player_pos.x, y)
@@ -68,6 +112,7 @@ while running:
             Room.positionDeterminer(cameFrom.__name__)
         elif check:
             player_pos.y = y
+            dy = -1
     if keys[pygame.K_s]:
         y = player_pos.y + 325 * dt / ySpeedScale
         check = Room.inBounds(player_pos.x, y)
@@ -77,6 +122,7 @@ while running:
             Room.positionDeterminer(cameFrom.__name__)
         elif check:
             player_pos.y = y
+            dy = 1
     if keys[pygame.K_a]:
         x = player_pos.x - 325 * dt / xSpeedScale
         check = Room.inBounds(x, player_pos.y)
@@ -86,6 +132,7 @@ while running:
             Room.positionDeterminer(cameFrom.__name__)
         elif check:
             player_pos.x = x
+            dx = -1
     if keys[pygame.K_d]:
         x = player_pos.x + 325 * dt / xSpeedScale
         check = Room.inBounds(x, player_pos.y)
@@ -95,6 +142,10 @@ while running:
             Room.positionDeterminer(cameFrom.__name__)
         elif check:
             player_pos.x = x
+            dx = 1
+            
+    # Update player animation state
+    Player.update_movement(dx, dy)
 
     check = Room.inBounds(player_pos.x, player_pos.y)
     if type(check) == int:
