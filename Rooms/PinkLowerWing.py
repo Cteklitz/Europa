@@ -26,6 +26,9 @@ bookcase = False
 lDoor = False
 desk = False
 table = False
+fishtank = False
+
+fishtankRange = pygame.Rect(750, 110, 60, 30)
 
 Bookcase = pygame.image.load("Assets/Bookcase.png")
 Bookcase2 = pygame.image.load("Assets/Bookcase2.png")
@@ -49,8 +52,10 @@ tableRange = pygame.Rect(292,160,350,16)
 scaledTooDarkSee = pygame.transform.scale(Assets.tooDarkSee, (Assets.tooDarkSee.get_width()*1.5, Assets.tooDarkSee.get_height()/1.2))
 tooDarkSee = Objects.briefText(virtual_screen, scaledTooDarkSee, 170, 160, 3)
 
+fishtankRange = pygame.Rect(750, 110, 60, 30)
+
 def inBounds(x, y):
-    global bookcase, lDoor, lockedDoor, desk, table
+    global bookcase, lDoor, lockedDoor, desk, table, fishtank
 
     level, power = Objects.getPipeDungeonInfo()
     _, lowerWingPower = Objects.getPinkWingInfo()
@@ -80,6 +85,9 @@ def inBounds(x, y):
     if table:
         table = False
         return 4
+    if fishtank:
+        fishtank = False
+        return 6
     if lockedDoorRect.collidepoint(x,y) and Objects.getOpen():
         if not Objects.getPinkPower() and level == 1 and power and lowerWingPower:
             Sounds.powerAmb.stop()
@@ -112,7 +120,7 @@ def positionDeterminer(cameFrom):
         player_pos = pygame.Vector2(bigBoyRect.x + bigBoyRect.width/2, bigBoyRect.y + bigBoyRect.height + 5)
 
 def Room(screen, screen_res, events):
-    global bookcase, Bookcase, lDoor, desk, table
+    global bookcase, Bookcase, lDoor, desk, table, fishtank
 
     xScale = screen.get_width()/virtual_screen.get_width() 
     yScale = screen.get_height()/virtual_screen.get_height()
@@ -142,6 +150,11 @@ def Room(screen, screen_res, events):
                 if tableRange.collidepoint(player_pos):
                     if level == 1 and power and lowerWingPower or Objects.getPinkPower():
                         table = True
+                    else:
+                        tooDarkSee.activated_time = pygame.time.get_ticks()
+                if fishtankRange.collidepoint(player_pos):
+                    if level == 1 and power and lowerWingPower or Objects.getPinkPower():
+                        fishtank = True
                     else:
                         tooDarkSee.activated_time = pygame.time.get_ticks()
 
@@ -262,6 +275,14 @@ def Room(screen, screen_res, events):
 
     if upperWingPower and power and level == 1:
         virtual_screen.blit(litSave, (80,31))
+
+    #visualization rectangle and text for fishtank interaction area
+    pygame.draw.rect(virtual_screen, (255, 255, 0), fishtankRange, 2)  # Yellow outline
+    
+    #text "fishtank placeholder"
+    font = pygame.font.Font(None, 20)
+    text = font.render("fishtank placeholder", True, (255, 255, 0))  # Yellow text
+    virtual_screen.blit(text, (fishtankRange.x, fishtankRange.y - 20))  # Position above rectangle
 
     scaled = pygame.transform.scale(virtual_screen, screen_res)
     screen.blit(scaled, (0, 0))

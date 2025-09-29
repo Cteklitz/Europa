@@ -26,11 +26,8 @@ numbers_img = pygame.image.load("Assets/Lockbox_numbers.png").convert_alpha()
 font = pygame.font.SysFont(None, 48)
 small_font = pygame.font.SysFont(None, 28)
 
-# Digit regions: (left, top, right, bottom) for each digit 0-9
-
-# Image is 2 rows x 6 columns, each cell is 166x292 pixels
 cell_w, cell_h = 166, 292
-# Mapping: 0 is at (col=3, row=1), 1 is (col=0, row=0), ..., 9 is (col=2, row=1)
+
 digit_map = [
     (3, 1), # 0
     (0, 0), # 1
@@ -54,7 +51,7 @@ for col, row in digit_map:
 digit_positions = [
     [105, 113], [155, 113], [207, 113], [255, 113],
 ]
-digit_size = [45, 41]  # width, height for all digits
+digit_size = [45, 41]
 
 CORRECT_CODE = [1, 2, 3, 4]
 digits = [0, 0, 0, 0]
@@ -64,9 +61,7 @@ chestOpen = False
 exit = False
 collected = False
 
-# Replace the for-loop in draw_interface with this:
 def draw_interface():
-    # Draw lockbox background
     virtual = pygame.Surface(VIRTUAL_RES)
     if unlocked:
         virtual.blit(lockbox_img_open, (0, 0))
@@ -92,7 +87,7 @@ def draw_interface():
             
 
     scaled = pygame.transform.scale(virtual, WINDOW_RES)
-    # Center the scaled surface on the screen
+   
     screen_width, screen_height = screen.get_size()
     surf_width, surf_height = scaled.get_size()
     center_x = (screen_width - surf_width) // 2
@@ -154,7 +149,7 @@ def Room(screen, screen_res, events):
                     running = False
                     exit = True
 
-        # Check for correct code
+        
         if digits == CORRECT_CODE:
             unlocked = True
             chestOpen = True
@@ -165,6 +160,5 @@ def Room(screen, screen_res, events):
     return player_pos, xScale, yScale
 
 def positionDeterminer(arg):
-    # Your logic here
     pass
 

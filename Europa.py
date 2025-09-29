@@ -152,11 +152,11 @@ while running:
     # Update player animation state
     Player.update_movement(dx, dy)
 
-        check = Room.inBounds(player_pos.x, player_pos.y)
-        if type(check) == int:
-            cameFrom = Room
-            updateRoom(area.getRoom(Room, check))
-            Room.positionDeterminer(cameFrom.__name__)
+    check = Room.inBounds(player_pos.x, player_pos.y)
+    if type(check) == int:
+        cameFrom = Room
+        updateRoom(area.getRoom(Room, check))
+        Room.positionDeterminer(cameFrom.__name__)
 
     # flip() the display to put your work on screen
     pygame.display.flip()

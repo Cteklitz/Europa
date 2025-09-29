@@ -18,7 +18,7 @@ print("Loaded background image:", bg_img.get_size())
 
 def Room(screen, screen_res, events):
     global player_pos, exit, exit
-    print("Fishtank_puzzle Room started") # <-- Add this
+    print("Fishtank_puzzle Room started")
     pygame.mouse.set_visible(False)
 
     shovel = pygame.Surface((32, 32), pygame.SRCALPHA)
@@ -64,18 +64,17 @@ def Room(screen, screen_res, events):
     algae = pygame.Surface(WINDOW_RES, pygame.SRCALPHA)
     algae.fill((0, 0, 0, 0))  # Fully transparent
 
-    glass_margin_x = int(WINDOW_RES[0] * 0.09)  # 20% margin instead of 5%
+    glass_margin_x = int(WINDOW_RES[0] * 0.09)  
     glass_margin_y = int(WINDOW_RES[1] * 0.147)
     glass_width = WINDOW_RES[0] - 2 * glass_margin_x
     glass_height = WINDOW_RES[1] - 2 * glass_margin_y
     glass_x = glass_margin_x
     glass_y = glass_margin_y
     # Move algae region horizontally by a percent of the screen width
-    horizontal_shift = int(WINDOW_RES[0] * .02)  # 10% of the screen width
-    vertical_shift = int(WINDOW_RES[1] * 0.014)  # 5% of the screen height
+    horizontal_shift = int(WINDOW_RES[0] * .02) 
+    vertical_shift = int(WINDOW_RES[1] * 0.014) 
     glass_y = glass_margin_y + vertical_shift  # Move down
-      # Move right
-    # Or use glass_x = glass_margin_x - horizontal_shift  # Move left
+    
     glass_x = glass_margin_x - horizontal_shift
     GLASS_RECT = pygame.Rect(glass_x, glass_y, glass_width, glass_height)
 
@@ -157,7 +156,7 @@ def Room(screen, screen_res, events):
     PARTICLE_COUNT = 1
 
     last_angle = 0
-    angle = 0  # Add this line before your while running loop
+    angle = 0  
 
     def squeegee_clean(pos, prev_pos, radius):
         if GLASS_RECT.collidepoint(pos):
@@ -264,18 +263,18 @@ def Room(screen, screen_res, events):
             prev_vmx, prev_vmy = vmx, vmy
         else:
             prev_vmx, prev_vmy = None, None
-            angle = last_angle  # Ensure angle is always defined
+            angle = last_angle  
 
         cleared = cleared_fraction_in_box()
         if not chest_open and cleared >= CLEAR_THRESHOLD:
             chest_open = True
 
-        # Draw everything to virtual
+        
         virtual.fill((0, 0, 0))
         virtual.blit(bg_img, (0, 0))
         virtual.blit(algae, (0, 0))
 
-        # Now scale and blit virtual to screen
+       
         scaled = pygame.transform.scale(virtual, WINDOW_RES)
         screen_width, screen_height = screen.get_size()
         surf_width, surf_height = scaled.get_size()
