@@ -11,6 +11,7 @@ pygame.mixer.init()
 
 import Area
 import Player
+import Inventory
 
 # Load player sprites
 Player.load_sprites()
@@ -69,36 +70,40 @@ def updateRoom(room):
 
 while running:
     events = pygame.event.get()
-    player_pos, xSpeedScale, ySpeedScale = area.getPos(screen, screen_res, events, Room)
-    for event in events:
-        if event.type == pygame.QUIT:
-                running = False
-        elif event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_ESCAPE:
-                running = False
-            if event.key == pygame.K_BACKSPACE:
-                check = Room.inBounds(player_pos.x, player_pos.y)
-                if type(check) == int:
-                    cameFrom = Room
-                    updateRoom(area.getRoom(Room, check))
-                    Room.positionDeterminer(cameFrom.__name__)
-            if event.key == pygame.K_e:
-                check = Room.inBounds(player_pos.x, player_pos.y)
-                if type(check) == int:
-                    cameFrom = Room
-                    updateRoom(area.getRoom(Room, check))
-                    Room.positionDeterminer(cameFrom.__name__)
-            # Open inventory
-            if event.key == pygame.K_TAB: 
-                for item in Player.inventory:
-                    print(item)
-        elif event.type == pygame.MOUSEBUTTONDOWN:
-            if event.button == 1:
-                check = Room.inBounds(player_pos.x, player_pos.y)
-                if type(check) == int:
-                    cameFrom = Room
-                    updateRoom(area.getRoom(Room, check))
-                    Room.positionDeterminer(cameFrom.__name__)
+    if Inventory.open:
+        Inventory.Inventory(screen, screen_res, events)
+    else:
+        player_pos, xSpeedScale, ySpeedScale = area.getPos(screen, screen_res, events, Room)
+        for event in events:
+            if event.type == pygame.QUIT:
+                    running = False
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    running = False
+                if event.key == pygame.K_BACKSPACE:
+                    check = Room.inBounds(player_pos.x, player_pos.y)
+                    if type(check) == int:
+                        cameFrom = Room
+                        updateRoom(area.getRoom(Room, check))
+                        Room.positionDeterminer(cameFrom.__name__)
+                if event.key == pygame.K_e:
+                    check = Room.inBounds(player_pos.x, player_pos.y)
+                    if type(check) == int:
+                        cameFrom = Room
+                        updateRoom(area.getRoom(Room, check))
+                        Room.positionDeterminer(cameFrom.__name__)
+                # Open inventory
+                if event.key == pygame.K_TAB:
+                    Inventory.open = True
+                    for item in Player.inventory:
+                        print(item)
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                if event.button == 1:
+                    check = Room.inBounds(player_pos.x, player_pos.y)
+                    if type(check) == int:
+                        cameFrom = Room
+                        updateRoom(area.getRoom(Room, check))
+                        Room.positionDeterminer(cameFrom.__name__)
 
     keys = pygame.key.get_pressed()
     dx = dy = 0
@@ -147,11 +152,11 @@ while running:
     # Update player animation state
     Player.update_movement(dx, dy)
 
-    check = Room.inBounds(player_pos.x, player_pos.y)
-    if type(check) == int:
-        cameFrom = Room
-        updateRoom(area.getRoom(Room, check))
-        Room.positionDeterminer(cameFrom.__name__)
+        check = Room.inBounds(player_pos.x, player_pos.y)
+        if type(check) == int:
+            cameFrom = Room
+            updateRoom(area.getRoom(Room, check))
+            Room.positionDeterminer(cameFrom.__name__)
 
     # flip() the display to put your work on screen
     pygame.display.flip()
