@@ -94,9 +94,9 @@ def Room(screen, screen_res, events):
                 mouse_pos = (mouse_x/xScale, mouse_y/yScale)
                 # player clicks red petri
                 if luckyRect.collidepoint(mouse_pos) and visible:           
-                    Player.addItem(Items.redPetri)
-                    Sounds.glass1.play()
-                    redFound = True
+                    if (Player.addItem(Items.redPetri)):
+                        Sounds.glass1.play()
+                        redFound = True
                 elif redRect.collidepoint(mouse_pos) and redFound:
                     selected = "Red"
                 elif yellowRect.collidepoint(mouse_pos) and yellowFound:

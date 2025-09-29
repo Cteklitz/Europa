@@ -52,9 +52,9 @@ def Room(screen, screen_res, events):
                         open = True
                     elif open and not yellowFound and petriRect.collidepoint(mouse_pos):
                         # add yellow petri to inventory
-                        Player.addItem(Items.yellowPetri)
-                        Sounds.glass1.play()
-                        yellowFound = True
+                        if (Player.addItem(Items.yellowPetri)):
+                            Sounds.glass1.play()
+                            yellowFound = True
 
     if not open:
         virtual_screen.blit(orangeyellowclosed, (0,0))
