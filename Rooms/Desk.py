@@ -46,9 +46,9 @@ def Room(screen, screen_res, events):
                     mouse_pos = (mouse_x/xScale, mouse_y/yScale)
                     if not blueFound and petriRect.collidepoint(mouse_pos):
                         # add blue petri to inventory
-                        Player.addItem(Items.bluePetri)
-                        Sounds.glass1.play()
-                        blueFound = True
+                        if (Player.addItem(Items.bluePetri)):
+                            Sounds.glass1.play()
+                            blueFound = True
 
     virtual_screen.blit(desk, (0,0))
 
