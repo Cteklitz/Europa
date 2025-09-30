@@ -2,8 +2,8 @@
 import pygame
 import os
 
-script_dir = os.path.dirname(os.path.abspath(__file__))
-os.chdir(script_dir)
+scriptDir = os.path.dirname(os.path.abspath(__file__))
+os.chdir(scriptDir)
 
 # pygame setup
 pygame.init()
@@ -60,7 +60,7 @@ else:
 area = Area.PipeDungeon
 
 screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
-screen_res = screen.get_size()
+screenRes = screen.get_size()
 clock = pygame.time.Clock()
 running = True
 dt = 0
@@ -86,29 +86,18 @@ while running:
             Room.positionDeterminer("Debug")
     
     if debug_system.panel_open:
-        debug_system.draw_panel(screen, screen_res, events)
+        debug_system.draw_panel(screen, screenRes, events)
     elif Inventory.open:
-        Inventory.Inventory(screen, screen_res, events)
+        Inventory.Inventory(screen, screenRes, events)
     else:
-        player_pos, xSpeedScale, ySpeedScale = area.getPos(screen, screen_res, events, Room)
+        playerPos, xSpeedScale, ySpeedScale = area.getPos(screen, screenRes, events, Room)
+
         for event in events:
             if event.type == pygame.QUIT:
                     running = False
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     running = False
-                if event.key == pygame.K_BACKSPACE:
-                    check = Room.inBounds(player_pos.x, player_pos.y)
-                    if type(check) == int:
-                        cameFrom = Room
-                        updateRoom(area.getRoom(Room, check))
-                        Room.positionDeterminer(cameFrom.__name__)
-                if event.key == pygame.K_e:
-                    check = Room.inBounds(player_pos.x, player_pos.y)
-                    if type(check) == int:
-                        cameFrom = Room
-                        updateRoom(area.getRoom(Room, check))
-                        Room.positionDeterminer(cameFrom.__name__)
                 # Open inventory
                 if event.key == pygame.K_TAB:
                     Inventory.open = True
@@ -117,66 +106,10 @@ while running:
                 # Debug menu
                 if event.key == pygame.K_h:
                     debug_system.toggle_panel()
-            elif event.type == pygame.MOUSEBUTTONDOWN:
-                if event.button == 1:
-                    check = Room.inBounds(player_pos.x, player_pos.y)
-                    if type(check) == int:
-                        cameFrom = Room
-                        updateRoom(area.getRoom(Room, check))
-                        Room.positionDeterminer(cameFrom.__name__)
 
-    keys = pygame.key.get_pressed()
-    dx = dy = 0
-    
-    if keys[pygame.K_w]:
-        y = player_pos.y - 325 * dt / ySpeedScale
-        check = Room.inBounds(player_pos.x, y)
-        if type(check) == int:
-            cameFrom = Room
-            updateRoom(area.getRoom(Room, check))
-            Room.positionDeterminer(cameFrom.__name__)
-        elif check:
-            player_pos.y = y
-            dy = -1
-    if keys[pygame.K_s]:
-        y = player_pos.y + 325 * dt / ySpeedScale
-        check = Room.inBounds(player_pos.x, y)
-        if type(check) == int:
-            cameFrom = Room
-            updateRoom(area.getRoom(Room, check))
-            Room.positionDeterminer(cameFrom.__name__)
-        elif check:
-            player_pos.y = y
-            dy = 1
-    if keys[pygame.K_a]:
-        x = player_pos.x - 325 * dt / xSpeedScale
-        check = Room.inBounds(x, player_pos.y)
-        if type(check) == int:
-            cameFrom = Room
-            updateRoom(area.getRoom(Room, check))
-            Room.positionDeterminer(cameFrom.__name__)
-        elif check:
-            player_pos.x = x
-            dx = -1
-    if keys[pygame.K_d]:
-        x = player_pos.x + 325 * dt / xSpeedScale
-        check = Room.inBounds(x, player_pos.y)
-        if type(check) == int:
-            cameFrom = Room
-            updateRoom(area.getRoom(Room, check))
-            Room.positionDeterminer(cameFrom.__name__)
-        elif check:
-            player_pos.x = x
-            dx = 1
-            
-    # Update player animation state
-    Player.update_movement(dx, dy)
-
-    check = Room.inBounds(player_pos.x, player_pos.y)
-    if type(check) == int:
-        cameFrom = Room
-        updateRoom(area.getRoom(Room, check))
-        Room.positionDeterminer(cameFrom.__name__)
+        #Movement
+        keys = pygame.key.get_pressed()
+        dx, dy = Player.handle_movement(keys, dt, playerPos, ySpeedScale, xSpeedScale, Room, area, updateRoom)
 
     # flip() the display to put your work on screen
     pygame.display.flip()

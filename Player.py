@@ -123,6 +123,83 @@ def update_movement(dx, dy):
         facing = 'left'
     # For vertical movement (dx == 0), keep the last facing direction
 
+def handle_movement(keys, dt, player_pos, y_speed_scale, x_speed_scale, room, area, update_room_func):
+    """
+    Handle player movement input and room transitions
+    Returns: (dx, dy) for animation purposes
+    """
+    dx = dy = 0
+    
+    if keys[pygame.K_w]:
+        y = player_pos.y - 325 * dt / y_speed_scale
+        #Checks if the movement upwards results in room change. If so, update the room to new room and set the initial position with positionDeterminer
+        check = room.inBounds(player_pos.x, y)
+        if type(check) == int:
+            came_from = room
+            update_room_func(area.getRoom(room, check))
+            room = update_room_func.__globals__.get('Room')  # Get updated room reference
+            if room:
+                room.positionDeterminer(came_from.__name__)
+        elif check:
+            player_pos.y = y
+            dy = -1
+    
+    if keys[pygame.K_s]:
+        y = player_pos.y + 325 * dt / y_speed_scale
+        #Checks if the movement downwards results in room change. If so, update the room to new room and set the initial position with positionDeterminer
+        check = room.inBounds(player_pos.x, y)
+        if type(check) == int:
+            came_from = room
+            update_room_func(area.getRoom(room, check))
+            room = update_room_func.__globals__.get('Room')  # Get updated room reference
+            if room:
+                room.positionDeterminer(came_from.__name__)
+        elif check:
+            player_pos.y = y
+            dy = 1
+    
+    if keys[pygame.K_a]:
+        x = player_pos.x - 325 * dt / x_speed_scale
+        #Checks if the movement to the left results in room change. If so, update the room to new room and set the initial position with positionDeterminer
+        check = room.inBounds(x, player_pos.y)
+        if type(check) == int:
+            came_from = room
+            update_room_func(area.getRoom(room, check))
+            room = update_room_func.__globals__.get('Room')  # Get updated room reference
+            if room:
+                room.positionDeterminer(came_from.__name__)
+        elif check:
+            player_pos.x = x
+            dx = -1
+    
+    if keys[pygame.K_d]:
+        x = player_pos.x + 325 * dt / x_speed_scale
+        #Checks if the movement to the right results in room change. If so, update the room to new room and set the initial position with positionDeterminer
+        check = room.inBounds(x, player_pos.y)
+        if type(check) == int:
+            came_from = room
+            update_room_func(area.getRoom(room, check))
+            room = update_room_func.__globals__.get('Room')  # Get updated room reference  
+            if room:
+                room.positionDeterminer(came_from.__name__)
+        elif check:
+            player_pos.x = x
+            dx = 1
+
+    #Checks if any other input (mouse click, backspace, etc.) results in room change. If so, update the room to new room and set the initial position with positionDeterminer
+    check = room.inBounds(player_pos.x, player_pos.y)
+    if type(check) == int:
+        came_from = room
+        update_room_func(area.getRoom(room, check))
+        room = update_room_func.__globals__.get('Room')  # Get updated room reference
+        if room:
+            room.positionDeterminer(came_from.__name__)
+    
+    # Update animation state
+    update_movement(dx, dy)
+    
+    return dx, dy
+
 # adds an item to iventory
 def addItem(item):
     if (len(inventory) < MaxInventorySize):
