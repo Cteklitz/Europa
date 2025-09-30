@@ -22,6 +22,19 @@ dt = 0
 area = Area.PipeDungeon
 Room = MainRoom
 
+# Each room file must contain these three functions:
+# 1. Room(screen, screen_res, events) - Contains the loop of what is being drawn for that room, logic to update variables based on input, etc.
+#    Its parameters are passed to it from this file (the main game loop) through Area.py's getPos().
+#
+# 2. inBounds(x, y) - Serves two purposes:
+#       1. When within a room, it returns a bool True or False. This defines the bounding box for where the player can walk.
+#
+#       2. When the given position results in a room change (often a position that collides with a door) it returns an int number code. 
+#       This code corresponds with an index for that room's array of connected rooms within the roomLayout of that room's Area (see Area.py)
+#
+# 3. positionDeterminer(cameFrom) - Only called after a room update. Sets the initial position of player in the new room based on room the player came from.
+#    Isn't always explicitly needed (ie. for screens where you aren't moving the player). In these cases leaving just 'pass' in the body is acceptable.
+
 def updateRoom(room):
     global Room
     Room = room
