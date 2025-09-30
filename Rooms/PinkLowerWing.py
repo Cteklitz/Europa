@@ -149,7 +149,7 @@ def Room(screen, screen_res, events):
                         tooDarkSee.activated_time = pygame.time.get_ticks()
                 if tableRange.collidepoint(player_pos):
                     if level == 1 and power and lowerWingPower or Objects.getPinkPower():
-                        table = True
+                        table = True  # This will now take us to SpotDiffs instead of Lockbox_puzzle
                     else:
                         tooDarkSee.activated_time = pygame.time.get_ticks()
                 if fishtankRange.collidepoint(player_pos):

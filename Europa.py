@@ -17,7 +17,7 @@ import Inventory
 Player.load_sprites()
 from Rooms import ControlRoom, MainRoom, PinkRoom, PinkLowerWing, BookcaseView, OrangeYellow, \
     Safe, PinkUpperWing, TrianglePuzzle, TriangleSolution, BeakerPuzzle, MscopeTable, Microscope, \
-    LockedDoor, Desk, Lockbox_puzzle, PinkPower, BlueRoom, Fishtank_puzzle
+    LockedDoor, Desk, Lockbox_puzzle, PinkPower, BlueRoom, Fishtank_puzzle, SpotDiffs
 import Player
 
 
@@ -42,7 +42,8 @@ room_dict = {
     "Lockbox_puzzle": Lockbox_puzzle,
     "PinkPower": PinkPower,
     "BlueRoom": BlueRoom,
-    "Fishtank_puzzle": Fishtank_puzzle
+    "Fishtank_puzzle": Fishtank_puzzle,
+    "SpotDiffs": SpotDiffs
 }
 
 debug_room = None

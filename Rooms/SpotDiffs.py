@@ -1,10 +1,8 @@
 import pygame
 import Assets
 import Objects
-from shapely.geometry import Point, Polygon
 import Sounds
-import Player
-import Items
+from Rooms import Lockbox_puzzle 
 
 virtual_res = (389,189)
 virtual_screen = pygame.Surface(virtual_res)
@@ -12,106 +10,66 @@ dark_overlay = pygame.Surface(virtual_screen.get_size(), pygame.SRCALPHA)
 
 player_pos = pygame.Vector2(192, 128)
 
+# Load all background variations
 background = pygame.image.load("Assets/spotDiffs.png")
 background2 = pygame.image.load("Assets/spotDiffs2.png")
 background3 = pygame.image.load("Assets/spotDiffs3.png")
 
-found = 0
-collected = False
-exit = False
+# Define the clickable chest region around the chest in the center
+chest_rect = pygame.Rect(166, 110, 60, 35)
+
 chestOpen = False
-played = False
-
-mat = False
-stem = False
-corner = False
-water = False
-light = False
-backgroundDiff = False
-
-matRect = pygame.Rect(263,154,44,17)
-stemRect = pygame.Rect(283,6,14,15)
-cornerRect = pygame.Rect(309,83,12,12)
-waterRect = pygame.Rect(202,87,23,11)
-lightRect = pygame.Rect(353,16,23,20)
-backgroundRect = pygame.Rect(194,0,195,81)
-
-matRect2 = pygame.Rect(74,154,44,17)
-stemRect2 = pygame.Rect(94,6,14,15)
-cornerRect2 = pygame.Rect(121,83,12,12)
-waterRect2 = pygame.Rect(11,87,23,11)
-lightRect2 = pygame.Rect(164,16,23,20)
-backgroundRect2 = pygame.Rect(0,0,197,81)
-
-chairRect1 = pygame.Rect(14,21,76,57)
-chairRect2 = pygame.Rect(110,21,76,57)
-chairRect3 = pygame.Rect(205,21,76,57)
-chairRect4 = pygame.Rect(298,21,76,57)
-
-letterRect = pygame.Rect(180,117,32,6)
+exit = False
 
 def inBounds(x, y):
     global exit
     if exit:
         exit = False
-        return 0
-    return False
+        return 0  # Always return 0 when exiting, to go back to previous room
 
 def positionDeterminer(cameFrom):
     pass
 
 def Room(screen, screen_res, events):
-    global exit, chestOpen, collected, mat, stem, corner, water, light, backgroundDiff, found, played
+    global exit, chestOpen
+    # Make sure cursor is visible since we need to click
+    pygame.mouse.set_visible(True)
+    
     xScale = screen.get_width()/virtual_screen.get_width() 
     yScale = screen.get_height()/virtual_screen.get_height()
+    
+    # Check if lockbox has been opened
+    if Lockbox_puzzle.unlocked:
+        chestOpen = True  # Show the open chest
+    
+    # Handle backspace/escape first to ensure we can always exit
+    for event in events:
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_BACKSPACE or event.key == pygame.K_ESCAPE:
+                exit = True
+                return player_pos, xScale, yScale  # Return immediately when escaping
+
 
     for event in events:
         if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_BACKSPACE:
+            if event.key == pygame.K_BACKSPACE or event.key == pygame.K_ESCAPE:
                 exit = True
         elif event.type == pygame.MOUSEBUTTONDOWN:
-                if event.button == 1:
-                    mouse_x, mouse_y = pygame.mouse.get_pos()
-                    mouse_pos = (mouse_x/xScale, mouse_y/yScale)
-                    if matRect.collidepoint(mouse_pos) or matRect2.collidepoint(mouse_pos):
-                        if not mat:
-                            mat = True
-                            found += 1
-                    elif stemRect.collidepoint(mouse_pos) or stemRect2.collidepoint(mouse_pos):
-                        if not stem:
-                            stem = True
-                            found += 1
-                    elif cornerRect.collidepoint(mouse_pos) or cornerRect2.collidepoint(mouse_pos):
-                        if not corner:
-                            corner = True
-                            found += 1
-                    elif waterRect.collidepoint(mouse_pos) or waterRect2.collidepoint(mouse_pos):
-                        if not water:
-                            water = True
-                            found += 1
-                    elif lightRect.collidepoint(mouse_pos) or lightRect2.collidepoint(mouse_pos):
-                        if not light:
-                            light = True
-                            found += 1
-                    elif backgroundRect.collidepoint(mouse_pos) or backgroundRect2.collidepoint(mouse_pos):
-                        if not chairRect1.collidepoint(mouse_pos) and not chairRect2.collidepoint(mouse_pos) and not chairRect3.collidepoint(mouse_pos) and not chairRect4.collidepoint(mouse_pos):
-                            if not backgroundDiff:
-                                backgroundDiff = True
-                                found += 1
-                    elif letterRect.collidepoint(mouse_pos) and chestOpen and not collected:
-                        if (Player.addItem(Items.letterTile)):
-                            Sounds.letter.play()
-                            collected = True
-                    if found == 6:
-                        chestOpen = True
-                        if not played:
-                            played = True
-                            Sounds.draweropen.play()
+            if event.button == 1:
+                # Get mouse position and scale it to virtual resolution
+                mouse_x, mouse_y = pygame.mouse.get_pos()
+                scaled_x = mouse_x / xScale
+                scaled_y = mouse_y / yScale
+                
+                # Check if click is in chest region
+                if chest_rect.collidepoint(scaled_x, scaled_y) and not Lockbox_puzzle.unlocked:
+                    Sounds.draweropen.play()
+                    chestOpen = True
+                    exit = True 
 
-    virtual_screen.fill((195, 195, 195))
-
-    Assets.punch_light_hole(virtual_screen, dark_overlay, (virtual_screen.get_width()/2, virtual_screen.get_height()/2), 500, (100, 0, 100))
-
+    virtual_screen.fill((0, 0, 0))  # Black background
+    
+    # Show the appropriate background based on chest state
     if not chestOpen:
         virtual_screen.blit(background, (0,0))
     else:
@@ -119,29 +77,12 @@ def Room(screen, screen_res, events):
             virtual_screen.blit(background2, (0,0))
         else:
             virtual_screen.blit(background3, (0,0))
-
-    if mat:
-        pygame.draw.rect(virtual_screen, "red", matRect, 3)
-        pygame.draw.rect(virtual_screen, "red", matRect2, 3)
-    if stem:
-        pygame.draw.rect(virtual_screen, "red", stemRect, 3)
-        pygame.draw.rect(virtual_screen, "red", stemRect2, 3)
-    if corner:
-        pygame.draw.rect(virtual_screen, "red", cornerRect, 3)
-        pygame.draw.rect(virtual_screen, "red", cornerRect2, 3)
-    if water:
-        pygame.draw.rect(virtual_screen, "red", waterRect, 3)
-        pygame.draw.rect(virtual_screen, "red", waterRect2, 3)
-    if light:
-        pygame.draw.rect(virtual_screen, "red", lightRect, 3)
-        pygame.draw.rect(virtual_screen, "red", lightRect2, 3)
-    if backgroundDiff:
-        pygame.draw.rect(virtual_screen, "red", backgroundRect, 3)
-        pygame.draw.rect(virtual_screen, "red", backgroundRect2, 3)
-    if collected:
-        pygame.draw.rect(virtual_screen, "black", letterRect)
-
+    
+    # Scale and display
     scaled = pygame.transform.scale(virtual_screen, screen_res)
     screen.blit(scaled, (0, 0))
 
-    return player_pos, xScale, yScale
+
+    if chestOpen and not Lockbox_puzzle.unlocked:
+        return player_pos, xScale, yScale, 1
+    return player_pos, xScale, yScale, 0

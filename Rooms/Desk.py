@@ -17,6 +17,7 @@ desk = pygame.image.load("Assets/DeskZoom.png")
 blueFound = False
 exit = False
 
+
 petriRect = pygame.Rect(1241,505,460,233)
 
 def inBounds(x, y):
@@ -31,6 +32,7 @@ def positionDeterminer(cameFrom):
 
 def Room(screen, screen_res, events):
     global exit, blueFound
+    pygame.mouse.set_visible(True)  # Show cursor in desk view
     xScale = screen.get_width()/virtual_screen.get_width() 
     yScale = screen.get_height()/virtual_screen.get_height()
 

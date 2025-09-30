@@ -73,7 +73,7 @@ def Room(screen, screen_res, events):
     # Move algae region horizontally by a percent of the screen width
     horizontal_shift = int(WINDOW_RES[0] * .02) 
     vertical_shift = int(WINDOW_RES[1] * 0.014) 
-    glass_y = glass_margin_y + vertical_shift  # Move down
+    glass_y = glass_margin_y + vertical_shift  # Moves algae down
     
     glass_x = glass_margin_x - horizontal_shift
     GLASS_RECT = pygame.Rect(glass_x, glass_y, glass_width, glass_height)
@@ -84,17 +84,25 @@ def Room(screen, screen_res, events):
     box_y = (WINDOW_RES[1] - box_height) // 2
     BOX_RECT = pygame.Rect(box_x, box_y, box_width, box_height)
 
-    # When drawing algae, update the loop to use the new GLASS_RECT position
-    for y in range(GLASS_RECT.top, GLASS_RECT.bottom):
-        for x in range(GLASS_RECT.left, GLASS_RECT.right):
-            if random.random() < 0.10:
-                shade = random.randint(-24, 24)
-                r = max(0, min(255, ALGAE_COLOR[0] + shade))
-                g = max(0, min(255, ALGAE_COLOR[1] + shade))
-                b = max(0, min(255, ALGAE_COLOR[2] + shade))
-                algae.set_at((x, y), (r, g, b, 245))
-            else:
-                algae.set_at((x, y), (*ALGAE_COLOR, 245))
+    # Fill the entire glass area with base algae color first
+    # Create a fully transparent base surface
+    algae = pygame.Surface(WINDOW_RES, pygame.SRCALPHA)
+    algae.fill((0, 0, 0, 0))  # Start completely transparent
+    
+    # Create the algae surface just for the glass area with solid color
+    base_algae = pygame.Surface((GLASS_RECT.width, GLASS_RECT.height), pygame.SRCALPHA)
+    base_algae.fill((*ALGAE_COLOR, 252))
+    
+    # Only draw algae in the glass area
+    algae.blit(base_algae, (GLASS_RECT.left, GLASS_RECT.top))
+
+    # Added 500 slightly darker dots for texture
+    DARK_ALGAE = (60, 100, 40)  # Slightly darker green
+    for _ in range(500):
+        x = GLASS_RECT.left + random.randint(0, GLASS_RECT.width - 4)
+        y = GLASS_RECT.top + random.randint(0, GLASS_RECT.height - 4)
+        # Draw a 4x4 pixel dark spot
+        pygame.draw.rect(algae, (*DARK_ALGAE, 252), pygame.Rect(x, y, 4, 4))
 
     for y in range(algae.get_height()):
         for x in range(algae.get_width()):
@@ -110,7 +118,6 @@ def Room(screen, screen_res, events):
             offset_y = int(dist * math.sin(angle))
             jitter_radius = random.randint(int(radius * 0.4), int(radius * 0.7))
             erase_circle(algae, (pos[0] + offset_x, pos[1] + offset_y), jitter_radius)
-        # Just return True, or remove the return value if not needed
         return True
 
     def cleared_fraction_in_box():
@@ -274,6 +281,24 @@ def Room(screen, screen_res, events):
         virtual.blit(bg_img, (0, 0))
         virtual.blit(algae, (0, 0))
 
+        # Only update and draw particles when actively cleaning (dragging)
+        if dragging:
+            # Update particles
+            for particle in particles[:]: 
+                particle["x"] += particle["dx"]
+                particle["y"] += particle["dy"]
+                particle["dy"] += 0.1  # Gravity
+                particle["life"] -= 1
+                if particle["life"] <= 0:
+                    particles.remove(particle)
+
+            # Draw particles
+            for particle in particles:
+                alpha = min(255, particle["life"] * 20)
+                color = (*ALGAE_COLOR, alpha)
+                pos = (int(particle["x"]), int(particle["y"]))
+                pygame.draw.circle(virtual, color, pos, 4) 
+
        
         scaled = pygame.transform.scale(virtual, WINDOW_RES)
         screen_width, screen_height = screen.get_size()
@@ -295,7 +320,6 @@ def Room(screen, screen_res, events):
     return player_pos, xSpeedScale, ySpeedScale
 
 def positionDeterminer(arg):
-    # Your logic here
     pass
 
 def erase_circle(surface, pos, radius):

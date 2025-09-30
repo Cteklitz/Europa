@@ -131,8 +131,12 @@ def Room(screen, screen_res, events):
                             digits[i] = 9
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
-                    running = False
-                    exit = True
+                    if unlocked:
+                        running = False
+                        exit = True
+                    else: 
+                        running = False
+                        exit = True
                 elif event.key == pygame.K_RIGHT or event.key == pygame.K_d:
                     selected = (selected + 1) % 4
                 elif event.key == pygame.K_LEFT or event.key == pygame.K_a:
@@ -150,10 +154,12 @@ def Room(screen, screen_res, events):
                     exit = True
 
         
+        # Check if code is correct
         if digits == CORRECT_CODE:
             unlocked = True
             chestOpen = True
-            collected = True  # <-- Set collected to True when lockbox is opened
+            collected = True
+           
 
     xScale = VIRTUAL_RES[0] / WINDOW_RES[0]
     yScale = VIRTUAL_RES[1] / WINDOW_RES[1]

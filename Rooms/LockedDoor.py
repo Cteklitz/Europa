@@ -57,6 +57,7 @@ def positionDeterminer(cameFrom):
 
 def Room(screen, screen_res, events):
     global exit, solved, active, cutscene, doorY, enter, played
+    pygame.mouse.set_visible(True)  # Show cursor in door view
     xScale = screen.get_width()/virtual_screen.get_width() 
     yScale = screen.get_height()/virtual_screen.get_height()
 
