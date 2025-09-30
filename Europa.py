@@ -69,9 +69,25 @@ def updateRoom(room):
     global Room
     Room = room
 
+# Import debugging module
+from Debugging.debug_system import debug_system
+
 while running:
     events = pygame.event.get()
-    if Inventory.open:
+    
+    # Handle debug teleportation
+    if hasattr(debug_system, 'teleport_target') and debug_system.teleport_target:
+        target_room = debug_system.teleport_target
+        debug_system.teleport_target = None  # Reset the target
+        
+        # Update to the target room
+        if target_room in room_dict:
+            updateRoom(room_dict[target_room])
+            Room.positionDeterminer("Debug")
+    
+    if debug_system.panel_open:
+        debug_system.draw_panel(screen, screen_res, events)
+    elif Inventory.open:
         Inventory.Inventory(screen, screen_res, events)
     else:
         player_pos, xSpeedScale, ySpeedScale = area.getPos(screen, screen_res, events, Room)
@@ -98,6 +114,9 @@ while running:
                     Inventory.open = True
                     for item in Player.inventory:
                         print(item)
+                # Debug menu
+                if event.key == pygame.K_h:
+                    debug_system.toggle_panel()
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 1:
                     check = Room.inBounds(player_pos.x, player_pos.y)

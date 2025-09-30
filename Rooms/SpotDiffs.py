@@ -42,18 +42,11 @@ def Room(screen, screen_res, events):
     if Lockbox_puzzle.unlocked:
         chestOpen = True  # Show the open chest
     
-    # Handle backspace/escape first to ensure we can always exit
     for event in events:
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_BACKSPACE or event.key == pygame.K_ESCAPE:
                 exit = True
-                return player_pos, xScale, yScale  # Return immediately when escaping
-
-
-    for event in events:
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_BACKSPACE or event.key == pygame.K_ESCAPE:
-                exit = True
+                return player_pos, xScale, yScale, 0  # Return immediately with no transition
         elif event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == 1:
                 # Get mouse position and scale it to virtual resolution
@@ -65,7 +58,7 @@ def Room(screen, screen_res, events):
                 if chest_rect.collidepoint(scaled_x, scaled_y) and not Lockbox_puzzle.unlocked:
                     Sounds.draweropen.play()
                     chestOpen = True
-                    exit = True 
+                    return player_pos, xScale, yScale, 1  # Return transition to lockbox puzzle 
 
     virtual_screen.fill((0, 0, 0))  # Black background
     

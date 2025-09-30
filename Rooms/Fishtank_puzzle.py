@@ -16,22 +16,20 @@ player_pos = pygame.Vector2(192, 128)
 exit = False
 print("Loaded background image:", bg_img.get_size())
 
+# Pre-load squeegee image at module level to avoid loading delay
+try:
+    squeegee_img = pygame.image.load("Assets/squeegee_fishtank_puzzle.png").convert_alpha()
+    squeegee_img = pygame.transform.scale(squeegee_img, (45, 45))
+except Exception as e:
+    print("Error loading squeegee image:", e)
+    squeegee_img = pygame.Surface((48, 24), pygame.SRCALPHA)
+    pygame.draw.rect(squeegee_img, (200, 200, 200), (0, 6, 48, 12))
+    pygame.draw.rect(squeegee_img, (100, 100, 100), (0, 0, 48, 6))
+
 def Room(screen, screen_res, events):
-    global player_pos, exit, exit
+    global player_pos, exit
     print("Fishtank_puzzle Room started")
     pygame.mouse.set_visible(False)
-
-    shovel = pygame.Surface((32, 32), pygame.SRCALPHA)
-
-    # Load squeegee image
-    try:
-        squeegee_img = pygame.image.load("Assets/squeegee_fishtank_puzzle.png").convert_alpha()
-        squeegee_img = pygame.transform.scale(squeegee_img, (45, 45))  # <-- Smaller size
-    except Exception as e:
-        print("Error loading squeegee image:", e)
-        squeegee_img = pygame.Surface((48, 24), pygame.SRCALPHA)       # <-- Bigger size
-        pygame.draw.rect(squeegee_img, (200, 200, 200), (0, 6, 48, 12))
-        pygame.draw.rect(squeegee_img, (100, 100, 100), (0, 0, 48, 6))
 
     DIG_RADIUS = 7
     DIG_OFFSET_Y = -5
@@ -96,18 +94,13 @@ def Room(screen, screen_res, events):
     # Only draw algae in the glass area
     algae.blit(base_algae, (GLASS_RECT.left, GLASS_RECT.top))
 
-    # Added 500 slightly darker dots for texture
+    # Reduced texture dots for better performance (200 instead of 500)
     DARK_ALGAE = (60, 100, 40)  # Slightly darker green
-    for _ in range(500):
+    for _ in range(200):  # Reduced from 500 to 200
         x = GLASS_RECT.left + random.randint(0, GLASS_RECT.width - 4)
         y = GLASS_RECT.top + random.randint(0, GLASS_RECT.height - 4)
         # Draw a 4x4 pixel dark spot
         pygame.draw.rect(algae, (*DARK_ALGAE, 252), pygame.Rect(x, y, 4, 4))
-
-    for y in range(algae.get_height()):
-        for x in range(algae.get_width()):
-            if algae.get_at((x, y))[:3] == (255, 0, 255):
-                algae.set_at((x, y), (*ALGAE_COLOR, 245))
 
     def clean_at(pos, radius=DIG_RADIUS):
         erase_circle(algae, pos, radius)
@@ -142,7 +135,7 @@ def Room(screen, screen_res, events):
             })
 
     floating_particles = []
-    for _ in range(30):
+    for _ in range(15):  # Reduced from 30 to 15 for better performance
         floating_particles.append({
             "x": random.randint(GLASS_RECT.left, GLASS_RECT.right),
             "y": random.randint(GLASS_RECT.top, GLASS_RECT.bottom),
@@ -187,16 +180,7 @@ def Room(screen, screen_res, events):
     def get_angle(x1, y1, x2, y2):
         return math.degrees(math.atan2(y2 - y1, x2 - x1))
 
-    def blur_surface(surface, passes=2):
-        arr = pygame.surfarray.pixels3d(surface)
-        for _ in range(passes):
-            arr[:] = (
-                arr +
-                pygame.surfarray.pixels3d(pygame.transform.smoothscale(surface, (surface.get_width()//2, surface.get_height()//2)).convert_alpha()).repeat(2, axis=0).repeat(2, axis=1)[:surface.get_width(), :surface.get_height()]
-            ) // 2
-        del arr
-
-    blur_surface(algae, passes=2)
+    # Removed expensive blur operation for better performance
 
     while running:
         dt = clock.tick(60)
@@ -251,22 +235,16 @@ def Room(screen, screen_res, events):
                                 spawn_sand_particles((x, y), PARTICLE_COUNT)
                 else:
                     if GLASS_RECT.collidepoint(vmx, vmy + DIG_OFFSET_Y):
-                        before = algae.copy()
                         squeegee_clean((vmx, vmy + DIG_OFFSET_Y), None, BRUSH_RADIUS)
-                        mask_before = pygame.mask.from_surface(before)
-                        mask_after = pygame.mask.from_surface(algae)
-                        if mask_before.count() != mask_after.count():
-                            if random.random() < PARTICLE_SPAWN_CHANCE:
-                                spawn_sand_particles((vmx, vmy + DIG_OFFSET_Y), PARTICLE_COUNT)
+                        # Simplified particle spawning without expensive mask comparison
+                        if random.random() < PARTICLE_SPAWN_CHANCE:
+                            spawn_sand_particles((vmx, vmy + DIG_OFFSET_Y), PARTICLE_COUNT)
             else:
                 if GLASS_RECT.collidepoint(vmx, vmy + DIG_OFFSET_Y):
-                    before = algae.copy()
                     squeegee_clean((vmx, vmy + DIG_OFFSET_Y), None, BRUSH_RADIUS)
-                    mask_before = pygame.mask.from_surface(before)
-                    mask_after = pygame.mask.from_surface(algae)
-                    if mask_before.count() != mask_after.count():
-                        if random.random() < PARTICLE_SPAWN_CHANCE:
-                            spawn_sand_particles((vmx, vmy + DIG_OFFSET_Y), BRUSH_RADIUS)
+                    # Simplified particle spawning without expensive mask comparison
+                    if random.random() < PARTICLE_SPAWN_CHANCE:
+                        spawn_sand_particles((vmx, vmy + DIG_OFFSET_Y), BRUSH_RADIUS)
             prev_vmx, prev_vmy = vmx, vmy
         else:
             prev_vmx, prev_vmy = None, None
@@ -312,7 +290,6 @@ def Room(screen, screen_res, events):
         rect = rotated_squeegee.get_rect(center=(mx, my))
         screen.blit(rotated_squeegee, rect.topleft)
 
-        pygame.display.flip()
         pygame.display.flip()
 
     xSpeedScale = VIRTUAL_RES[0] / WINDOW_RES[0]
