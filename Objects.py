@@ -152,6 +152,9 @@ class Code():
         self.state = 0
         self.rect = pygame.Rect(x,y,21,41)
 
+# Same getter functions for getting information about rooms the player isn't currently in that are in Area.py. 
+# Rooms can't call the functions directly in Area.py due to circular import, so passing them to here is a workaround. 
+# Call these functions when in a room file, not the ones in Area.py.
 def getPipeDungeonInfo():
     return Area.getPipeDungeonInfo()
 
