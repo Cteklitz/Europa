@@ -1,7 +1,8 @@
 # Example file showing a circle moving on screen
 import pygame
 import Assets
-
+from LightSource import LightSource
+from LightingUtils import apply_lighting
 pipePuzzle = [
     [2,1,2,6,6],
     [6,4,1,2,5],
@@ -71,11 +72,12 @@ solution = {
 
 solved = False
 
+
 def checkSolution(pipePuzzle, solution):
     global solved, activeSquares, power
-    for (row, col), correct_value in solution.items():
-        if pipePuzzle[row][col] != correct_value:
-            return
+    #for (row, col), correct_value in solution.items():
+        #if pipePuzzle[row][col] != correct_value:
+            #return
     solved = True
     power = True
     activeSquares = [
@@ -213,8 +215,10 @@ def inBounds(x, y):
 
 virtual_res = (352, 384)
 virtual_screen = pygame.Surface(virtual_res)
-dark_overlay = pygame.Surface(virtual_screen.get_size(), pygame.SRCALPHA)
-dark_overlay.fill((0, 0, 0, 50))
+#dark_overlay = pygame.Surface(virtual_screen.get_size(), pygame.SRCALPHA)
+#dark_overlay.fill((0, 0, 0, 50))
+
+lights = [LightSource(160, 288, 100, (255, 200, 100), 220)]
 
 player_pos = pygame.Vector2(175, 340)
 
@@ -265,7 +269,6 @@ def Room(screen, screen_res, events):
     pygame.draw.line(virtual_screen, (0,0,0), (288, 0), (288, 256), 1)
     draw_map(virtual_screen, Assets.tiles, activeSquares, 96, 32)
     draw_map(virtual_screen, Assets.pipes, pipePuzzle, 96, 32)
-
     valve.update()
     virtual_screen.blit(Assets.pipes[7], (160,0))
     for y in range(192, 384, 32):
@@ -285,9 +288,14 @@ def Room(screen, screen_res, events):
         pygame.draw.circle(virtual_screen, "red", player_pos, 16)
         virtual_screen.blit(valve.image, valve.rect)
 
-    virtual_screen.blit(dark_overlay, (0, 0))
 
+    # LightSource.add_ambient_light(virtual_screen)
+    apply_lighting(virtual_screen, lights) 
+    
     scaled = pygame.transform.scale(virtual_screen, screen_res)
     screen.blit(scaled, (0, 0))
+
+   
+
 
     return player_pos, screen.get_width()/virtual_screen.get_width(), screen.get_height()/virtual_screen.get_height()

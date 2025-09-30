@@ -9,12 +9,16 @@ os.chdir(script_dir)
 pygame.init()
 pygame.mixer.init()
 
+
 import Area
 from Rooms import MainRoom
 import Player
 
 screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
 screen_res = screen.get_size()
+width, height = screen_res
+
+
 clock = pygame.time.Clock()
 running = True
 dt = 0
@@ -28,6 +32,7 @@ def updateRoom(room):
 while running:
     events = pygame.event.get()
     player_pos, xSpeedScale, ySpeedScale = area.getPos(screen, screen_res, events, Room)
+
     for event in events:
         if event.type == pygame.QUIT:
                 running = False

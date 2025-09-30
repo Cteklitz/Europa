@@ -3,6 +3,8 @@ import Assets
 import Objects
 from shapely.geometry import Point, Polygon
 import Sounds
+from LightSource import LightSource
+from LightingUtils import apply_lighting
 
 virtual_res = (324, 219)
 virtual_screen = pygame.Surface(virtual_res)
@@ -41,7 +43,10 @@ lights = [
     Objects.SquishedLight(94, 111, 1),
     Objects.SquishedLight(158, 111, 1)
 ]
-
+wall_lights = [
+    LightSource(100, 50, radius=200, color=(255, 200, 100), strength=220),
+    LightSource(220, 50, radius=200, color=(255, 200, 100), strength=220)
+]
 background = pygame.image.load("Assets/PinkUpperWing.png")
 door = pygame.image.load("Assets/pinkupperwingdoor.png")
 powerdoor = pygame.image.load("Assets/powerdoor.png")
@@ -201,17 +206,20 @@ def Room(screen, screen_res, events):
     if blue:
         virtual_screen.blit(smolBlue, (157, 124))
 
-    virtual_screen.blit(dark_overlay, (0, 0))
-    virtual_screen2.blit(dark_overlay2, (0, 0))
+    # virtual_screen.blit(dark_overlay, (0, 0))
+    # virtual_screen2.blit(dark_overlay2, (0, 0))
     
     if not lit and not Objects.getPinkPower():
         tooDarkRead.update()
         tooDarkSee.update()
+    
+    apply_lighting(virtual_screen, wall_lights, darkness = 220, ambient_color = (40, 30, 30), ambient_strength = 20) 
 
     if not whiteboard:
         scaled = pygame.transform.scale(virtual_screen, screen_res)
     else:
         scaled = pygame.transform.scale(virtual_screen2, screen_res)
+    
     screen.blit(scaled, (0, 0))
 
     return player_pos, xScale, yScale
