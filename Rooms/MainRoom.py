@@ -6,6 +6,7 @@ import Sounds
 import Items
 
 virtual_res = (480, 480)
+
 virtual_screen = pygame.Surface(virtual_res)
 dark_overlay = pygame.Surface(virtual_screen.get_size(), pygame.SRCALPHA)
 
@@ -144,6 +145,9 @@ def Room(screen, screen_res, events):
         pygame.draw.circle(virtual_screen, "red", player_pos, 16)
 
     virtual_screen.blit(dark_overlay, (0, 0))
+
+    #roomRatio = virtual_res[0] / virtual_res[1]
+    #screen_res = (screen_res[1] * roomRatio, screen_res[1])
 
     scaled = pygame.transform.scale(virtual_screen, screen_res)
     screen.blit(scaled, (0, 0))
