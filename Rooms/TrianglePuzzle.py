@@ -23,7 +23,7 @@ timer2 = Objects.timer(10, False)
 
 trianglePuzzle = {
     1: 11,
-    2: 10,
+    2: 2,
     3: 4,
     4: 3,
     5: 7,
