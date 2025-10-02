@@ -7,7 +7,8 @@ import random
 import Player
 import Items
 
-virtual_res = (750,500)
+#virtual_res = (750,500)
+virtual_res = (750/4,500/4)
 virtual_screen = pygame.Surface(virtual_res)
 dark_overlay = pygame.Surface(virtual_screen.get_size(), pygame.SRCALPHA)
 
@@ -23,7 +24,7 @@ timer2 = Objects.timer(10, False)
 
 trianglePuzzle = {
     1: 11,
-    2: 2,
+    2: 10,
     3: 4,
     4: 3,
     5: 7,
@@ -58,7 +59,7 @@ giveupRect = pygame.Rect(190, 410, giveup.get_width(), giveup.get_height())
 
 gridPos = {
     1: (80,100),
-    2: (150,98),
+    2: (150/4,98/4),
     3: (220,100),
     4: (290,98),
     5: (360,100),
@@ -277,6 +278,10 @@ def Room(screen, screen_res, events):
                 pygame.draw.line(virtual_screen, "black", (270, 450), (320, 430), 3)
                 pygame.draw.line(virtual_screen, "black", (270, 450), (320, 470), 3)
                 pygame.draw.line(virtual_screen, "black", (295, 440), (295, 460), 3)
+
+
+    roomRatio = virtual_res[0] / virtual_res[1]
+    screen_res = (screen_res[1] * roomRatio, screen_res[1])           
 
     scaled = pygame.transform.scale(virtual_screen, screen_res)
     screen.blit(scaled, (0, 0))
