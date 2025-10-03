@@ -21,7 +21,7 @@ def getSpotDiffsSolved():
     return SpotDiffs.chestOpen
 
 def getColors():
-    return MscopeTable.redFound, OrangeYellow.yellowFound, Desk.blueFound
+    return MscopeTable.redPlaced, MscopeTable.yellowPlaced, MscopeTable.bluePlaced
 
 def getSelected():
     return MscopeTable.selected
