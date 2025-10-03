@@ -4,28 +4,9 @@ import Objects
 from shapely.geometry import Point, Polygon
 import Sounds
 from LightSource import LightSource
-from LightingUtils import apply_lighting
+from LightFalloff import LightFalloff
+from LightingUtils import apply_lighting, apply_falloff
 
-
-def draw_light_falloff(surface, light_pos, screen_size, radius=300, intensity=180):
-    overlay = pygame.Surface(screen_size, pygame.SRCALPHA)  
-    overlay.fill((0, 0, 0, 0))  # fully transparent background
-
-    gradient = pygame.Surface((radius*2, radius*2), pygame.SRCALPHA)
-
-    for y in range(radius*2):
-        for x in range(radius*2):
-            dx = x - radius
-            dy = y - radius
-            dist = (dx**2 + dy**2) ** 0.5
-            if dist < radius:
-                alpha = int(intensity * (dist / radius))
-                gradient.set_at((x, y), (0, 0, 0, alpha))
-            else:
-                gradient.set_at((x, y), (0, 0, 0, intensity))
-
-    overlay.blit(gradient, (light_pos[0] - radius, light_pos[1] - radius), special_flags=pygame.BLEND_RGBA_ADD)
-    surface.blit(overlay, (0, 0))
 
 virtual_res = (324, 219)
 virtual_screen = pygame.Surface(virtual_res)
@@ -38,7 +19,6 @@ dark_overlay2 = pygame.Surface(virtual_screen2.get_size(), pygame.SRCALPHA)
 player_pos = pygame.Vector2(239, 180)
 
 bounds = Polygon([(39, 102), (294, 102), (305, 174), (25, 174)])
-shadows = pygame.Surface(virtual_screen.get_size(), pygame.SRCALPHA)
 
 trianglePuzzle1 = False
 trianglePuzzle2 = False
@@ -69,6 +49,8 @@ light_pos = (270, 250)
 wall_lights = [
     LightSource(light_pos[0], light_pos[1], radius=150, color=(255, 200, 100), strength=220)
 ]
+falloff = [LightFalloff(virtual_screen.get_size())]
+
 background = pygame.image.load("Assets/PinkUpperWing.png")
 door = pygame.image.load("Assets/pinkupperwingdoor.png")
 powerdoor = pygame.image.load("Assets/powerdoor.png")
@@ -132,37 +114,6 @@ def positionDeterminer(cameFrom):
         player_pos = pygame.Vector2(exitWalk.centerx + 2, exitWalk.centery - 5)
 
 
-def draw_shadow(surface, image, pos, light_pos, shadow_alpha=150, blur_strength=3):
-    shadow = pygame.Surface(image.get_size(), pygame.SRCALPHA)
-    shadow.fill((0, 0, 0, 0))
-    shadow.blit(image, (0, 0))
-
-    shadow.fill((0, 0, 0, shadow_alpha), special_flags=pygame.BLEND_RGBA_MULT)
-
-    mask = pygame.Surface(image.get_size(), pygame.SRCALPHA)
-    for y in range(image.get_height()):
-        alpha = int(shadow_alpha * (1 - y / image.get_height()))
-        pygame.draw.line(mask, (0, 0, 0, alpha), (0, y), (image.get_width(), y))
-    shadow.blit(mask, (0, 0), special_flags=pygame.BLEND_RGBA_MULT)
-
-    direction = pygame.Vector2(pos) - pygame.Vector2(light_pos)
-    if direction.length() != 0:
-        offset_scale = 30 / (direction.length() + 1)
-        direction.scale_to_length(offset_scale)
-    direction = -direction
-
-    shadow_pos = (
-        pos[0] + direction.x - 1,
-        pos[1] + direction.y - 1
-    )
-
-    surface.blit(shadow, shadow_pos)
-
-    if blur_strength > 0:
-        small = pygame.transform.smoothscale(shadow, (image.get_width() // blur_strength, image.get_height() // blur_strength))
-        blurred = pygame.transform.smoothscale(small, image.get_size())
-        surface.blit(blurred, shadow_pos)
-
 
 def Room(screen, screen_res, events):
     global trianglePuzzle1, trianglePuzzle2, whiteboard, beaker, table, tableboundRect, tooDarkRead
@@ -202,13 +153,7 @@ def Room(screen, screen_res, events):
     dark_overlay.fill((0, 0, 0, 150))
     dark_overlay2.fill((0, 0, 0, 150))
 
-    # Table shadow
-    draw_shadow(shadows, mscopetableScale, (105, 100), light_pos, shadow_alpha=200)
 
-    # Beaker case shadow
-    draw_shadow(shadows, beakercase, (10, 70), light_pos, shadow_alpha=200)
-
-    virtual_screen.blit(shadows, (0, 0))
 
     if lit:
         Assets.punch_light_hole(virtual_screen, dark_overlay, (virtual_screen.get_width()/2, virtual_screen.get_height()/2), 500, (100, 0, 100))
@@ -268,19 +213,17 @@ def Room(screen, screen_res, events):
     if blue:
         virtual_screen.blit(smolBlue, (157, 124))
 
-    # virtual_screen.blit(dark_overlay, (0, 0))
-    # virtual_screen2.blit(dark_overlay2, (0, 0))
     
     if not lit and not Objects.getPinkPower():
         tooDarkRead.update()
         tooDarkSee.update()
-    shadows.fill((0, 0, 0, 100))
    
-    
-
-    apply_lighting(virtual_screen, wall_lights, darkness=100, ambient_color=(30, 30, 30), ambient_strength=30)
-
-    draw_light_falloff(virtual_screen, light_pos, screen.get_size(), radius=300, intensity=180)
+    if not lit:
+        virtual_screen.blit(dark_overlay, (0, 0))
+        virtual_screen2.blit(dark_overlay2, (0, 0))
+    else:
+        apply_lighting(virtual_screen, wall_lights, darkness=100, ambient_color=(30, 30, 30), ambient_strength=30)
+        apply_falloff(falloff, virtual_screen, light_pos)
 
     if not whiteboard:
         scaled = pygame.transform.scale(virtual_screen, screen_res)

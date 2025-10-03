@@ -75,9 +75,9 @@ solved = False
 
 def checkSolution(pipePuzzle, solution):
     global solved, activeSquares, power
-    #for (row, col), correct_value in solution.items():
-        #if pipePuzzle[row][col] != correct_value:
-            #return
+    for (row, col), correct_value in solution.items():
+        if pipePuzzle[row][col] != correct_value:
+            return
     solved = True
     power = True
     activeSquares = [
@@ -218,7 +218,7 @@ virtual_screen = pygame.Surface(virtual_res)
 #dark_overlay = pygame.Surface(virtual_screen.get_size(), pygame.SRCALPHA)
 #dark_overlay.fill((0, 0, 0, 50))
 
-lights = [LightSource(160, 288, 100, (255, 200, 100), 220)]
+lights = [LightSource(160, 288, 200, (255, 200, 100), 220)]
 
 player_pos = pygame.Vector2(175, 340)
 

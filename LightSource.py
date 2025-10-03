@@ -1,6 +1,5 @@
 import pygame
 import math
-import random
 class LightSource(pygame.sprite.Sprite):
     def __init__(self, x, y, radius = 120, color = (255, 200, 150), strength = 200, shape = "circle", angle = 90, spread = 90):
         super().__init__()
@@ -15,11 +14,12 @@ class LightSource(pygame.sprite.Sprite):
         self.spread = spread    # for cones
         self.light_surface = self.create_light_surface()
 
-
+    # Returns light surface
     def create_light_surface(self):
         light_surface = pygame.Surface((self.radius * 2, self.radius * 2), pygame.SRCALPHA)
         r, g, b = self.color
         if self.shape == "circle":
+            # Draws cocentric circles with decreasing alpha values to represent fading light
             for rad in range(self.radius, 0, -1):
                 falloff = (rad / self.radius) ** 1.8
                 alpha = int(self.strength * (1 - falloff))
@@ -60,7 +60,7 @@ class LightSource(pygame.sprite.Sprite):
             light_surface.blit(fade_mask, (0, 0), special_flags=pygame.BLEND_RGBA_ADD)
         return light_surface
 
-
+    # Draws light onto screen by substracting from dark surface and light showing throuhg
     def draw(self, surface):
         rect = self.light_surface.get_rect(center = (self.x, self.y))
         surface.blit(self.light_surface, rect, special_flags = pygame.BLEND_RGBA_SUB)
