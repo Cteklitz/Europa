@@ -4,6 +4,8 @@ import Objects
 from shapely.geometry import Point, Polygon
 import Sounds
 import random
+import Player
+import Items
 
 virtual_res = (275,216)
 virtual_screen = pygame.Surface(virtual_res)
@@ -28,6 +30,8 @@ timer2 = Objects.timer(0.25, False)
 
 doorY = 0
 doorRect = pygame.Rect(0,0,openDoor.get_width(),openDoor.get_height())
+
+letterCount = 0
 
 letters = [
     Objects.Code(66, 50),
@@ -56,7 +60,7 @@ def positionDeterminer(cameFrom):
     pass
 
 def Room(screen, screen_res, events):
-    global exit, solved, active, cutscene, doorY, enter, played
+    global exit, solved, active, cutscene, doorY, enter, played, letterCount
     xScale = screen.get_width()/virtual_screen.get_width() 
     yScale = screen.get_height()/virtual_screen.get_height()
 
@@ -64,7 +68,7 @@ def Room(screen, screen_res, events):
     _, lowerWingPower = Objects.getPinkWingInfo()
     lit = lowerWingPower and level == 1 and power
 
-    letterCount = Objects.getLetterCount()
+    #letterCount = Objects.getLetterCount()
 
     if letterCount == 4 and not solved:
         active = True
@@ -78,12 +82,17 @@ def Room(screen, screen_res, events):
                 mouse_x, mouse_y = pygame.mouse.get_pos()
                 mouse_pos = (mouse_x/xScale, mouse_y/yScale)
                 for letter in letters:
-                    if letter.rect.collidepoint(mouse_pos) and active:
+                    if letter.rect.collidepoint(mouse_pos) and active: # increment letter value if all tiles are placed
                         Sounds.combo.play()
                         if letter.state == 25:
                             letter.state = 0
                         else:
                             letter.state += 1
+                    elif letter.rect.collidepoint(mouse_pos) and not active: # place letter tile from inv if not all are placed
+                        if (Player.checkItem(Items.letterTile)):
+                            Player.removeItem(Items.letterTile)
+                            Sounds.combo.play()
+                            letterCount += 1              
 
                 if letters[0].state == 12 and letters[1].state == 8 and letters[2].state == 13 and letters[3].state == 4:
                     solved  = True
