@@ -120,6 +120,8 @@ tooDarkSee = pygame.image.load("Assets/TooDarkSee.png")
 letterTiles = load_tileset("Assets/letters.png", 21, 41)
 numberTiles = load_tileset("Assets/numbers.png", 21, 41)
 
+useButton = pygame.image.load("Assets/useButton.png")
+
 ### ITEMS
 pinkKeycard = pygame.image.load("Assets/pink_keycard.png")
 pinkKeycardGround = pygame.image.load("Assets/pink_keycard_ground.png")

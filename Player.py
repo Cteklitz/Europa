@@ -51,6 +51,7 @@ def removeItem(_item):
         
 # Consumes the item at the input index in the player inventory. Will activate any global effects here
 def consumeItem(index):
+    global health
     if index in range(len(inventory)):
         item = inventory[index]
 
