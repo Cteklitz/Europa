@@ -1,7 +1,7 @@
 # To use in room: define light_pos variable with value tuple of desired light position (x , y)
 # create list of LightSource(light_pos[0], light_pos[1]) objects. Radius, color, strength can be changed if desired.
 # create list of LightFalloff(screen_size) objects in room. radius and darkness can be changed if desired.
-# In loop, use apply_lighting(screen, list_of_lights) apply_falloff(list_of_falloff, screen, light_pos)
+# In loop, use apply_lighting(screen, list_of_lights) apply_falloff(falloff, screen, light_pos) for each light
 
 import pygame
 

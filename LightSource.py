@@ -21,8 +21,8 @@ class LightSource(pygame.sprite.Sprite):
         if self.shape == "circle":
             # Draws cocentric circles with decreasing alpha values to represent fading light
             for rad in range(self.radius, 0, -1):
-                falloff = (rad / self.radius) ** 1.8
-                alpha = int(self.strength * (1 - falloff))
+                falloff = (rad / self.radius) ** 0.3
+                alpha = int(self.strength * (1- falloff))
                 alpha = max(0, min(alpha, 255))
                 if alpha <= 0:
                     continue

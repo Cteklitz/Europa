@@ -14,7 +14,7 @@ import Area
 from Rooms import MainRoom
 import Player
 
-screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
+screen = pygame.display.set_mode((0, 0), pygame.RESIZABLE)
 screen_res = screen.get_size()
 width, height = screen_res
 

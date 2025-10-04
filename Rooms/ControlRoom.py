@@ -1,8 +1,7 @@
 # Example file showing a circle moving on screen
 import pygame
 import Assets
-from LightSource import LightSource
-from LightingUtils import apply_lighting
+
 pipePuzzle = [
     [2,1,2,6,6],
     [6,4,1,2,5],
@@ -215,10 +214,8 @@ def inBounds(x, y):
 
 virtual_res = (352, 384)
 virtual_screen = pygame.Surface(virtual_res)
-#dark_overlay = pygame.Surface(virtual_screen.get_size(), pygame.SRCALPHA)
-#dark_overlay.fill((0, 0, 0, 50))
-
-lights = [LightSource(160, 288, 200, (255, 200, 100), 220)]
+dark_overlay = pygame.Surface(virtual_screen.get_size(), pygame.SRCALPHA)
+dark_overlay.fill((0, 0, 0, 50))
 
 player_pos = pygame.Vector2(175, 340)
 
@@ -288,9 +285,6 @@ def Room(screen, screen_res, events):
         pygame.draw.circle(virtual_screen, "red", player_pos, 16)
         virtual_screen.blit(valve.image, valve.rect)
 
-
-    # LightSource.add_ambient_light(virtual_screen)
-    apply_lighting(virtual_screen, lights) 
     
     scaled = pygame.transform.scale(virtual_screen, screen_res)
     screen.blit(scaled, (0, 0))

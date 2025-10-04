@@ -45,11 +45,13 @@ lights = [
     Objects.SquishedLight(94, 111, 1),
     Objects.SquishedLight(158, 111, 1)
 ]
-light_pos = (270, 250)
+light_pos = (70, 50)
+light_pos2 = (240, 50)
 wall_lights = [
-    LightSource(light_pos[0], light_pos[1], radius=150, color=(255, 200, 100), strength=220)
+    LightSource(light_pos[0], light_pos[1], radius=50, color=(255, 200, 100), strength = 120),
+    LightSource(light_pos2[0], light_pos2[1], radius=50, color=(255, 200, 100), strength = 120)
 ]
-falloff = [LightFalloff(virtual_screen.get_size())]
+falloff = [LightFalloff(virtual_screen.get_size(), darkness = 160)]
 
 background = pygame.image.load("Assets/PinkUpperWing.png")
 door = pygame.image.load("Assets/pinkupperwingdoor.png")
@@ -63,6 +65,8 @@ mscopetable = pygame.image.load("Assets/mscopetable.png")
 smolRed = pygame.image.load("Assets/smolRed.png")
 smolYellow = pygame.image.load("Assets/smolYellow.png")
 smolBlue = pygame.image.load("Assets/smolBlue.png")
+circleLightUnscaled = pygame.image.load("Assets/CircleLight.png")
+circleLight = pygame.transform.scale(circleLightUnscaled, (22, 22))
 tableWidth = mscopetable.get_width()/3
 tableHeight = mscopetable.get_height()/3
 mscopetableScale = pygame.transform.scale(mscopetable, (tableWidth, tableHeight))
@@ -72,6 +76,7 @@ tooDarkReadScale = pygame.transform.scale(Assets.tooDarkRead, (Assets.tooDarkRea
 tooDarkRead = Objects.briefText(virtual_screen, tooDarkReadScale, 10, 180, 3)
 tooDarkSeeScale = pygame.transform.scale(Assets.tooDarkSee, (Assets.tooDarkSee.get_width()/1.25,Assets.tooDarkSee.get_height()/1.25))
 tooDarkSee = Objects.briefText(virtual_screen, tooDarkSeeScale, 15, 180, 3)
+
 
 def inBounds(x, y):
     global trianglePuzzle1, trianglePuzzle2, beaker, tableRect, table, tooDarkRead
@@ -155,12 +160,13 @@ def Room(screen, screen_res, events):
 
 
 
-    if lit:
-        Assets.punch_light_hole(virtual_screen, dark_overlay, (virtual_screen.get_width()/2, virtual_screen.get_height()/2), 500, (100, 0, 100))
-        Assets.punch_light_hole(virtual_screen2, dark_overlay2, (virtual_screen2.get_width()/2, virtual_screen2.get_height()/2), 500, (100, 0, 100))
+    #if lit:
+       # Assets.punch_light_hole(virtual_screen, dark_overlay, (virtual_screen.get_width()/2, virtual_screen.get_height()/2), 500, (100, 0, 100))
+      #  Assets.punch_light_hole(virtual_screen2, dark_overlay2, (virtual_screen2.get_width()/2, virtual_screen2.get_height()/2), 500, (100, 0, 100))
 
     virtual_screen.blit(tripuzzlehints, (43,66))
     virtual_screen.blit(whiteboardimg, (99,43))
+    
     if not Objects.getTriangleSolved():
         virtual_screen.blit(tripuzzle, (232,66))
     else:
@@ -201,6 +207,8 @@ def Room(screen, screen_res, events):
             virtual_screen.blit(beakercase2, (10, 70))
         else:
             virtual_screen.blit(beakercase, (10, 70))
+    virtual_screen.blit(circleLight, circleLight.get_rect(center=light_pos))
+    virtual_screen.blit(circleLight, circleLight.get_rect(center=light_pos2))
 
     virtual_screen2.blit(whiteboardzoom, (20,20))
 
@@ -222,8 +230,9 @@ def Room(screen, screen_res, events):
         virtual_screen.blit(dark_overlay, (0, 0))
         virtual_screen2.blit(dark_overlay2, (0, 0))
     else:
-        apply_lighting(virtual_screen, wall_lights, darkness=100, ambient_color=(30, 30, 30), ambient_strength=30)
+        apply_lighting(virtual_screen, wall_lights, darkness=20, ambient_color=(30, 30, 30), ambient_strength=80)
         apply_falloff(falloff, virtual_screen, light_pos)
+        apply_falloff(falloff, virtual_screen, light_pos2)
 
     if not whiteboard:
         scaled = pygame.transform.scale(virtual_screen, screen_res)
