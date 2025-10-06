@@ -9,6 +9,7 @@ os.chdir(scriptDir)
 pygame.init()
 pygame.mixer.init()
 
+
 import Area
 from Rooms import MainRoom
 import Player

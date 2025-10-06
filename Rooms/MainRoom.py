@@ -4,6 +4,7 @@ import Objects
 from shapely.geometry import Point, Polygon
 import Sounds
 import Items
+from LightSource import LightSource
 
 virtual_res = (480, 480)
 virtual_screen = pygame.Surface(virtual_res)
@@ -13,6 +14,8 @@ player_pos = pygame.Vector2(240, 340)
 
 bounds = Assets.draw_polygon(virtual_screen, (320,430), 8, 160, "gray")
 octagon = Polygon(bounds)
+
+light_sources = [LightSource(100, 100, 40)]
 
 lights = [
     Objects.Light(47, 192, 1),
