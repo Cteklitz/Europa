@@ -287,6 +287,6 @@ def Room(screen, screen_res, events):
 
     virtual_screen.blit(dark_overlay, (0, 0))
 
-    Assets.set_aspect_ratio(virtual_res, virtual_screen, screen_res, screen)  # fix scaling and blit to screen
+    Assets.scaled_draw(virtual_res, virtual_screen, screen_res, screen)  # fix scaling and blit to screen
 
     return player_pos, screen.get_width()/virtual_screen.get_width(), screen.get_height()/virtual_screen.get_height()
