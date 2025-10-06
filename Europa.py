@@ -2,8 +2,8 @@
 import pygame
 import os
 
-script_dir = os.path.dirname(os.path.abspath(__file__))
-os.chdir(script_dir)
+scriptDir = os.path.dirname(os.path.abspath(__file__))
+os.chdir(scriptDir)
 
 # pygame setup
 pygame.init()
@@ -13,17 +13,28 @@ pygame.mixer.init()
 import Area
 from Rooms import MainRoom
 import Player
+import Inventory
 
-screen = pygame.display.set_mode((0, 0), pygame.RESIZABLE)
-screen_res = screen.get_size()
-width, height = screen_res
-
-
+screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
+screenRes = screen.get_size()
 clock = pygame.time.Clock()
 running = True
 dt = 0
 area = Area.PipeDungeon
 Room = MainRoom
+
+# Each room file must contain these three functions:
+# 1. Room(screen, screen_res, events) - Contains the loop of what is being drawn for that room, logic to update variables based on input, etc.
+#    Its parameters are passed to it from this file (the main game loop) through Area.py's getPos().
+#
+# 2. inBounds(x, y) - Serves two purposes:
+#       1. When within a room, it returns a bool True or False. This defines the bounding box for where the player can walk.
+#
+#       2. When the given position results in a room change (often a position that collides with a door) it returns an int number code. 
+#       This code corresponds with an index for that room's array of connected rooms within the roomLayout of that room's Area (see Area.py)
+#
+# 3. positionDeterminer(cameFrom) - Only called after a room update. Sets the initial position of player in the new room based on room the player came from.
+#    Isn't always explicitly needed (ie. for screens where you aren't moving the player). In these cases leaving just 'pass' in the body is acceptable.
 
 def updateRoom(room):
     global Room
@@ -31,81 +42,72 @@ def updateRoom(room):
 
 while running:
     events = pygame.event.get()
-    player_pos, xSpeedScale, ySpeedScale = area.getPos(screen, screen_res, events, Room)
+    if Inventory.open:
+        Inventory.Inventory(screen, screenRes, events)
+    else:
+        player_pos, xSpeedScale, ySpeedScale = area.getPos(screen, screenRes, events, Room)
 
-    for event in events:
-        if event.type == pygame.QUIT:
-                running = False
-        elif event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_ESCAPE:
-                running = False
-            if event.key == pygame.K_BACKSPACE:
-                check = Room.inBounds(player_pos.x, player_pos.y)
-                if type(check) == int:
-                    cameFrom = Room
-                    updateRoom(area.getRoom(Room, check))
-                    Room.positionDeterminer(cameFrom.__name__)
-            if event.key == pygame.K_e:
-                check = Room.inBounds(player_pos.x, player_pos.y)
-                if type(check) == int:
-                    cameFrom = Room
-                    updateRoom(area.getRoom(Room, check))
-                    Room.positionDeterminer(cameFrom.__name__)
-            # Open inventory
-            if event.key == pygame.K_TAB: 
-                for item in Player.inventory:
-                    print(item)
-        elif event.type == pygame.MOUSEBUTTONDOWN:
-            if event.button == 1:
-                check = Room.inBounds(player_pos.x, player_pos.y)
-                if type(check) == int:
-                    cameFrom = Room
-                    updateRoom(area.getRoom(Room, check))
-                    Room.positionDeterminer(cameFrom.__name__)
+        for event in events:
+            if event.type == pygame.QUIT:
+                    running = False
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    running = False
+                # Open inventory
+                if event.key == pygame.K_TAB:
+                    Inventory.open = True
+                    for item in Player.inventory:
+                        print(item)
 
-    keys = pygame.key.get_pressed()
-    if keys[pygame.K_w]:
-        y = player_pos.y - 325 * dt / ySpeedScale
-        check = Room.inBounds(player_pos.x, y)
-        if type(check) == int:
-            cameFrom = Room
-            updateRoom(area.getRoom(Room, check))
-            Room.positionDeterminer(cameFrom.__name__)
-        elif check:
-            player_pos.y = y
-    if keys[pygame.K_s]:
-        y = player_pos.y + 325 * dt / ySpeedScale
-        check = Room.inBounds(player_pos.x, y)
-        if type(check) == int:
-            cameFrom = Room
-            updateRoom(area.getRoom(Room, check))
-            Room.positionDeterminer(cameFrom.__name__)
-        elif check:
-            player_pos.y = y
-    if keys[pygame.K_a]:
-        x = player_pos.x - 325 * dt / xSpeedScale
-        check = Room.inBounds(x, player_pos.y)
-        if type(check) == int:
-            cameFrom = Room
-            updateRoom(area.getRoom(Room, check))
-            Room.positionDeterminer(cameFrom.__name__)
-        elif check:
-            player_pos.x = x
-    if keys[pygame.K_d]:
-        x = player_pos.x + 325 * dt / xSpeedScale
-        check = Room.inBounds(x, player_pos.y)
-        if type(check) == int:
-            cameFrom = Room
-            updateRoom(area.getRoom(Room, check))
-            Room.positionDeterminer(cameFrom.__name__)
-        elif check:
-            player_pos.x = x
+        #Movement
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_w]:
+            y = player_pos.y - 325 * dt / ySpeedScale
+            #Checks if the movement upwards results in room change. If so, update the room to new room and set the initial position with positionDeterminer
+            check = Room.inBounds(player_pos.x, y)
+            if type(check) == int:
+                cameFrom = Room
+                updateRoom(area.getRoom(Room, check))
+                Room.positionDeterminer(cameFrom.__name__)
+            elif check:
+                player_pos.y = y
+        if keys[pygame.K_s]:
+            y = player_pos.y + 325 * dt / ySpeedScale
+            #Checks if the movement downwards results in room change. If so, update the room to new room and set the initial position with positionDeterminer
+            check = Room.inBounds(player_pos.x, y)
+            if type(check) == int:
+                cameFrom = Room
+                updateRoom(area.getRoom(Room, check))
+                Room.positionDeterminer(cameFrom.__name__)
+            elif check:
+                player_pos.y = y
+        if keys[pygame.K_a]:
+            x = player_pos.x - 325 * dt / xSpeedScale
+            #Checks if the movement to the left results in room change. If so, update the room to new room and set the initial position with positionDeterminer
+            check = Room.inBounds(x, player_pos.y)
+            if type(check) == int:
+                cameFrom = Room
+                updateRoom(area.getRoom(Room, check))
+                Room.positionDeterminer(cameFrom.__name__)
+            elif check:
+                player_pos.x = x
+        if keys[pygame.K_d]:
+            x = player_pos.x + 325 * dt / xSpeedScale
+            #Checks if the movement to the right results in room change. If so, update the room to new room and set the initial position with positionDeterminer
+            check = Room.inBounds(x, player_pos.y)
+            if type(check) == int:
+                cameFrom = Room
+                updateRoom(area.getRoom(Room, check))
+                Room.positionDeterminer(cameFrom.__name__)
+            elif check:
+                player_pos.x = x
 
-    check = Room.inBounds(player_pos.x, player_pos.y)
-    if type(check) == int:
-        cameFrom = Room
-        updateRoom(area.getRoom(Room, check))
-        Room.positionDeterminer(cameFrom.__name__)
+        #Checks if any other input (mouse click, backspace, etc.) results in room change. If so, update the room to new room and set the initial position with positionDeterminer
+        check = Room.inBounds(player_pos.x, player_pos.y)
+        if type(check) == int:
+            cameFrom = Room
+            updateRoom(area.getRoom(Room, check))
+            Room.positionDeterminer(cameFrom.__name__)
 
     # flip() the display to put your work on screen
     pygame.display.flip()
