@@ -236,10 +236,7 @@ def Room(screen, screen_res, events):
 
     if not whiteboard:
         Assets.scaled_draw(virtual_res, virtual_screen, screen_res, screen)
-        # scaled = pygame.transform.scale(virtual_screen, screen_res)
     else:
         Assets.scaled_draw(virtual_res, virtual_screen2, screen_res, screen)
-        # scaled = pygame.transform.scale(virtual_screen2, screen_res)
-    # screen.blit(scaled, (0, 0))
 
     return player_pos, 2, 2  # can return movement speeds of 2, 2 since room is scaled (can pick any equal values)
