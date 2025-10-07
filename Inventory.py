@@ -3,6 +3,7 @@ import Assets
 import Player
 
 virtual_res = (900, 650)
+#irtual_res = (1024, 720)
 virtual_screen = pygame.Surface(virtual_res)
 open = False
 inventory = pygame.image.load("Assets/InventoryMenu.png")
@@ -74,11 +75,12 @@ def Inventory(screen, screen_res, events):
     for slot in imagePositions:
         if len(Player.inventory) > i:
             virtual_screen.blit(Player.inventory[i].inventory_sprite, slot)
-            font = pygame.font.SysFont("Cascadia Code", 24)
+            font = pygame.font.Font("Assets/Minecraft.ttf", 24)
             text = font.render(Player.inventory[i].name, True, "white")
             textRect = text.get_rect()
             textRect.center = (slot[0]+50, slot[1]+105)
             virtual_screen.blit(text, textRect)
+            
         if i == Player.MaxInventorySize - 1:
             i = 0
         else:
@@ -87,7 +89,7 @@ def Inventory(screen, screen_res, events):
     if selected != -1:
         pygame.draw.rect(virtual_screen, "white", selectionRects[selected], 5)
         if findIndex() < len(Player.inventory):
-            font = pygame.font.SysFont("Cascadia Code", 34)
+            font = pygame.font.Font("Assets/Minecraft.ttf", 24)
             Assets.draw_text(virtual_screen, Player.inventory[findIndex()].description, "white", descRect, font)
 
         virtual_screen.blit(Assets.useButton, useRect)

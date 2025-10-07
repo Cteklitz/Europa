@@ -7,6 +7,7 @@ import Items
 from LightSource import LightSource
 
 virtual_res = (480, 480)
+
 virtual_screen = pygame.Surface(virtual_res)
 dark_overlay = pygame.Surface(virtual_screen.get_size(), pygame.SRCALPHA)
 

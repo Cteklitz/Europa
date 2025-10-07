@@ -16,17 +16,17 @@ player_pos = pygame.Vector2(192, 128)
 background = pygame.image.load("Assets/mscopetablezoom.png")
 opendrawer = pygame.image.load("Assets/opendrawer.png")
 redpetri = pygame.image.load("Assets/redpetri.png")
-redRect = pygame.Rect(82, 57, 11, 6)
+redRect = pygame.Rect(81, 56, 13, 8)
 yellowpetri = pygame.image.load("Assets/yellowpetri.png") 
-yellowRect = pygame.Rect(103, 52, 11, 6)
+yellowRect = pygame.Rect(102, 51, 13, 8)
 bluepetri = pygame.image.load("Assets/bluepetri.png") 
-blueRect = pygame.Rect(98, 64, 11, 6)
+blueRect = pygame.Rect(97, 63, 13, 8)
 
 redPlaced = False
 yellowPlaced = False
 bluePlaced = False
 
-Cover = pygame.Surface((11, 6))
+Cover = pygame.Surface((13, 8))
 Cover.fill((127,127,127))
 msRect = pygame.Rect(54,44,11,6)
 
