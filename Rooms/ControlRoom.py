@@ -71,6 +71,7 @@ solution = {
 
 solved = False
 
+
 def checkSolution(pipePuzzle, solution):
     global solved, activeSquares, power
     for (row, col), correct_value in solution.items():
@@ -265,7 +266,6 @@ def Room(screen, screen_res, events):
     pygame.draw.line(virtual_screen, (0,0,0), (288, 0), (288, 256), 1)
     draw_map(virtual_screen, Assets.tiles, activeSquares, 96, 32)
     draw_map(virtual_screen, Assets.pipes, pipePuzzle, 96, 32)
-
     valve.update()
     virtual_screen.blit(Assets.pipes[7], (160,0))
     for y in range(192, 384, 32):
