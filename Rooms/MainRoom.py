@@ -145,7 +145,6 @@ def Room(screen, screen_res, events):
 
     virtual_screen.blit(dark_overlay, (0, 0))
 
-    scaled = pygame.transform.scale(virtual_screen, screen_res)
-    screen.blit(scaled, (0, 0))
+    Assets.scaled_draw(virtual_res, virtual_screen, screen_res, screen)
 
-    return player_pos, screen.get_width()/virtual_screen.get_width(), screen.get_height()/virtual_screen.get_height()
+    return player_pos, 2, 2  # can return movement speeds of 2, 2 since room is scaled (can pick any equal values)

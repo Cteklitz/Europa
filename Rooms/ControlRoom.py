@@ -289,4 +289,4 @@ def Room(screen, screen_res, events):
 
     Assets.scaled_draw(virtual_res, virtual_screen, screen_res, screen)  # fix scaling and blit to screen
 
-    return player_pos, screen.get_width()/virtual_screen.get_width(), screen.get_height()/virtual_screen.get_height()
+    return player_pos, 2, 2  # can return movement speeds of 2, 2 since room is scaled (can pick any equal values)

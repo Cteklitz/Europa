@@ -209,9 +209,11 @@ def Room(screen, screen_res, events):
         tooDarkSee.update()
 
     if not whiteboard:
-        scaled = pygame.transform.scale(virtual_screen, screen_res)
+        Assets.scaled_draw(virtual_res, virtual_screen, screen_res, screen)
+        # scaled = pygame.transform.scale(virtual_screen, screen_res)
     else:
-        scaled = pygame.transform.scale(virtual_screen2, screen_res)
-    screen.blit(scaled, (0, 0))
+        Assets.scaled_draw(virtual_res, virtual_screen2, screen_res, screen)
+        # scaled = pygame.transform.scale(virtual_screen2, screen_res)
+    # screen.blit(scaled, (0, 0))
 
-    return player_pos, xScale, yScale
+    return player_pos, 2, 2  # can return movement speeds of 2, 2 since room is scaled (can pick any equal values)
