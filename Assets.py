@@ -61,6 +61,28 @@ def draw_text(surface, text, color, rect, font):
         surface.blit(line_surf, (rect.x, rect.y + y_offset))
         y_offset += font.get_height()
 
+
+# properly scale aspect ratios, center
+def scaled_draw(virtual_res, virtual_screen, screen_res, screen):
+    # normalize aspect ratio for screen display
+    room_ratio = virtual_res[0] / virtual_res[1]
+    screen_res = (screen_res[1] * room_ratio, screen_res[1])  # effectively (sresy*vresx)/vresy, sresy
+
+    # get user screen dimensions
+    info = pygame.display.Info()
+    screen_w, screen_h = info.current_w, info.current_h
+
+    black_back = pygame.Surface((screen_w, screen_h), pygame.SRCALPHA)  # fullscreen black background
+    black_back.fill((0, 0, 0))
+    screen.blit(black_back, (0, 0))
+
+    center_x = (screen_w - screen_res[0]) // 2  # distance from left side to center
+
+    # scale and center room
+    scaled = pygame.transform.scale(virtual_screen, screen_res)
+    screen.blit(scaled, (center_x, 0))
+
+
 tiles = load_tileset("Assets/Grid.png", 32, 32)
 dimTiles = load_tileset("Assets/DimGrid.png", 32, 32)
 pipes = load_tileset("Assets/PipeSet.png", 32, 32)
@@ -119,6 +141,8 @@ tooDarkSee = pygame.image.load("Assets/TooDarkSee.png")
 
 letterTiles = load_tileset("Assets/letters.png", 21, 41)
 numberTiles = load_tileset("Assets/numbers.png", 21, 41)
+
+useButton = pygame.image.load("Assets/useButton.png")
 
 ### ITEMS
 pinkKeycard = pygame.image.load("Assets/pink_keycard.png")

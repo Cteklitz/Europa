@@ -22,7 +22,7 @@ def getSpotDiffsSolved():
     return SpotDiffs.chestOpen
 
 def getColors():
-    return MscopeTable.redFound, OrangeYellow.yellowFound, Desk.blueFound
+    return MscopeTable.redPlaced, MscopeTable.yellowPlaced, MscopeTable.bluePlaced
 
 def getSelected():
     return MscopeTable.selected
@@ -34,16 +34,7 @@ def getPinkPower():
     return PinkPower.pinkPower
 
 def getLetterCount():
-    count = 0
-    if TrianglePuzzle.collected:
-        count += 1
-    if BeakerPuzzle.collected:
-        count += 1
-    if Safe.collected:
-        count += 1
-    if SpotDiffs.collected:
-        count += 1
-    return count
+    return LockedDoor.letterCount
 
 class Area:
     def __init__(self, roomLayout):

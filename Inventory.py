@@ -30,6 +30,8 @@ def findIndex():
 leftArrowRect = pygame.Rect(17,103,54,188)
 rightArrowRect = pygame.Rect(847,103,54,188)
 
+useRect = pygame.Rect(760,550,95,53)
+
 descRect = pygame.Rect(353,323,510,285)
 
 def Inventory(screen, screen_res, events):
@@ -55,6 +57,9 @@ def Inventory(screen, screen_res, events):
                         index = 0
                     else:
                         index = index + 1
+                if useRect.collidepoint(mouse_pos) and selected != -1:
+                    Player.consumeItem(selected)
+                
                 count = 0
                 for slot in selectionRects:
                     if slot.collidepoint(mouse_pos):
@@ -86,6 +91,8 @@ def Inventory(screen, screen_res, events):
         if findIndex() < len(Player.inventory):
             font = pygame.font.Font("Assets/Minecraft.ttf", 24)
             Assets.draw_text(virtual_screen, Player.inventory[findIndex()].description, "white", descRect, font)
+
+        virtual_screen.blit(Assets.useButton, useRect)
 
     scaled = pygame.transform.scale(virtual_screen, screen_res)
     screen.blit(scaled, (0, 0))

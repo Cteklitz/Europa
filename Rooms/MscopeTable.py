@@ -22,6 +22,10 @@ yellowRect = pygame.Rect(102, 51, 13, 8)
 bluepetri = pygame.image.load("Assets/bluepetri.png") 
 blueRect = pygame.Rect(97, 63, 13, 8)
 
+redPlaced = False
+yellowPlaced = False
+bluePlaced = False
+
 Cover = pygame.Surface((13, 8))
 Cover.fill((127,127,127))
 msRect = pygame.Rect(54,44,11,6)
@@ -64,7 +68,7 @@ def positionDeterminer(cameFrom):
     pass
 
 def Room(screen, screen_res, events):
-    global exit, redFound, visible, selected, microscope
+    global exit, redFound, visible, selected, microscope, redPlaced, yellowPlaced, bluePlaced
     xScale = screen.get_width()/virtual_screen.get_width() 
     yScale = screen.get_height()/virtual_screen.get_height()
 
@@ -97,12 +101,23 @@ def Room(screen, screen_res, events):
                     if (Player.addItem(Items.redPetri)):
                         Sounds.glass1.play()
                         redFound = True
-                elif redRect.collidepoint(mouse_pos) and redFound:
+                elif redRect.collidepoint(mouse_pos) and redPlaced:
                     selected = "Red"
-                elif yellowRect.collidepoint(mouse_pos) and yellowFound:
+                elif yellowRect.collidepoint(mouse_pos) and yellowPlaced:
                     selected = "Yellow"
-                elif blueRect.collidepoint(mouse_pos) and blueFound:
+                elif blueRect.collidepoint(mouse_pos) and bluePlaced:
                     selected = "Blue"
+                elif (redRect.collidepoint(mouse_pos) or yellowRect.collidepoint(mouse_pos) or blueRect.collidepoint(mouse_pos)):
+                    # TODO: add "Place petri dishes?" prompt or smth
+                    if Player.checkItem(Items.redPetri):
+                        Player.removeItem(Items.redPetri)
+                        redPlaced = True
+                    if Player.checkItem(Items.yellowPetri):
+                        Player.removeItem(Items.yellowPetri)
+                        yellowPlaced = True
+                    if Player.checkItem(Items.bluePetri):
+                        Player.removeItem(Items.bluePetri)
+                        bluePlaced = True
                 elif msRect.collidepoint(mouse_pos):
                     selected = "None"
                 elif MSRect.collidepoint(mouse_pos) and selected != "None":
@@ -136,19 +151,17 @@ def Room(screen, screen_res, events):
                 virtual_screen.blit(redpetri, luckyRect, area=pygame.Rect(0, 0, 11, 5))
         count -= 1
 
-
-    # TODO: Add a way for player to place petri dishs from inventory
-    if not redFound or selected == "Red":
+    if not redPlaced or selected == "Red":
         virtual_screen.blit(Cover, redRect)
         if selected == "Red":
             virtual_screen.blit(redpetri, msRect)
 
-    if not yellowFound or selected == "Yellow":
+    if not yellowPlaced or selected == "Yellow":
         virtual_screen.blit(Cover, yellowRect)
         if selected == "Yellow":
             virtual_screen.blit(yellowpetri, msRect)
 
-    if not blueFound or selected == "Blue":
+    if not bluePlaced or selected == "Blue":
         virtual_screen.blit(Cover, blueRect)
         if selected == "Blue":
             virtual_screen.blit(bluepetri, msRect)
