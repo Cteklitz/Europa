@@ -39,7 +39,7 @@ def divertWater():
             upperWingPower = True
             lowerWingPower = False
 
-valve = Objects.Valve(96, 112, divertWater)
+valve = Objects.TopDownValve(96, 112, divertWater)
 
 def inBounds(x, y):
     level, power = Objects.getPipeDungeonInfo()

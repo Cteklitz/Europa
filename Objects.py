@@ -53,6 +53,32 @@ class Valve:
                 self.image = Assets.valveSprites[0]
                 self.activated_time = -1
 
+class TopDownValve:
+    def __init__(self, xpos, ypos, action):
+        self.x = xpos
+        self.y = ypos
+        self.image = Assets.topDownValveSprites[0]
+        self.rect = self.image.get_rect(topleft=(xpos, ypos))
+        self.activated_time = -1
+        self.action = action
+
+    def check_collision(self, player_pos):
+        in_range = (self.x - 8 < player_pos.x < self.x + 40) and (self.y - 8 < player_pos.y < self.y + 40)
+
+        if in_range and self.activated_time == -1:
+            Sounds.valveSound.play()
+            self.image = Assets.topDownValveSprites[1]
+            self.action()
+            self.activated_time = pygame.time.get_ticks()
+
+    def update(self):
+        if self.activated_time != -1:
+            seconds = (pygame.time.get_ticks() - self.activated_time) / 1000
+
+            if seconds > 0.25:
+                self.image = Assets.topDownValveSprites[0]
+                self.activated_time = -1
+
 class Light:
     def __init__(self, xpos, ypos, type):
         self.x = xpos

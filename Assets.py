@@ -91,6 +91,7 @@ orangeSwitch= load_tileset("Assets/OrangeSwitch.png", 32, 32)
 blueSwitch= load_tileset("Assets/BlueSwitch.png", 32, 32)
 greenSwitch= load_tileset("Assets/GreenSwitch.png", 32, 32)
 valveSprites = load_tileset("Assets/Valve.png", 32, 32)
+topDownValveSprites = load_tileset("Assets/TopDownValve.png", 32, 32)
 
 ctrlRoomDoor = pygame.image.load("Assets/CtrlRoomDoor.png")
 
