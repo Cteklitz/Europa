@@ -31,7 +31,8 @@ def getOpen():
     return LockedDoor.solved
 
 def getPinkPower():
-    return PinkPower.pinkPower
+    #return PinkPower.pinkPower
+    return True
 
 def getLetterCount():
     return LockedDoor.letterCount
