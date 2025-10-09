@@ -173,8 +173,11 @@ def getBeakerSolved():
 def getSpotDiffsSolved():
     return Area.getSpotDiffsSolved()
 
-def getColors():
-    return Area.getColors()
+def getColorsFound():
+    return Area.getColorsFound()
+
+def getColorsPlaced():
+    return Area.getColorsPlaced()
 
 def getSelected():
     return Area.getSelected()
