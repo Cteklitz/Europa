@@ -96,7 +96,7 @@ def Room(screen, screen_res, events):
                 mouse_x, mouse_y = pygame.mouse.get_pos()
                 mouse_pos = (mouse_x/xScale, mouse_y/yScale)
                 # player clicks red petri
-                if luckyRect.collidepoint(mouse_pos) and visible:           
+                if luckyRect.collidepoint(mouse_pos) and not redFound and visible:           
                     if (Player.addItem(Items.redPetri)):
                         Sounds.glass1.play()
                         redFound = True
