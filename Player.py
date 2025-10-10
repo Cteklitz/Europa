@@ -13,7 +13,7 @@ def addItem(item):
         return True
     else:
         return False
-    
+
 # checks if an item is in the inventory (can check based on item object or id); Probably try to use id mostly?
 # def checkItem(_item):
 #     if (type(_item) is Items.Item):
@@ -30,6 +30,8 @@ def addItem(item):
 #         print("ERROR: Item type not valid")
 #         return False
     
+# checks if an item is in the inventory (can check based on item object or id); Probably try to use id mostly?
+# Modified to check if item is equipped rather than in inventory
 def checkItem(_item):
     if (type(_item) is Items.Item and type(equipped) is Items.Item):
         if _item.id == equipped.id:
