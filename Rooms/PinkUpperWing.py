@@ -48,10 +48,10 @@ lights = [
 light_pos = (70, 50)
 light_pos2 = (240, 50)
 wall_lights = [
-    LightSource(light_pos[0], light_pos[1], radius=50, color=(255, 200, 100), strength = 120),
-    LightSource(light_pos2[0], light_pos2[1], radius=50, color=(255, 200, 100), strength = 120)
+    LightSource(light_pos[0], light_pos[1], radius=60, strength = 220),
+    LightSource(light_pos2[0], light_pos2[1], radius=60, strength = 220)
 ]
-falloff = [LightFalloff(virtual_screen.get_size(), darkness = 160)]
+falloff = [LightFalloff(virtual_screen.get_size(), darkness = 140)]
 
 background = pygame.image.load("Assets/PinkUpperWing.png")
 door = pygame.image.load("Assets/pinkupperwingdoor.png")
@@ -155,8 +155,9 @@ def Room(screen, screen_res, events):
 
     virtual_screen.blit(background, (0,0))
     virtual_screen2.fill((195, 195, 195))
-    dark_overlay.fill((0, 0, 0, 150))
-    dark_overlay2.fill((0, 0, 0, 150))
+    if not lit:
+        dark_overlay.fill((0, 0, 0, 150))
+        dark_overlay2.fill((0, 0, 0, 150))
 
 
 
@@ -230,7 +231,7 @@ def Room(screen, screen_res, events):
         virtual_screen.blit(dark_overlay, (0, 0))
         virtual_screen2.blit(dark_overlay2, (0, 0))
     else:
-        apply_lighting(virtual_screen, wall_lights, darkness=20, ambient_color=(30, 30, 30), ambient_strength=80)
+        apply_lighting(virtual_screen, wall_lights, darkness=10, ambient_color=(30, 30, 30), ambient_strength=10)
         apply_falloff(falloff, virtual_screen, light_pos)
         apply_falloff(falloff, virtual_screen, light_pos2)
 
