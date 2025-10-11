@@ -3,7 +3,7 @@ import Assets
 import Player
 
 virtual_res = (900, 650)
-#irtual_res = (1024, 720)
+#virtual_res = (1024, 720)
 virtual_screen = pygame.Surface(virtual_res)
 open = False
 inventory = pygame.image.load("Assets/InventoryMenu.png")
@@ -24,6 +24,7 @@ selectionRects = [
     pygame.Rect(661,80,175,144)
 ]
 
+# finds what index in the player's inventory the selected item is referencing
 def findIndex():
     return (selected + index) % Player.MaxInventorySize
 
@@ -31,6 +32,7 @@ leftArrowRect = pygame.Rect(17,103,54,188)
 rightArrowRect = pygame.Rect(847,103,54,188)
 
 useRect = pygame.Rect(760,550,95,53)
+equipRect = pygame.Rect(685,550,170,53)
 
 descRect = pygame.Rect(353,323,510,285)
 
@@ -41,7 +43,7 @@ def Inventory(screen, screen_res, events):
 
     for event in events:
         if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_BACKSPACE:
+            if event.key == pygame.K_TAB:
                 open = False
         elif event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == 1:
@@ -57,8 +59,11 @@ def Inventory(screen, screen_res, events):
                         index = 0
                     else:
                         index = index + 1
-                if useRect.collidepoint(mouse_pos) and selected != -1:
-                    Player.consumeItem(selected)
+                if findIndex() < len(Player.inventory):
+                    if equipRect.collidepoint(mouse_pos) and Player.inventory[findIndex()].buttonType == "equip":
+                        Player.consumeItem(findIndex())
+                    elif useRect.collidepoint(mouse_pos) and Player.inventory[findIndex()].buttonType == "use":
+                        Player.consumeItem(findIndex())
                 
                 count = 0
                 for slot in selectionRects:
@@ -92,7 +97,13 @@ def Inventory(screen, screen_res, events):
             font = pygame.font.Font("Assets/Minecraft.ttf", 24)
             Assets.draw_text(virtual_screen, Player.inventory[findIndex()].description, "white", descRect, font)
 
-        virtual_screen.blit(Assets.useButton, useRect)
+            if Player.inventory[findIndex()].buttonType == "equip":
+                if Player.checkItem(Player.inventory[findIndex()]):
+                    virtual_screen.blit(Assets.unequipButton, equipRect)
+                else:
+                    virtual_screen.blit(Assets.equipButton, equipRect)
+            else:
+                    virtual_screen.blit(Assets.useButton, useRect)
 
     scaled = pygame.transform.scale(virtual_screen, screen_res)
     screen.blit(scaled, (0, 0))

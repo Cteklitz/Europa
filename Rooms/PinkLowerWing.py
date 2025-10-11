@@ -122,7 +122,7 @@ def Room(screen, screen_res, events):
 
     bookcaseRange = pygame.Rect(792,140,104,56)
 
-    _, _, blueFound = Objects.getColors()
+    _, _, blueFound = Objects.getColorsFound()
 
     spotdiffssolved = Objects.getSpotDiffsSolved()
 

@@ -128,13 +128,13 @@ for i in range(5):
     squishedDimTiles.append(squished)
 
 squishedPipes = []
-for i in range(12):
-    squished = pygame.transform.scale(pipes[i], (80, 8))
+for i in range(14):
+    squished = pygame.transform.scale(pipes[i], (80, 11))
     squishedPipes.append(squished)
 
 squishedPipes2 = []
-for i in range(12):
-    squished = pygame.transform.scale(pipes[i], (41, 8))
+for i in range(14):
+    squished = pygame.transform.scale(pipes[i], (41, 11))
     squishedPipes2.append(squished)
 
 tooDarkRead = pygame.image.load("Assets/TooDark.png")
@@ -144,6 +144,8 @@ letterTiles = load_tileset("Assets/letters.png", 21, 41)
 numberTiles = load_tileset("Assets/numbers.png", 21, 41)
 
 useButton = pygame.image.load("Assets/useButton.png")
+equipButton = pygame.image.load("Assets/equipButton.png")
+unequipButton = pygame.image.load("Assets/unequipButton.png")
 
 ### ITEMS
 pinkKeycard = pygame.image.load("Assets/pink_keycard.png")
