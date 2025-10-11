@@ -175,9 +175,14 @@ def Room(screen, screen_res, events):
     virtual_screen.blit(powerdoor, (31,188))
     virtual_screen.blit(door, (221,188))
 
-    for i in range(6):
+    for i in range(4):
         virtual_screen.blit(Assets.squishedPipes2[1], (64 + 36*i, 180))
+    
+    virtual_screen.blit(Assets.squishedPipes2[13], (208, 180))
 
+    virtual_screen.blit(Assets.squishedPipes2[1], (244, 180))
+
+    # upper horizontal pipes
     for i in range(4):
         virtual_screen.blit(Assets.squishedPipes2[1], (100 + 36*i, 111))
 
