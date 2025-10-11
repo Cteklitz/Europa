@@ -175,7 +175,7 @@ def Room(screen, screen_res, events):
     virtual_screen.blit(powerdoor, (31,188))
     virtual_screen.blit(door, (221,188))
 
-    for i in range(5):
+    for i in range(6):
         virtual_screen.blit(Assets.squishedPipes2[1], (64 + 36*i, 180))
 
     for i in range(4):
@@ -184,7 +184,7 @@ def Room(screen, screen_res, events):
     for i in range(9):
         virtual_screen.blit(Assets.squishedPipes2[2], (218, 173 - 7*i))
 
-    virtual_screen.blit(Assets.squishedPipes2[0], (218, 180))
+    #virtual_screen.blit(Assets.squishedPipes2[0], (218, 180))
     virtual_screen.blit(Assets.squishedPipes2[4], (28, 180))
 
     for light in lights:
@@ -231,7 +231,7 @@ def Room(screen, screen_res, events):
         virtual_screen.blit(dark_overlay, (0, 0))
         virtual_screen2.blit(dark_overlay2, (0, 0))
     else:
-        apply_lighting(virtual_screen, wall_lights, darkness=10, ambient_color=(30, 30, 30), ambient_strength=10)
+        apply_lighting(virtual_screen, wall_lights, darkness=10, ambient_color=(50, 50, 50), ambient_strength=10)
         apply_falloff(falloff, virtual_screen, light_pos)
         apply_falloff(falloff, virtual_screen, light_pos2)
 

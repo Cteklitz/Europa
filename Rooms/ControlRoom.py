@@ -268,7 +268,10 @@ def Room(screen, screen_res, events):
     draw_map(virtual_screen, Assets.pipes, pipePuzzle, 96, 32)
     valve.update()
     virtual_screen.blit(Assets.pipes[7], (160,0))
-    for y in range(192, 384, 32):
+    for y in range(192, 256, 32):
+        virtual_screen.blit(Assets.pipes[7], (160, y))
+    virtual_screen.blit(Assets.pipes[12], (160, 256))
+    for y in range(288, 384, 32):
         virtual_screen.blit(Assets.pipes[7], (160, y))
     virtual_screen.blit(Assets.pipes[10], (64,96))
     virtual_screen.blit(Assets.pipes[10], (256,96))
