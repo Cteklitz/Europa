@@ -213,7 +213,7 @@ def Room(screen, screen_res, events):
 
     virtual_screen2.blit(whiteboardzoom, (20,20))
 
-    red, yellow, blue = Objects.getColors()
+    red, yellow, blue = Objects.getColorsPlaced()
 
     if red:
         virtual_screen.blit(smolRed, (150, 121))

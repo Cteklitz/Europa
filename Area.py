@@ -21,7 +21,10 @@ def getBeakerSolved():
 def getSpotDiffsSolved():
     return SpotDiffs.chestOpen
 
-def getColors():
+def getColorsFound():
+    return MscopeTable.redFound, OrangeYellow.yellowFound, Desk.blueFound
+
+def getColorsPlaced():
     return MscopeTable.redPlaced, MscopeTable.yellowPlaced, MscopeTable.bluePlaced
 
 def getSelected():

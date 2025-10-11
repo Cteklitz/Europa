@@ -9,19 +9,20 @@ class Item(NamedTuple):
     description: str
     inventory_sprite: list # to hold an asset from Assets
     ground_sprite: list # to hold an asset from Assets, for items that are never found on ground just reuse inventory sprite
+    buttonType: str # use or equip
 
 redPetriInv = pygame.image.load("Assets/redpetriInv.png")
 bluePetriInv = pygame.image.load("Assets/bluepetriInv.png")
 yellowPetriInv = pygame.image.load("Assets/yellowpetriInv.png")
 
-pinkKeycard = Item("pinkKeycard", "Pink Keycard", "Seems to be a keycard for a pink area", Assets.pinkKeycard, Assets.pinkKeycardGround)
+pinkKeycard = Item("pinkKeycard", "Pink Keycard", "Seems to be a keycard for a pink area", Assets.pinkKeycard, Assets.pinkKeycardGround, "equip")
 
-bandage = Item("bandage", "Bandage", "A roll of gauze used for covering wounds to stop bleeding", Assets.bandage, Assets.bandageGround)
+bandage = Item("bandage", "Bandage", "A roll of gauze used for covering wounds to stop bleeding", Assets.bandage, Assets.bandageGround, "use")
 
-redPetri = Item("redPetri", "Petri Dish", "A petri dish containing red droplets", redPetriInv, Assets.redPetriGround)
-bluePetri = Item("bluePetri", "Petri Dish", "A petri dish containing blue blobs", bluePetriInv, Assets.bluePetriGround)
-yellowPetri = Item("yellowPetri", "Petri Dish", "A petri dish containing yellow particles", yellowPetriInv, Assets.yellowPetriGround)
+redPetri = Item("redPetri", "Petri Dish", "A petri dish containing red droplets", redPetriInv, Assets.redPetriGround, "equip")
+bluePetri = Item("bluePetri", "Petri Dish", "A petri dish containing blue blobs", bluePetriInv, Assets.bluePetriGround, "equip")
+yellowPetri = Item("yellowPetri", "Petri Dish", "A petri dish containing yellow particles", yellowPetriInv, Assets.yellowPetriGround, "equip")
 
-letterTile = Item("letterTile", "Tile", "A ceramic tile with a letter incribed on it", Assets.letterTile, Assets.letterTile)
+letterTile = Item("letterTile", "Tile", "A ceramic tile with a letter incribed on it", Assets.letterTile, Assets.letterTile, "equip")
 
 

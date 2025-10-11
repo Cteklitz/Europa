@@ -21,6 +21,7 @@ yellowpetri = pygame.image.load("Assets/yellowpetri.png")
 yellowRect = pygame.Rect(102, 51, 13, 8)
 bluepetri = pygame.image.load("Assets/bluepetri.png") 
 blueRect = pygame.Rect(97, 63, 13, 8)
+tableRect = pygame.Rect(15,48,184,31)
 
 redPlaced = False
 yellowPlaced = False
@@ -76,8 +77,6 @@ def Room(screen, screen_res, events):
     upperWingPower, _ = Objects.getPinkWingInfo()
     lit = upperWingPower and level == 1 and power
 
-    _, yellowFound, blueFound = Objects.getColors()
-
     visible = False
 
     if drawers[luckyNumber-1].state == "open":
@@ -97,7 +96,7 @@ def Room(screen, screen_res, events):
                 mouse_x, mouse_y = pygame.mouse.get_pos()
                 mouse_pos = (mouse_x/xScale, mouse_y/yScale)
                 # player clicks red petri
-                if luckyRect.collidepoint(mouse_pos) and visible:           
+                if luckyRect.collidepoint(mouse_pos) and not redFound and visible:           
                     if (Player.addItem(Items.redPetri)):
                         Sounds.glass1.play()
                         redFound = True
@@ -107,7 +106,7 @@ def Room(screen, screen_res, events):
                     selected = "Yellow"
                 elif blueRect.collidepoint(mouse_pos) and bluePlaced:
                     selected = "Blue"
-                elif (redRect.collidepoint(mouse_pos) or yellowRect.collidepoint(mouse_pos) or blueRect.collidepoint(mouse_pos)):
+                elif tableRect.collidepoint(mouse_pos):
                     # TODO: add "Place petri dishes?" prompt or smth
                     if Player.checkItem(Items.redPetri):
                         Player.removeItem(Items.redPetri)

@@ -143,6 +143,8 @@ letterTiles = load_tileset("Assets/letters.png", 21, 41)
 numberTiles = load_tileset("Assets/numbers.png", 21, 41)
 
 useButton = pygame.image.load("Assets/useButton.png")
+equipButton = pygame.image.load("Assets/equipButton.png")
+unequipButton = pygame.image.load("Assets/unequipButton.png")
 
 ### ITEMS
 pinkKeycard = pygame.image.load("Assets/pink_keycard.png")
