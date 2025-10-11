@@ -6,7 +6,7 @@ import Sounds
 import Player
 import Items
 
-virtual_res = (2000,1254)
+virtual_res = (300,188)
 virtual_screen = pygame.Surface(virtual_res)
 dark_overlay = pygame.Surface(virtual_screen.get_size(), pygame.SRCALPHA)
 
@@ -17,7 +17,7 @@ desk = pygame.image.load("Assets/DeskZoom.png")
 blueFound = False
 exit = False
 
-petriRect = pygame.Rect(1241,505,460,233)
+petriRect = pygame.Rect(1241/6.6,505/6.6,460/6.6,233/6.6)
 
 def inBounds(x, y):
     global exit, tooDark
