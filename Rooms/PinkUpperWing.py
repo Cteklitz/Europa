@@ -12,7 +12,7 @@ virtual_res = (324, 219)
 virtual_screen = pygame.Surface(virtual_res)
 dark_overlay = pygame.Surface(virtual_screen.get_size(), pygame.SRCALPHA)
 
-virtual_res2 = (420, 219)
+virtual_res2 = (400, 219)
 virtual_screen2 = pygame.Surface(virtual_res2)
 dark_overlay2 = pygame.Surface(virtual_screen2.get_size(), pygame.SRCALPHA)
 
@@ -216,7 +216,7 @@ def Room(screen, screen_res, events):
     virtual_screen.blit(circleLight, circleLight.get_rect(center=light_pos))
     virtual_screen.blit(circleLight, circleLight.get_rect(center=light_pos2))
 
-    virtual_screen2.blit(whiteboardzoom, (20,20))
+    virtual_screen2.blit(whiteboardzoom, (10,20))
 
     red, yellow, blue = Objects.getColorsPlaced()
 
