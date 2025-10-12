@@ -178,7 +178,7 @@ def Room(screen, screen_res, events):
     for i in range(4):
         virtual_screen.blit(Assets.squishedPipes2[1], (64 + 36*i, 177))
     
-    virtual_screen.blit(Assets.squishedPipes2[13], (208, 177))
+    virtual_screen.blit(Assets.squishedPipes2[0], (218, 177))
 
     virtual_screen.blit(Assets.squishedPipes2[1], (244, 177))
 
