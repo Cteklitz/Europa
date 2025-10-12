@@ -200,6 +200,9 @@ def Room(screen, screen_res, events):
     for y in range(120, 184, 8):
         virtual_screen.blit(Assets.squishedPipes[7], (600,y))
 
+    pygame.draw.line(virtual_screen, "black", (628,112), (628,115), 3)
+    pygame.draw.line(virtual_screen, "black", (651,112), (651,115), 3)
+
     virtual_screen.blit(Assets.squishedPipes[8], (12,142))
     virtual_screen.blit(Assets.squishedPipes[6], (80,142))
 

@@ -176,21 +176,21 @@ def Room(screen, screen_res, events):
     virtual_screen.blit(door, (221,188))
 
     for i in range(4):
-        virtual_screen.blit(Assets.squishedPipes2[1], (64 + 36*i, 180))
+        virtual_screen.blit(Assets.squishedPipes2[1], (64 + 36*i, 177))
     
-    virtual_screen.blit(Assets.squishedPipes2[13], (208, 180))
+    virtual_screen.blit(Assets.squishedPipes2[13], (208, 177))
 
-    virtual_screen.blit(Assets.squishedPipes2[1], (244, 180))
+    virtual_screen.blit(Assets.squishedPipes2[1], (244, 177))
 
     # upper horizontal pipes
     for i in range(4):
-        virtual_screen.blit(Assets.squishedPipes2[1], (100 + 36*i, 111))
+        virtual_screen.blit(Assets.squishedPipes2[1], (100 + 36*i, 108))
 
     for i in range(9):
-        virtual_screen.blit(Assets.squishedPipes2[2], (218, 173 - 7*i))
+        virtual_screen.blit(Assets.squishedPipes2[2], (218, 170 - 7*i))
 
     #virtual_screen.blit(Assets.squishedPipes2[0], (218, 180))
-    virtual_screen.blit(Assets.squishedPipes2[4], (28, 180))
+    virtual_screen.blit(Assets.squishedPipes2[4], (28, 177))
 
     for light in lights:
         if lit:
