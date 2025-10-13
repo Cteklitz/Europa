@@ -12,7 +12,7 @@ virtual_res = (324, 219)
 virtual_screen = pygame.Surface(virtual_res)
 dark_overlay = pygame.Surface(virtual_screen.get_size(), pygame.SRCALPHA)
 
-virtual_res2 = (420, 219)
+virtual_res2 = (400, 219)
 virtual_screen2 = pygame.Surface(virtual_res2)
 dark_overlay2 = pygame.Surface(virtual_screen2.get_size(), pygame.SRCALPHA)
 
@@ -176,21 +176,21 @@ def Room(screen, screen_res, events):
     virtual_screen.blit(door, (221,188))
 
     for i in range(4):
-        virtual_screen.blit(Assets.squishedPipes2[1], (64 + 36*i, 180))
+        virtual_screen.blit(Assets.squishedPipes2[1], (64 + 36*i, 177))
     
-    virtual_screen.blit(Assets.squishedPipes2[13], (208, 180))
+    virtual_screen.blit(Assets.squishedPipes2[0], (218, 177))
 
-    virtual_screen.blit(Assets.squishedPipes2[1], (244, 180))
+    virtual_screen.blit(Assets.squishedPipes2[1], (244, 177))
 
     # upper horizontal pipes
     for i in range(4):
-        virtual_screen.blit(Assets.squishedPipes2[1], (100 + 36*i, 111))
+        virtual_screen.blit(Assets.squishedPipes2[1], (100 + 36*i, 108))
 
     for i in range(9):
-        virtual_screen.blit(Assets.squishedPipes2[2], (218, 173 - 7*i))
+        virtual_screen.blit(Assets.squishedPipes2[2], (218, 170 - 7*i))
 
     #virtual_screen.blit(Assets.squishedPipes2[0], (218, 180))
-    virtual_screen.blit(Assets.squishedPipes2[4], (28, 180))
+    virtual_screen.blit(Assets.squishedPipes2[4], (28, 177))
 
     for light in lights:
         if lit:
@@ -216,7 +216,7 @@ def Room(screen, screen_res, events):
     virtual_screen.blit(circleLight, circleLight.get_rect(center=light_pos))
     virtual_screen.blit(circleLight, circleLight.get_rect(center=light_pos2))
 
-    virtual_screen2.blit(whiteboardzoom, (20,20))
+    virtual_screen2.blit(whiteboardzoom, (10,20))
 
     red, yellow, blue = Objects.getColorsPlaced()
 
