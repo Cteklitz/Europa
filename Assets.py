@@ -66,7 +66,7 @@ def draw_text(surface, text, color, rect, font):
 def scaled_draw(virtual_res, virtual_screen, screen_res, screen):
     # normalize aspect ratio for screen display
     room_ratio = virtual_res[0] / virtual_res[1]
-    screen_res = (screen_res[0] * room_ratio, screen_res[1])  # effectively (sresy*vresx)/vresy, sresy
+    screen_res = (screen_res[1] * room_ratio, screen_res[1])  # effectively (sresy*vresx)/vresy, sresy
 
     # get user screen dimensions
     info = pygame.display.Info()
