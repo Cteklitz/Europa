@@ -28,8 +28,8 @@ selectionRects = [
 def findIndex():
     return (selected + index) % Player.MaxInventorySize
 
-leftArrowRect = pygame.Rect(17,103,54,188)
-rightArrowRect = pygame.Rect(847,103,54,188)
+leftArrowRect = pygame.Rect(17,103,37,84)
+rightArrowRect = pygame.Rect(847,103,37,84)
 
 useRect = pygame.Rect(760,550,95,53)
 equipRect = pygame.Rect(685,550,170,53)
