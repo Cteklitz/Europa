@@ -136,19 +136,20 @@ def Room(screen, screen_res, events):
                         bluePlaced = True
                 elif MSRect.collidepoint(mouse_pos) and selected != "None":
                     microscope = True
-                for drawer in drawers:
-                    if drawer.rect.collidepoint(mouse_pos):
-                        if drawer.state == "closed":
-                            Sounds.drawerclose.stop()
-                            Sounds.draweropen.play()
-                            drawer.state = "open"
-                            drawer.rect.y += 4
-                        else:
-                            Sounds.draweropen.stop()
-                            Sounds.drawerclose.play()
-                            drawer.state = "closed"
-                            drawer.rect.y -= 4
-                        break
+                else:
+                    for drawer in drawers:
+                        if drawer.rect.collidepoint(mouse_pos):
+                            if drawer.state == "closed":
+                                Sounds.drawerclose.stop()
+                                Sounds.draweropen.play()
+                                drawer.state = "open"
+                                drawer.rect.y += 4
+                            else:
+                                Sounds.draweropen.stop()
+                                Sounds.drawerclose.play()
+                                drawer.state = "closed"
+                                drawer.rect.y -= 4
+                            break
                     
     virtual_screen.fill((195, 195, 195))
     dark_overlay.fill((0, 0, 0, 150))
