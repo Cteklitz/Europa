@@ -45,16 +45,21 @@ def checkItem(_item):
 # this is for removing items that dont have a global effect, like placing a quest item or dropping an item
 # use consumeItem for consumable items that should do something
 def removeItem(_item):
+    global equipped
     if (type(_item) is Items.Item):
         for i in range(len(inventory)): # int itertor bc we need the index the item is found at to pop it
             if _item.id == inventory[i].id:
                 inventory.pop(i)
+                if _item.buttonType == "equip":
+                    equipped = None
                 return True
         return False # return false if item not found
     elif (type(_item) is str):
         for i in range(len(inventory)):
                 if _item == inventory[i].id:
                     inventory.pop(i)
+                    if _item.buttonType == "equip":
+                        equipped = None
                     return True
         return False # return false if item not found
     else:

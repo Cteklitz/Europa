@@ -29,7 +29,7 @@ bluePlaced = False
 
 Cover = pygame.Surface((13, 8))
 Cover.fill((127,127,127))
-msRect = pygame.Rect(54,44,11,6)
+msRect = pygame.Rect(54,44,13,8)
 
 MSRect = pygame.Rect(40,24,32,43)
 
@@ -106,6 +106,23 @@ def Room(screen, screen_res, events):
                     selected = "Yellow"
                 elif blueRect.collidepoint(mouse_pos) and bluePlaced:
                     selected = "Blue"
+                elif msRect.collidepoint(mouse_pos):
+                    if Player.checkItem(Items.redPetri):
+                        Player.removeItem(Items.redPetri)
+                        redPlaced = True
+                        selected = "Red"
+                    elif Player.checkItem(Items.yellowPetri):
+                        Player.removeItem(Items.yellowPetri)
+                        yellowPlaced = True
+                        selected = "Yellow"
+                    elif Player.checkItem(Items.bluePetri):
+                        Player.removeItem(Items.bluePetri)
+                        bluePlaced = True
+                        selected = "Blue"
+                    else:
+                        selected = "None"
+
+                    print(selected)
                 elif tableRect.collidepoint(mouse_pos):
                     # TODO: add "Place petri dishes?" prompt or smth
                     if Player.checkItem(Items.redPetri):
@@ -117,28 +134,27 @@ def Room(screen, screen_res, events):
                     if Player.checkItem(Items.bluePetri):
                         Player.removeItem(Items.bluePetri)
                         bluePlaced = True
-                elif msRect.collidepoint(mouse_pos):
-                    selected = "None"
                 elif MSRect.collidepoint(mouse_pos) and selected != "None":
                     microscope = True
-                for drawer in drawers:
-                    if drawer.rect.collidepoint(mouse_pos):
-                        if drawer.state == "closed":
-                            Sounds.drawerclose.stop()
-                            Sounds.draweropen.play()
-                            drawer.state = "open"
-                            drawer.rect.y += 4
-                        else:
-                            Sounds.draweropen.stop()
-                            Sounds.drawerclose.play()
-                            drawer.state = "closed"
-                            drawer.rect.y -= 4
-                        break
+                else:
+                    for drawer in drawers:
+                        if drawer.rect.collidepoint(mouse_pos):
+                            if drawer.state == "closed":
+                                Sounds.drawerclose.stop()
+                                Sounds.draweropen.play()
+                                drawer.state = "open"
+                                drawer.rect.y += 4
+                            else:
+                                Sounds.draweropen.stop()
+                                Sounds.drawerclose.play()
+                                drawer.state = "closed"
+                                drawer.rect.y -= 4
+                            break
                     
     virtual_screen.fill((195, 195, 195))
     dark_overlay.fill((0, 0, 0, 150))
 
-    Assets.punch_light_hole(virtual_screen, dark_overlay, (virtual_screen.get_width()/2, virtual_screen.get_height()/2), 500, (100, 0, 100))
+    Assets.punch_light_hole(virtual_screen, dark_overlay, (virtual_screen.get_width()/2, virtual_screen.get_height()/2), 500, (0, 0, 0))
 
     virtual_screen.blit(background, (0,0))
 
@@ -154,12 +170,10 @@ def Room(screen, screen_res, events):
         virtual_screen.blit(Cover, redRect)
         if selected == "Red":
             virtual_screen.blit(redpetri, msRect)
-
     if not yellowPlaced or selected == "Yellow":
         virtual_screen.blit(Cover, yellowRect)
         if selected == "Yellow":
             virtual_screen.blit(yellowpetri, msRect)
-
     if not bluePlaced or selected == "Blue":
         virtual_screen.blit(Cover, blueRect)
         if selected == "Blue":

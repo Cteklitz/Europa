@@ -76,11 +76,18 @@ def scaled_draw(virtual_res, virtual_screen, screen_res, screen):
     black_back.fill((0, 0, 0))
     screen.blit(black_back, (0, 0))
 
-    center_x = (screen_w - screen_res[0]) // 2  # distance from left side to center
-
     # scale and center room
     scaled = pygame.transform.scale(virtual_screen, screen_res)
-    screen.blit(scaled, (center_x, 0))
+
+    while scaled.get_width() > screen_w or scaled.get_height() > screen_h:
+        new_w = scaled.get_width() * 0.95
+        new_h = scaled.get_height() * 0.95
+        scaled = pygame.transform.scale(scaled, (new_w, new_h))
+
+    center_x = (screen_w - scaled.get_width()) // 2  # distance from left side to center
+    center_y = (screen_h - scaled.get_height()) // 2  # distance from top to center
+
+    screen.blit(scaled, (center_x, center_y))
 
 
 tiles = load_tileset("Assets/Grid.png", 32, 32)
@@ -162,3 +169,6 @@ yellowPetri = pygame.image.load("Assets/yellowPetri.png")
 yellowPetriGround = pygame.image.load("Assets/smolyellow.png")
 
 letterTile = pygame.image.load("Assets/letter_tile.png")
+
+trianglePuzzleCorner = pygame.image.load("Assets/trianglePuzzleCorner.png")
+trianglePuzzleBackground = pygame.image.load("Assets/trianglePuzzleBackground.png")
