@@ -72,31 +72,23 @@ def consumeItem(index):
     if index in range(len(inventory)):
         item = inventory[index]
 
-        match item:
-            case Items.bandage:
-                health += 15
-                if health >= 100:
-                    health = 100
-                inventory.pop(index)
-                return True
-            case Items.redPetri:
-                if equipped == Items.redPetri:
-                    equipped = None
-                else:
-                    equipped = Items.redPetri
-            case Items.bluePetri:
-                if equipped == Items.bluePetri:
-                    equipped = None
-                else:
-                    equipped = Items.bluePetri
-            case Items.yellowPetri:
-                if equipped == Items.yellowPetri:
-                    equipped = None
-                else:
-                    equipped = Items.yellowPetri
-            case _:
-                print(item.name + " cannot be consumed")
-                return False
+        if item.buttonType == "equip":
+            if equipped == item:
+                equipped = None
+            else:
+                equipped = item
+            return True
+        else:
+            match item:
+                case Items.bandage:
+                    health += 15
+                    if health >= 100:
+                        health = 100
+                    inventory.pop(index)
+                    return True
+                case _:
+                    print(item.name + " cannot be consumed")
+                    return False
     else:
         print(str(index) + " is not a valid inventory value")
         return False
