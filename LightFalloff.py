@@ -7,6 +7,9 @@ class LightFalloff(pygame.sprite.Sprite):
         self.screen_size = screen_size
         self.overlay = self.create_overlay(self.screen_size)
         self.gradient = self.create_gradient()
+
+    def update_darkness(self, _darkness):
+        self.darkness = _darkness
     
     # Creates transparent surface size of the screen to hold the gradient
     def create_overlay(self, screen_size):
