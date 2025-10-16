@@ -18,12 +18,15 @@ class LightFalloff(pygame.sprite.Sprite):
     
     # Creates radial falloff gradient darkening outwards from the center
     def create_gradient(self):
-        gradient = pygame.Surface((self.radius*2, self.radius*2), pygame.SRCALPHA)
+        surface_size = max(self.screen_size) * 2
+        gradient = pygame.Surface((surface_size, surface_size ), pygame.SRCALPHA)
 
-        for y in range(self.radius * 2):
-            for x in range(self.radius*2):
-                dx = x - self.radius
-                dy = y - self.radius
+        center = surface_size/2
+
+        for y in range(surface_size):
+            for x in range(surface_size):
+                dx = x - center
+                dy = y - center
                 dist = (dx**2 + dy**2) ** 0.5
                 if dist < self.radius:
                     alpha = int(self.darkness * (dist / self.radius))
@@ -35,5 +38,5 @@ class LightFalloff(pygame.sprite.Sprite):
     # Draws falloff gradient on surface at light position
     def draw(self, surface, light_pos):
         self.overlay.fill((0, 0, 0, 0)) # Clears previous drawing of gradient
-        self.overlay.blit(self.gradient, (light_pos[0] - self.radius, light_pos[1] - self.radius), special_flags=pygame.BLEND_RGBA_ADD)
+        self.overlay.blit(self.gradient, (light_pos[0] - max(self.screen_size), light_pos[1] - max(self.screen_size)), special_flags=pygame.BLEND_RGBA_ADD)
         surface.blit(self.overlay, (0, 0)) # Blit overlay onto screen
