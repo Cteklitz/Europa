@@ -43,8 +43,8 @@ table = False
 
 Bookcase = pygame.image.load("Assets/Bookcase.png")
 Bookcase2 = pygame.image.load("Assets/Bookcase2.png")
-Lit = pygame.image.load("Assets/Lit.png")
-scaledLit = pygame.transform.scale(Lit, (384, 55))
+Lit = pygame.image.load("Assets/WindowLit.png")
+scaledLit = pygame.transform.scale(Lit, (396, 55))
 unlit = pygame.image.load("Assets/WindowUnlit.png")
 scaledUnlit = pygame.transform.scale(unlit, (396, 68))
 lockedDoor = pygame.image.load("Assets/LockedDoor1.png")
@@ -183,30 +183,10 @@ def Room(screen, screen_res, events):
     if (lowerWingPower and power and level == 1) or Objects.getPinkPower():
         Assets.punch_light_hole(virtual_screen, dark_overlay, (virtual_screen.get_width()/2, virtual_screen.get_height()/2), 500, (0, 0, 0))
 
-    # pygame.draw.rect(virtual_screen, (105,105,105), (80, 0, 384, 32))
-    # pygame.draw.rect(virtual_screen, "black", (80, 0, 384, 32), 1)
-
-    # pygame.draw.rect(virtual_screen, (105,105,105), (80, 95, 384, 17))
-    # pygame.draw.rect(virtual_screen, "black", (80, 95, 384, 17), 1)
-
-    # pygame.draw.rect(virtual_screen, "navyblue", (80, 31, 384, 64))
-    # pygame.draw.rect(virtual_screen, "black", (80, 31, 384, 64), 1)
-
-    if upperWingPower and power and level == 1 or Objects.getPinkPower():
-        virtual_screen.blit(scaledLit, (79, 30))
+    if (lowerWingPower and power and level == 1) or Objects.getPinkPower():
+        virtual_screen.blit(scaledLit, (83, 30))
     else:
         virtual_screen.blit(scaledUnlit, (83, 30))
-
-    # pygame.draw.line(virtual_screen, (185, 122, 167), (133, 79), (133, 93), 5)
-    # pygame.draw.line(virtual_screen, (185, 122, 167), (163, 79), (163, 93), 5)
-
-    # pygame.draw.line(virtual_screen, (185, 122, 167), (316, 79), (316, 93), 5)
-    # pygame.draw.line(virtual_screen, (185, 122, 167), (346, 79), (346, 93), 5)
-
-    # pygame.draw.line(virtual_screen, "white", (100, 60), (125, 35))
-    # pygame.draw.line(virtual_screen, "white", (160, 75), (185, 50))
-
-    # pygame.draw.rect(virtual_screen, (185, 122, 87), (630, 112, 20, 1))
 
     for x in range(160, 680, 80):
         virtual_screen.blit(Assets.squishedPipes[10], (x,112))
@@ -290,8 +270,8 @@ def Room(screen, screen_res, events):
     if not lit or not Objects.getPinkPower():
         tooDarkSee.update()
 
-    if upperWingPower and power and level == 1:
-        virtual_screen.blit(litSave, (80,31))
+    #if upperWingPower and power and level == 1:
+    #    virtual_screen.blit(litSave, (80,31))
 
     # apply lighting (it will looks weird due to the screwy scaling in this room, way too much effort to fix it so whatever)
     if (lowerWingPower and power and level == 1) or Objects.getPinkPower():
