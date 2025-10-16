@@ -183,6 +183,7 @@ def Room(screen, screen_res, events):
     if (lowerWingPower and power and level == 1) or Objects.getPinkPower():
         Assets.punch_light_hole(virtual_screen, dark_overlay, (virtual_screen.get_width()/2, virtual_screen.get_height()/2), 500, (0, 0, 0))
 
+    # Shows unlit window or lit depending on if lights are on
     if (lowerWingPower and power and level == 1) or Objects.getPinkPower():
         virtual_screen.blit(scaledLit, (83, 30))
     else:
@@ -209,10 +210,6 @@ def Room(screen, screen_res, events):
         lit = light.update()
         if (lowerWingPower or Objects.getPinkPower()) and lit:
             light.image = Assets.squishedTiles[1]
-            #if index < 3:
-                #Assets.punch_light_hole(virtual_screen, dark_overlay, (light.x + 40, light.y + 6), 23, light.color)
-                #Assets.punch_light_hole(virtual_screen, dark_overlay, (light.x + 25, light.y + 8), 23, light.color)
-                #Assets.punch_light_hole(virtual_screen, dark_overlay, (light.x + 55, light.y + 8), 23, light.color)
 
         else:
             light.image = Assets.squishedDimTiles[1]
@@ -269,9 +266,6 @@ def Room(screen, screen_res, events):
 
     if not lit or not Objects.getPinkPower():
         tooDarkSee.update()
-
-    #if upperWingPower and power and level == 1:
-    #    virtual_screen.blit(litSave, (80,31))
 
     # apply lighting (it will looks weird due to the screwy scaling in this room, way too much effort to fix it so whatever)
     if (lowerWingPower and power and level == 1) or Objects.getPinkPower():
