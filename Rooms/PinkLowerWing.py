@@ -32,7 +32,7 @@ wall_lights = [
     LightSource(light_pos[0], light_pos[1], radius=60, strength = 220),
     LightSource(light_pos2[0], light_pos2[1], radius=60, strength = 220)
 ]
-falloff = [LightFalloff(virtual_screen.get_size(), darkness = 140)]
+falloff = [LightFalloff(virtual_screen.get_size(), darkness = 70)]
 
 bookcase = False
 lDoor = False
@@ -296,7 +296,7 @@ def Room(screen, screen_res, events):
     # apply lighting (it will looks weird due to the screwy scaling in this room, way too much effort to fix it so whatever)
     if (lowerWingPower and power and level == 1) or Objects.getPinkPower():
         apply_lighting(virtual_screen, wall_lights, darkness=10, ambient_color=(50, 50, 50), ambient_strength=10)
-        apply_falloff(falloff, virtual_screen, (light_pos[0] - 10, light_pos[1]))
+        apply_falloff(falloff, virtual_screen, (light_pos[0], light_pos[1]))
         apply_falloff(falloff, virtual_screen, light_pos2)
 
     scaled = pygame.transform.scale(virtual_screen, screen_res)
