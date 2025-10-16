@@ -204,8 +204,8 @@ def Room(screen, screen_res, events):
         #LightSource(upperWingLight.x + 16, upperWingLight.y + 16, radius=pinkLightRadius, strength = pinkLightStrength, color = pinkLightColor)
         apply_lighting(virtual_screen, lightsNew, darkness=10, ambient_color=(50, 50, 50), ambient_strength=10)
         # apply falloff
-        apply_falloff(falloff, virtual_screen, (lightsNew[0].x, lightsNew[0].y + 100)) # +100 bc otherwise the falloff does not cover the whole scree (i think this is caused by the lights being too close to the edge of the screen? maybe can be fixed)
-        apply_falloff(falloff, virtual_screen, (lightsNew[1].x, lightsNew[1].y + 100))
+        apply_falloff(falloff, virtual_screen, (lightsNew[0].x, lightsNew[0].y))
+        apply_falloff(falloff, virtual_screen, (lightsNew[1].x, lightsNew[1].y))
         apply_falloff(falloff, virtual_screen, (lightsNew[2].x, lightsNew[2].y))
         apply_falloff(falloff, virtual_screen, (lightsNew[3].x, lightsNew[3].y))
         apply_falloff(falloff, virtual_screen, (lightsNew[4].x, lightsNew[4].y))

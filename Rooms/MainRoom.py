@@ -5,6 +5,9 @@ from shapely.geometry import Point, Polygon
 import Sounds
 import Items
 from LightSource import LightSource
+from LightFalloff import LightFalloff
+from LightingUtils import apply_lighting, apply_falloff
+
 
 virtual_res = (480, 480)
 
@@ -16,7 +19,10 @@ player_pos = pygame.Vector2(240, 340)
 bounds = Assets.draw_polygon(virtual_screen, (320,430), 8, 160, "gray")
 octagon = Polygon(bounds)
 
-light_sources = [LightSource(100, 100, 40)]
+lightSources = [LightSource(240, 240, radius=60, strength = 200)]
+pinkLight1 = LightSource(63, 207, radius=100, strength=200, color=(150,0,150))
+pinkLight2 = LightSource(63, 273, radius=100, strength=200, color=(150,0,150))
+falloff = [LightFalloff(virtual_screen.get_size(), darkness = (100))]
 
 lights = [
     Objects.Light(47, 192, 1),
@@ -117,11 +123,11 @@ def Room(screen, screen_res, events):
             elif light.type == 4:
                 x = 224 + 16
                 y = 12 + 16
-            if not Done:
-                Assets.punch_light_hole(virtual_screen, dark_overlay, (x, y), 100, light.color)
+            #if not Done:
+                #Assets.punch_light_hole(virtual_screen, dark_overlay, (x, y), 100, light.color)       
         virtual_screen.blit(light.image, light.rect)
 
-    Assets.punch_light_hole(virtual_screen, dark_overlay, (240,240), 23, (239,228,176))
+    #Assets.punch_light_hole(virtual_screen, dark_overlay, (240,240), 23, (239,228,176))
 
     for y in range(44, 236, 32):
         virtual_screen.blit(Assets.pipes[7], (224, y))
@@ -147,7 +153,25 @@ def Room(screen, screen_res, events):
         virtual_screen.blit(Assets.ctrlRoomDoor, (220, 224))
         pygame.draw.circle(virtual_screen, "red", player_pos, 16)
 
-    virtual_screen.blit(dark_overlay, (0, 0))
+
+    pipeDungeonInfo = Objects.getPipeDungeonInfo()
+    pinkPower = Objects.getPinkPower()
+
+    # clear colored lights from lightSources
+    while (len(lightSources) > 1):
+        lightSources.pop()
+
+    if pinkPower or (pipeDungeonInfo[0] == 1 and pipeDungeonInfo[1] == True): # checks if the pink door should be lit
+        lightSources.append(pinkLight1)
+        lightSources.append(pinkLight2)
+
+    falloff[0].update_darkness(140 / len(lightSources)) # adjust falloff strength based on amount of lights
+    
+    apply_lighting(virtual_screen, lightSources, darkness=10, ambient_color=(50, 50, 50), ambient_strength=10)
+    for i in range(len(lightSources)): # apply falloff for each light in lightSources
+        apply_falloff(falloff, virtual_screen, (lightSources[i].x, lightSources[i].y))
+
+    #virtual_screen.blit(dark_overlay, (0, 0))
 
     Assets.scaled_draw(virtual_res, virtual_screen, screen_res, screen)
 

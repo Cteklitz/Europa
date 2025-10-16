@@ -1,6 +1,9 @@
 # Example file showing a circle moving on screen
 import pygame
 import Assets
+from LightSource import LightSource
+from LightFalloff import LightFalloff
+from LightingUtils import apply_lighting, apply_falloff
 
 pipePuzzle = [
     [2,1,2,6,6],
@@ -124,6 +127,9 @@ pipeSound = pygame.mixer.Sound("Audio/pipe.wav")
 valveSound = pygame.mixer.Sound("Audio/valve.wav")
 switchSound = pygame.mixer.Sound("Audio/switch.wav")
 
+circleLight = pygame.image.load("Assets/CircleLight.png")
+
+
 class Valve:
     def __init__(self, xpos, ypos, action):
         self.x = xpos
@@ -243,6 +249,15 @@ def positionDeterminer(cameFrom):
     global player_pos
     player_pos = pygame.Vector2(175, 340)
 
+# Lighting
+light_pos = (81, 132)
+light_pos2 = (271, 132)
+wall_lights = [
+    LightSource(light_pos[0], light_pos[1], radius=80, strength = 220),
+    LightSource(light_pos2[0], light_pos2[1], radius=80, strength = 220)
+]
+falloff = [LightFalloff(virtual_screen.get_size(), darkness = 100)]   
+
 def Room(screen, screen_res, events):
     global level, floor
 
@@ -287,6 +302,13 @@ def Room(screen, screen_res, events):
     else:
         pygame.draw.circle(virtual_screen, "red", player_pos, 16)
         virtual_screen.blit(valve.image, valve.rect)
+
+    virtual_screen.blit(circleLight, circleLight.get_rect(center=light_pos))
+    virtual_screen.blit(circleLight, circleLight.get_rect(center=light_pos2))
+
+    apply_lighting(virtual_screen, wall_lights, darkness=10, ambient_color=(50, 50, 50), ambient_strength=10)
+    apply_falloff(falloff, virtual_screen, light_pos)
+    apply_falloff(falloff, virtual_screen, light_pos2)
 
     virtual_screen.blit(dark_overlay, (0, 0))
 

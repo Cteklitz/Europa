@@ -158,12 +158,6 @@ def Room(screen, screen_res, events):
         dark_overlay.fill((0, 0, 0, 150))
         dark_overlay2.fill((0, 0, 0, 150))
 
-
-
-    #if lit:
-       # Assets.punch_light_hole(virtual_screen, dark_overlay, (virtual_screen.get_width()/2, virtual_screen.get_height()/2), 500, (100, 0, 100))
-      #  Assets.punch_light_hole(virtual_screen2, dark_overlay2, (virtual_screen2.get_width()/2, virtual_screen2.get_height()/2), 500, (100, 0, 100))
-
     virtual_screen.blit(tripuzzlehints, (43,66))
     virtual_screen.blit(whiteboardimg, (99,43))
 
@@ -188,7 +182,6 @@ def Room(screen, screen_res, events):
     for i in range(9):
         virtual_screen.blit(Assets.squishedPipes2[2], (218, 170 - 7*i))
 
-    #virtual_screen.blit(Assets.squishedPipes2[0], (218, 180))
     virtual_screen.blit(Assets.squishedPipes2[4], (28, 177))
 
     for light in lights:
