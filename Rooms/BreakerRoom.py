@@ -14,26 +14,26 @@ bounds = Assets.draw_polygon(virtual_screen, (208, 208), 4, 160, "gray")
 outline = Polygon(bounds)
 
 lights = [
-    Objects.Light(176, 144, 2),
+    Objects.Light(176, 48, 2),
+    Objects.Light(176, 176, 2),
     Objects.Light(48, 48, 2),
-    Objects.Light(48, 176, 2),
-    Objects.Light(176, 80, 1)
+    Objects.Light(48, 176, 2)
 ]
 
-blueDoor = Objects.Door(16, 112, Assets.blueDoorWest)
-lockedDoor = Objects.Door(208, 112, Assets.lockedDoorEast)
-
-open = False
+northDoor = Objects.Door(112, 16, Assets.lockedDoorNorth)
+westDoor = Objects.Door(16, 112, Assets.grayDoorWest)
 
 def inBounds(x, y):
-    global open
     level, power = Objects.getPipeDungeonInfo()
-    if blueDoor.rect.collidepoint((x,y)):
+    if westDoor.rect.collidepoint((x,y)):
         if level == 2 and power:
             Sounds.powerAmb.stop()
             Sounds.ominousAmb.play(-1)
         return 0
-    if lockedDoor.rect.collidepoint((x,y)) and open:
+    elif northDoor.rect.collidepoint((x,y)):
+        if level == 2 and power:
+            Sounds.powerAmb.stop()
+            Sounds.ominousAmb.play(-1)
         return 1
     elif not outline.contains(Point(x,y)):
         return False
@@ -41,12 +41,16 @@ def inBounds(x, y):
 
 def positionDeterminer(cameFrom):
     global player_pos
-    if cameFrom == "Rooms.MainRoom":
-        player_pos = pygame.Vector2(blueDoor.x + 37, blueDoor.y + blueDoor.rect.height/2)
+    if cameFrom == "Rooms.BlueRoom":
+        player_pos = pygame.Vector2(westDoor.x + 37, westDoor.y + westDoor.rect.height/2)
 
 def Room(screen, screen_res, events):
-    global open
+    level, power = Objects.getPipeDungeonInfo()
     
+    # for event in events:
+    #     if event.type == pygame.KEYDOWN:
+    #         if event.key == pygame.K_e:
+             
     virtual_screen.fill((105,105,105))
     dark_overlay.fill((0, 0, 0, 150))
     outer = Assets.draw_polygon(virtual_screen, (240, 240), 4, 224, "gray", 1, True)
@@ -56,33 +60,16 @@ def Room(screen, screen_res, events):
         pygame.draw.line(virtual_screen, "black", outer[i], inner[i], 1)
 
     Done = False
-    pink = False
-    blue = False
 
     for light in lights:
-        lit = light.update()
-        if lit and light.type == 1:
-            Assets.punch_light_hole(virtual_screen, dark_overlay, (192,96), 50, (100, 0, 100))
-            pink = True
-        if not Done and lit and light.type == 2:
+        light.update()
+        if not Done:
             Assets.punch_light_hole(virtual_screen, dark_overlay, (112, 112), 300, (0, 162, 232))
             Done = True
-            blue = True
         virtual_screen.blit(light.image, light.rect)
 
-    for x in range(48, 208, 32):
-        virtual_screen.blit(Assets.pipes[10], (x,112))
-
-    virtual_screen.blit(blueDoor.image, blueDoor.rect)
-
-    if pink and blue:
-        open = True
-        lockedDoor.image = Assets.grayDoorEast
-    else:
-        open = False
-        lockedDoor.image = Assets.lockedDoorEast
-    
-    virtual_screen.blit(lockedDoor.image, lockedDoor.rect)
+    virtual_screen.blit(northDoor.image, northDoor.rect)
+    virtual_screen.blit(westDoor.image, westDoor.rect)
 
     pygame.draw.circle(virtual_screen, "red", player_pos, 16)
 

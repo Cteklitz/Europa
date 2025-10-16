@@ -7,7 +7,7 @@ from LightSource import LightSource
 from LightFalloff import LightFalloff
 from LightingUtils import apply_lighting, apply_falloff
 
-pinkPower = False
+pinkPower = True
 played = False
 
 switchSound = pygame.mixer.Sound("Audio/switch.wav")

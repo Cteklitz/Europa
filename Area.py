@@ -1,6 +1,6 @@
 from Rooms import ControlRoom, MainRoom, PinkRoom, PinkLowerWing, BookcaseView, OrangeYellow, \
 Safe, PinkUpperWing, TrianglePuzzle, TriangleSolution, BeakerPuzzle, MscopeTable, Microscope, \
-LockedDoor, Desk, SpotDiffs, PinkPower, BlueRoom
+LockedDoor, Desk, SpotDiffs, PinkPower, BlueRoom, BreakerRoom
 
 # Getter functions for getting information about rooms the player isn't currently in. Use the corresponding functions in Objects.py, not these, when accessing info.
 def getPipeDungeonInfo():
@@ -21,10 +21,7 @@ def getBeakerSolved():
 def getSpotDiffsSolved():
     return SpotDiffs.chestOpen
 
-def getColorsFound():
-    return MscopeTable.redFound, OrangeYellow.yellowFound, Desk.blueFound
-
-def getColorsPlaced():
+def getColors():
     return MscopeTable.redPlaced, MscopeTable.yellowPlaced, MscopeTable.bluePlaced
 
 def getSelected():
@@ -35,7 +32,6 @@ def getOpen():
 
 def getPinkPower():
     return PinkPower.pinkPower
-    # return True
 
 def getLetterCount():
     return LockedDoor.letterCount
@@ -73,7 +69,8 @@ PipeDungeon = Area(
             MscopeTable: [PinkUpperWing, Microscope],
             Microscope: [MscopeTable],
             PinkPower: [PinkLowerWing],
-            BlueRoom: [MainRoom]
+            BlueRoom: [MainRoom, BreakerRoom],
+            BreakerRoom: [BlueRoom]
     }
 )
 
