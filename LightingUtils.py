@@ -25,6 +25,7 @@ def apply_lighting(surface, lights, darkness = 200, ambient_strength = 40, ambie
     # Blend ambient light on top of the surface
     surface.blit(ambient_overlay, (0, 0), special_flags=pygame.BLEND_RGBA_ADD)
 
+# Add falloff to screen
 def apply_falloff(falloff, surface, light_pos):
     for shadow in falloff:
         shadow.draw(surface, light_pos)

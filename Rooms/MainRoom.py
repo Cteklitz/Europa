@@ -20,9 +20,18 @@ bounds = Assets.draw_polygon(virtual_screen, (320,430), 8, 160, "gray")
 octagon = Polygon(bounds)
 
 lightSources = [LightSource(240, 240, radius=60, strength = 200)]
-pinkLight1 = LightSource(63, 207, radius=100, strength=200, color=(150,0,150))
-pinkLight2 = LightSource(63, 273, radius=100, strength=200, color=(150,0,150))
-falloff = [LightFalloff(virtual_screen.get_size(), darkness = (100))]
+pinkLight1 = LightSource(63, 207, radius=50, strength=100, color=(120,0,120))
+pinkLight2 = LightSource(63, 273, radius=50, strength=100, color=(120,0,120))
+
+# this is to allow for a dynamic amount of lights to be on without affecting the room brightness
+# falloffs[n] is the falloff for when there are n lights in the room, it should be applied to each of the n lights 
+# also this solution sucks! makes the game take super long to launch since calcing the darkness is slow
+# will try and think of a way to fix it ig
+max_lights = 4
+darkness = 180
+falloffs = []
+for i in range(1, max_lights):
+    falloffs.append([LightFalloff(virtual_screen.get_size(), darkness = (darkness / i))])
 
 lights = [
     Objects.Light(47, 192, 1),
@@ -164,12 +173,10 @@ def Room(screen, screen_res, events):
     if pinkPower or (pipeDungeonInfo[0] == 1 and pipeDungeonInfo[1] == True): # checks if the pink door should be lit
         lightSources.append(pinkLight1)
         lightSources.append(pinkLight2)
-
-    falloff[0].update_darkness(140 / len(lightSources)) # adjust falloff strength based on amount of lights
     
     apply_lighting(virtual_screen, lightSources, darkness=10, ambient_color=(50, 50, 50), ambient_strength=10)
     for i in range(len(lightSources)): # apply falloff for each light in lightSources
-        apply_falloff(falloff, virtual_screen, (lightSources[i].x, lightSources[i].y))
+        apply_falloff(falloffs[len(lightSources) - 1], virtual_screen, (lightSources[i].x, lightSources[i].y))
 
     #virtual_screen.blit(dark_overlay, (0, 0))
 
