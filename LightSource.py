@@ -1,7 +1,7 @@
 import pygame
 import math
 class LightSource(pygame.sprite.Sprite):
-    def __init__(self, x, y, radius = 120, color = (255, 200, 150), strength = 200, shape = "circle", angle = 90, spread = 90):
+    def __init__(self, x, y, radius = 120, color = (255, 255, 255), strength = 200, shape = "circle", angle = 90, spread = 90):
         super().__init__()
         
         self.x = x
@@ -57,10 +57,14 @@ class LightSource(pygame.sprite.Sprite):
             for rad in range(self.radius, 0, -1):
                 mask_alpha = int(50 * (rad / self.radius) ** 2)  # smooth fade
                 pygame.draw.circle(fade_mask, (255, 255, 255, mask_alpha), (self.radius, self.radius), rad)
-            light_surface.blit(fade_mask, (0, 0), special_flags=pygame.BLEND_RGBA_ADD)
+            light_surface.blit(fade_mask, (0, 0), special_flags=pygame.BLEND_RGBA_SUB)
         return light_surface
 
-    # Draws light onto screen by substracting from dark surface and light showing throuhg
+    # If light is colored, adds light to background. Subtracts light if not.
     def draw(self, surface):
         rect = self.light_surface.get_rect(center = (self.x, self.y))
-        surface.blit(self.light_surface, rect, special_flags = pygame.BLEND_RGBA_SUB)
+        if self.color != (255, 255, 255):
+            surface.blit(self.light_surface, rect, special_flags = pygame.BLEND_RGBA_ADD)
+        else:
+            surface.blit(self.light_surface, rect, special_flags = pygame.BLEND_RGBA_SUB)
+        

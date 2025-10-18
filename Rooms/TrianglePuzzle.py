@@ -245,14 +245,26 @@ def Room(screen, screen_res, events):
     virtual_screen.fill((185, 122, 87))
     dark_overlay.fill((0, 0, 0, 150))
 
+    virtual_screen.blit(Assets.trianglePuzzleBackground, (0,0))
+
     for i in range(1,15):
         triangle, pos = getTriangle(trianglePuzzle[i], i)
         virtual_screen.blit(triangle, pos)
 
-    pygame.draw.circle(virtual_screen, (255, 201, 14), (0,0), 35)
-    pygame.draw.circle(virtual_screen, (255, 201, 14), (750,0), 35)
-    pygame.draw.circle(virtual_screen, (255, 201, 14), (0,500), 35)
-    pygame.draw.circle(virtual_screen, (255, 201, 14), (750,500), 35)
+    cornerRect1 = Assets.trianglePuzzleCorner.get_rect()
+    cornerRect2 = Assets.trianglePuzzleCorner.get_rect()
+    cornerRect3 = Assets.trianglePuzzleCorner.get_rect()
+    cornerRect4 = Assets.trianglePuzzleCorner.get_rect()
+
+    cornerRect1.center = (0,0)
+    cornerRect2.center = (750,0)
+    cornerRect3.center = (0,500)
+    cornerRect4.center = (750,500)
+
+    virtual_screen.blit(Assets.trianglePuzzleCorner, cornerRect1)
+    virtual_screen.blit(Assets.trianglePuzzleCorner, cornerRect2)
+    virtual_screen.blit(Assets.trianglePuzzleCorner, cornerRect3)
+    virtual_screen.blit(Assets.trianglePuzzleCorner, cornerRect4)
 
     if not solved:
         virtual_screen.blit(giveup, (190, 410))

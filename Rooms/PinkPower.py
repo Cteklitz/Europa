@@ -3,6 +3,9 @@ import pygame
 import Assets
 import Objects
 import Sounds
+from LightSource import LightSource
+from LightFalloff import LightFalloff
+from LightingUtils import apply_lighting, apply_falloff
 
 pinkPower = False
 played = False
@@ -56,6 +59,13 @@ lights = [
     [Light(160, 116), dimLightScale3, LightScale3]
 ]
 
+lightPos = [(64 + 16,0 + 16), (256 + 16,0 + 16), (64 + 16,224 + 16), (256 + 16,224 + 16)]
+lightsNew = [LightSource(lightPos[0][0], lightPos[0][1], radius=60, strength = 220),
+             LightSource(lightPos[1][0], lightPos[1][1], radius=60, strength = 220),
+             LightSource(lightPos[2][0], lightPos[2][1], radius=60, strength = 220),
+             LightSource(lightPos[3][0], lightPos[3][1], radius=60, strength = 220),]
+falloff = [LightFalloff((virtual_res[0], virtual_res[1]), darkness = 25)]
+
 pulse = 8
 setup = False
 
@@ -88,7 +98,7 @@ def lightFunction():
         
 
 def inBounds(x, y):
-    global pinkPower
+    global pinkPower, pulse
     doorRect = pygame.Rect(300,208,door.get_width(),door.get_height())
     if doorRect.collidepoint(x,y):
         level, power = Objects.getPipeDungeonInfo()
@@ -150,7 +160,7 @@ def Room(screen, screen_res, events):
     pygame.draw.line(virtual_screen, (0,0,0), (288, 0), (288, 256), 1)
 
     if pinkPower:
-        Assets.punch_light_hole(virtual_screen, dark_overlay, (virtual_screen.get_width()/1.8, virtual_screen.get_height()/2), 500, (100, 0, 100))
+        Assets.punch_light_hole(virtual_screen, dark_overlay, (virtual_screen.get_width()/1.8, virtual_screen.get_height()/2), 500, (0, 0, 0))
 
     if pinkPower:
         virtual_screen.blit(Assets.tiles[1], (64,0))
@@ -186,6 +196,24 @@ def Room(screen, screen_res, events):
     virtual_screen.blit(door, (300,208))
 
     pygame.draw.circle(virtual_screen, "red", player_pos, 16)
+
+    # apply lighting
+    if pinkPower:
+        # add pulse lights to lights array
+        lightsNew.append(LightSource(lights[(pulse - 1) % 8][0].x + 20, lights[(pulse - 1) % 8][0].y + 15, radius=50, strength=100, color=(150,0,100)))
+        #LightSource(upperWingLight.x + 16, upperWingLight.y + 16, radius=pinkLightRadius, strength = pinkLightStrength, color = pinkLightColor)
+        apply_lighting(virtual_screen, lightsNew, darkness=10, ambient_color=(50, 50, 50), ambient_strength=10)
+        # apply falloff
+        apply_falloff(falloff, virtual_screen, (lightsNew[0].x, lightsNew[0].y))
+        apply_falloff(falloff, virtual_screen, (lightsNew[1].x, lightsNew[1].y))
+        apply_falloff(falloff, virtual_screen, (lightsNew[2].x, lightsNew[2].y))
+        apply_falloff(falloff, virtual_screen, (lightsNew[3].x, lightsNew[3].y))
+        apply_falloff(falloff, virtual_screen, (lightsNew[4].x, lightsNew[4].y))
+
+        lightsNew.pop()
+
+        #for i in range(4, len(lightsNew)):
+            #apply_falloff(falloff, virtual_screen, (lightsNew[i].x, lightsNew[i].y))
 
     virtual_screen.blit(dark_overlay, (0, 0))
 

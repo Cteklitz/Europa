@@ -12,7 +12,7 @@ virtual_res = (324, 219)
 virtual_screen = pygame.Surface(virtual_res)
 dark_overlay = pygame.Surface(virtual_screen.get_size(), pygame.SRCALPHA)
 
-virtual_res2 = (420, 219)
+virtual_res2 = (400, 219)
 virtual_screen2 = pygame.Surface(virtual_res2)
 dark_overlay2 = pygame.Surface(virtual_screen2.get_size(), pygame.SRCALPHA)
 
@@ -48,10 +48,10 @@ lights = [
 light_pos = (70, 50)
 light_pos2 = (240, 50)
 wall_lights = [
-    LightSource(light_pos[0], light_pos[1], radius=50, color=(255, 200, 100), strength = 120),
-    LightSource(light_pos2[0], light_pos2[1], radius=50, color=(255, 200, 100), strength = 120)
+    LightSource(light_pos[0], light_pos[1], radius=60, strength = 220),
+    LightSource(light_pos2[0], light_pos2[1], radius=60, strength = 220)
 ]
-falloff = [LightFalloff(virtual_screen.get_size(), darkness = 160)]
+falloff = [LightFalloff(virtual_screen.get_size(), darkness = 140)]
 
 background = pygame.image.load("Assets/PinkUpperWing.png")
 door = pygame.image.load("Assets/pinkupperwingdoor.png")
@@ -65,8 +65,7 @@ mscopetable = pygame.image.load("Assets/mscopetable.png")
 smolRed = pygame.image.load("Assets/smolRed.png")
 smolYellow = pygame.image.load("Assets/smolYellow.png")
 smolBlue = pygame.image.load("Assets/smolBlue.png")
-circleLightUnscaled = pygame.image.load("Assets/CircleLight.png")
-circleLight = pygame.transform.scale(circleLightUnscaled, (22, 22))
+circleLight = pygame.image.load("Assets/CircleLight.png")
 tableWidth = mscopetable.get_width()/3
 tableHeight = mscopetable.get_height()/3
 mscopetableScale = pygame.transform.scale(mscopetable, (tableWidth, tableHeight))
@@ -155,14 +154,9 @@ def Room(screen, screen_res, events):
 
     virtual_screen.blit(background, (0,0))
     virtual_screen2.fill((195, 195, 195))
-    dark_overlay.fill((0, 0, 0, 150))
-    dark_overlay2.fill((0, 0, 0, 150))
-
-
-
-    #if lit:
-       # Assets.punch_light_hole(virtual_screen, dark_overlay, (virtual_screen.get_width()/2, virtual_screen.get_height()/2), 500, (100, 0, 100))
-      #  Assets.punch_light_hole(virtual_screen2, dark_overlay2, (virtual_screen2.get_width()/2, virtual_screen2.get_height()/2), 500, (100, 0, 100))
+    if not lit:
+        dark_overlay.fill((0, 0, 0, 150))
+        dark_overlay2.fill((0, 0, 0, 150))
 
     virtual_screen.blit(tripuzzlehints, (43,66))
     virtual_screen.blit(whiteboardimg, (99,43))
@@ -174,17 +168,21 @@ def Room(screen, screen_res, events):
     virtual_screen.blit(powerdoor, (31,188))
     virtual_screen.blit(door, (221,188))
 
-    for i in range(5):
-        virtual_screen.blit(Assets.squishedPipes2[1], (64 + 36*i, 180))
-
     for i in range(4):
-        virtual_screen.blit(Assets.squishedPipes2[1], (100 + 36*i, 111))
+        virtual_screen.blit(Assets.squishedPipes2[1], (64 + 36*i, 177))
+    
+    virtual_screen.blit(Assets.squishedPipes2[0], (218, 177))
+
+    virtual_screen.blit(Assets.squishedPipes2[1], (244, 177))
+
+    # upper horizontal pipes
+    for i in range(4):
+        virtual_screen.blit(Assets.squishedPipes2[1], (100 + 36*i, 108))
 
     for i in range(9):
-        virtual_screen.blit(Assets.squishedPipes2[2], (218, 173 - 7*i))
+        virtual_screen.blit(Assets.squishedPipes2[2], (218, 170 - 7*i))
 
-    virtual_screen.blit(Assets.squishedPipes2[0], (218, 180))
-    virtual_screen.blit(Assets.squishedPipes2[4], (28, 180))
+    virtual_screen.blit(Assets.squishedPipes2[4], (28, 177))
 
     for light in lights:
         if lit:
@@ -210,9 +208,9 @@ def Room(screen, screen_res, events):
     virtual_screen.blit(circleLight, circleLight.get_rect(center=light_pos))
     virtual_screen.blit(circleLight, circleLight.get_rect(center=light_pos2))
 
-    virtual_screen2.blit(whiteboardzoom, (20,20))
+    virtual_screen2.blit(whiteboardzoom, (10,20))
 
-    red, yellow, blue = Objects.getColors()
+    red, yellow, blue = Objects.getColorsPlaced()
 
     if red:
         virtual_screen.blit(smolRed, (150, 121))
@@ -230,7 +228,7 @@ def Room(screen, screen_res, events):
         virtual_screen.blit(dark_overlay, (0, 0))
         virtual_screen2.blit(dark_overlay2, (0, 0))
     else:
-        apply_lighting(virtual_screen, wall_lights, darkness=20, ambient_color=(30, 30, 30), ambient_strength=80)
+        apply_lighting(virtual_screen, wall_lights, darkness=10, ambient_color=(50, 50, 50), ambient_strength=10)
         apply_falloff(falloff, virtual_screen, light_pos)
         apply_falloff(falloff, virtual_screen, light_pos2)
 

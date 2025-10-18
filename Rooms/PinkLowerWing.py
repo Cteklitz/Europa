@@ -3,6 +3,9 @@ import Assets
 import Objects
 from shapely.geometry import Point, Polygon, LineString
 import Sounds
+from LightSource import LightSource
+from LightFalloff import LightFalloff
+from LightingUtils import apply_lighting, apply_falloff
 
 virtual_res = (904, 208)
 virtual_screen = pygame.Surface(virtual_res)
@@ -22,6 +25,17 @@ lights = [
     Objects.SquishedLight(120, 184, 1)
 ]
 
+# Lighting
+light_pos = (50, 50)
+light_pos2 = (640, 50)
+light_pos3 = (300, 50)
+wall_lights = [
+    LightSource(light_pos[0], light_pos[1], radius=60, strength = 220),
+    LightSource(light_pos2[0], light_pos2[1], radius=60, strength = 220),
+    LightSource(light_pos3[0], light_pos3[1], radius = 10, strength=220)
+]
+falloff = [LightFalloff(virtual_screen.get_size(), darkness = 70)]
+
 bookcase = False
 lDoor = False
 desk = False
@@ -29,8 +43,10 @@ table = False
 
 Bookcase = pygame.image.load("Assets/Bookcase.png")
 Bookcase2 = pygame.image.load("Assets/Bookcase2.png")
-Lit = pygame.image.load("Assets/Lit.png")
-scaledLit = pygame.transform.scale(Lit, (384, 55))
+Lit = pygame.image.load("Assets/WindowLit.png")
+scaledLit = pygame.transform.scale(Lit, (396, 55))
+unlit = pygame.image.load("Assets/WindowUnlit.png")
+scaledUnlit = pygame.transform.scale(unlit, (396, 68))
 lockedDoor = pygame.image.load("Assets/LockedDoor1.png")
 lockedDoorRect = lockedDoor.get_rect(topleft=(31,95))
 lockedDoorRange = pygame.Rect(lockedDoorRect.x, lockedDoorRect.y-10, lockedDoorRect.width+10, lockedDoorRect.height+10)
@@ -48,6 +64,10 @@ tableRect2 = pygame.Rect(292,110,350,45)
 tableRange = pygame.Rect(292,160,350,16)
 scaledTooDarkSee = pygame.transform.scale(Assets.tooDarkSee, (Assets.tooDarkSee.get_width()*1.5, Assets.tooDarkSee.get_height()/1.2))
 tooDarkSee = Objects.briefText(virtual_screen, scaledTooDarkSee, 170, 160, 3)
+circleLight = pygame.image.load("Assets/CircleLight.png")
+scaledLightLeft = pygame.transform.scale(circleLight, (circleLight.get_width()*1.9, circleLight.get_height()/1.0))
+scaledLightLeft = pygame.transform.rotate(scaledLightLeft, 30)
+scaledLightRight = pygame.transform.scale(circleLight, (circleLight.get_width()*1.9, circleLight.get_height()/1.0))
 
 def inBounds(x, y):
     global bookcase, lDoor, lockedDoor, desk, table
@@ -122,7 +142,7 @@ def Room(screen, screen_res, events):
 
     bookcaseRange = pygame.Rect(792,140,104,56)
 
-    _, _, blueFound = Objects.getColors()
+    _, _, blueFound = Objects.getColorsFound()
 
     spotdiffssolved = Objects.getSpotDiffsSolved()
 
@@ -157,37 +177,17 @@ def Room(screen, screen_res, events):
     pygame.draw.line(virtual_screen, "black", (16, 190), (80, 112))
     pygame.draw.line(virtual_screen, "black", (887, 190), (824, 112))
 
+    virtual_screen.blit(scaledLightLeft, scaledLightLeft.get_rect(center=light_pos))
+    virtual_screen.blit(scaledLightRight, scaledLightLeft.get_rect(center=light_pos2))
+
     if (lowerWingPower and power and level == 1) or Objects.getPinkPower():
-        Assets.punch_light_hole(virtual_screen, dark_overlay, (virtual_screen.get_width()/2, virtual_screen.get_height()/2), 500, (100, 0, 100))
+        Assets.punch_light_hole(virtual_screen, dark_overlay, (virtual_screen.get_width()/2, virtual_screen.get_height()/2), 500, (0, 0, 0))
 
-    pygame.draw.rect(virtual_screen, (105,105,105), (80, 0, 384, 32))
-    pygame.draw.rect(virtual_screen, "black", (80, 0, 384, 32), 1)
-
-    pygame.draw.rect(virtual_screen, (105,105,105), (80, 95, 384, 17))
-    pygame.draw.rect(virtual_screen, "black", (80, 95, 384, 17), 1)
-
-    pygame.draw.rect(virtual_screen, "navyblue", (80, 31, 384, 64))
-    pygame.draw.rect(virtual_screen, "black", (80, 31, 384, 64), 1)
-
-    if upperWingPower and power and level == 1 or Objects.getPinkPower():
-        virtual_screen.blit(scaledLit, (79, 30))
+    # Shows unlit window or lit depending on if lights are on
+    if (lowerWingPower and power and level == 1) or Objects.getPinkPower():
+        virtual_screen.blit(scaledLit, (83, 30))
     else:
-        pygame.draw.rect(virtual_screen, (105,105,185), (104, 39, 360, 40))
-        pygame.draw.rect(virtual_screen, "black", (104, 39, 360, 40), 1)
-
-        pygame.draw.rect(virtual_screen, (0, 0, 30), (104, 50, 360, 20))
-        pygame.draw.rect(virtual_screen, "black", (104, 50, 360, 20), 1)
-
-    pygame.draw.line(virtual_screen, (185, 122, 167), (133, 79), (133, 93))
-    pygame.draw.line(virtual_screen, (185, 122, 167), (163, 79), (163, 93))
-
-    pygame.draw.line(virtual_screen, (185, 122, 167), (316, 79), (316, 93))
-    pygame.draw.line(virtual_screen, (185, 122, 167), (346, 79), (346, 93))
-
-    pygame.draw.line(virtual_screen, "white", (100, 60), (125, 35))
-    pygame.draw.line(virtual_screen, "white", (160, 75), (185, 50))
-
-    pygame.draw.rect(virtual_screen, (185, 122, 87), (630, 112, 20, 1))
+        virtual_screen.blit(scaledUnlit, (83, 30))
 
     for x in range(160, 680, 80):
         virtual_screen.blit(Assets.squishedPipes[10], (x,112))
@@ -200,6 +200,9 @@ def Room(screen, screen_res, events):
     for y in range(120, 184, 8):
         virtual_screen.blit(Assets.squishedPipes[7], (600,y))
 
+    pygame.draw.line(virtual_screen, "black", (628,112), (628,115), 3)
+    pygame.draw.line(virtual_screen, "black", (651,112), (651,115), 3)
+
     virtual_screen.blit(Assets.squishedPipes[8], (12,142))
     virtual_screen.blit(Assets.squishedPipes[6], (80,142))
 
@@ -207,10 +210,7 @@ def Room(screen, screen_res, events):
         lit = light.update()
         if (lowerWingPower or Objects.getPinkPower()) and lit:
             light.image = Assets.squishedTiles[1]
-            if index < 3:
-                Assets.punch_light_hole(virtual_screen, dark_overlay, (light.x + 40, light.y + 6), 23, light.color)
-                Assets.punch_light_hole(virtual_screen, dark_overlay, (light.x + 25, light.y + 8), 23, light.color)
-                Assets.punch_light_hole(virtual_screen, dark_overlay, (light.x + 55, light.y + 8), 23, light.color)
+
         else:
             light.image = Assets.squishedDimTiles[1]
         virtual_screen.blit(light.image, light.rect)
@@ -267,8 +267,11 @@ def Room(screen, screen_res, events):
     if not lit or not Objects.getPinkPower():
         tooDarkSee.update()
 
-    if upperWingPower and power and level == 1:
-        virtual_screen.blit(litSave, (80,31))
+    # apply lighting (it will looks weird due to the screwy scaling in this room, way too much effort to fix it so whatever)
+    if (lowerWingPower and power and level == 1) or Objects.getPinkPower():
+        apply_lighting(virtual_screen, wall_lights, darkness=10, ambient_color=(50, 50, 50), ambient_strength=10)
+        apply_falloff(falloff, virtual_screen, (light_pos[0], light_pos[1]))
+        apply_falloff(falloff, virtual_screen, light_pos2)
 
     scaled = pygame.transform.scale(virtual_screen, screen_res)
     screen.blit(scaled, (0, 0))
