@@ -183,8 +183,8 @@ def Room(screen, screen_res, events):
     if (lowerWingPower and power and level == 1) or Objects.getPinkPower():
         Assets.punch_light_hole(virtual_screen, dark_overlay, (virtual_screen.get_width()/2, virtual_screen.get_height()/2), 500, (0, 0, 0))
 
-    # Shows unlit window or lit depending on if lights are on
-    if (lowerWingPower and power and level == 1) or Objects.getPinkPower():
+    # Shows unlit window or lit depending on if lights are on in Upper Wing
+    if (upperWingPower and power and level == 1) or Objects.getPinkPower():
         virtual_screen.blit(scaledLit, (83, 22))
     else:
         virtual_screen.blit(scaledUnlit, (83, 22))
