@@ -44,7 +44,7 @@ table = False
 Bookcase = pygame.image.load("Assets/Bookcase.png")
 Bookcase2 = pygame.image.load("Assets/Bookcase2.png")
 Lit = pygame.image.load("Assets/WindowLit.png")
-scaledLit = pygame.transform.scale(Lit, (396, 55))
+scaledLit = pygame.transform.scale(Lit, (396, 68))
 unlit = pygame.image.load("Assets/WindowUnlit.png")
 scaledUnlit = pygame.transform.scale(unlit, (396, 68))
 lockedDoor = pygame.image.load("Assets/LockedDoor1.png")
@@ -185,9 +185,9 @@ def Room(screen, screen_res, events):
 
     # Shows unlit window or lit depending on if lights are on
     if (lowerWingPower and power and level == 1) or Objects.getPinkPower():
-        virtual_screen.blit(scaledLit, (83, 30))
+        virtual_screen.blit(scaledLit, (83, 22))
     else:
-        virtual_screen.blit(scaledUnlit, (83, 30))
+        virtual_screen.blit(scaledUnlit, (83, 22))
 
     for x in range(160, 680, 80):
         virtual_screen.blit(Assets.squishedPipes[10], (x,112))
