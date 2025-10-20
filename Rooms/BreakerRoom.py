@@ -23,6 +23,9 @@ lights = [
 northDoor = Objects.Door(112, 16, Assets.lockedDoorNorth)
 westDoor = Objects.Door(16, 112, Assets.grayDoorWest)
 
+breakerBox = Assets.breakerBox
+breakerRect = pygame.Rect(150, 17, 32, 32)
+
 def inBounds(x, y):
     level, power = Objects.getPipeDungeonInfo()
     if westDoor.rect.collidepoint((x,y)):
@@ -72,6 +75,7 @@ def Room(screen, screen_res, events):
 
     virtual_screen.blit(northDoor.image, northDoor.rect)
     virtual_screen.blit(westDoor.image, westDoor.rect)
+    virtual_screen.blit(breakerBox, breakerRect)
 
     pygame.draw.circle(virtual_screen, "red", player_pos, 16)
 

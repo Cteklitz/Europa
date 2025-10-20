@@ -154,6 +154,8 @@ useButton = pygame.image.load("Assets/useButton.png")
 equipButton = pygame.image.load("Assets/equipButton.png")
 unequipButton = pygame.image.load("Assets/unequipButton.png")
 
+breakerBox = pygame.image.load("Assets/breaker.png")
+
 ### ITEMS
 pinkKeycard = pygame.image.load("Assets/pink_keycard.png")
 pinkKeycardGround = pygame.image.load("Assets/pink_keycard_ground.png")
