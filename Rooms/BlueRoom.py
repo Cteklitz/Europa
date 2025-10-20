@@ -75,12 +75,15 @@ def Room(screen, screen_res, events):
 
     virtual_screen.blit(blueDoor.image, blueDoor.rect)
 
-    if pink and blue:
-        open = True
-        lockedDoor.image = Assets.grayDoorEast
-    else:
-        open = False
-        lockedDoor.image = Assets.lockedDoorEast
+    # Door always open for testing. Change before final version
+    open = True
+    lockedDoor.image = Assets.grayDoorEast
+    # if pink and blue:
+    #     open = True
+    #     lockedDoor.image = Assets.grayDoorEast
+    # else:
+    #     open = False
+    #     lockedDoor.image = Assets.lockedDoorEast
     
     virtual_screen.blit(lockedDoor.image, lockedDoor.rect)
 
