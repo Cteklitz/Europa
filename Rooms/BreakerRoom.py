@@ -43,6 +43,8 @@ def positionDeterminer(cameFrom):
     global player_pos
     if cameFrom == "Rooms.BlueRoom":
         player_pos = pygame.Vector2(westDoor.x + 37, westDoor.y + westDoor.rect.height/2)
+    if cameFrom == "Rooms.PuddleRoom":
+        player_pos = pygame.Vector2(northDoor.x + northDoor.rect.width/2, northDoor.y + northDoor.rect.height + 5)
 
 def Room(screen, screen_res, events):
     level, power = Objects.getPipeDungeonInfo()

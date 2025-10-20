@@ -48,8 +48,8 @@ def inBounds(x, y):
 
 def positionDeterminer(cameFrom):
     global player_pos
-    if cameFrom == "Rooms.BlueRoom":
-        player_pos = pygame.Vector2(southDoor.x + 16, southDoor.y + 5)
+    if cameFrom == "Rooms.BreakerRoom":
+        player_pos = pygame.Vector2(southDoor.x + 16, southDoor.y - 5)
 
 def Room(screen, screen_res, events):
     level, power = Objects.getPipeDungeonInfo()
