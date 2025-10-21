@@ -32,6 +32,7 @@ def getSelected():
 
 def getOpen():
     return LockedDoor.solved
+    #return True
 
 def getPinkPower():
     return PinkPower.pinkPower
