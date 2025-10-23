@@ -25,8 +25,13 @@ westDoor = Objects.Door(16, 112, Assets.grayDoorWest)
 
 breakerBox = Assets.breakerBox
 breakerRect = pygame.Rect(150, 17, 32, 32)
+breakerInteractRect = pygame.Rect(150, 49, 32, 16)
+
+puzzle = False
 
 def inBounds(x, y):
+    global puzzle
+
     level, power = Objects.getPipeDungeonInfo()
     if westDoor.rect.collidepoint((x,y)):
         if level == 2 and power:
@@ -38,6 +43,9 @@ def inBounds(x, y):
             Sounds.powerAmb.stop()
             Sounds.ominousAmb.play(-1)
         return 1
+    elif puzzle:
+        puzzle = False
+        return 2
     elif not outline.contains(Point(x,y)):
         return False
     return True
@@ -50,11 +58,14 @@ def positionDeterminer(cameFrom):
         player_pos = pygame.Vector2(northDoor.x + northDoor.rect.width/2, northDoor.y + northDoor.rect.height + 5)
 
 def Room(screen, screen_res, events):
+    global puzzle
     level, power = Objects.getPipeDungeonInfo()
     
-    # for event in events:
-    #     if event.type == pygame.KEYDOWN:
-    #         if event.key == pygame.K_e:
+    for event in events:
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_e:
+                if breakerInteractRect.collidepoint(player_pos):
+                    puzzle = True
              
     virtual_screen.fill((105,105,105))
     dark_overlay.fill((0, 0, 0, 150))
