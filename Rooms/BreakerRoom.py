@@ -25,7 +25,7 @@ westDoor = Objects.Door(16, 112, Assets.grayDoorWest)
 
 breakerBox = Assets.breakerBox
 breakerRect = pygame.Rect(150, 17, 32, 32)
-breakerInteractRect = pygame.Rect(150, 49, 32, 16)
+breakerInteractRect = pygame.Rect(150, 48, 32, 16)
 
 puzzle = False
 

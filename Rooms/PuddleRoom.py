@@ -63,6 +63,8 @@ def positionDeterminer(cameFrom):
     global player_pos
     if cameFrom == "Rooms.BreakerRoom":
         player_pos = pygame.Vector2(southDoor.x + 16, southDoor.y - 5)
+    if cameFrom == "Rooms.StorageCloset":
+        player_pos = pygame.Vector2(westDoor.x + 37, westDoor.y + 16)
 
 def Room(screen, screen_res, events):
     global hatchOpen
