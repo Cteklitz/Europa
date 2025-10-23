@@ -10,6 +10,19 @@ dark_overlay = pygame.Surface(virtual_screen.get_size(), pygame.SRCALPHA)
 
 player_pos = pygame.Vector2(192, 128)
 
+ladderHatchClosed_original = pygame.image.load("Assets/LadderHatchClosed.png")
+ladderHatchOpen_original = pygame.image.load("Assets/LadderHatchOpen.png")
+
+original_size = ladderHatchClosed_original.get_size()
+new_size = (int(original_size[0] * 0.40), int(original_size[1] * 0.3))
+ladderHatchClosed = pygame.transform.scale(ladderHatchClosed_original, new_size)
+ladderHatchOpen = pygame.transform.scale(ladderHatchOpen_original, new_size)
+
+
+hatchOpen = False
+hatchPosition = (90, 40)
+hatchRect = pygame.Rect(hatchPosition[0], hatchPosition[1], new_size[0], new_size[1])  # Clickable area
+
 bounds = Polygon([(48,48), (368,48), (368,208), (48,208)])
 
 lights = [
@@ -52,11 +65,16 @@ def positionDeterminer(cameFrom):
         player_pos = pygame.Vector2(southDoor.x + 16, southDoor.y - 5)
 
 def Room(screen, screen_res, events):
+    global hatchOpen
     level, power = Objects.getPipeDungeonInfo()
     
-    # for event in events:
-    #     if event.type == pygame.KEYDOWN:
-    #         if event.key == pygame.K_e:
+    # Handle events
+    for event in events:
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_e:
+                # Check if player is near the hatch
+                if hatchRect.collidepoint(player_pos.x, player_pos.y):
+                    hatchOpen = True  # Open the hatch
              
     virtual_screen.fill((105,105,105))
     dark_overlay.fill((0, 0, 0, 150))
@@ -104,6 +122,12 @@ def Room(screen, screen_res, events):
     virtual_screen.blit(southDoor.image, southDoor.rect)
     virtual_screen.blit(westDoor.image, westDoor.rect)
     virtual_screen.blit(eastDoor.image, eastDoor.rect)
+
+    # Display the appropriate ladder hatch image based on state
+    if hatchOpen:
+        virtual_screen.blit(ladderHatchOpen, hatchPosition)
+    else:
+        virtual_screen.blit(ladderHatchClosed, hatchPosition)
 
     pygame.draw.circle(virtual_screen, "red", player_pos, 16)
 
