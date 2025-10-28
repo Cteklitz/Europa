@@ -26,24 +26,6 @@ LightScale1 = pygame.transform.scale(Assets.squishedTiles[1], (Assets.squishedTi
 LightScale2 = pygame.transform.scale(Assets.squishedTiles[1], (Assets.squishedTiles[1].get_width()/2.2, Assets.squishedTiles[1].get_height()*1.5))
 LightScale3 = pygame.transform.scale(Assets.squishedTiles[1], (Assets.squishedTiles[1].get_width()/2.5, Assets.squishedTiles[1].get_height()*1.5))
 
-class Light:
-    def __init__(self, x, y):
-        self.x = x
-        self.y = y
-        self.state = 1
-
-lights = [
-    [Light(156, 180), dimLightScale1, LightScale1],
-    [Light(156, 172), dimLightScale1, LightScale1],
-    [Light(156, 164), dimLightScale1, LightScale1],
-    [Light(156, 156), dimLightScale1, LightScale1],
-    [Light(156, 148), dimLightScale1, LightScale1],
-    [Light(156, 140), dimLightScale1, LightScale1],
-    [Light(156, 132), dimLightScale1, LightScale1],
-    [Light(158, 124), dimLightScale2, LightScale2],
-    [Light(160, 116), dimLightScale3, LightScale3]
-]
-
 lightPos = [(64 + 16,0 + 16), (256 + 16,0 + 16), (64 + 16,224 + 16), (256 + 16,224 + 16)]
 lightsNew = [LightSource(lightPos[0][0], lightPos[0][1], radius=60, strength = 220),
              LightSource(lightPos[1][0], lightPos[1][1], radius=60, strength = 220),
@@ -71,18 +53,81 @@ def inBounds(x, y):
         if y > 384 - (352 - x + 64):
             return True
         return False
+    
+leftIndex = 0
+rightIndex = 1
+waterLevels = [30, 60, 75, 35]
+
+waterLevelSprites = Assets.load_tileset("Assets/waterLevels.png", 30, 155)
+redArrow = pygame.image.load("Assets/redArrow.png")
+greenArrow = pygame.image.load("Assets/greenArrow.png")
+
+def increaseLeftIndex():
+    global leftIndex, rightIndex
+    if leftIndex == 3:
+        if rightIndex == 0:
+            leftIndex = 1
+        else:
+            leftIndex = 0
+    else:
+        leftIndex += 1
+        if leftIndex == rightIndex:
+            leftIndex += 1
+            if leftIndex == 4:
+                leftIndex = 0
+
+def increaseRightIndex():
+    global rightIndex, leftIndex
+    if rightIndex == 3:
+        if leftIndex == 0:
+            rightIndex = 1
+        else:
+            rightIndex = 0
+    else:
+        rightIndex += 1
+        if leftIndex == rightIndex:
+            rightIndex += 1
+            if rightIndex == 4:
+                rightIndex = 0
+
+def switch15():
+    global waterLevels, leftIndex, rightIndex
+    if waterLevels[leftIndex] < waterLevels[rightIndex] and waterLevels[leftIndex] <= 85 and waterLevels[rightIndex] >= 15:
+        waterLevels[leftIndex] += 15
+        waterLevels[rightIndex] -= 15
+    elif waterLevels[rightIndex] < waterLevels[leftIndex] and waterLevels[rightIndex] <= 85 and waterLevels[leftIndex] >= 15:
+        waterLevels[rightIndex] += 15
+        waterLevels[leftIndex] -= 15
+
+def switch10():
+    global waterLevels, leftIndex, rightIndex
+    if waterLevels[leftIndex] < waterLevels[rightIndex] and waterLevels[leftIndex] <= 90 and waterLevels[rightIndex] >= 10:
+        waterLevels[leftIndex] += 10
+        waterLevels[rightIndex] -= 10
+    elif waterLevels[rightIndex] < waterLevels[leftIndex] and waterLevels[rightIndex] <= 90 and waterLevels[leftIndex] >= 10:
+        waterLevels[rightIndex] += 10
+        waterLevels[leftIndex] -= 10
+
+valves = [
+    Objects.Valve(64, 300, increaseLeftIndex),
+    Objects.Valve(128, 300, increaseRightIndex),
+    Objects.Valve(192, 300, switch15),
+    Objects.Valve(256, 300, switch10)
+]
 
 def positionDeterminer(cameFrom):
     global player_pos
     player_pos = pygame.Vector2(9 + flippedDoor.get_width(), 208 + (flippedDoor.get_height()*5/6))
 
 def Room(screen, screen_res, events):
+    global valves, redArrow, greenArrow
     level, power = Objects.getPipeDungeonInfo()
 
-    # poll for events
-    # for event in events:
-    #     if event.type == pygame.KEYDOWN:
-    #         if event.key == pygame.K_e:
+    for event in events:
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_e:
+                for valve in valves:
+                    valve.check_collision(player_pos)
 
     # fill the screen with a color to wipe away anything from last frame
     virtual_screen.fill("gray")
@@ -105,7 +150,28 @@ def Room(screen, screen_res, events):
 
     virtual_screen.blit(flippedDoor, (9,208))
 
-    pygame.draw.circle(virtual_screen, "red", player_pos, 16)
+    if player_pos.y < 312:
+        pygame.draw.circle(virtual_screen, "red", player_pos, 16)
+
+        for valve in valves:
+            valve.update()
+            virtual_screen.blit(valve.image, valve.rect)
+    else:
+        for valve in valves:
+            valve.update()
+            virtual_screen.blit(valve.image, valve.rect)
+
+        pygame.draw.circle(virtual_screen, "red", player_pos, 16)
+
+    waterX = 88
+    for i in range(4):
+        imageIndex = int(waterLevels[i] / 5)
+        virtual_screen.blit(waterLevelSprites[imageIndex], (waterX, 52))
+        if waterLevels[i] == 50:
+            virtual_screen.blit(greenArrow, (waterX-5, 125))
+        else:
+            virtual_screen.blit(redArrow, (waterX-5, 125))
+        waterX += 49
 
         #for i in range(4, len(lightsNew)):
             #apply_falloff(falloff, virtual_screen, (lightsNew[i].x, lightsNew[i].y))
