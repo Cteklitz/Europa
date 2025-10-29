@@ -57,6 +57,7 @@ def inBounds(x, y):
 leftIndex = 0
 rightIndex = 1
 waterLevels = [30, 60, 75, 35]
+solved = False
 
 waterLevelSprites = Assets.load_tileset("Assets/waterLevels.png", 30, 155)
 redArrow = pygame.image.load("Assets/redArrow.png")
@@ -120,7 +121,7 @@ def positionDeterminer(cameFrom):
     player_pos = pygame.Vector2(9 + flippedDoor.get_width(), 208 + (flippedDoor.get_height()*5/6))
 
 def Room(screen, screen_res, events):
-    global valves, redArrow, greenArrow
+    global valves, redArrow, greenArrow, solved
     level, power = Objects.getPipeDungeonInfo()
 
     for event in events:
@@ -128,6 +129,12 @@ def Room(screen, screen_res, events):
             if event.key == pygame.K_e:
                 for valve in valves:
                     valve.check_collision(player_pos)
+                good = True
+                for i in range(3):
+                    if waterLevels[i] != 50:
+                        good = False
+                if good:
+                    solved = True
 
     # fill the screen with a color to wipe away anything from last frame
     virtual_screen.fill("gray")

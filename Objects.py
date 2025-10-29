@@ -216,3 +216,6 @@ def getOpen():
 
 def getPinkPower():
     return Area.getPinkPower()
+
+def getWaterLevelsSolved():
+    return Area.getWaterLevelsSolved()

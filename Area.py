@@ -1,7 +1,7 @@
 from Rooms import ControlRoom, MainRoom, PinkRoom, PinkLowerWing, BookcaseView, OrangeYellow, \
 Safe, PinkUpperWing, TrianglePuzzle, TriangleSolution, BeakerPuzzle, MscopeTable, Microscope, \
 LockedDoor, Desk, SpotDiffs, PinkPower, BlueRoom, BreakerRoom, PuddleRoom, BreakerPuzzle,     \
-StorageCloset, ValvePuzzle
+StorageCloset, ValvePuzzle, BluePower
 
 # Getter functions for getting information about rooms the player isn't currently in. Use the corresponding functions in Objects.py, not these, when accessing info.
 def getPipeDungeonInfo():
@@ -40,6 +40,9 @@ def getPinkPower():
 def getLetterCount():
     return LockedDoor.letterCount
 
+def getWaterLevelsSolved():
+    return ValvePuzzle.solved
+
 class Area:
     def __init__(self, roomLayout):
         self.roomLayout = roomLayout
@@ -75,10 +78,11 @@ PipeDungeon = Area(
             PinkPower: [PinkLowerWing],
             BlueRoom: [MainRoom, BreakerRoom],
             BreakerRoom: [BlueRoom, PuddleRoom, BreakerPuzzle],
-            PuddleRoom: [BreakerRoom, StorageCloset, ValvePuzzle],
+            PuddleRoom: [BreakerRoom, StorageCloset, ValvePuzzle, BluePower],
             BreakerPuzzle: [BreakerRoom],
             StorageCloset: [PuddleRoom],
-            ValvePuzzle: [PuddleRoom]
+            ValvePuzzle: [PuddleRoom],
+            BluePower: [PuddleRoom]
     }
 )
 

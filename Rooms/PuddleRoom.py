@@ -16,6 +16,9 @@ original_size = ladderHatchOpen_original.get_size()
 new_size = (int(original_size[0] * 0.40), int(original_size[1] * 0.3))
 ladderHatchOpen = pygame.transform.scale(ladderHatchOpen_original, new_size)
 
+lowerLevelFlooded = pygame.image.load("Assets/LowerLevelFlooded.png")
+lowerLevelFloodedText = Objects.briefText(virtual_screen, lowerLevelFlooded, 15, 180, 3)
+
 hatchPosition = (90, 40)
 hatchRect = pygame.Rect(hatchPosition[0], hatchPosition[1], new_size[0], new_size[1])  # Clickable area
 
@@ -34,7 +37,11 @@ eastDoor = Objects.Door(368, 112, Assets.grayDoorEast)
 topRightWall = pygame.Rect(275, 48, 125, 31)
 bottomRightWall = pygame.Rect(276, 176, 124, 32)
 
+powerRoom = False
+
 def inBounds(x, y):
+    global powerRoom
+
     level, power = Objects.getPipeDungeonInfo()
     if southDoor.rect.collidepoint((x,y)):
         if level == 2 and power:
@@ -51,6 +58,9 @@ def inBounds(x, y):
             Sounds.powerAmb.stop()
             Sounds.ominousAmb.play(-1)
         return 2
+    elif powerRoom:
+        powerRoom = False
+        return 3
     elif not bounds.contains(Point(x,y)) or topRightWall.collidepoint((x,y)) or bottomRightWall.collidepoint((x,y)):
         return False
     return True
@@ -63,10 +73,22 @@ def positionDeterminer(cameFrom):
         player_pos = pygame.Vector2(westDoor.x + 37, westDoor.y + 16)
     if cameFrom == "Rooms.ValvePuzzle":
         player_pos = pygame.Vector2(eastDoor.x - 5, eastDoor.y + 16)
+    if cameFrom == "Rooms.BluePower":
+        player_pos = pygame.Vector2(123, 75)
 
 def Room(screen, screen_res, events):
+    global powerRoom
     level, power = Objects.getPipeDungeonInfo()
-             
+
+    for event in events:
+        if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_e:
+                    if hatchRect.collidepoint(player_pos):
+                        if not Objects.getWaterLevelsSolved():
+                            lowerLevelFloodedText.activated_time = pygame.time.get_ticks()
+                        else:
+                            powerRoom = True
+
     virtual_screen.fill((105,105,105))
     dark_overlay.fill((0, 0, 0, 150))
     outerRect = pygame.Rect((16,16,384,224))
@@ -114,10 +136,11 @@ def Room(screen, screen_res, events):
     virtual_screen.blit(westDoor.image, westDoor.rect)
     virtual_screen.blit(eastDoor.image, eastDoor.rect)
 
-    
     virtual_screen.blit(ladderHatchOpen, hatchPosition)
 
     pygame.draw.circle(virtual_screen, "red", player_pos, 16)
+
+    lowerLevelFloodedText.update()
 
     #virtual_screen.blit(dark_overlay, (0, 0))
 
