@@ -15,8 +15,10 @@ dark_overlay.fill((0, 0, 0, 50))
 player_pos = pygame.Vector2(87.5, 30)  # Reduced by 50%
 
 floor = pygame.image.load("Assets/floor_small.png")
-print(f"{floor.get_width()}, {floor.get_height()}")
 door = pygame.image.load("Assets/powerRoomDoor.png")
+
+locker = Assets.locker
+lockerRect = pygame.Rect(50, 19, 32, 32)
 
 dimLightScale1 = pygame.transform.scale(Assets.squishedDimTiles[1], (Assets.squishedDimTiles[1].get_width()/4, Assets.squishedDimTiles[1].get_height()*0.75))
 dimLightScale2 = pygame.transform.scale(Assets.squishedDimTiles[1], (Assets.squishedDimTiles[1].get_width()/4.4, Assets.squishedDimTiles[1].get_height()*0.75))
@@ -102,6 +104,7 @@ def Room(screen, screen_res, events):
     '''
 
     virtual_screen.blit(door, (150,24))  # Reduced by 50%
+    virtual_screen.blit(locker, lockerRect)
 
     pygame.draw.circle(virtual_screen, "red", player_pos, 16)  # Reduced by 50%
 
