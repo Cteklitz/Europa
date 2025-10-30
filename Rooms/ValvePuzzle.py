@@ -63,57 +63,89 @@ waterLevelSprites = Assets.load_tileset("Assets/waterLevels.png", 30, 155)
 redArrow = pygame.image.load("Assets/redArrow.png")
 greenArrow = pygame.image.load("Assets/greenArrow.png")
 
-def increaseLeftIndex():
-    global leftIndex, rightIndex
-    if leftIndex == 3:
-        if rightIndex == 0:
-            leftIndex = 1
-        else:
-            leftIndex = 0
-    else:
-        leftIndex += 1
-        if leftIndex == rightIndex:
-            leftIndex += 1
-            if leftIndex == 4:
-                leftIndex = 0
+# def increaseLeftIndex():
+#     global leftIndex, rightIndex
+#     if leftIndex == 3:
+#         if rightIndex == 0:
+#             leftIndex = 1
+#         else:
+#             leftIndex = 0
+#     else:
+#         leftIndex += 1
+#         if leftIndex == rightIndex:
+#             leftIndex += 1
+#             if leftIndex == 4:
+#                 leftIndex = 0
 
-def increaseRightIndex():
-    global rightIndex, leftIndex
-    if rightIndex == 3:
-        if leftIndex == 0:
-            rightIndex = 1
-        else:
-            rightIndex = 0
-    else:
-        rightIndex += 1
-        if leftIndex == rightIndex:
-            rightIndex += 1
-            if rightIndex == 4:
-                rightIndex = 0
+# def increaseRightIndex():
+#     global rightIndex, leftIndex
+#     if rightIndex == 3:
+#         if leftIndex == 0:
+#             rightIndex = 1
+#         else:
+#             rightIndex = 0
+#     else:
+#         rightIndex += 1
+#         if leftIndex == rightIndex:
+#             rightIndex += 1
+#             if rightIndex == 4:
+#                 rightIndex = 0
 
-def switch15():
-    global waterLevels, leftIndex, rightIndex
-    if waterLevels[leftIndex] < waterLevels[rightIndex] and waterLevels[leftIndex] <= 85 and waterLevels[rightIndex] >= 15:
-        waterLevels[leftIndex] += 15
-        waterLevels[rightIndex] -= 15
-    elif waterLevels[rightIndex] < waterLevels[leftIndex] and waterLevels[rightIndex] <= 85 and waterLevels[leftIndex] >= 15:
-        waterLevels[rightIndex] += 15
-        waterLevels[leftIndex] -= 15
+# def switch15():
+#     global waterLevels, leftIndex, rightIndex
+#     if waterLevels[leftIndex] < waterLevels[rightIndex] and waterLevels[leftIndex] <= 85 and waterLevels[rightIndex] >= 15:
+#         waterLevels[leftIndex] += 15
+#         waterLevels[rightIndex] -= 15
+#     elif waterLevels[rightIndex] < waterLevels[leftIndex] and waterLevels[rightIndex] <= 85 and waterLevels[leftIndex] >= 15:
+#         waterLevels[rightIndex] += 15
+#         waterLevels[leftIndex] -= 15
 
-def switch10():
-    global waterLevels, leftIndex, rightIndex
-    if waterLevels[leftIndex] < waterLevels[rightIndex] and waterLevels[leftIndex] <= 90 and waterLevels[rightIndex] >= 10:
-        waterLevels[leftIndex] += 10
-        waterLevels[rightIndex] -= 10
-    elif waterLevels[rightIndex] < waterLevels[leftIndex] and waterLevels[rightIndex] <= 90 and waterLevels[leftIndex] >= 10:
-        waterLevels[rightIndex] += 10
-        waterLevels[leftIndex] -= 10
+# def switch10():
+#     global waterLevels, leftIndex, rightIndex
+#     if waterLevels[leftIndex] < waterLevels[rightIndex] and waterLevels[leftIndex] <= 90 and waterLevels[rightIndex] >= 10:
+#         waterLevels[leftIndex] += 10
+#         waterLevels[rightIndex] -= 10
+#     elif waterLevels[rightIndex] < waterLevels[leftIndex] and waterLevels[rightIndex] <= 90 and waterLevels[leftIndex] >= 10:
+#         waterLevels[rightIndex] += 10
+#         waterLevels[leftIndex] -= 10
+# 
+# valves = [
+#     Objects.Valve(64, 300, increaseLeftIndex),
+#     Objects.Valve(128, 300, increaseRightIndex),
+#     Objects.Valve(192, 300, switch15),
+#     Objects.Valve(256, 300, switch10)
+# ]
+
+def move15():
+    global waterLevels
+    if waterLevels[0] >= 15 and waterLevels[1] <= 85:
+        waterLevels[0] = waterLevels[0] - 15
+        waterLevels[1] = waterLevels[1] + 15
+
+def move10():
+    global waterLevels
+    if waterLevels[1] >= 25 and waterLevels[3] <= 75:
+        waterLevels[1] = waterLevels[1] - 25
+        waterLevels[3] = waterLevels[3] + 25
+
+def move5():
+    global waterLevels
+    if waterLevels[1] <= 95 and waterLevels[2] >= 5:
+        waterLevels[2] = waterLevels[2] - 5
+        waterLevels[1] = waterLevels[1] + 5
+
+def split20():
+    global waterLevels
+    if waterLevels[3] >= 20 and waterLevels[0] <= 90 and waterLevels[2] <= 90:
+        waterLevels[3] = waterLevels[3] - 20
+        waterLevels[2] = waterLevels[2] + 10
+        waterLevels[0] = waterLevels[0] + 10
 
 valves = [
-    Objects.Valve(64, 300, increaseLeftIndex),
-    Objects.Valve(128, 300, increaseRightIndex),
-    Objects.Valve(192, 300, switch15),
-    Objects.Valve(256, 300, switch10)
+    Objects.Valve(64, 300, move15),
+    Objects.Valve(128, 300, move10),
+    Objects.Valve(192, 300, move5),
+    Objects.Valve(256, 300, split20)
 ]
 
 def positionDeterminer(cameFrom):
