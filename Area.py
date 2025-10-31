@@ -37,6 +37,9 @@ def getOpen():
 def getPinkPower():
     return PinkPower.pinkPower
 
+def getBluePower():
+    return BluePower.bluePower
+
 def getLetterCount():
     return LockedDoor.letterCount
 

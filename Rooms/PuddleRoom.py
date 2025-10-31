@@ -59,6 +59,8 @@ def inBounds(x, y):
             Sounds.ominousAmb.play(-1)
         return 2
     elif powerRoom:
+        if Objects.getBluePower():
+            Sounds.powerOnAmb.play(-1)
         powerRoom = False
         return 3
     elif not bounds.contains(Point(x,y)) or topRightWall.collidepoint((x,y)) or bottomRightWall.collidepoint((x,y)):

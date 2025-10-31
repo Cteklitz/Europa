@@ -103,6 +103,8 @@ def inBounds(x, y):
     global bluePower, pulse, exit
     ladderBottom = pygame.Rect(92,282,48,16)
     if exit:
+        if bluePower:
+            Sounds.powerOnAmb.stop()
         exit = False
         return 0
     if ladderBottom.collidepoint((x,y)):
