@@ -12,13 +12,13 @@ player_pos = pygame.Vector2(192, 128)
 # Item positions and scales
 mop_pos = (44, 94)
 mop_scale = 0.6
-tape_pos = (54, 26)
+tape_pos = (54, 40)
 tape_scale = 0.2
 
 # Load images
 lockerViewBg = pygame.image.load("Assets/LockerView.png")
 mop = pygame.image.load("Assets/Mop.png")
-yellowElectricalTape = pygame.image.load("Assets/YellowElectricalTape.png")
+yellowElectricalTape = pygame.image.load("Assets/tape_lockerview.png")
 
 exit = False
 
@@ -43,13 +43,14 @@ def Room(screen, screen_res, events):
                 exit = True
 
     # Display background image
+    virtual_screen.fill((195, 195, 195))
     virtual_screen.blit(lockerViewBg, (0, 0))
 
     scaled_mop = pygame.transform.scale(mop, (int(mop.get_width() * mop_scale), int(mop.get_height() * mop_scale)))
-    scaled_tape = pygame.transform.scale(yellowElectricalTape, (int(yellowElectricalTape.get_width() * tape_scale), int(yellowElectricalTape.get_height() * tape_scale)))
+    #scaled_tape = pygame.transform.scale(yellowElectricalTape, (int(yellowElectricalTape.get_width() * tape_scale), int(yellowElectricalTape.get_height() * tape_scale)))
     
     virtual_screen.blit(scaled_mop, mop_pos)
-    virtual_screen.blit(scaled_tape, tape_pos)
+    virtual_screen.blit(yellowElectricalTape, tape_pos)
 
     scaled = pygame.transform.scale(virtual_screen, screen_res)
     screen.blit(scaled, (0, 0))
