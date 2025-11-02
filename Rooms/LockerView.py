@@ -32,7 +32,7 @@ def inBounds(x, y):
 def positionDeterminer(cameFrom):
     pass
 
-def LockerView(screen, screen_res, events):
+def Room(screen, screen_res, events):
     global exit
     xScale = screen.get_width()/virtual_screen.get_width() 
     yScale = screen.get_height()/virtual_screen.get_height()

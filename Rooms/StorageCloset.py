@@ -18,7 +18,8 @@ floor = pygame.image.load("Assets/floor_small.png")
 door = pygame.image.load("Assets/powerRoomDoor.png")
 
 locker = Assets.locker
-lockerRect = pygame.Rect(50, 19, 32, 32)
+lockerRect = pygame.Rect(50, 19, 32, 64)
+lockerInteractRect = pygame.Rect(50, 19, 32, 64)
 
 dimLightScale1 = pygame.transform.scale(Assets.squishedDimTiles[1], (Assets.squishedDimTiles[1].get_width()/4, Assets.squishedDimTiles[1].get_height()*0.75))
 dimLightScale2 = pygame.transform.scale(Assets.squishedDimTiles[1], (Assets.squishedDimTiles[1].get_width()/4.4, Assets.squishedDimTiles[1].get_height()*0.75))
@@ -53,11 +54,17 @@ lightsNew = [LightSource(lightPos[0][0], lightPos[0][1], radius=30, strength = 2
              LightSource(lightPos[3][0], lightPos[3][1], radius=30, strength = 220),]
 falloff = [LightFalloff((virtual_res[0], virtual_res[1]), darkness = 25)]
         
+lockerView = False
 
 def inBounds(x, y):
+    global lockerView
+
     doorRect = pygame.Rect(150, 24, door.get_width(), door.get_height())  # Reduced by 50%
     if doorRect.collidepoint(x,y):
         return 0
+    elif lockerView:
+        lockerView = False
+        return 1
     if y > 134:  # Reduced by 50%
         return False
     if x < 8 or x > 168:  # Reduced by 50%
@@ -77,10 +84,20 @@ def inBounds(x, y):
 
 def positionDeterminer(cameFrom):
     global player_pos
-    player_pos = pygame.Vector2(150 - 15 + door.get_width()/4, 24 + (door.get_height()*5/6))  # Reduced by 50%
+    if cameFrom == "Rooms.PuddleRoom":
+        player_pos = pygame.Vector2(150 - 15 + door.get_width()/4, 24 + (door.get_height()*5/6))  # Reduced by 50%
+    else:
+        player_pos = pygame.Vector2(55, 95)
 
 def Room(screen, screen_res, events):
+    global lockerView
     level, power = Objects.getPipeDungeonInfo()
+
+    for event in events:
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_e:
+                if lockerInteractRect.collidepoint(player_pos):
+                    lockerView = True
 
     # fill the screen with a color to wipe away anything from last frame
     virtual_screen.fill("gray")
