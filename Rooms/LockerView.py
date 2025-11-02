@@ -2,6 +2,8 @@ import pygame
 import Assets
 import Objects
 from shapely.geometry import Point, Polygon
+import Player
+import Items
 
 virtual_res = (389, 189)
 virtual_screen = pygame.Surface(virtual_res)
@@ -20,6 +22,11 @@ lockerViewBg = pygame.image.load("Assets/LockerView.png")
 mop = pygame.image.load("Assets/Mop.png")
 yellowElectricalTape = pygame.image.load("Assets/tape_lockerview.png")
 
+tapeRect = pygame.Rect(tape_pos[0], tape_pos[1], 16, 16)
+mopRect = pygame.Rect(mop_pos[0], mop_pos[1], 60, 100)
+
+tapeCollected = False
+mopCollected = False
 exit = False
 
 def inBounds(x, y):
@@ -33,7 +40,7 @@ def positionDeterminer(cameFrom):
     pass
 
 def Room(screen, screen_res, events):
-    global exit
+    global exit, tapeCollected, mopCollected
     xScale = screen.get_width()/virtual_screen.get_width() 
     yScale = screen.get_height()/virtual_screen.get_height()
 
@@ -41,6 +48,20 @@ def Room(screen, screen_res, events):
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_BACKSPACE or event.key == pygame.K_ESCAPE:
                 exit = True
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if event.button == 1:
+                mouse_x, mouse_y = pygame.mouse.get_pos()
+                mouse_pos = (mouse_x/xScale, mouse_y/yScale)
+                # player clicks tape
+                if tapeRect.collidepoint(mouse_pos) and not tapeCollected:     
+                    if (Player.addItem(Items.electricalTape)):
+                        tapeCollected = True
+                        # TODO: add sound effect for picking up tape
+                # player clicks mop
+                if mopRect.collidepoint(mouse_pos) and not mopCollected:     
+                    if (Player.addItem(Items.mop)):
+                        mopCollected = True
+                        # TODO: add sound effect for picking up tape
 
     # Display background image
     virtual_screen.fill((195, 195, 195))
@@ -49,8 +70,10 @@ def Room(screen, screen_res, events):
     scaled_mop = pygame.transform.scale(mop, (int(mop.get_width() * mop_scale), int(mop.get_height() * mop_scale)))
     #scaled_tape = pygame.transform.scale(yellowElectricalTape, (int(yellowElectricalTape.get_width() * tape_scale), int(yellowElectricalTape.get_height() * tape_scale)))
     
-    virtual_screen.blit(scaled_mop, mop_pos)
-    virtual_screen.blit(yellowElectricalTape, tape_pos)
+    if not mopCollected:
+        virtual_screen.blit(scaled_mop, mop_pos)
+    if not tapeCollected:
+        virtual_screen.blit(yellowElectricalTape, tape_pos)
 
     scaled = pygame.transform.scale(virtual_screen, screen_res)
     screen.blit(scaled, (0, 0))

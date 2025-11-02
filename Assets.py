@@ -165,6 +165,12 @@ pinkKeycardGround = pygame.image.load("Assets/pink_keycard_ground.png")
 bandage = pygame.image.load("Assets/bandage.png")
 bandageGround = pygame.image.load("Assets/bandage_ground.png")
 
+tape = pygame.image.load("Assets/YellowElectricalTape.png")
+tapeGround = pygame.image.load("Assets/tape_lockerview.png")
+
+mop = pygame.image.load("Assets/Mop.png")
+mopGround = pygame.image.load("Assets/Mop.png")
+
 redPetri = pygame.image.load("Assets/redpetri.png")
 redPetriGround = pygame.image.load("Assets/smolRed.png")
 bluePetri = pygame.image.load("Assets/bluePetri.png")
