@@ -134,6 +134,14 @@ def Room(screen, screen_res, events):
             Done = True
         virtual_screen.blit(light.image, light.rect)
 
+    for y in range(144, 208, 32):
+        virtual_screen.blit(Assets.pipes[12], (int(virtual_screen.get_width()/2) - 16,y))
+
+    virtual_screen.blit(Assets.pipes[15], (int(virtual_screen.get_width()/2) - 16,112))
+
+    for x in range(int(virtual_screen.get_width()/2) + 16, 368, 32):
+        virtual_screen.blit(Assets.pipes[10], (x,112))
+
     virtual_screen.blit(southDoor.image, southDoor.rect)
     virtual_screen.blit(westDoor.image, westDoor.rect)
     virtual_screen.blit(eastDoor.image, eastDoor.rect)

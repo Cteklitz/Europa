@@ -88,6 +88,14 @@ def Room(screen, screen_res, events):
     virtual_screen.blit(westDoor.image, westDoor.rect)
     virtual_screen.blit(breakerBox, breakerRect)
 
+    for x in range(48, 112, 32):
+        virtual_screen.blit(Assets.pipes[10], (x,112))
+
+    virtual_screen.blit(Assets.pipes[14], (112,112))
+
+    for y in range(48, 112, 32):
+        virtual_screen.blit(Assets.pipes[12], (112,y))
+
     pygame.draw.circle(virtual_screen, "red", player_pos, 16)
 
     virtual_screen.blit(dark_overlay, (0, 0))

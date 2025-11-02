@@ -17,6 +17,7 @@ player_pos = pygame.Vector2(175, 340)
 floor = pygame.image.load("Assets/floor.png")
 door = pygame.image.load("Assets/powerRoomDoor.png")
 flippedDoor = pygame.transform.flip(door, True, False)
+console = pygame.image.load("Assets/Doohickey.png")
 
 dimLightScale1 = pygame.transform.scale(Assets.squishedDimTiles[1], (Assets.squishedDimTiles[1].get_width()/2, Assets.squishedDimTiles[1].get_height()*1.5))
 dimLightScale2 = pygame.transform.scale(Assets.squishedDimTiles[1], (Assets.squishedDimTiles[1].get_width()/2.2, Assets.squishedDimTiles[1].get_height()*1.5))
@@ -35,8 +36,11 @@ falloff = [LightFalloff((virtual_res[0], virtual_res[1]), darkness = 25)]
 
 def inBounds(x, y):
     doorRect = pygame.Rect(9,208,door.get_width(),door.get_height())
+    consoleRect = pygame.Rect(int(virtual_screen.get_width()/2) - 64 - 16, 225, console.get_width() + 32, console.get_height())
     if doorRect.collidepoint(x,y):
         return 0
+    if consoleRect.collidepoint(x,y):
+        return False
     if y > 368:
         return False
     if x < 16 or x > 336:
@@ -187,6 +191,26 @@ def Room(screen, screen_res, events):
         virtual_screen.blit(Assets.dimTiles[2], (64,224))
         virtual_screen.blit(Assets.dimTiles[2], (256,224))
 
+    virtual_screen.blit(Assets.pipes[16], (int(virtual_screen.get_width()/2) - 16,308))
+    virtual_screen.blit(Assets.pipes[17], (int(virtual_screen.get_width()/2) - 16,276))
+    virtual_screen.blit(Assets.pipes[12], (int(virtual_screen.get_width()/2) - 16,244))
+
+    for x in range(int(virtual_screen.get_width()/2) - 48, 16, -32):
+        virtual_screen.blit(Assets.pipes[10], (x,276))
+
+    for x in range(int(virtual_screen.get_width()/2) - 48, 48, -32):
+        virtual_screen.blit(Assets.pipes[10], (x,308))
+
+    for x in range(int(virtual_screen.get_width()/2) + 16, 275, 32):
+        virtual_screen.blit(Assets.pipes[10], (x,308))
+
+    pygame.draw.line(virtual_screen, "black", (63,320), (63,328), 1)
+    pygame.draw.line(virtual_screen, "black", (288,320), (288,328), 1)
+
+    virtual_screen.blit(Assets.pipes[18], (8,276))
+
+    virtual_screen.blit(console, (int(virtual_screen.get_width()/2) - 64,225))
+
     virtual_screen.blit(flippedDoor, (9,208))
 
     if player_pos.y < 312:
@@ -200,7 +224,7 @@ def Room(screen, screen_res, events):
             valve.update()
             virtual_screen.blit(valve.image, valve.rect)
 
-        pygame.draw.circle(virtual_screen, "red", player_pos, 16)
+    pygame.draw.circle(virtual_screen, "red", player_pos, 16)
 
     waterX = 88
     for i in range(4):
