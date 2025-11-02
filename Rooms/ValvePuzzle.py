@@ -63,7 +63,7 @@ rightIndex = 1
 waterLevels = [30, 60, 75, 35]
 solved = False
 
-waterLevelSprites = Assets.load_tileset("Assets/waterLevels.png", 30, 155)
+waterLevelSprites = Assets.load_tileset("Assets/waterLevels.png", 30, 162)
 redArrow = pygame.image.load("Assets/redArrow.png")
 greenArrow = pygame.image.load("Assets/greenArrow.png")
 
@@ -231,9 +231,9 @@ def Room(screen, screen_res, events):
         imageIndex = int(waterLevels[i] / 5)
         virtual_screen.blit(waterLevelSprites[imageIndex], (waterX, 52))
         if waterLevels[i] == 50:
-            virtual_screen.blit(greenArrow, (waterX-5, 125))
+            virtual_screen.blit(greenArrow, (waterX-5, 128))
         else:
-            virtual_screen.blit(redArrow, (waterX-5, 125))
+            virtual_screen.blit(redArrow, (waterX-5, 128))
         waterX += 49
 
         #for i in range(4, len(lightsNew)):
