@@ -25,7 +25,7 @@ yellowPetri = Item("yellowPetri", "Petri Dish", "A petri dish containing yellow 
 
 letterTile = Item("letterTile", "Tile", "A ceramic tile with a letter incribed on it", Assets.letterTile, Assets.letterTile, "equip")
 
-electricalTape = Item("electricalTape", "Electric Tape", "A plastic tape used for repairing electrical devices and wires", Assets.tape, Assets.tapeGround, "equip")
-mop = Item("mop", "Mop", "A standard mop used to clean floors", Assets.mop, Assets.mopGround, "equip")
+electricalTape = Item("electricalTape", "Electric Tape", "A plastic tape used for repairing electrical devices and wires", Assets.tapeInv, Assets.tapeGround, "equip")
+mop = Item("mop", "Mop", "A standard mop used to clean floors", Assets.mopInv, Assets.mopGround, "equip")
 
 

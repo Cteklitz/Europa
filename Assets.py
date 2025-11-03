@@ -167,9 +167,11 @@ bandageGround = pygame.image.load("Assets/bandage_ground.png")
 
 tape = pygame.image.load("Assets/YellowElectricalTape.png")
 tapeGround = pygame.image.load("Assets/tape_lockerview.png")
+tapeInv = pygame.image.load("Assets/YellowElectricalTapeInv.png")
 
 mop = pygame.image.load("Assets/Mop.png")
 mopGround = pygame.image.load("Assets/Mop.png")
+mopInv = pygame.image.load("Assets/MopInv.png")
 
 redPetri = pygame.image.load("Assets/redpetri.png")
 redPetriGround = pygame.image.load("Assets/smolRed.png")
