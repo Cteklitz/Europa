@@ -18,15 +18,13 @@ original_size = ladderHatchOpen_original.get_size()
 new_size = (int(original_size[0] * 0.40), int(original_size[1] * 0.3))
 ladderHatchOpen = pygame.transform.scale(ladderHatchOpen_original, new_size)
 
-# Load puddle images
-puddle1 = pygame.image.load("Assets/Puddle1.png")
-puddle2 = pygame.image.load("Assets/Puddle2.png")
-puddle3 = pygame.image.load("Assets/Puddle3.png")
+brokenWire = pygame.image.load("Assets/BrokenWire.png")
 
-# puddle positions
-puddle1_pos = (270, 140)  # Position puddle1 bottom
-puddle2_pos = (270, 80)   # Position puddle2 top
-puddle3_pos = (280, 110)  # Position puddle3 middle
+fixedWire = pygame.image.load("Assets/FixedWire.png")
+
+# Load outer puddle image with 70% opacity
+outerPuddle = pygame.image.load("Assets/OuterPuddle.png")
+outerPuddle.set_alpha(179)
 
 # puddle interaction region
 puddleRegion = pygame.Rect(250, 70, 60, 80)  
@@ -37,10 +35,42 @@ lowerLevelFloodedText = Objects.briefText(virtual_screen, lowerLevelFlooded, 15,
 # puddle interaction variables
 puddleSelected = False
 
+# Wire repair variables
+wireRepaired = False
+wireRect = pygame.Rect(292, 95, 32, 32)  # Clickable area around the broken wire
+
+# Electrical effect variables
+import random
+import math
+electrical_timer = 0
+spark_positions = []
+
 hatchPosition = (90, 40)
 hatchRect = pygame.Rect(hatchPosition[0], hatchPosition[1], new_size[0], new_size[1])  # Clickable area
 
 bounds = Polygon([(48,48), (368,48), (368,208), (48,208)])
+
+def draw_electrical_effects(surface, puddle_positions):
+    global electrical_timer, spark_positions
+    
+    electrical_timer += 1
+    
+    
+    if electrical_timer % 40 == 0:  # New sparks every 40 frames
+        spark_positions.clear()
+        
+        outer_puddle_pos = (280, 80)
+        for _ in range(random.randint(1, 2)):
+            spark_x = outer_puddle_pos[0] + random.randint(0, 50)  # 50 pixel width region
+            spark_y = outer_puddle_pos[1] + random.randint(0, 90)  # 90 pixel height region
+            spark_positions.append((spark_x, spark_y))
+    
+    
+    for pos in spark_positions:
+        
+        if random.random() > 0.75:  # Only 25% chance to show spark
+
+            surface.set_at(pos, (255, 255, 0))  # yellow pixel
 
 lights = [
     Objects.Light(336, 80, 2),
@@ -103,7 +133,7 @@ def positionDeterminer(cameFrom):
         player_pos = pygame.Vector2(123, 75)
 
 def Room(screen, screen_res, events):
-    global powerRoom, puddleSelected
+    global powerRoom, puddleSelected, wireRepaired
     level, power = Objects.getPipeDungeonInfo()
 
     for event in events:
@@ -115,6 +145,9 @@ def Room(screen, screen_res, events):
                         else:
                             powerRoom = True
                     
+                    elif Player.checkItem(Items.electricalTape):
+                        if wireRect.collidepoint(player_pos) and not wireRepaired:
+                            wireRepaired = True
                     elif Player.checkItem(Items.mop):
                         if puddleRegion.collidepoint(player_pos):
                             puddleSelected = True
@@ -170,6 +203,22 @@ def Room(screen, screen_res, events):
     for x in range(int(virtual_screen.get_width()/2) + 16, 368, 32):
         virtual_screen.blit(Assets.pipes[10], (x,112))
 
+    # Draw broken wire or repaired wire based on repair status
+    if wireRepaired:
+        virtual_screen.blit(fixedWire, (292, 85))  # Repaired wire
+    else:
+        virtual_screen.blit(brokenWire, (292, 85))  # Broken wire
+    
+    virtual_screen.blit(Assets.pipes[5], (300, 80))
+    virtual_screen.blit(Assets.pipes[3], (250, 80))
+    virtual_screen.blit(Assets.pipes[5], (250, 52))
+    # horizontal connection toward ladder
+    virtual_screen.blit(Assets.pipes[10], (270, 80))
+    virtual_screen.blit(Assets.pipes[10], (228, 52))
+    virtual_screen.blit(Assets.pipes[10], (198, 52))
+    virtual_screen.blit(Assets.pipes[10], (166, 52))
+    virtual_screen.blit(Assets.pipes[10], (134, 52))
+
     virtual_screen.blit(southDoor.image, southDoor.rect)
     virtual_screen.blit(westDoor.image, westDoor.rect)
     virtual_screen.blit(eastDoor.image, eastDoor.rect)
@@ -177,9 +226,11 @@ def Room(screen, screen_res, events):
     virtual_screen.blit(ladderHatchOpen, hatchPosition)
 
     # Draw puddles
-    virtual_screen.blit(puddle1, puddle1_pos)
-    virtual_screen.blit(puddle2, puddle2_pos)
-    virtual_screen.blit(puddle3, puddle3_pos)
+    virtual_screen.blit(outerPuddle, (250, 80))
+
+    # Draw electrical effects on the electrified water
+    puddle_positions = [(250, 80)]  # Only OuterPuddle remains
+    draw_electrical_effects(virtual_screen, puddle_positions)
 
     pygame.draw.circle(virtual_screen, "red", player_pos, 16)
 
