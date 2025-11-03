@@ -5,6 +5,9 @@ from shapely.geometry import Point, Polygon
 import Sounds
 import Player
 import Items
+from LightSource import LightSource
+from LightFalloff import LightFalloff
+from LightingUtils import apply_lighting, apply_falloff
 
 virtual_res = (416, 256)
 virtual_screen = pygame.Surface(virtual_res)
@@ -17,6 +20,10 @@ ladderHatchOpen_original = pygame.image.load("Assets/LadderHatchOpen.png")
 original_size = ladderHatchOpen_original.get_size()
 new_size = (int(original_size[0] * 0.40), int(original_size[1] * 0.3))
 ladderHatchOpen = pygame.transform.scale(ladderHatchOpen_original, new_size)
+
+lightsNew = [LightSource(100, 128, radius=60, strength = 150),
+             LightSource(300, 128, radius=60, strength = 150)]
+falloff = [LightFalloff(virtual_screen.get_size(), darkness = 140)]
 
 brokenWire = pygame.image.load("Assets/BrokenWire.png")
 
@@ -233,6 +240,10 @@ def Room(screen, screen_res, events):
     draw_electrical_effects(virtual_screen, puddle_positions)
 
     pygame.draw.circle(virtual_screen, "red", player_pos, 16)
+
+    apply_lighting(virtual_screen, lightsNew, darkness=10, ambient_color=(50, 50, 50), ambient_strength=10)
+    apply_falloff(falloff, virtual_screen, (lightsNew[0].x, lightsNew[0].y))
+    apply_falloff(falloff, virtual_screen, (lightsNew[1].x, lightsNew[1].y))
 
     lowerLevelFloodedText.update()
 

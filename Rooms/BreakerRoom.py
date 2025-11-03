@@ -25,7 +25,7 @@ lights = [
 ]
 
 ambientLightPos = (256/2, 256/2)
-lightsNew = [LightSource(ambientLightPos[0], ambientLightPos[1], radius=60, strength = 150)]
+lightsNew = [LightSource(ambientLightPos[0], ambientLightPos[1], radius=40, strength = 150)]
 falloff = [LightFalloff(virtual_screen.get_size(), darkness = 200)]
 
 northDoor = Objects.Door(112, 16, Assets.lockedDoorNorth)
@@ -106,7 +106,7 @@ def Room(screen, screen_res, events):
 
     pygame.draw.circle(virtual_screen, "red", player_pos, 16)
 
-    apply_lighting(virtual_screen, lightsNew, darkness=10, ambient_color=(50, 50, 50), ambient_strength=10)
+    apply_lighting(virtual_screen, lightsNew, darkness=10, ambient_color=(20, 20, 20), ambient_strength=5)
     apply_falloff(falloff, virtual_screen, ambientLightPos)
 
     virtual_screen.blit(dark_overlay, (0, 0))
