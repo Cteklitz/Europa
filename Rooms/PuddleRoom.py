@@ -44,16 +44,19 @@ def inBounds(x, y):
 
     level, power = Objects.getPipeDungeonInfo()
     if southDoor.rect.collidepoint((x,y)):
+        lowerLevelFloodedText.activated_time = -1
         if level == 2 and power:
             Sounds.powerAmb.stop()
             Sounds.ominousAmb.play(-1)
         return 0
     elif westDoor.rect.collidepoint((x,y)):
+        lowerLevelFloodedText.activated_time = -1
         if level == 2 and power:
             Sounds.powerAmb.stop()
             Sounds.ominousAmb.play(-1)
         return 1
     elif eastDoor.rect.collidepoint((x,y)):
+        lowerLevelFloodedText.activated_time = -1
         if level == 2 and power:
             Sounds.powerAmb.stop()
             Sounds.ominousAmb.play(-1)
