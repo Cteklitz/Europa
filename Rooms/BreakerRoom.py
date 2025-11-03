@@ -3,6 +3,10 @@ import Assets
 import Objects
 from shapely.geometry import Point, Polygon
 import Sounds
+from LightSource import LightSource
+from LightFalloff import LightFalloff
+from LightingUtils import apply_lighting, apply_falloff
+
 
 virtual_res = (256, 256)
 virtual_screen = pygame.Surface(virtual_res)
@@ -19,6 +23,10 @@ lights = [
     Objects.Light(48, 48, 2),
     Objects.Light(48, 176, 2)
 ]
+
+ambientLightPos = (256/2, 256/2)
+lightsNew = [LightSource(ambientLightPos[0], ambientLightPos[1], radius=60, strength = 150)]
+falloff = [LightFalloff(virtual_screen.get_size(), darkness = 200)]
 
 northDoor = Objects.Door(112, 16, Assets.lockedDoorNorth)
 westDoor = Objects.Door(16, 112, Assets.grayDoorWest)
@@ -80,7 +88,7 @@ def Room(screen, screen_res, events):
     for light in lights:
         light.update()
         if not Done:
-            Assets.punch_light_hole(virtual_screen, dark_overlay, (112, 112), 300, (0, 162, 232))
+            Assets.punch_light_hole(virtual_screen, dark_overlay, (112, 112), 300, (0, 0, 0))
             Done = True
         virtual_screen.blit(light.image, light.rect)
 
@@ -97,6 +105,9 @@ def Room(screen, screen_res, events):
         virtual_screen.blit(Assets.pipes[12], (112,y))
 
     pygame.draw.circle(virtual_screen, "red", player_pos, 16)
+
+    apply_lighting(virtual_screen, lightsNew, darkness=10, ambient_color=(50, 50, 60), ambient_strength=10)
+    apply_falloff(falloff, virtual_screen, ambientLightPos)
 
     virtual_screen.blit(dark_overlay, (0, 0))
 
