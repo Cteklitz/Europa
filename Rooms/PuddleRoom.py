@@ -3,6 +3,8 @@ import Assets
 import Objects
 from shapely.geometry import Point, Polygon
 import Sounds
+import Player
+import Items
 
 virtual_res = (416, 256)
 virtual_screen = pygame.Surface(virtual_res)
@@ -16,8 +18,24 @@ original_size = ladderHatchOpen_original.get_size()
 new_size = (int(original_size[0] * 0.40), int(original_size[1] * 0.3))
 ladderHatchOpen = pygame.transform.scale(ladderHatchOpen_original, new_size)
 
+# Load puddle images
+puddle1 = pygame.image.load("Assets/Puddle1.png")
+puddle2 = pygame.image.load("Assets/Puddle2.png")
+puddle3 = pygame.image.load("Assets/Puddle3.png")
+
+# puddle positions
+puddle1_pos = (270, 140)  # Position puddle1 bottom
+puddle2_pos = (270, 80)   # Position puddle2 top
+puddle3_pos = (280, 110)  # Position puddle3 middle
+
+# puddle interaction region
+puddleRegion = pygame.Rect(250, 70, 60, 80)  
+
 lowerLevelFlooded = pygame.image.load("Assets/LowerLevelFlooded.png")
 lowerLevelFloodedText = Objects.briefText(virtual_screen, lowerLevelFlooded, 15, 180, 3)
+
+# puddle interaction variables
+puddleSelected = False
 
 hatchPosition = (90, 40)
 hatchRect = pygame.Rect(hatchPosition[0], hatchPosition[1], new_size[0], new_size[1])  # Clickable area
@@ -40,7 +58,7 @@ bottomRightWall = pygame.Rect(276, 176, 124, 32)
 powerRoom = False
 
 def inBounds(x, y):
-    global powerRoom
+    global powerRoom, puddleSelected
 
     level, power = Objects.getPipeDungeonInfo()
     if southDoor.rect.collidepoint((x,y)):
@@ -61,6 +79,9 @@ def inBounds(x, y):
             Sounds.powerAmb.stop()
             Sounds.ominousAmb.play(-1)
         return 2
+    elif puddleSelected:
+        puddleSelected = False
+        return 4  
     elif powerRoom:
         if Objects.getBluePower():
             Sounds.powerOnAmb.play(-1)
@@ -82,7 +103,7 @@ def positionDeterminer(cameFrom):
         player_pos = pygame.Vector2(123, 75)
 
 def Room(screen, screen_res, events):
-    global powerRoom
+    global powerRoom, puddleSelected
     level, power = Objects.getPipeDungeonInfo()
 
     for event in events:
@@ -93,6 +114,10 @@ def Room(screen, screen_res, events):
                             lowerLevelFloodedText.activated_time = pygame.time.get_ticks()
                         else:
                             powerRoom = True
+                    
+                    elif Player.checkItem(Items.mop):
+                        if puddleRegion.collidepoint(player_pos):
+                            puddleSelected = True
 
     virtual_screen.fill((105,105,105))
     dark_overlay.fill((0, 0, 0, 150))
@@ -150,6 +175,11 @@ def Room(screen, screen_res, events):
     virtual_screen.blit(eastDoor.image, eastDoor.rect)
 
     virtual_screen.blit(ladderHatchOpen, hatchPosition)
+
+    # Draw puddles
+    virtual_screen.blit(puddle1, puddle1_pos)
+    virtual_screen.blit(puddle2, puddle2_pos)
+    virtual_screen.blit(puddle3, puddle3_pos)
 
     pygame.draw.circle(virtual_screen, "red", player_pos, 16)
 
