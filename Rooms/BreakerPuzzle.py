@@ -140,6 +140,7 @@ class OperatorNode(Node):
         Node.operator_nodes.append(self)  # keep track of operator nodes
 
     def connect(self, other):
+        print("Attempting connection")
         pass
 
     def connect_back(self, other):
@@ -221,30 +222,30 @@ class MultimeterNode(Node):
 # TODO fix rectangle locations and sizes?; divide by xScale, yScale? Got these based on mouse xPos, yPos by clicking the centers
 #  (not top left corner) of the nodes on the image. Note: haven't tested the rectangles much yet
 nodes = [
-    InputNode(pygame.Rect(229, 82, 40, 40), 13),
-    InputNode(pygame.Rect(301, 82, 40, 40), 8),
-    InputNode(pygame.Rect(373, 82, 40, 40), 9),
-    InputNode(pygame.Rect(444, 82, 40, 40), 8),
-    InputNode(pygame.Rect(517, 82, 40, 40), 6),
-    InputNode(pygame.Rect(587, 82, 40, 40), 2),
-    InputNode(pygame.Rect(659, 82, 40, 40), 4),
-    OperatorNode(pygame.Rect(237, 270, 50, 50), 1, lambda x: x + 3),
-    OperatorNode(pygame.Rect(319, 270, 50, 50), 2, lambda x, y: x - y),
-    OperatorNode(pygame.Rect(401, 270, 50, 50), 2, lambda x, y: x * y),
-    OperatorNode(pygame.Rect(482, 270, 50, 50), 2, lambda x, y: x + y),
-    OperatorNode(pygame.Rect(565, 270, 50, 50), 2, lambda x, y: x // y),
-    OperatorNode(pygame.Rect(646, 270, 50, 50), 2, lambda x, y: x % y),
-    OutputNode(pygame.Rect(249, 480, 40, 40), 3),
-    OutputNode(pygame.Rect(377, 480, 40, 40), 5),
-    OutputNode(pygame.Rect(505, 480, 40, 40), 16),
-    OutputNode(pygame.Rect(634, 480, 40, 40), 7)
+    InputNode(pygame.Rect(39, 12, 12, 14), 13),
+    InputNode(pygame.Rect(53, 12, 12, 14), 8),
+    InputNode(pygame.Rect(67, 12, 12, 14), 9),
+    InputNode(pygame.Rect(81, 12, 12, 14), 8),
+    InputNode(pygame.Rect(95, 12, 12, 14), 6),
+    InputNode(pygame.Rect(109, 12, 12, 14), 2),
+    InputNode(pygame.Rect(123, 12, 12, 14), 4),
+    OperatorNode(pygame.Rect(40, 48, 13, 17), 1, lambda x: x + 3),
+    OperatorNode(pygame.Rect(56, 48, 13, 17), 2, lambda x, y: x - y),
+    OperatorNode(pygame.Rect(72, 48, 13, 17), 2, lambda x, y: x * y),
+    OperatorNode(pygame.Rect(88, 48, 13, 17), 2, lambda x, y: x + y),
+    OperatorNode(pygame.Rect(104, 48, 13, 17), 2, lambda x, y: x // y),
+    OperatorNode(pygame.Rect(120, 48, 13, 17), 2, lambda x, y: x % y),
+    OutputNode(pygame.Rect(43, 93, 12, 14), 3),
+    OutputNode(pygame.Rect(68, 93, 12, 14), 5),
+    OutputNode(pygame.Rect(93, 93, 12, 14), 16),
+    OutputNode(pygame.Rect(118, 93, 12, 14), 7)
 ]
 
 # TODO: delete these after testing is complete
-nodes[0].connect(nodes[7])
-print(f"{nodes[7].cur_result} should be 16")
-nodes[0].connect(nodes[8])
-print(f"{nodes[8].cur_result} should be None, {nodes[8]} and {nodes[0].connection_below} should not match.")
+#nodes[0].connect(nodes[7])
+#print(f"{nodes[7].cur_result} should be 16")
+#nodes[0].connect(nodes[8])
+#print(f"{nodes[8].cur_result} should be None, {nodes[8]} and {nodes[0].connection_below} should not match.")
 
 
 def inBounds(x, y):
@@ -258,9 +259,9 @@ def inBounds(x, y):
 def positionDeterminer(cameFrom):
     pass
 
-
+recently_selected = None 
 def Room(screen, screen_res, events):
-    global exit, solved, beakerPuzzle, collected
+    global exit, solved, beakerPuzzle, collected, recently_selected
     xScale = screen.get_width() / virtual_screen.get_width()
     yScale = screen.get_height() / virtual_screen.get_height()
 
@@ -278,24 +279,31 @@ def Room(screen, screen_res, events):
                 mouse_pos = (mouse_x / xScale, mouse_y / yScale)
                 if not solved:
                     # TODO: correctly placed and working clickable object implementation
-                    recently_selected = None  # track the most recently selected node
+                    #recently_selected = None  # track the most recently selected node
                     # map clicks to nodes/rectangles, do logic
+                    anySelected = False
                     for node in nodes:
                         if node.isClicked(mouse_pos):
+                            anySelected = True
+                            #print(f"{node.rect}, {mouse_pos}")
+                            #print(f"{recently_selected}")
                             # if clicked node is end-point and already has connection, disconnect it
                             if node.node_height % 2 != 0 and node.disconnect():
                                 recently_selected = None
                                 break
 
                             if recently_selected is None:
+                                print("selected node")
                                 recently_selected = node
                             elif node.connect(recently_selected):
+                                print("connection made!")
                                 recently_selected = None  # connection was made, reset
                             else:
                                 recently_selected = node  # connection could not be made, set clicked node as selected
                             break  # node was found, break
-                        else:
-                            recently_selected = None  # allow user to reset their node selection by clicking elsewhere
+                    if not anySelected:
+                        print("deselected node")
+                        recently_selected = None  # allow user to reset their node selection by clicking elsewhere
                     pass
 
     virtual_screen.fill((195, 195, 195))
