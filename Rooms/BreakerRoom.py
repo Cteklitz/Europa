@@ -106,7 +106,7 @@ def Room(screen, screen_res, events):
 
     pygame.draw.circle(virtual_screen, "red", player_pos, 16)
 
-    apply_lighting(virtual_screen, lightsNew, darkness=10, ambient_color=(50, 50, 60), ambient_strength=10)
+    apply_lighting(virtual_screen, lightsNew, darkness=10, ambient_color=(50, 50, 50), ambient_strength=10)
     apply_falloff(falloff, virtual_screen, ambientLightPos)
 
     virtual_screen.blit(dark_overlay, (0, 0))

@@ -10,7 +10,7 @@ from LightingUtils import apply_lighting, apply_falloff
 virtual_res = (176, 142)  # Reduced by 50%
 virtual_screen = pygame.Surface(virtual_res)
 dark_overlay = pygame.Surface(virtual_screen.get_size(), pygame.SRCALPHA)
-dark_overlay.fill((0, 0, 0, 50))
+dark_overlay.fill((0, 0, 0, 10))
 
 player_pos = pygame.Vector2(87.5, 30)  # Reduced by 50%
 
@@ -47,12 +47,10 @@ lights = [
     [Light(80, 58), dimLightScale3, LightScale3]
 ]
 
-lightPos = [(32 + 8, 0 + 8), (128 + 8, 0 + 8), (32 + 8, 62 + 8), (128 + 8, 62 + 8)]  # Reduced by 50%
-lightsNew = [LightSource(lightPos[0][0], lightPos[0][1], radius=30, strength = 220),  # Radius reduced by 50%
-             LightSource(lightPos[1][0], lightPos[1][1], radius=30, strength = 220),
-             LightSource(lightPos[2][0], lightPos[2][1], radius=30, strength = 220),
-             LightSource(lightPos[3][0], lightPos[3][1], radius=30, strength = 220),]
-falloff = [LightFalloff((virtual_res[0], virtual_res[1]), darkness = 25)]
+light_pos = (176 / 2, 15)
+lightsNew = [LightSource(light_pos[0], light_pos[1], radius=30, strength = 100)]
+falloff = [LightFalloff(virtual_screen.get_size(), darkness = 220)]
+circleLight = pygame.image.load("Assets/CircleLight.png")
         
 lockerView = False
 
@@ -101,7 +99,7 @@ def Room(screen, screen_res, events):
 
     # fill the screen with a color to wipe away anything from last frame
     virtual_screen.fill("gray")
-    dark_overlay.fill((0, 0, 0, 150))
+    dark_overlay.fill((0, 0, 0, 50))
 
     pygame.draw.line(virtual_screen, (0,0,0), (31, 0), (31, 78), 1)  # Reduced by 50%
     pygame.draw.line(virtual_screen, (0,0,0), (144, 0), (144, 78), 1)  # Reduced by 50%
@@ -124,6 +122,10 @@ def Room(screen, screen_res, events):
     virtual_screen.blit(locker, lockerRect)
 
     pygame.draw.circle(virtual_screen, "red", player_pos, 16)  # Reduced by 50%
+
+    virtual_screen.blit(circleLight, circleLight.get_rect(center=light_pos))
+    apply_lighting(virtual_screen, lightsNew, darkness=60, ambient_color=(20, 20, 20), ambient_strength=10)
+    apply_falloff(falloff, virtual_screen, light_pos)
 
     virtual_screen.blit(dark_overlay, (0, 0))
 
