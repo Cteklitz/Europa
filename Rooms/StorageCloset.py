@@ -87,7 +87,7 @@ def positionDeterminer(cameFrom):
     if cameFrom == "Rooms.PuddleRoom":
         player_pos = pygame.Vector2(150 - 15 + door.get_width()/4, 24 + (door.get_height()*5/6))  # Reduced by 50%
     else:
-        player_pos = pygame.Vector2(55, 95)
+        player_pos = pygame.Vector2(66, 80)
 
 def Room(screen, screen_res, events):
     global lockerView

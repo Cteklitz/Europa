@@ -5,7 +5,7 @@ from shapely.geometry import Point, Polygon
 import Player
 import Items
 
-virtual_res = (389, 189)
+virtual_res = (389, 195)
 virtual_screen = pygame.Surface(virtual_res)
 dark_overlay = pygame.Surface(virtual_screen.get_size(), pygame.SRCALPHA)
 
