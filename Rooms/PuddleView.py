@@ -4,6 +4,7 @@ import Objects
 from shapely.geometry import Point, Polygon
 import Player
 import Items
+import Sounds
 
 virtual_res = (800, 600)  
 virtual_screen = pygame.Surface(virtual_res)
@@ -53,6 +54,18 @@ exit = False
 puddlesCleaned = False
 cleanup_check_timer = 0
 
+# Eye effect variables
+eye_image_original = pygame.image.load("Assets/eye.png")
+
+eye_size = (eye_image_original.get_width() // 3, eye_image_original.get_height() // 3)
+eye_image = pygame.transform.scale(eye_image_original, eye_size)
+eye_alpha = 0
+eye_fade_direction = 1
+eye_timer = 0
+eye_position = (360, 80)
+eye_cycle_complete = False
+eye_max_alpha = 204  # 80% of 255 (80% visibility)
+
 def calculate_cleanup_percentage():
     step = 10
     puddle_pixels = 0
@@ -83,7 +96,9 @@ def positionDeterminer(cameFrom):
     pass
 
 def PuddleView(screen, screen_res, events):
+    global eye_alpha, eye_fade_direction, eye_timer, eye_cycle_complete, eye_max_alpha
     global exit, mouse_pos, is_mopping, puddlesCleaned
+    
     xScale = screen.get_width()/virtual_screen.get_width() 
     yScale = screen.get_height()/virtual_screen.get_height()
 
@@ -94,16 +109,21 @@ def PuddleView(screen, screen_res, events):
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_BACKSPACE or event.key == pygame.K_ESCAPE:
                 exit = True
+                # Stop mop sound if playing when exiting
+                Sounds.mopSound.stop()
         elif event.type == pygame.MOUSEBUTTONDOWN:
-            if event.button == 1:
+            if event.button == 1 and Player.checkItem(Items.mop):
                 is_mopping = True
                 if repairRect.collidepoint(mouse_pos) and Player.checkItem(Items.electricalTape) and puddlesCleaned:
                     Objects.RepairWire()
         elif event.type == pygame.MOUSEBUTTONUP:
             if event.button == 1:
                 is_mopping = False
+                Sounds.mopSound.stop()
     
     if is_mopping and Player.checkItem(Items.mop):
+        # Start playing mop sound on loop
+        Sounds.mopSound.play(-1)
         pygame.draw.circle(puddle_mask, (0, 0, 0, 0), (int(mouse_pos[0]), int(mouse_pos[1])), mop_radius)
 
         global cleanup_check_timer
@@ -131,6 +151,29 @@ def PuddleView(screen, screen_res, events):
     virtual_screen.blit(elbow2, (-82, -90))
     
     virtual_screen.blit(puddle_mask, (0, 0))
+    
+    # EYE EFFECT
+    if not eye_cycle_complete:
+        eye_timer += 1
+        
+        # Fade in and out slowly
+        if eye_timer % 2 == 0:  
+            eye_alpha += eye_fade_direction * 2
+            
+            # Eye alpha boundaries
+            
+            if eye_alpha >= eye_max_alpha:
+                eye_alpha = eye_max_alpha
+                eye_fade_direction = -1  
+            elif eye_alpha <= 0 and eye_fade_direction == -1:
+                eye_alpha = 0
+                eye_cycle_complete = True  
+    
+    
+    if eye_alpha > 0:
+        eye_surface = eye_image.copy()
+        eye_surface.set_alpha(eye_alpha)
+        virtual_screen.blit(eye_surface, eye_position)
     
     mop_rect = mop_cursor.get_rect()
     # mop mosition

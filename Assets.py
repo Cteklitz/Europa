@@ -150,6 +150,8 @@ tooDarkSee = pygame.image.load("Assets/TooDarkSee.png")
 letterTiles = load_tileset("Assets/letters.png", 21, 41)
 numberTiles = load_tileset("Assets/numbers.png", 21, 41)
 
+multiNumbers = load_tileset("Assets/multi_numbers.png", 5, 9)
+
 useButton = pygame.image.load("Assets/useButton.png")
 equipButton = pygame.image.load("Assets/equipButton.png")
 unequipButton = pygame.image.load("Assets/unequipButton.png")
@@ -187,6 +189,8 @@ trianglePuzzleBackground = pygame.image.load("Assets/trianglePuzzleBackground.pn
 
 toolboxGround = pygame.image.load("Assets/ToolboxGround.png")
 multiInv = pygame.image.load("Assets/multimeterInv.png")
+multimeter = pygame.image.load("Assets/multimeter.png")
+multimeter_toggled = pygame.image.load("Assets/multimeter_flipped.png")
 
 puddle1 = pygame.image.load("Assets/Puddle1.png")
 puddle2 = pygame.image.load("Assets/Puddle2.png")
