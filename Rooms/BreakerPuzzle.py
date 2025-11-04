@@ -141,7 +141,38 @@ class OperatorNode(Node):
 
     def connect(self, other):
         print("Attempting connection")
-        pass
+        # check if connection is coming from above or below
+        if other.node_height == 1: # connection comes from above
+            print("Connection coming from above")
+            # check that there is an open input
+            if self.num_inputs_allowed > len(self.connections_above):
+                if (other.connect_back(self)):
+                    self.connections_above.append(other)
+                    return True
+                else:
+                    return False
+            else:
+                print("Breaker Puzzle: Operator node does not have open inputs")
+                return False
+        elif other.node_height == 3: # connection comes from below
+            print("Connection coming from below")
+            if self.connection_below is not None:  # make sure that output is empty
+                print("Breaker Puzzle connect: Operator <--> Output --- Operator output already connected")
+                return False
+            else:
+                if other.connect_back(self):
+                    self.connection_below = other
+                    return True
+                else:
+                    return False
+        elif other.node_height == 2:
+            print("Breaker Puzzle: Cannot connect two operator nodes")
+            return False      
+        else:
+            print(f"Breaker Puzzle: Invalid height value of {other.height}")
+            return False
+
+        return True
 
     def connect_back(self, other):
         if self.node_height == other.node_height - 1:  # self is one level above (note that height grows down)
