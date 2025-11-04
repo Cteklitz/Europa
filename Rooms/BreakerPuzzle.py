@@ -123,7 +123,15 @@ class InputNode(Node):
 
     # TODO: returns True if disconnection was successful in both directions, False otherwise
     def disconnect(self):
-        pass
+        if self.connection_below is not None:
+            print("Disconnecting")
+            if (self.connection_below.disconnect_back(self)):
+                self.connection_below = None
+                return True
+            else:
+                return False
+        else:
+            return False
 
     # TODO: returns True if self can and does disconnect itself from other, False otherwise
     def disconnect_back(self, other):
@@ -219,7 +227,24 @@ class OperatorNode(Node):
         pass
 
     def disconnect_back(self, other):
-        pass
+        # TODO: Handle case where first connection is disconnected (rn it just moves the other connection over; going to need to rework connect and drawing wires to handle this case)
+        # check if disconnect comes from above or below
+        if other.node_height == 1: # input node
+            for node in self.connections_above:
+                if node == other:
+                    self.cur_result = None
+                    self.connections_above.remove(node)
+                    return True
+            return False
+        elif other.node_height == 3: # output node
+            if self.connection_below == other:
+                self.cur_result = None
+                self.connection_below = None
+                return True
+            else:
+                return False
+        else:
+            return False
 
 
 class OutputNode(Node):
@@ -230,13 +255,26 @@ class OutputNode(Node):
         Node.end_nodes.append(self)  # keep track of end nodes
 
     def connect(self, other):
-        pass
+        if len(self.connections_above) == 0: # check that node does not already have connection
+            if other.node_height == 2: # check that other node is an operator node
+                if (other.connect_back(self)):
+                    self.connections_above.append(other)
+                    return True
+        return False
 
     def connect_back(self, other):
-        pass
+        if len(self.connections_above) == 0: # check that node does not already have connection
+            if other.node_height == 2: # check that other node is an operator node
+                self.connections_above.append(other)
+                return True
+        return False
 
     def disconnect(self):
-        pass
+        if len(self.connections_above) == 1: # check that node has connection
+            if self.connections_above[0].disconnect_back(self):
+                self.connections_above.pop()
+                return True
+        return False
 
     def disconnect_back(self, other):
         pass
