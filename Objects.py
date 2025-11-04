@@ -222,3 +222,9 @@ def getBluePower():
 
 def getWaterLevelsSolved():
     return Area.getWaterLevelsSolved()
+
+def RepairWire():
+    return Area.RepairWire()
+
+def getWireRepaired():
+    return Area.getWireRepaired()

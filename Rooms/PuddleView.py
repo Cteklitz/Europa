@@ -20,6 +20,18 @@ puddle1 = pygame.transform.scale(Assets.puddle1, (Assets.puddle1.get_width() * s
 puddle2 = pygame.transform.scale(Assets.puddle2, (Assets.puddle2.get_width() * scale_factor, Assets.puddle2.get_height() * scale_factor))
 puddle3 = pygame.transform.scale(Assets.puddle3, (Assets.puddle3.get_width() * scale_factor, Assets.puddle3.get_height() * scale_factor))
 
+# pipe scaling
+brokenWire = pygame.image.load("Assets/BrokenWire.png")
+fixedWire = pygame.image.load("Assets/FixedWire.png")
+
+horizontalPipe = pygame.transform.scale(Assets.pipes[10], (Assets.pipes[10].get_width() * scale_factor, Assets.pipes[10].get_height() * scale_factor))
+brokenPipe = pygame.transform.scale(brokenWire, (brokenWire.get_width() * scale_factor, brokenWire.get_height() * scale_factor))
+repairRect = pygame.Rect(350 + 136, virtual_screen.get_height()/2 - 128 - 256 + 40 + 192, 96, 88)
+fixedPipe = pygame.transform.scale(fixedWire, (fixedWire.get_width() * scale_factor, fixedWire.get_height() * scale_factor))
+elbow1 = pygame.transform.scale(Assets.pipes[5], (Assets.pipes[5].get_width() * scale_factor, Assets.pipes[5].get_height() * scale_factor))
+elbow2 = pygame.transform.scale(Assets.pipes[18], (Assets.pipes[18].get_width() * scale_factor, Assets.pipes[18].get_height() * scale_factor))
+
+# puddle positions
 puddle1_pos = (330, 10)
 puddle2_pos = (230, 235)
 puddle3_pos = (390, 300)
@@ -28,13 +40,9 @@ puddle3_pos = (390, 300)
 puddle_mask = pygame.Surface(virtual_res, pygame.SRCALPHA)
 puddle_mask.fill((0, 0, 0, 0))
 
-
 puddle_mask.blit(puddle1, puddle1_pos)
 puddle_mask.blit(puddle2, puddle2_pos)
 puddle_mask.blit(puddle3, puddle3_pos)
-
-cleanup_mask = pygame.Surface(virtual_res, pygame.SRCALPHA)
-cleanup_mask.fill((0, 0, 0, 0))
 
 mouse_pos = (0, 0)
 is_mopping = False
@@ -53,12 +61,11 @@ def calculate_cleanup_percentage():
     for x in range(0, virtual_res[0], step):
         for y in range(0, virtual_res[1], step):
             puddle_alpha = puddle_mask.get_at((x, y))[3]
-            cleanup_alpha = cleanup_mask.get_at((x, y))[3]
             
-            if puddle_alpha > 0:
-                puddle_pixels += 1
-                if cleanup_alpha > 0:
-                    cleaned_pixels += 1
+            if puddle_alpha == 0:
+                cleaned_pixels += 1
+                
+            puddle_pixels += 1
     
     if puddle_pixels == 0:
         return 0
@@ -76,7 +83,7 @@ def positionDeterminer(cameFrom):
     pass
 
 def PuddleView(screen, screen_res, events):
-    global exit, mouse_pos, is_mopping, cleanup_mask
+    global exit, mouse_pos, is_mopping, puddlesCleaned
     xScale = screen.get_width()/virtual_screen.get_width() 
     yScale = screen.get_height()/virtual_screen.get_height()
 
@@ -90,14 +97,16 @@ def PuddleView(screen, screen_res, events):
         elif event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == 1:
                 is_mopping = True
+                if repairRect.collidepoint(mouse_pos) and Player.checkItem(Items.electricalTape) and puddlesCleaned:
+                    Objects.RepairWire()
         elif event.type == pygame.MOUSEBUTTONUP:
             if event.button == 1:
                 is_mopping = False
     
     if is_mopping and Player.checkItem(Items.mop):
-        pygame.draw.circle(cleanup_mask, (195, 195, 195, 255), (int(mouse_pos[0]), int(mouse_pos[1])), mop_radius)
+        pygame.draw.circle(puddle_mask, (0, 0, 0, 0), (int(mouse_pos[0]), int(mouse_pos[1])), mop_radius)
 
-        global puddlesCleaned, cleanup_check_timer
+        global cleanup_check_timer
         cleanup_check_timer += 1
         if cleanup_check_timer >= 30 and not puddlesCleaned:
             cleanup_percent = calculate_cleanup_percentage()
@@ -106,10 +115,22 @@ def PuddleView(screen, screen_res, events):
             cleanup_check_timer = 0
 
     virtual_screen.fill((195, 195, 195))
+
+    for x in range(0,800,256):
+        virtual_screen.blit(horizontalPipe, (x, virtual_screen.get_height()/2 - 128))
+
+    if not Objects.getWireRepaired():
+        virtual_screen.blit(brokenPipe, (350, virtual_screen.get_height()/2 - 128 - 256 + 40))
+    else:
+        virtual_screen.blit(fixedPipe, (350, virtual_screen.get_height()/2 - 128 - 256 + 40))
+
+    virtual_screen.blit(elbow1, (414, -90))
+
+    virtual_screen.blit(horizontalPipe, (174, -90))
+
+    virtual_screen.blit(elbow2, (-82, -90))
     
     virtual_screen.blit(puddle_mask, (0, 0))
-    
-    virtual_screen.blit(cleanup_mask, (0, 0))
     
     mop_rect = mop_cursor.get_rect()
     # mop mosition

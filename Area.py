@@ -46,6 +46,12 @@ def getLetterCount():
 def getWaterLevelsSolved():
     return ValvePuzzle.solved
 
+def RepairWire():
+    PuddleRoom.wireRepaired = True
+
+def getWireRepaired():
+    return PuddleRoom.wireRepaired
+
 class Area:
     def __init__(self, roomLayout):
         self.roomLayout = roomLayout
