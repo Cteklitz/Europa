@@ -18,14 +18,14 @@ puddle3_original = pygame.image.load("Assets/Puddle3.png")
 mop_cursor = pygame.image.load("Assets/Mop.png")
 
 # puddle scaling
-scale_factor = 6
+scale_factor = 8
 puddle1 = pygame.transform.scale(puddle1_original, (puddle1_original.get_width() * scale_factor, puddle1_original.get_height() * scale_factor))
 puddle2 = pygame.transform.scale(puddle2_original, (puddle2_original.get_width() * scale_factor, puddle2_original.get_height() * scale_factor))
 puddle3 = pygame.transform.scale(puddle3_original, (puddle3_original.get_width() * scale_factor, puddle3_original.get_height() * scale_factor))
 
-puddle1_pos = (330, 20)
-puddle2_pos = (255, 205)
-puddle3_pos = (390, 265)
+puddle1_pos = (330, 10)
+puddle2_pos = (230, 235)
+puddle3_pos = (390, 300)
 
 # puddle masks 
 puddle_mask = pygame.Surface(virtual_res, pygame.SRCALPHA)
@@ -36,7 +36,6 @@ puddle_mask.blit(puddle1, puddle1_pos)
 puddle_mask.blit(puddle2, puddle2_pos)
 puddle_mask.blit(puddle3, puddle3_pos)
 
-# cleanup mask to track whats been mopped
 cleanup_mask = pygame.Surface(virtual_res, pygame.SRCALPHA)
 cleanup_mask.fill((0, 0, 0, 0))
 
@@ -45,6 +44,29 @@ is_mopping = False
 mop_radius = 30
 
 exit = False
+
+puddlesCleaned = False
+cleanup_check_timer = 0
+
+def calculate_cleanup_percentage():
+    step = 10
+    puddle_pixels = 0
+    cleaned_pixels = 0
+    
+    for x in range(0, virtual_res[0], step):
+        for y in range(0, virtual_res[1], step):
+            puddle_alpha = puddle_mask.get_at((x, y))[3]
+            cleanup_alpha = cleanup_mask.get_at((x, y))[3]
+            
+            if puddle_alpha > 0:
+                puddle_pixels += 1
+                if cleanup_alpha > 0:
+                    cleaned_pixels += 1
+    
+    if puddle_pixels == 0:
+        return 0
+    
+    return (cleaned_pixels / puddle_pixels) * 100
 
 def inBounds(x, y):
     global exit
@@ -78,6 +100,15 @@ def PuddleView(screen, screen_res, events):
     if is_mopping:
         pygame.draw.circle(cleanup_mask, (195, 195, 195, 255), 
                           (int(mouse_pos[0]), int(mouse_pos[1])), mop_radius)
+        
+
+        global puddlesCleaned, cleanup_check_timer
+        cleanup_check_timer += 1
+        if cleanup_check_timer >= 30 and not puddlesCleaned:
+            cleanup_percent = calculate_cleanup_percentage()
+            if cleanup_percent >= 95.0:
+                puddlesCleaned = True
+            cleanup_check_timer = 0
 
     virtual_screen.fill((195, 195, 195))
     
@@ -95,6 +126,10 @@ def PuddleView(screen, screen_res, events):
     screen.blit(scaled, (0, 0))
 
     return player_pos, xScale, yScale
+
+def getPuddlesCleaned():
+    """Get the puddle cleaning state"""
+    return puddlesCleaned
 
 def Room(screen, screen_res, events):
     return PuddleView(screen, screen_res, events)

@@ -34,7 +34,10 @@ outerPuddle = pygame.image.load("Assets/OuterPuddle.png")
 outerPuddle.set_alpha(179)
 
 # puddle interaction region
-puddleRegion = pygame.Rect(250, 70, 60, 80)  
+puddleRegion = pygame.Rect(250, 70, 60, 115)  
+
+# puddle collision area (blocks movement when puddles exist)
+puddleCollisionArea = pygame.Rect(270, 20, 50, 300)  # Area around outerPuddle that blocks movement
 
 lowerLevelFlooded = pygame.image.load("Assets/LowerLevelFlooded.png")
 lowerLevelFloodedText = Objects.briefText(virtual_screen, lowerLevelFlooded, 15, 180, 3)
@@ -126,6 +129,17 @@ def inBounds(x, y):
         return 3
     elif not bounds.contains(Point(x,y)) or topRightWall.collidepoint((x,y)) or bottomRightWall.collidepoint((x,y)):
         return False
+    else:
+        # Check if puddles are cleaned up - if not, block movement through puddle area
+        try:
+            from Rooms import PuddleView
+            puddles_cleaned = PuddleView.getPuddlesCleaned()
+        except:
+            puddles_cleaned = False
+            
+        if not puddles_cleaned and puddleCollisionArea.collidepoint((x,y)):
+            return False  # Block movement through puddle area
+            
     return True
 
 def positionDeterminer(cameFrom):
@@ -157,7 +171,16 @@ def Room(screen, screen_res, events):
                             wireRepaired = True
                     elif Player.checkItem(Items.mop):
                         if puddleRegion.collidepoint(player_pos):
-                            puddleSelected = True
+                            # Check if puddles are already cleaned
+                            try:
+                                from Rooms import PuddleView
+                                puddles_cleaned = PuddleView.getPuddlesCleaned()
+                            except:
+                                puddles_cleaned = False
+                                
+                            if not puddles_cleaned:
+                                puddleSelected = True
+                            # If puddles are cleaned, block entering puddle view again
 
     virtual_screen.fill((105,105,105))
     dark_overlay.fill((0, 0, 0, 150))
@@ -232,12 +255,19 @@ def Room(screen, screen_res, events):
 
     virtual_screen.blit(ladderHatchOpen, hatchPosition)
 
-    # Draw puddles
-    virtual_screen.blit(outerPuddle, (250, 80))
-
-    # Draw electrical effects on the electrified water
-    puddle_positions = [(250, 80)]  # Only OuterPuddle remains
-    draw_electrical_effects(virtual_screen, puddle_positions)
+    # Draw puddles only if they haven't been cleaned up
+    try:
+        from Rooms import PuddleView
+        puddles_cleaned = PuddleView.getPuddlesCleaned()
+    except:
+        puddles_cleaned = False
+        
+    if not puddles_cleaned:
+        virtual_screen.blit(outerPuddle, (250, 80))
+        
+        # Draw electrical effects on the electrified water only if puddle exists
+        puddle_positions = [(250, 80)]  # Only OuterPuddle remains
+        draw_electrical_effects(virtual_screen, puddle_positions)
 
     pygame.draw.circle(virtual_screen, "red", player_pos, 16)
 
