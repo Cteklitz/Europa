@@ -169,18 +169,17 @@ def Room(screen, screen_res, events):
                     elif Player.checkItem(Items.electricalTape):
                         if wireRect.collidepoint(player_pos) and not wireRepaired:
                             wireRepaired = True
-                    elif Player.checkItem(Items.mop):
-                        if puddleRegion.collidepoint(player_pos):
-                            # Check if puddles are already cleaned
-                            try:
-                                from Rooms import PuddleView
-                                puddles_cleaned = PuddleView.getPuddlesCleaned()
-                            except:
-                                puddles_cleaned = False
+                    elif puddleRegion.collidepoint(player_pos):
+                        # Check if puddles are already cleaned
+                        try:
+                            from Rooms import PuddleView
+                            puddles_cleaned = PuddleView.getPuddlesCleaned()
+                        except:
+                            puddles_cleaned = False
                                 
-                            if not puddles_cleaned:
-                                puddleSelected = True
-                            # If puddles are cleaned, block entering puddle view again
+                        if not puddles_cleaned:
+                            puddleSelected = True
+                        # If puddles are cleaned, block entering puddle view again
 
     virtual_screen.fill((105,105,105))
     dark_overlay.fill((0, 0, 0, 150))

@@ -2,6 +2,8 @@ import pygame
 import Assets
 import Objects
 from shapely.geometry import Point, Polygon
+import Player
+import Items
 
 virtual_res = (800, 600)  
 virtual_screen = pygame.Surface(virtual_res)
@@ -92,10 +94,8 @@ def PuddleView(screen, screen_res, events):
             if event.button == 1:
                 is_mopping = False
     
-    if is_mopping:
-        pygame.draw.circle(cleanup_mask, (195, 195, 195, 255), 
-                          (int(mouse_pos[0]), int(mouse_pos[1])), mop_radius)
-        
+    if is_mopping and Player.checkItem(Items.mop):
+        pygame.draw.circle(cleanup_mask, (195, 195, 195, 255), (int(mouse_pos[0]), int(mouse_pos[1])), mop_radius)
 
         global puddlesCleaned, cleanup_check_timer
         cleanup_check_timer += 1
@@ -115,7 +115,8 @@ def PuddleView(screen, screen_res, events):
     # mop mosition
     mop_rect.centerx = int(mouse_pos[0]) - 15
     mop_rect.bottom = int(mouse_pos[1]) + 30
-    virtual_screen.blit(mop_cursor, mop_rect)
+    if Player.checkItem(Items.mop):
+        virtual_screen.blit(mop_cursor, mop_rect)
 
     scaled = pygame.transform.scale(virtual_screen, screen_res)
     screen.blit(scaled, (0, 0))
