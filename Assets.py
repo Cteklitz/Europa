@@ -174,3 +174,5 @@ letterTile = pygame.image.load("Assets/letter_tile.png")
 
 trianglePuzzleCorner = pygame.image.load("Assets/trianglePuzzleCorner.png")
 trianglePuzzleBackground = pygame.image.load("Assets/trianglePuzzleBackground.png")
+
+toolboxGround = pygame.image.load("Assets/ToolboxGround.png")

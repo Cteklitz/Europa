@@ -22,12 +22,22 @@ lights = [
 
 northDoor = Objects.Door(112, 16, Assets.lockedDoorNorth)
 westDoor = Objects.Door(16, 112, Assets.grayDoorWest)
+toolboxGround = Assets.toolboxGround
 
 breakerBox = Assets.breakerBox
 breakerRect = pygame.Rect(150, 17, 32, 32)
 
+toolbox = False
+toolboxRect = pygame.Rect(190, 115, 19, 28)
+toolboxInteractRect = pygame.Rect(185, 110, 29, 38)
+
+# prevents player from walking into walls/objects
 def inBounds(x, y):
+    global toolbox
     level, power = Objects.getPipeDungeonInfo()
+    if toolbox:
+        toolbox = False
+        return 2
     if westDoor.rect.collidepoint((x,y)):
         if level == 2 and power:
             Sounds.powerAmb.stop()
@@ -40,6 +50,8 @@ def inBounds(x, y):
         return 1
     elif not outline.contains(Point(x,y)):
         return False
+    elif toolboxRect.collidepoint((x,y)):
+        return False
     return True
 
 def positionDeterminer(cameFrom):
@@ -50,11 +62,15 @@ def positionDeterminer(cameFrom):
         player_pos = pygame.Vector2(northDoor.x + northDoor.rect.width/2, northDoor.y + northDoor.rect.height + 5)
 
 def Room(screen, screen_res, events):
+    global toolbox
     level, power = Objects.getPipeDungeonInfo()
     
-    # for event in events:
-    #     if event.type == pygame.KEYDOWN:
-    #         if event.key == pygame.K_e:
+    for event in events:
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_e:
+                if toolboxInteractRect.collidepoint(player_pos):
+                    toolbox = True
+
              
     virtual_screen.fill((105,105,105))
     dark_overlay.fill((0, 0, 0, 150))
@@ -76,6 +92,7 @@ def Room(screen, screen_res, events):
     virtual_screen.blit(northDoor.image, northDoor.rect)
     virtual_screen.blit(westDoor.image, westDoor.rect)
     virtual_screen.blit(breakerBox, breakerRect)
+    virtual_screen.blit(toolboxGround, (190, 115))
 
     pygame.draw.circle(virtual_screen, "red", player_pos, 16)
 
