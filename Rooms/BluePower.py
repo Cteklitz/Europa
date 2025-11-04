@@ -26,6 +26,12 @@ floor = pygame.image.load("Assets/floor.png")
 ladder = pygame.image.load("Assets/ladder.png")
 ladderExit = pygame.Rect(92,298,48,16)
 
+puddle1 = pygame.transform.scale(Assets.puddle1, (Assets.puddle1.get_width(), Assets.puddle1.get_height()/2))
+puddle2 = pygame.transform.scale(Assets.puddle2, (Assets.puddle2.get_width(), Assets.puddle2.get_height()/2))
+puddle3 = pygame.transform.scale(Assets.puddle3, (Assets.puddle3.get_width(), Assets.puddle3.get_height()/2))
+puddle4 = pygame.transform.scale(Assets.puddle1, (Assets.puddle1.get_width()*2, Assets.puddle1.get_height()))
+puddle5 = pygame.transform.scale(Assets.puddle3, (Assets.puddle3.get_width()*2, Assets.puddle3.get_height()))
+
 scaledSwitch = []
 
 for tile in Assets.blueSwitch:
@@ -131,7 +137,7 @@ def positionDeterminer(cameFrom):
     player_pos = pygame.Vector2(116, 300)
 
 def Room(screen, screen_res, events):
-    global bluePower, played, exit
+    global bluePower, played, exit, puddle1, puddle2, puddle3
 
     # poll for events
     for event in events:
@@ -182,6 +188,12 @@ def Room(screen, screen_res, events):
         virtual_screen.blit(scaledSwitch[0], (144,192))
     else:
         virtual_screen.blit(scaledSwitch[1], (144,192))
+
+    virtual_screen.blit(puddle1, (240,320))
+    virtual_screen.blit(puddle2, (60,275))
+    virtual_screen.blit(puddle3, (160,340))
+    virtual_screen.blit(puddle4, (200,260))
+    virtual_screen.blit(puddle5, (30,330))
 
     if player_pos.y < 298:
         pygame.draw.circle(virtual_screen, "red", player_pos, 16)

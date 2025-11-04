@@ -187,3 +187,7 @@ trianglePuzzleBackground = pygame.image.load("Assets/trianglePuzzleBackground.pn
 
 toolboxGround = pygame.image.load("Assets/ToolboxGround.png")
 multiInv = pygame.image.load("Assets/multimeterInv.png")
+
+puddle1 = pygame.image.load("Assets/Puddle1.png")
+puddle2 = pygame.image.load("Assets/Puddle2.png")
+puddle3 = pygame.image.load("Assets/Puddle3.png")

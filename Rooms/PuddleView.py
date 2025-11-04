@@ -9,19 +9,14 @@ dark_overlay = pygame.Surface(virtual_screen.get_size(), pygame.SRCALPHA)
 
 player_pos = pygame.Vector2(192, 128)
 
-
-puddle1_original = pygame.image.load("Assets/Puddle1.png")
-puddle2_original = pygame.image.load("Assets/Puddle2.png")
-puddle3_original = pygame.image.load("Assets/Puddle3.png")
-
 # Load mop for cursor
 mop_cursor = pygame.image.load("Assets/Mop.png")
 
 # puddle scaling
 scale_factor = 8
-puddle1 = pygame.transform.scale(puddle1_original, (puddle1_original.get_width() * scale_factor, puddle1_original.get_height() * scale_factor))
-puddle2 = pygame.transform.scale(puddle2_original, (puddle2_original.get_width() * scale_factor, puddle2_original.get_height() * scale_factor))
-puddle3 = pygame.transform.scale(puddle3_original, (puddle3_original.get_width() * scale_factor, puddle3_original.get_height() * scale_factor))
+puddle1 = pygame.transform.scale(Assets.puddle1, (Assets.puddle1.get_width() * scale_factor, Assets.puddle1.get_height() * scale_factor))
+puddle2 = pygame.transform.scale(Assets.puddle2, (Assets.puddle2.get_width() * scale_factor, Assets.puddle2.get_height() * scale_factor))
+puddle3 = pygame.transform.scale(Assets.puddle3, (Assets.puddle3.get_width() * scale_factor, Assets.puddle3.get_height() * scale_factor))
 
 puddle1_pos = (330, 10)
 puddle2_pos = (230, 235)
