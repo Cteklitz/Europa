@@ -71,7 +71,8 @@ def inBounds(x, y):
 
 def Room(screen, screen_res, events):
     global exit, open, multimeter_found, paper_open, first_time, found, curr_index, curr_eye, cutscene, cutscene_start, played
-    virtual_screen.fill((0, 0, 0)) # TODO: replace with background
+    virtual_screen.fill((159, 161, 160))
+    pygame.draw.line(virtual_screen, (0, 0, 0), (0, 100), (screen.get_width(), 100))
     xScale = screen.get_width()/virtual_screen.get_width() 
     yScale = screen.get_height()/virtual_screen.get_height()
     curr_time = pygame.time.get_ticks()
@@ -136,14 +137,16 @@ def Room(screen, screen_res, events):
             virtual_screen.blit(crumpled_paper, (130, 56), crumpled_paper_rect)
         # eye jumpscare cutscene
         if (cutscene):
-            if (curr_time - cutscene_start < 3000):
+            if (curr_time - cutscene_start < 5000):
                 pre_jumpscare_sound.play()
                 virtual_screen.blit(eye_closed, closed_eye_rect)
-            elif (curr_time - cutscene_start < 8000):
+            elif (curr_time - cutscene_start < 10000):
                 if (not played):
                     pre_jumpscare_sound.stop()
-                    jumpscare_sound.play()
-                    jumpscare_layer_sound.play()
+                    channel1 = pygame.mixer.find_channel(True)
+                    channel1.play(jumpscare_layer_sound)
+                    channel2 = pygame.mixer.find_channel(True)
+                    channel2.play(jumpscare_sound)
                     played = True
                 virtual_screen.blit(eye_open, open_eye_rect)
     scaled = pygame.transform.scale(virtual_screen, screen_res)
