@@ -123,7 +123,15 @@ class InputNode(Node):
 
     # TODO: returns True if disconnection was successful in both directions, False otherwise
     def disconnect(self):
-        pass
+        if self.connection_below is not None:
+            print("Disconnecting")
+            if (self.connection_below.disconnect_back(self)):
+                self.connection_below = None
+                return True
+            else:
+                return False
+        else:
+            return False
 
     # TODO: returns True if self can and does disconnect itself from other, False otherwise
     def disconnect_back(self, other):
@@ -141,7 +149,38 @@ class OperatorNode(Node):
 
     def connect(self, other):
         print("Attempting connection")
-        pass
+        # check if connection is coming from above or below
+        if other.node_height == 1: # connection comes from above
+            print("Connection coming from above")
+            # check that there is an open input
+            if self.num_inputs_allowed > len(self.connections_above):
+                if (other.connect_back(self)):
+                    self.connections_above.append(other)
+                    return True
+                else:
+                    return False
+            else:
+                print("Breaker Puzzle: Operator node does not have open inputs")
+                return False
+        elif other.node_height == 3: # connection comes from below
+            print("Connection coming from below")
+            if self.connection_below is not None:  # make sure that output is empty
+                print("Breaker Puzzle connect: Operator <--> Output --- Operator output already connected")
+                return False
+            else:
+                if other.connect_back(self):
+                    self.connection_below = other
+                    return True
+                else:
+                    return False
+        elif other.node_height == 2:
+            print("Breaker Puzzle: Cannot connect two operator nodes")
+            return False      
+        else:
+            print(f"Breaker Puzzle: Invalid height value of {other.height}")
+            return False
+
+        return True
 
     def connect_back(self, other):
         if self.node_height == other.node_height - 1:  # self is one level above (note that height grows down)
@@ -188,7 +227,24 @@ class OperatorNode(Node):
         pass
 
     def disconnect_back(self, other):
-        pass
+        # TODO: Handle case where first connection is disconnected (rn it just moves the other connection over; going to need to rework connect and drawing wires to handle this case)
+        # check if disconnect comes from above or below
+        if other.node_height == 1: # input node
+            for node in self.connections_above:
+                if node == other:
+                    self.cur_result = None
+                    self.connections_above.remove(node)
+                    return True
+            return False
+        elif other.node_height == 3: # output node
+            if self.connection_below == other:
+                self.cur_result = None
+                self.connection_below = None
+                return True
+            else:
+                return False
+        else:
+            return False
 
 
 class OutputNode(Node):
@@ -199,13 +255,26 @@ class OutputNode(Node):
         Node.end_nodes.append(self)  # keep track of end nodes
 
     def connect(self, other):
-        pass
+        if len(self.connections_above) == 0: # check that node does not already have connection
+            if other.node_height == 2: # check that other node is an operator node
+                if (other.connect_back(self)):
+                    self.connections_above.append(other)
+                    return True
+        return False
 
     def connect_back(self, other):
-        pass
+        if len(self.connections_above) == 0: # check that node does not already have connection
+            if other.node_height == 2: # check that other node is an operator node
+                self.connections_above.append(other)
+                return True
+        return False
 
     def disconnect(self):
-        pass
+        if len(self.connections_above) == 1: # check that node has connection
+            if self.connections_above[0].disconnect_back(self):
+                self.connections_above.pop()
+                return True
+        return False
 
     def disconnect_back(self, other):
         pass
@@ -313,6 +382,28 @@ def Room(screen, screen_res, events):
                             (virtual_screen.get_width() / 2, virtual_screen.get_height() / 2), 500, (0, 0, 0))
 
     virtual_screen.blit(background, (0, 0))
+
+    # draw wires for connections
+    for node in nodes:
+        if node.node_height == 2: # start all connections from operator nodes
+            if len(node.connections_above) >= 1:
+                pygame.draw.line(virtual_screen, (100,0,0), (node.rect.left + 3, node.rect.top + 1), (node.connections_above[0].rect.left + 5, node.connections_above[0].rect.top + 12), width=2)
+            if len(node.connections_above) == 2:
+                pygame.draw.line(virtual_screen, (100,0,0), (node.rect.left + 8, node.rect.top + 1), (node.connections_above[1].rect.left + 5, node.connections_above[1].rect.top + 12), width=2)
+            if node.connection_below is not None:
+                pygame.draw.line(virtual_screen, (100,0,0), (node.rect.left + 3, node.rect.top + 15), (node.connection_below.rect.left + 5, node.connection_below.rect.top + 1), width=2)
+
+    # draw wire from current selected node to mouse
+    if recently_selected is not None:
+        mouse_x, mouse_y = pygame.mouse.get_pos()
+        mouse_pos = (mouse_x / xScale, mouse_y / yScale)
+        if recently_selected.node_height == 1: # input node
+            pygame.draw.line(virtual_screen, (100,0,0), (recently_selected.rect.left + 5, recently_selected.rect.top + 12), mouse_pos, width=2)
+        elif recently_selected.node_height == 2: # operator node
+            # idk how to handle this and make it look good, temp implmentation for now
+            pygame.draw.line(virtual_screen, (100,0,0), (recently_selected.rect.left + 3, recently_selected.rect.top + 15), mouse_pos, width=2)
+        elif recently_selected.node_height == 3: # output node
+            pygame.draw.line(virtual_screen, (100,0,0), (recently_selected.rect.left + 5, recently_selected.rect.top + 1), mouse_pos, width=2)
 
     scaled = pygame.transform.scale(virtual_screen, screen_res)
     screen.blit(scaled, (0, 0))
