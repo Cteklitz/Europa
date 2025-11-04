@@ -45,9 +45,9 @@ Here are some of the TODOs I have written in my notes (besides general method im
 2. Implement actual unique evaluation/comparison logic in each connection() method
    * store how much cur_result=None is over (positive), correct (0), or under (negative) in the OutputNode
 
-3. Click on already connected endpoint to detach wire; create disconnect() function (will need a disconnect_back() too)
+3. Click on already connected endpoint to detach wire; create disconnect() function (will need a disconnect_back() too) -- DONE for input and output nodes, not sure how to handle for operator nodes
 
-4. Draw wires on valid connection
+4. Draw wires on valid connection -- DONE
 
 5. Implement Multimeter, check for multimeter equipped
 '''
@@ -156,13 +156,13 @@ class OperatorNode(Node):
             if self.num_inputs_allowed > len(self.connections_above):
                 if (other.connect_back(self)):
                     self.connections_above.append(other)
-                    return True
+                    #return True
                 else:
                     return False
             elif self.connections_above[0] is None:
                 if (other.connect_back(self)):
                     self.connections_above[0] = other
-                    return True
+                    #return True
                 else:
                     return False
             else:
@@ -176,7 +176,7 @@ class OperatorNode(Node):
             else:
                 if other.connect_back(self):
                     self.connection_below = other
-                    return True
+                    #return True
                 else:
                     return False
         elif other.node_height == 2:
@@ -186,6 +186,9 @@ class OperatorNode(Node):
             print(f"Breaker Puzzle: Invalid height value of {other.height}")
             return False
 
+        # only evaluate if all connections are filled
+        if len(self.connections_above) == self.num_inputs_allowed and self.connections_above[0] is not None:
+            self.evaluate_operation(*self.connections_above)  # evaluate operation and store result
         return True
 
     def connect_back(self, other):
@@ -214,7 +217,7 @@ class OperatorNode(Node):
 
     # check if an operator node has all connections in and out
     def is_fully_connected(self):
-        if self.num_inputs_allowed == len(self.connections_above) and (len(self.connection_below) == 1):
+        if self.num_inputs_allowed == len(self.connections_above) and (len(self.connection_below) == 1) and self.connections_above[0] is not None:
             return True
         return False
 
@@ -301,8 +304,6 @@ class MultimeterNode(Node):
 
 
 # 7 input nodes, 6 operator nodes, 4 output nodes
-# TODO fix rectangle locations and sizes?; divide by xScale, yScale? Got these based on mouse xPos, yPos by clicking the centers
-#  (not top left corner) of the nodes on the image. Note: haven't tested the rectangles much yet
 nodes = [
     InputNode(pygame.Rect(39, 12, 12, 14), 13),
     InputNode(pygame.Rect(53, 12, 12, 14), 8),
@@ -417,6 +418,37 @@ def Room(screen, screen_res, events):
             pygame.draw.line(virtual_screen, (100,0,0), (recently_selected.rect.left + 3, recently_selected.rect.top + 15), mouse_pos, width=2)
         elif recently_selected.node_height == 3: # output node
             pygame.draw.line(virtual_screen, (100,0,0), (recently_selected.rect.left + 5, recently_selected.rect.top + 1), mouse_pos, width=2)
+
+    # evaluate connections
+    output_diffs = [None, None, None, None]
+    display_diffs = ['X', 'X', 'X', 'X']
+    total_diff = 0
+    i = 0
+    for node in nodes:
+        if node.node_height == 3:
+            if len(node.connections_above) == 1:
+                if node.connections_above[0].cur_result is not None:
+                    output_diffs[i] = node.connections_above[0].cur_result - node.expected_out
+                    total_diff += output_diffs[i]
+                    if output_diffs[i] > 0:
+                        display_diffs[i] = '+'
+                    elif output_diffs[i] < 0:
+                        display_diffs[i] = '-'
+                    elif output_diffs[i] == 0:
+                        display_diffs[i] = '='
+            i += 1
+    
+    # TODO: Display diff info on multimeter
+
+
+    # check if puzzle is solved
+    correct = 0
+    for num in output_diffs:
+        if num is not None:
+            if num == 0:
+                correct += 1
+    if correct == 4:
+        solved = True
 
     scaled = pygame.transform.scale(virtual_screen, screen_res)
     screen.blit(scaled, (0, 0))
