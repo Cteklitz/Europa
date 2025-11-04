@@ -17,6 +17,11 @@ player_pos = pygame.Vector2(192, 128)
 exit = False
 
 background = pygame.image.load("Assets/breaker_zoom.png")
+multimeter = Assets.multimeter
+multimeter_toggled = Assets.multimeter_toggled
+multimeter_toggle_rect = pygame.Rect(170 + 22, 20 + 45, 25, 25)
+numbers = Assets.multiNumbers
+multimeter_status = False
 
 solved = False
 
@@ -344,7 +349,7 @@ def positionDeterminer(cameFrom):
 
 recently_selected = None 
 def Room(screen, screen_res, events):
-    global exit, solved, beakerPuzzle, collected, recently_selected
+    global exit, solved, beakerPuzzle, collected, recently_selected, multimeter_status
     xScale = screen.get_width() / virtual_screen.get_width()
     yScale = screen.get_height() / virtual_screen.get_height()
 
@@ -360,7 +365,9 @@ def Room(screen, screen_res, events):
             if event.button == 1:
                 mouse_x, mouse_y = pygame.mouse.get_pos()
                 mouse_pos = (mouse_x / xScale, mouse_y / yScale)
-                if not solved:
+                if multimeter_toggle_rect.collidepoint(mouse_pos) and recently_selected is None:                   
+                    multimeter_status = not multimeter_status
+                elif not solved:
                     # TODO: correctly placed and working clickable object implementation
                     #recently_selected = None  # track the most recently selected node
                     # map clicks to nodes/rectangles, do logic
@@ -438,9 +445,62 @@ def Room(screen, screen_res, events):
                         display_diffs[i] = '='
             i += 1
     
-    # TODO: Display diff info on multimeter
+    # TODO: Pick a better font
+    # The toggle toggles whether the total difference or the individual differences are displayed
+    '''
+    font = pygame.font.Font("Assets/Verdana.ttf", 7)
+    if Player.checkItem(Items.multimeter):
+        if multimeter_status: # total difference
+            virtual_screen.blit(multimeter, (170, 20))
+            
+            text = font.render(str(total_diff), False, "white")
+            textRect = text.get_rect()
+            textRect.left = 170 + 19
+            textRect.top = 20 + 25
+            virtual_screen.blit(text, textRect)
+        else:
+            virtual_screen.blit(multimeter_toggled, (170, 20))
+            string = display_diffs[0] + display_diffs[1] + display_diffs[2] + display_diffs[3]
+            text = font.render(string, False, "white")
+            textRect = text.get_rect()
+            textRect.left = 170 + 19
+            textRect.top = 20 + 25
+            virtual_screen.blit(text, textRect)
+    '''
+    display = [13, 13, 13, 13]
+    displayRect = pygame.Rect(170 + 19, 20 + 24, 5, 9)
+    if Player.checkItem(Items.multimeter):
+        if multimeter_status: # total difference
+            virtual_screen.blit(multimeter, (170, 20))
+            string = str(abs(total_diff))            
+            while(len(string) < 4):
+                string = "0" + string
+                
+            if (total_diff < 0):
+                display[0] = 11
+            for i in range(1, len(string)):
+                num = int(string[i])
+                display[i] = num
+            
+        else:
+            virtual_screen.blit(multimeter_toggled, (170, 20))
+            for i in range(4):
+                match display_diffs[i]:
+                    case 'X':
+                        display[i] = 10
+                    case '+':
+                        display[i] = 12
+                    case '-':
+                        display[i] = 11
+                    case '0':
+                        display[i] = 0
 
+        virtual_screen.blit(numbers[display[0]], (displayRect.x, displayRect.y))
+        virtual_screen.blit(numbers[display[1]], (displayRect.x + 6, displayRect.y))
+        virtual_screen.blit(numbers[display[2]], (displayRect.x + 12, displayRect.y))
+        virtual_screen.blit(numbers[display[3]], (displayRect.x + 18, displayRect.y))
 
+    
     # check if puzzle is solved
     correct = 0
     for num in output_diffs:
