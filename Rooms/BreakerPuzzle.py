@@ -159,6 +159,12 @@ class OperatorNode(Node):
                     return True
                 else:
                     return False
+            elif self.connections_above[0] is None:
+                if (other.connect_back(self)):
+                    self.connections_above[0] = other
+                    return True
+                else:
+                    return False
             else:
                 print("Breaker Puzzle: Operator node does not have open inputs")
                 return False
@@ -189,12 +195,17 @@ class OperatorNode(Node):
                 return False
             self.connection_below = other
         elif self.node_height == other.node_height + 1:  # self is one level below
-            if len(self.connections_above) == self.num_inputs_allowed:
+            if len(self.connections_above) == 0:
+                self.connections_above.append(other)
+            elif self.connections_above[0] is None:
+                self.connections_above[0] = other
+            elif len(self.connections_above) == self.num_inputs_allowed:
                 print("Breaker Puzzle connection: Input <--> Operator --- operator has full connections")
                 return False
-            self.connections_above.append(other)
+            else:
+                self.connections_above.append(other)
             # only evaluate if all connections are filled
-            if len(self.connections_above) == self.num_inputs_allowed:
+            if len(self.connections_above) == self.num_inputs_allowed and self.connections_above[0] is not None:
                 self.evaluate_operation(*self.connections_above)  # evaluate operation and store result
         else:
             print("Breaker Puzzle: cannot connect nodes of same height or height difference > 1.")
@@ -230,10 +241,12 @@ class OperatorNode(Node):
         # TODO: Handle case where first connection is disconnected (rn it just moves the other connection over; going to need to rework connect and drawing wires to handle this case)
         # check if disconnect comes from above or below
         if other.node_height == 1: # input node
-            for node in self.connections_above:
-                if node == other:
+            for i in range(len(self.connections_above)):
+                if self.connections_above[i] == other:
                     self.cur_result = None
-                    self.connections_above.remove(node)
+                    self.connections_above[i] = None
+                    if i == 1:
+                        self.connections_above.pop()
                     return True
             return False
         elif other.node_height == 3: # output node
@@ -386,9 +399,9 @@ def Room(screen, screen_res, events):
     # draw wires for connections
     for node in nodes:
         if node.node_height == 2: # start all connections from operator nodes
-            if len(node.connections_above) >= 1:
+            if len(node.connections_above) >= 1 and node.connections_above[0] is not None:
                 pygame.draw.line(virtual_screen, (100,0,0), (node.rect.left + 3, node.rect.top + 1), (node.connections_above[0].rect.left + 5, node.connections_above[0].rect.top + 12), width=2)
-            if len(node.connections_above) == 2:
+            if len(node.connections_above) == 2 and node.connections_above[1] is not None:
                 pygame.draw.line(virtual_screen, (100,0,0), (node.rect.left + 8, node.rect.top + 1), (node.connections_above[1].rect.left + 5, node.connections_above[1].rect.top + 12), width=2)
             if node.connection_below is not None:
                 pygame.draw.line(virtual_screen, (100,0,0), (node.rect.left + 3, node.rect.top + 15), (node.connection_below.rect.left + 5, node.connection_below.rect.top + 1), width=2)
