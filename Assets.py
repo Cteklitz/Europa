@@ -156,12 +156,22 @@ unequipButton = pygame.image.load("Assets/unequipButton.png")
 
 breakerBox = pygame.image.load("Assets/breaker.png")
 
+locker = pygame.image.load("Assets/locker.png")
+
 ### ITEMS
 pinkKeycard = pygame.image.load("Assets/pink_keycard.png")
 pinkKeycardGround = pygame.image.load("Assets/pink_keycard_ground.png")
 
 bandage = pygame.image.load("Assets/bandage.png")
 bandageGround = pygame.image.load("Assets/bandage_ground.png")
+
+tape = pygame.image.load("Assets/YellowElectricalTape.png")
+tapeGround = pygame.image.load("Assets/tape_lockerview.png")
+tapeInv = pygame.image.load("Assets/YellowElectricalTapeInv.png")
+
+mop = pygame.image.load("Assets/Mop.png")
+mopGround = pygame.image.load("Assets/Mop.png")
+mopInv = pygame.image.load("Assets/MopInv.png")
 
 redPetri = pygame.image.load("Assets/redpetri.png")
 redPetriGround = pygame.image.load("Assets/smolRed.png")

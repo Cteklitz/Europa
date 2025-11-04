@@ -3,6 +3,10 @@ import Assets
 import Objects
 from shapely.geometry import Point, Polygon
 import Sounds
+from LightSource import LightSource
+from LightFalloff import LightFalloff
+from LightingUtils import apply_lighting, apply_falloff
+
 
 virtual_res = (256, 256)
 virtual_screen = pygame.Surface(virtual_res)
@@ -20,12 +24,19 @@ lights = [
     Objects.Light(48, 176, 2)
 ]
 
+ambientLightPos = (256/2, 256/2)
+lightsNew = [LightSource(ambientLightPos[0], ambientLightPos[1], radius=40, strength = 150)]
+falloff = [LightFalloff(virtual_screen.get_size(), darkness = 200)]
+
 northDoor = Objects.Door(112, 16, Assets.lockedDoorNorth)
 westDoor = Objects.Door(16, 112, Assets.grayDoorWest)
 toolboxGround = Assets.toolboxGround
 
 breakerBox = Assets.breakerBox
 breakerRect = pygame.Rect(150, 17, 32, 32)
+breakerInteractRect = pygame.Rect(150, 48, 32, 16)
+
+puzzle = False
 
 toolbox = False
 toolboxRect = pygame.Rect(190, 115, 19, 28)
@@ -34,6 +45,8 @@ toolboxInteractRect = pygame.Rect(185, 110, 29, 38)
 # prevents player from walking into walls/objects
 def inBounds(x, y):
     global toolbox
+    global puzzle
+
     level, power = Objects.getPipeDungeonInfo()
     if toolbox:
         toolbox = False
@@ -48,6 +61,9 @@ def inBounds(x, y):
             Sounds.powerAmb.stop()
             Sounds.ominousAmb.play(-1)
         return 1
+    elif puzzle:
+        puzzle = False
+        return 2
     elif not outline.contains(Point(x,y)):
         return False
     elif toolboxRect.collidepoint((x,y)):
@@ -63,14 +79,14 @@ def positionDeterminer(cameFrom):
 
 def Room(screen, screen_res, events):
     global toolbox
+    global puzzle
     level, power = Objects.getPipeDungeonInfo()
     
     for event in events:
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_e:
-                if toolboxInteractRect.collidepoint(player_pos):
-                    toolbox = True
-
+                if breakerInteractRect.collidepoint(player_pos):
+                    puzzle = True
              
     virtual_screen.fill((105,105,105))
     dark_overlay.fill((0, 0, 0, 150))
@@ -85,16 +101,26 @@ def Room(screen, screen_res, events):
     for light in lights:
         light.update()
         if not Done:
-            Assets.punch_light_hole(virtual_screen, dark_overlay, (112, 112), 300, (0, 162, 232))
+            Assets.punch_light_hole(virtual_screen, dark_overlay, (112, 112), 300, (0, 0, 0))
             Done = True
         virtual_screen.blit(light.image, light.rect)
 
     virtual_screen.blit(northDoor.image, northDoor.rect)
     virtual_screen.blit(westDoor.image, westDoor.rect)
     virtual_screen.blit(breakerBox, breakerRect)
-    virtual_screen.blit(toolboxGround, (190, 115))
+
+    for x in range(48, 112, 32):
+        virtual_screen.blit(Assets.pipes[10], (x,112))
+
+    virtual_screen.blit(Assets.pipes[14], (112,112))
+
+    for y in range(48, 112, 32):
+        virtual_screen.blit(Assets.pipes[12], (112,y))
 
     pygame.draw.circle(virtual_screen, "red", player_pos, 16)
+
+    apply_lighting(virtual_screen, lightsNew, darkness=10, ambient_color=(20, 20, 20), ambient_strength=5)
+    apply_falloff(falloff, virtual_screen, ambientLightPos)
 
     virtual_screen.blit(dark_overlay, (0, 0))
 
