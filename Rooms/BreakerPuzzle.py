@@ -141,7 +141,38 @@ class OperatorNode(Node):
 
     def connect(self, other):
         print("Attempting connection")
-        pass
+        # check if connection is coming from above or below
+        if other.node_height == 1: # connection comes from above
+            print("Connection coming from above")
+            # check that there is an open input
+            if self.num_inputs_allowed > len(self.connections_above):
+                if (other.connect_back(self)):
+                    self.connections_above.append(other)
+                    return True
+                else:
+                    return False
+            else:
+                print("Breaker Puzzle: Operator node does not have open inputs")
+                return False
+        elif other.node_height == 3: # connection comes from below
+            print("Connection coming from below")
+            if self.connection_below is not None:  # make sure that output is empty
+                print("Breaker Puzzle connect: Operator <--> Output --- Operator output already connected")
+                return False
+            else:
+                if other.connect_back(self):
+                    self.connection_below = other
+                    return True
+                else:
+                    return False
+        elif other.node_height == 2:
+            print("Breaker Puzzle: Cannot connect two operator nodes")
+            return False      
+        else:
+            print(f"Breaker Puzzle: Invalid height value of {other.height}")
+            return False
+
+        return True
 
     def connect_back(self, other):
         if self.node_height == other.node_height - 1:  # self is one level above (note that height grows down)
@@ -313,6 +344,16 @@ def Room(screen, screen_res, events):
                             (virtual_screen.get_width() / 2, virtual_screen.get_height() / 2), 500, (0, 0, 0))
 
     virtual_screen.blit(background, (0, 0))
+
+    # draw wires
+    for node in nodes:
+        if node.node_height == 2: # start all connections from operator nodes
+            if len(node.connections_above) >= 1:
+                pygame.draw.line(virtual_screen, (100,0,0), (node.rect.left + 3, node.rect.top + 1), (node.connections_above[0].rect.left + 5, node.connections_above[0].rect.top + 12), width=2)
+            if len(node.connections_above) == 2:
+                pygame.draw.line(virtual_screen, (100,0,0), (node.rect.left + 8, node.rect.top + 1), (node.connections_above[1].rect.left + 5, node.connections_above[1].rect.top + 12), width=2)
+            if node.connection_below is not None:
+                pygame.draw.line(virtual_screen, (100,0,0), (node.rect.left + 3, node.rect.top + 15), (node.connection_below.rect.left + 5, node.connection_below.rect.top + 1), width=2)
 
     scaled = pygame.transform.scale(virtual_screen, screen_res)
     screen.blit(scaled, (0, 0))
