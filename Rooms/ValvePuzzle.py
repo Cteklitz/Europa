@@ -121,26 +121,26 @@ greenArrow = pygame.image.load("Assets/greenArrow.png")
 # ]
 
 def move15():
-    global waterLevels
-    if waterLevels[0] >= 15 and waterLevels[1] <= 85:
+    global waterLevels, solved
+    if waterLevels[0] >= 15 and waterLevels[1] <= 85 and not solved:
         waterLevels[0] = waterLevels[0] - 15
         waterLevels[1] = waterLevels[1] + 15
 
 def move10():
-    global waterLevels
-    if waterLevels[1] >= 25 and waterLevels[3] <= 75:
+    global waterLevels, solved
+    if waterLevels[1] >= 25 and waterLevels[3] <= 75 and not solved:
         waterLevels[1] = waterLevels[1] - 25
         waterLevels[3] = waterLevels[3] + 25
 
 def move5():
-    global waterLevels
-    if waterLevels[1] <= 95 and waterLevels[2] >= 5:
+    global waterLevels, solved
+    if waterLevels[1] <= 95 and waterLevels[2] >= 5 and not solved:
         waterLevels[2] = waterLevels[2] - 5
         waterLevels[1] = waterLevels[1] + 5
 
 def split20():
-    global waterLevels
-    if waterLevels[3] >= 20 and waterLevels[0] <= 90 and waterLevels[2] <= 90:
+    global waterLevels, solved
+    if waterLevels[3] >= 20 and waterLevels[0] <= 90 and waterLevels[2] <= 90 and not solved:
         waterLevels[3] = waterLevels[3] - 20
         waterLevels[2] = waterLevels[2] + 10
         waterLevels[0] = waterLevels[0] + 10
