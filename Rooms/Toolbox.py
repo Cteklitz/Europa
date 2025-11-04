@@ -1,6 +1,7 @@
 import pygame
 import Player
 import Items
+import Sounds
 virtual_res = (250, 150)
 virtual_screen = pygame.Surface(virtual_res)
 player_pos = pygame.Vector2(192, 128)
@@ -52,6 +53,8 @@ eye_squish_sound = pygame.mixer.Sound("Audio/eyeSquish.wav")
 pre_jumpscare_sound = pygame.mixer.Sound("Audio/evil2Trimmed1.wav")
 jumpscare_sound = pygame.mixer.Sound("Audio/toolboxJumpscare.wav")
 jumpscare_layer_sound = pygame.mixer.Sound("Audio/evil2Trimmed2.wav")
+paper_crumple_sound = pygame.mixer.Sound("Audio/paperCrumple.wav")
+paper_open_sound = pygame.mixer.Sound("Audio/paperOpen.wav")
 
 pre_jumpscare_sound.set_volume(.05) # make audio quieter prejumpscare
 
@@ -82,6 +85,7 @@ def Room(screen, screen_res, events):
             # Changes toolbox to open or closed if clicked on
             if multimeter_click_rect.collidepoint((click_x_unscaled, click_y_unscaled)) and open and not multimeter_found and not paper_open:           
                     if (Player.addItem(Items.multimeter)):
+                        Sounds.letter.play()
                         multimeter_found = True
                         found += 1
                         if found == 2:
@@ -90,8 +94,10 @@ def Room(screen, screen_res, events):
             # Opens and closes paper
             elif crumpled_paper_click_rect.collidepoint((click_x_unscaled, click_y_unscaled)) and open:
                 if (not paper_open):
+                    paper_open_sound.play()
                     paper_open = True
                 else:
+                    paper_crumple_sound.play()
                     paper_open = False
                     if (multimeter_found and found == 1 or not multimeter_found and found == 0):
                         found += 1
