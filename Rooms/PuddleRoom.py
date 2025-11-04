@@ -78,7 +78,7 @@ def draw_electrical_effects(surface, puddle_positions):
     
     for pos in spark_positions:
         
-        if random.random() > 0.75:  # Only 25% chance to show spark
+        if random.random() > 0.55:  # 45% chance to show spark each interval
 
             surface.set_at(pos, (255, 255, 0))  # yellow pixel
 
