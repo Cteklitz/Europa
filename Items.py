@@ -28,4 +28,5 @@ letterTile = Item("letterTile", "Tile", "A ceramic tile with a letter incribed o
 electricalTape = Item("electricalTape", "Electric Tape", "A plastic tape used for repairing electrical devices and wires", Assets.tapeInv, Assets.tapeGround, "equip")
 mop = Item("mop", "Mop", "A standard mop used to clean floors", Assets.mopInv, Assets.mopGround, "equip")
 
+multimeter = Item("multimeter", "Multimeter", "An electrical instrument used to measure things such as voltage, current, and resistance", Assets.multiInv, Assets.multiInv, "equip")
 
