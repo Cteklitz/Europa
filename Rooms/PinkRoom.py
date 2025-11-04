@@ -187,7 +187,7 @@ def Room(screen, screen_res, events):
             apply_falloff(falloffPartial, virtual_screen, (lightsNew[3].x, lightsNew[3].y)) 
             
     else:
-        if len(lightsNew) == 4:
+        if len(lightsNew) == 3:
             lightsNew.append(upperWingPinkLight)
             lightsNew.append(lowerWingPinkLight)
 
