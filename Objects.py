@@ -222,3 +222,6 @@ def getBluePower():
 
 def getWaterLevelsSolved():
     return Area.getWaterLevelsSolved()
+
+def getBreakerSolved():
+    return Area.getBreakerSolved()

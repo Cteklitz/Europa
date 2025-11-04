@@ -46,6 +46,9 @@ def getLetterCount():
 def getWaterLevelsSolved():
     return ValvePuzzle.solved
 
+def getBreakerSolved():
+    return BreakerPuzzle.solved
+
 class Area:
     def __init__(self, roomLayout):
         self.roomLayout = roomLayout

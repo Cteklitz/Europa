@@ -492,8 +492,8 @@ def Room(screen, screen_res, events):
                         display[i] = 12
                     case '-':
                         display[i] = 11
-                    case '0':
-                        display[i] = 0
+                    case '=':
+                        display[i] = 0 # TODO: Equal char
 
         virtual_screen.blit(numbers[display[0]], (displayRect.x, displayRect.y))
         virtual_screen.blit(numbers[display[1]], (displayRect.x + 6, displayRect.y))
@@ -509,7 +509,7 @@ def Room(screen, screen_res, events):
                 correct += 1
     if correct == 4:
         solved = True
-
+        
     scaled = pygame.transform.scale(virtual_screen, screen_res)
     screen.blit(scaled, (0, 0))
 
