@@ -46,6 +46,9 @@ def getLetterCount():
 def getWaterLevelsSolved():
     return ValvePuzzle.solved
 
+def getBreakerSolved():
+    return BreakerPuzzle.solved
+
 def RepairWire():
     PuddleRoom.wireRepaired = True
 

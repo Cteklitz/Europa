@@ -29,6 +29,7 @@ lightsNew = [LightSource(ambientLightPos[0], ambientLightPos[1], radius=40, stre
 falloff = [LightFalloff(virtual_screen.get_size(), darkness = 200)]
 
 northDoor = Objects.Door(112, 16, Assets.lockedDoorNorth)
+northDoorUnlocked = Objects.Door(112, 16, Assets.grayDoorNorth)
 westDoor = Objects.Door(16, 112, Assets.grayDoorWest)
 toolboxGround = Assets.toolboxGround
 
@@ -46,6 +47,7 @@ toolboxInteractRect = pygame.Rect(185, 110, 29, 38)
 def inBounds(x, y):
     global toolbox
     global puzzle
+    global solved
 
     level, power = Objects.getPipeDungeonInfo()
     if toolbox:
@@ -60,7 +62,10 @@ def inBounds(x, y):
         if level == 2 and power:
             Sounds.powerAmb.stop()
             Sounds.ominousAmb.play(-1)
-        return 1
+        if solved:
+            return 1
+        else:
+            return False
     elif puzzle:
         puzzle = False
         return 2
@@ -81,7 +86,9 @@ def Room(screen, screen_res, events):
     global toolbox
     global puzzle
     level, power = Objects.getPipeDungeonInfo()
-    
+    global solved
+    solved = Objects.getBreakerSolved()
+
     for event in events:
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_e:
@@ -107,7 +114,10 @@ def Room(screen, screen_res, events):
             Done = True
         virtual_screen.blit(light.image, light.rect)
 
-    virtual_screen.blit(northDoor.image, northDoor.rect)
+    if solved:
+        virtual_screen.blit(northDoorUnlocked.image, northDoor.rect)
+    else:
+        virtual_screen.blit(northDoor.image, northDoor.rect)
     virtual_screen.blit(westDoor.image, westDoor.rect)
     virtual_screen.blit(breakerBox, breakerRect)
     virtual_screen.blit(toolboxGround, (190, 115))
