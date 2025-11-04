@@ -15,8 +15,8 @@ eye1 = pygame.image.load('Assets/toolboxEye1.png')
 eye2 = pygame.image.load('Assets/toolboxEye2.png') 
 eye3 = pygame.image.load('Assets/toolboxEye3.png')         
 eye4 = pygame.image.load('Assets/toolboxEye4.png') 
-eye5 = pygame.image.load('Assets/toolboxEye5.png')        
-eyes = [eye1, eye2, eye1, eye3, eye1, eye5, eye1, eye4]
+eye5 = pygame.image.load('Assets/toolboxEye5.png') 
+eyes = [eye1, eye2, eye1, eye3, eye1, eye5, eye1, eye4] # Array holding images of eye in animated eye object
 
 open = False # changes to true when user opens toolbox
 paper_open = False
@@ -37,6 +37,7 @@ eye_rect = (0, 0, eye1.get_width(), 40)
 first_time = pygame.time.get_ticks()
 curr_index = 0
 curr_eye = eyes[0]
+
 def positionDeterminer(cameFrom):
     pass
 
@@ -66,6 +67,7 @@ def Room(screen, screen_res, events):
                     if (Player.addItem(Items.multimeter)):
                         multimeter_found = True
                         found += 1
+            # Opens and closes paper
             elif crumpled_paper_click_rect.collidepoint((click_x_unscaled, click_y_unscaled)) and open:
                 if (not paper_open):
                     paper_open = True
@@ -73,6 +75,7 @@ def Room(screen, screen_res, events):
                         found += 1
                 else:
                     paper_open = False
+            # opens and closes toolbox if animated eye object is not present
             elif(285 < click_x < 1310 and 350 < click_y < 855) and not paper_open and found!=2:
                 if(open):
                     open = False
@@ -82,18 +85,20 @@ def Room(screen, screen_res, events):
         virtual_screen.blit(closed_toolbox, toolbox_rect)
     else:
         virtual_screen.blit(open_toolbox, toolbox_rect)
+        # Adds multimeter to screen if it has not been collected
         if (not multimeter_found):
             virtual_screen.blit(multimeter, (50, 54), multimeter_rect)
+        # Adds animated eye object if paper has been opened and multimeter collected
+        elif (found == 2):
+            if (curr_time - first_time >= 740):
+                curr_index = (curr_index + 1) % len(eyes)
+                curr_eye = eyes[curr_index] # sets current eye for animation in array
+                first_time = curr_time
+            virtual_screen.blit(curr_eye, (70, 44), eye_rect)
         if (paper_open):
             virtual_screen.blit(open_paper, open_paper_rect) 
         elif (not paper_open):
             virtual_screen.blit(crumpled_paper, (130, 56), crumpled_paper_rect)
-            if (found == 2):
-                if (curr_time - first_time >= 740):
-                    curr_index = (curr_index + 1) % len(eyes)
-                    curr_eye = eyes[curr_index]
-                    first_time = curr_time
-                virtual_screen.blit(curr_eye, (70, 44), eye_rect)
 
     scaled = pygame.transform.scale(virtual_screen, screen_res)
     screen.blit(scaled, (0, 0))
