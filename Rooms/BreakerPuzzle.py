@@ -345,6 +345,16 @@ def Room(screen, screen_res, events):
 
     virtual_screen.blit(background, (0, 0))
 
+    # draw wires
+    for node in nodes:
+        if node.node_height == 2: # start all connections from operator nodes
+            if len(node.connections_above) >= 1:
+                pygame.draw.line(virtual_screen, (100,0,0), (node.rect.left + 3, node.rect.top + 1), (node.connections_above[0].rect.left + 5, node.connections_above[0].rect.top + 12), width=2)
+            if len(node.connections_above) == 2:
+                pygame.draw.line(virtual_screen, (100,0,0), (node.rect.left + 8, node.rect.top + 1), (node.connections_above[1].rect.left + 5, node.connections_above[1].rect.top + 12), width=2)
+            if node.connection_below is not None:
+                pygame.draw.line(virtual_screen, (100,0,0), (node.rect.left + 3, node.rect.top + 15), (node.connection_below.rect.left + 5, node.connection_below.rect.top + 1), width=2)
+
     scaled = pygame.transform.scale(virtual_screen, screen_res)
     screen.blit(scaled, (0, 0))
 
