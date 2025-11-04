@@ -50,7 +50,7 @@ def inBounds(x, y):
     level, power = Objects.getPipeDungeonInfo()
     if toolbox:
         toolbox = False
-        return 2
+        return 3
     if westDoor.rect.collidepoint((x,y)):
         if level == 2 and power:
             Sounds.powerAmb.stop()
@@ -87,6 +87,8 @@ def Room(screen, screen_res, events):
             if event.key == pygame.K_e:
                 if breakerInteractRect.collidepoint(player_pos):
                     puzzle = True
+                if toolboxInteractRect.collidepoint(player_pos):
+                    toolbox = True
              
     virtual_screen.fill((105,105,105))
     dark_overlay.fill((0, 0, 0, 150))
@@ -108,6 +110,7 @@ def Room(screen, screen_res, events):
     virtual_screen.blit(northDoor.image, northDoor.rect)
     virtual_screen.blit(westDoor.image, westDoor.rect)
     virtual_screen.blit(breakerBox, breakerRect)
+    virtual_screen.blit(toolboxGround, (190, 115))
 
     for x in range(48, 112, 32):
         virtual_screen.blit(Assets.pipes[10], (x,112))

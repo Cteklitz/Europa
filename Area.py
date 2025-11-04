@@ -80,14 +80,15 @@ PipeDungeon = Area(
             Microscope: [MscopeTable],
             PinkPower: [PinkLowerWing],
             BlueRoom: [MainRoom, BreakerRoom],
-            BreakerRoom: [BlueRoom, PuddleRoom, BreakerPuzzle],
+            BreakerRoom: [BlueRoom, PuddleRoom, BreakerPuzzle, Toolbox],
             PuddleRoom: [BreakerRoom, StorageCloset, ValvePuzzle, BluePower, PuddleView],
             PuddleView: [PuddleRoom],
             BreakerPuzzle: [BreakerRoom],
             StorageCloset: [PuddleRoom, LockerView],
             LockerView: [StorageCloset],
             ValvePuzzle: [PuddleRoom],
-            BluePower: [PuddleRoom]
+            BluePower: [PuddleRoom],
+            Toolbox: [BreakerRoom]
     }
 )
 
