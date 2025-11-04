@@ -345,7 +345,7 @@ def Room(screen, screen_res, events):
 
     virtual_screen.blit(background, (0, 0))
 
-    # draw wires
+    # draw wires for connections
     for node in nodes:
         if node.node_height == 2: # start all connections from operator nodes
             if len(node.connections_above) >= 1:
@@ -354,6 +354,18 @@ def Room(screen, screen_res, events):
                 pygame.draw.line(virtual_screen, (100,0,0), (node.rect.left + 8, node.rect.top + 1), (node.connections_above[1].rect.left + 5, node.connections_above[1].rect.top + 12), width=2)
             if node.connection_below is not None:
                 pygame.draw.line(virtual_screen, (100,0,0), (node.rect.left + 3, node.rect.top + 15), (node.connection_below.rect.left + 5, node.connection_below.rect.top + 1), width=2)
+
+    # draw wire from current selected node to mouse
+    if recently_selected is not None:
+        mouse_x, mouse_y = pygame.mouse.get_pos()
+        mouse_pos = (mouse_x / xScale, mouse_y / yScale)
+        if recently_selected.node_height == 1: # input node
+            pygame.draw.line(virtual_screen, (100,0,0), (recently_selected.rect.left + 5, recently_selected.rect.top + 12), mouse_pos, width=2)
+        elif recently_selected.node_height == 2: # operator node
+            # idk how to handle this and make it look good, temp implmentation for now
+            pygame.draw.line(virtual_screen, (100,0,0), (recently_selected.rect.left + 3, recently_selected.rect.top + 15), mouse_pos, width=2)
+        elif recently_selected.node_height == 3: # output node
+            pygame.draw.line(virtual_screen, (100,0,0), (recently_selected.rect.left + 5, recently_selected.rect.top + 1), mouse_pos, width=2)
 
     scaled = pygame.transform.scale(virtual_screen, screen_res)
     screen.blit(scaled, (0, 0))
