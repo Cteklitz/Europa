@@ -367,6 +367,7 @@ def Room(screen, screen_res, events):
                 mouse_pos = (mouse_x / xScale, mouse_y / yScale)
                 if multimeter_toggle_rect.collidepoint(mouse_pos) and recently_selected is None:                   
                     multimeter_status = not multimeter_status
+                    Sounds.pipe.play()
                 elif not solved:
                     # TODO: correctly placed and working clickable object implementation
                     #recently_selected = None  # track the most recently selected node
@@ -379,6 +380,7 @@ def Room(screen, screen_res, events):
                             #print(f"{recently_selected}")
                             # if clicked node is end-point and already has connection, disconnect it
                             if node.node_height % 2 != 0 and node.disconnect():
+                                Sounds.toolbox.play()
                                 recently_selected = None
                                 break
 
@@ -387,6 +389,7 @@ def Room(screen, screen_res, events):
                                 recently_selected = node
                             elif node.connect(recently_selected):
                                 print("connection made!")
+                                Sounds.combo.play()
                                 recently_selected = None  # connection was made, reset
                             else:
                                 recently_selected = node  # connection could not be made, set clicked node as selected

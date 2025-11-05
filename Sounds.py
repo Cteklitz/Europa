@@ -34,3 +34,7 @@ powerOn = pygame.mixer.Sound("Audio/powerOnAmbStart.wav")
 powerOnAmb = pygame.mixer.Sound("Audio/powerOnAmb.wav")
 
 mopSound = pygame.mixer.Sound("Audio/mopsounds.wav")
+
+pipe = pygame.mixer.Sound("Audio/pipe.wav")
+
+toolbox = pygame.mixer.Sound("Audio/toolboxOpenClose.wav")
