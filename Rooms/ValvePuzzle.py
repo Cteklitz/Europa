@@ -180,7 +180,7 @@ def Room(screen, screen_res, events):
     pygame.draw.line(virtual_screen, (0,0,0), (64, 0), (64, 256), 1)
     pygame.draw.line(virtual_screen, (0,0,0), (288, 0), (288, 256), 1)
 
-    if power and level == 2:
+    if (power and level == 2) or Objects.getBluePower():
         virtual_screen.blit(Assets.tiles[2], (64,0))
         virtual_screen.blit(Assets.tiles[2], (256,0))
         virtual_screen.blit(Assets.tiles[2], (64,224))
@@ -239,7 +239,12 @@ def Room(screen, screen_res, events):
         #for i in range(4, len(lightsNew)):
             #apply_falloff(falloff, virtual_screen, (lightsNew[i].x, lightsNew[i].y))
 
-    virtual_screen.blit(dark_overlay, (0, 0))
+    if (power and level == 2) or Objects.getBluePower():
+        apply_lighting(virtual_screen, lightsNew, darkness=10, ambient_color=(50, 50, 50), ambient_strength=10)
+        for i in range(len(lightsNew)):
+            apply_falloff(falloff, virtual_screen, (lightsNew[i].x, lightsNew[i].y))
+
+    #virtual_screen.blit(dark_overlay, (0, 0))
 
     Assets.scaled_draw(virtual_res, virtual_screen, screen_res, screen)
 
