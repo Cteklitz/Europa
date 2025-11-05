@@ -3,6 +3,9 @@ import Assets
 import Objects
 from shapely.geometry import Point, Polygon
 import Sounds
+from LightSource import LightSource
+from LightFalloff import LightFalloff
+from LightingUtils import apply_lighting, apply_falloff
 
 virtual_res = (256, 256)
 virtual_screen = pygame.Surface(virtual_res)
@@ -19,6 +22,11 @@ lights = [
     Objects.Light(48, 176, 2),
     Objects.Light(176, 80, 1)
 ]
+
+ambientLightPos = (256/2, 256/2)
+lightsNew = [LightSource(ambientLightPos[0], ambientLightPos[1], radius=40, strength = 150)]
+falloff = [LightFalloff(virtual_screen.get_size(), darkness = 200)]
+pinkLight = [LightSource(176 + 16, 80 + 16, radius=20, strength = 150, color=(150,0,100))]
 
 blueDoor = Objects.Door(16, 112, Assets.blueDoorWest)
 lockedDoor = Objects.Door(208, 112, Assets.lockedDoorEast)
@@ -62,10 +70,10 @@ def Room(screen, screen_res, events):
     for light in lights:
         lit = light.update()
         if lit and light.type == 1:
-            Assets.punch_light_hole(virtual_screen, dark_overlay, (192,96), 50, (100, 0, 100))
+            #Assets.punch_light_hole(virtual_screen, dark_overlay, (192,96), 50, (0, 0, 0))
             pink = True
         if not Done and lit and light.type == 2:
-            Assets.punch_light_hole(virtual_screen, dark_overlay, (112, 112), 300, (0, 162, 232))
+            Assets.punch_light_hole(virtual_screen, dark_overlay, (112, 112), 300, (0, 0, 0))
             Done = True
             blue = True
         virtual_screen.blit(light.image, light.rect)
@@ -88,6 +96,14 @@ def Room(screen, screen_res, events):
     virtual_screen.blit(lockedDoor.image, lockedDoor.rect)
 
     pygame.draw.circle(virtual_screen, "red", player_pos, 16)
+
+    if blue: # apply standard lighting if blue power is on
+        apply_lighting(virtual_screen, lightsNew, darkness=10, ambient_color=(20, 20, 20), ambient_strength=5)
+        apply_falloff(falloff, virtual_screen, ambientLightPos)
+    elif pink: # apply special pink lighting if only pink is on
+        apply_lighting(virtual_screen, pinkLight, darkness=10, ambient_color=(20, 20, 20), ambient_strength=5)
+        apply_falloff(falloff, virtual_screen, (pinkLight[0].x,pinkLight[0].y))
+
 
     virtual_screen.blit(dark_overlay, (0, 0))
 
