@@ -22,12 +22,14 @@ octagon = Polygon(bounds)
 lightSources = [LightSource(240, 240, radius=60, strength = 200)]
 pinkLight1 = LightSource(63, 207, radius=50, strength=100, color=(120,0,120))
 pinkLight2 = LightSource(63, 273, radius=50, strength=100, color=(120,0,120))
+blueLight1 = LightSource(401 + 16, 192 + 16, radius=50, strength=100, color=(0,162,232))
+blueLight2 = LightSource(401 + 16, 256 + 16, radius=50, strength=100, color=(0,162,232))
 
 # this is to allow for a dynamic amount of lights to be on without affecting the room brightness
 # falloffs[n] is the falloff for when there are n lights in the room, it should be applied to each of the n lights 
 # also this solution sucks! makes the game take super long to launch since calcing the darkness is slow
 # will try and think of a way to fix it ig
-max_lights = 4
+max_lights = 6
 darkness = 180
 falloffs = []
 for i in range(1, max_lights):
@@ -165,6 +167,7 @@ def Room(screen, screen_res, events):
 
     pipeDungeonInfo = Objects.getPipeDungeonInfo()
     pinkPower = Objects.getPinkPower()
+    bluePower = Objects.getBluePower()
 
     # clear colored lights from lightSources
     while (len(lightSources) > 1):
@@ -173,6 +176,9 @@ def Room(screen, screen_res, events):
     if pinkPower or (pipeDungeonInfo[0] == 1 and pipeDungeonInfo[1] == True): # checks if the pink door should be lit
         lightSources.append(pinkLight1)
         lightSources.append(pinkLight2)
+    if bluePower or (pipeDungeonInfo[0] == 2 and pipeDungeonInfo[1] == True): # checks if the blue door should be lit
+        lightSources.append(blueLight1)
+        lightSources.append(blueLight2)
     
     apply_lighting(virtual_screen, lightSources, darkness=10, ambient_color=(50, 50, 50), ambient_strength=10)
     for i in range(len(lightSources)): # apply falloff for each light in lightSources
