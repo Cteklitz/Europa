@@ -187,6 +187,9 @@ def Room(screen, screen_res, events):
             apply_falloff(falloffPartial, virtual_screen, (lightsNew[3].x, lightsNew[3].y)) 
             
     else:
+        if len(lightsNew) != 5: # reset lights array if the right amount of lights is not in it
+            while len(lightsNew) > 3:
+                    lightsNew.pop()
         if len(lightsNew) == 3:
             lightsNew.append(upperWingPinkLight)
             lightsNew.append(lowerWingPinkLight)
