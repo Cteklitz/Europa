@@ -76,6 +76,12 @@ def inBounds(x, y):
             Sounds.ominousAmb.stop()
             Sounds.powerAmb.play(-1)
         return 2
+    elif greenDoor.rect.collidepoint((x,y)):
+        level, power = Objects.getPipeDungeonInfo()
+        if power and level == 3:
+            Sounds.ominousAmb.stop()
+            Sounds.powerAmb.play(-1)
+        return 3
     elif ctrlRmWallRect.collidepoint((x,y)):
         return False
     elif not octagon.contains(Point(x,y)):
