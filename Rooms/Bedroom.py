@@ -24,6 +24,9 @@ lights = [
     Objects.Light(176, 176, 1)
 ]
 
+leftBed = pygame.image.load("Assets/leftBed.png")
+rightBed = pygame.image.load("Assets/rightBed.png")
+
 # New Lighting
 pinkLightRadius = 25
 pinkLightStrength = 100
@@ -42,12 +45,19 @@ upperWingPower = False
 lowerWingPower = False
 
 def inBounds(x, y):
+    global leftBed, rightBed
     level, power = Objects.getPipeDungeonInfo()
+    leftBedRect = leftBed.get_rect()
+    leftBedRect.topleft = (37,37)
+    rightBedRect = rightBed.get_rect()
+    rightBedRect.topleft = (172,37)
     if northDoor.rect.collidepoint((x,y)):
         if level == 1 and power and not upperWingPower and not Objects.getPinkPower():
             Sounds.powerAmb.stop()
             Sounds.ominousAmb.play(-1)
         return 0
+    elif leftBedRect.collidepoint((x,y)) or rightBedRect.collidepoint((x,y)):
+        return False
     elif not outline.contains(Point(x,y)):
         return False
     return True
@@ -89,16 +99,19 @@ def Room(screen, screen_res, events):
                 Assets.punch_light_hole(virtual_screen, dark_overlay, (112, 112), 300, (1, 0, 1))
                 virtual_screen.blit(shadow, shadowRect)
                 Done = True
-            virtual_screen.blit(light.image, light.rect)
+            # virtual_screen.blit(light.image, light.rect)
     else:
         for light in lights:
             light.update()
             if not Done:
                 Assets.punch_light_hole(virtual_screen, dark_overlay, (112, 112), 300, (1, 0, 1))
                 Done = True
-            virtual_screen.blit(light.image, light.rect)
+            # virtual_screen.blit(light.image, light.rect)
 
     virtual_screen.blit(northDoor.image, northDoor.rect)
+
+    virtual_screen.blit(leftBed, (37,37))
+    virtual_screen.blit(rightBed, (172,37))
 
     # Unique things in each room here
     if BedroomNumber == 1:
