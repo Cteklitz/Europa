@@ -231,3 +231,9 @@ def RepairWire():
 
 def getWireRepaired():
     return Area.getWireRepaired()
+
+def getBedroomNumber():
+    return Area.getBedroomNumber()
+
+def setBedroomNumber(num):
+    Area.setBedroomNumber(num)
