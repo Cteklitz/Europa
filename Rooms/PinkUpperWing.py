@@ -117,8 +117,6 @@ def positionDeterminer(cameFrom):
     if cameFrom == "Rooms.PinkRoom":
         player_pos = pygame.Vector2(exitWalk.centerx + 2, exitWalk.centery - 5)
 
-
-
 def Room(screen, screen_res, events):
     global trianglePuzzle1, trianglePuzzle2, whiteboard, beaker, table, tableboundRect, tooDarkRead
 

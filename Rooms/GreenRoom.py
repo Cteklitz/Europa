@@ -78,6 +78,11 @@ def inBounds(x, y):
             Sounds.ominousAmb.play(-1)
         Objects.setBedroomNumber(3)
         return 2
+    elif greenhouseDoor.rect.collidepoint((x,y)):
+        if level == 3 and power and not lowerWingPower and not Objects.getPinkPower():
+            Sounds.powerAmb.stop()
+            Sounds.ominousAmb.play(-1)
+        return 3
     elif not bounds.collidepoint((x,y)):
         return False
     return True
@@ -86,15 +91,17 @@ def positionDeterminer(cameFrom):
     global player_pos
     if cameFrom == "Rooms.Bathroom":
         player_pos = pygame.Vector2(bathroomDoor.x + 37, bathroomDoor.y + bathroomDoor.rect.height/2)
-    if cameFrom == "Rooms.MainRoom":
+    elif cameFrom == "Rooms.MainRoom":
         player_pos = pygame.Vector2(greenDoor.x + greenDoor.rect.width/2, greenDoor.y + greenDoor.rect.height + 5)
-    if cameFrom == "Rooms.Bedroom":
+    elif cameFrom == "Rooms.Bedroom":
         if Objects.getBedroomNumber() == 1:
             player_pos = pygame.Vector2(bedroom1Door.x + bedroom1Door.rect.width/2, bedroom1Door.y - 5)
         elif Objects.getBedroomNumber() == 2:
             player_pos = pygame.Vector2(bedroom2Door.x + bedroom2Door.rect.width/2, bedroom2Door.y - 5)
         elif Objects.getBedroomNumber() == 3:
             player_pos = pygame.Vector2(bedroom3Door.x + bedroom3Door.rect.width/2, bedroom3Door.y - 5)
+    elif cameFrom == "Rooms.Greenhouse":
+        player_pos = pygame.Vector2(greenhouseDoor.x - 5, greenhouseDoor.y + greenhouseDoor.rect.height/2)
 
 def Room(screen, screen_res, events):
     global upperWingPower, lowerWingPower

@@ -61,53 +61,34 @@ while running:
 
         #Movement
         keys = pygame.key.get_pressed()
+        x = player_pos.x
+        y = player_pos.y
         if keys[pygame.K_w]:
-            y = player_pos.y - 325 * dt / ySpeedScale
-            #Checks if the movement upwards results in room change. If so, update the room to new room and set the initial position with positionDeterminer
-            check = Room.inBounds(player_pos.x, y)
-            if type(check) == int:
-                cameFrom = Room
-                updateRoom(area.getRoom(Room, check))
-                Room.positionDeterminer(cameFrom.__name__)
-            elif check:
-                player_pos.y = y
+            y = y - 325 * dt / ySpeedScale
         if keys[pygame.K_s]:
-            y = player_pos.y + 325 * dt / ySpeedScale
-            #Checks if the movement downwards results in room change. If so, update the room to new room and set the initial position with positionDeterminer
-            check = Room.inBounds(player_pos.x, y)
-            if type(check) == int:
-                cameFrom = Room
-                updateRoom(area.getRoom(Room, check))
-                Room.positionDeterminer(cameFrom.__name__)
-            elif check:
-                player_pos.y = y
+            y = y + 325 * dt / ySpeedScale
         if keys[pygame.K_a]:
-            x = player_pos.x - 325 * dt / xSpeedScale
-            #Checks if the movement to the left results in room change. If so, update the room to new room and set the initial position with positionDeterminer
-            check = Room.inBounds(x, player_pos.y)
-            if type(check) == int:
-                cameFrom = Room
-                updateRoom(area.getRoom(Room, check))
-                Room.positionDeterminer(cameFrom.__name__)
-            elif check:
-                player_pos.x = x
+            x = x - 325 * dt / xSpeedScale
         if keys[pygame.K_d]:
-            x = player_pos.x + 325 * dt / xSpeedScale
-            #Checks if the movement to the right results in room change. If so, update the room to new room and set the initial position with positionDeterminer
-            check = Room.inBounds(x, player_pos.y)
-            if type(check) == int:
-                cameFrom = Room
-                updateRoom(area.getRoom(Room, check))
-                Room.positionDeterminer(cameFrom.__name__)
-            elif check:
-                player_pos.x = x
+            x = x + 325 * dt / xSpeedScale
 
-        #Checks if any other input (mouse click, backspace, etc.) results in room change. If so, update the room to new room and set the initial position with positionDeterminer
-        check = Room.inBounds(player_pos.x, player_pos.y)
+        #Checks if horizontal movement results in room change. If so, update the room to new room and set the initial position with positionDeterminer
+        check = Room.inBounds(x, player_pos.y)
         if type(check) == int:
             cameFrom = Room
             updateRoom(area.getRoom(Room, check))
             Room.positionDeterminer(cameFrom.__name__)
+        elif check:
+            player_pos.update(x, player_pos.y)
+
+        #Checks if vertical movement results in room change. If so, update the room to new room and set the initial position with positionDeterminer
+        check = Room.inBounds(player_pos.x, y)
+        if type(check) == int:
+            cameFrom = Room
+            updateRoom(area.getRoom(Room, check))
+            Room.positionDeterminer(cameFrom.__name__)
+        elif check:
+            player_pos.update(player_pos.x, y)
 
     # flip() the display to put your work on screen
     pygame.display.flip()
