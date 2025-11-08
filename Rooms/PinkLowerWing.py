@@ -6,6 +6,7 @@ import Sounds
 from LightSource import LightSource
 from LightFalloff import LightFalloff
 from LightingUtils import apply_lighting, apply_falloff
+import Player
 
 virtual_res = (904, 208)
 virtual_screen = pygame.Surface(virtual_res)
@@ -27,7 +28,7 @@ lights = [
 
 # Lighting
 light_pos = (50, 50)
-light_pos2 = (640, 50)
+light_pos2 = (640, 30)
 light_pos3 = (300, 50)
 wall_lights = [
     LightSource(light_pos[0], light_pos[1], radius=60, strength = 220),
@@ -224,17 +225,13 @@ def Room(screen, screen_res, events):
     else:
         virtual_screen.blit(scaledDesk2, (100,66))
 
-    virtual_screen.blit(Assets.bigBoygGrayDoorNorth, (600,80,80,32))
+    virtual_screen.blit(Assets.bigBoygGrayDoorNorth, (560,48,80,32))
     letterCount = Objects.getLetterCount()
     if Objects.getOpen():
         letterCount = 5
     lockedDoor = pygame.image.load(f"Assets/LockedDoor{letterCount+1}.png")
-    virtual_screen.blit(lockedDoor, (31, 95, lockedDoor.get_width(),lockedDoor.get_height()))
-
-    circle_surface = pygame.Surface((32, 32), pygame.SRCALPHA)
-    pygame.draw.circle(circle_surface, "red", (16, 16), 16)
-
-    scaled_circle = pygame.transform.scale(circle_surface, (80, 32))
+    scaledLockedDoor = pygame.transform.scale(lockedDoor, (lockedDoor.get_width()*1.3, lockedDoor.get_height()*1.5))
+    virtual_screen.blit(scaledLockedDoor, (23, 65, scaledLockedDoor.get_width(),scaledLockedDoor.get_height()))
 
     if(player_pos.y >= 143):
         if not spotdiffssolved:
@@ -243,7 +240,7 @@ def Room(screen, screen_res, events):
             virtual_screen.blit(scaledTable2, (220,65))
 
     if(player_pos.y < 148):
-        virtual_screen.blit(scaled_circle, (player_pos.x - 40, player_pos.y - 16))
+        Player.animatePlayer(virtual_screen, player_pos, 160, 64)
         if not Objects.getCutscene():
             virtual_screen.blit(Bookcase, (800,100,96,96))
         else:
@@ -253,15 +250,13 @@ def Room(screen, screen_res, events):
             virtual_screen.blit(Bookcase, (800,100,96,96))
         else:
             virtual_screen.blit(Bookcase2, (800,100,96,96))
-        virtual_screen.blit(scaled_circle, (player_pos.x - 40, player_pos.y - 16))
+        Player.animatePlayer(virtual_screen, player_pos, 160, 64)
 
     if(player_pos.y < 143):
         if not spotdiffssolved:
             virtual_screen.blit(scaledTable, (220,65))
         else:
             virtual_screen.blit(scaledTable2, (220,65))
-
-    litSave = virtual_screen.subsurface((80, 31, 384, 64)).copy()
 
     virtual_screen.blit(dark_overlay, (0, 0))
 

@@ -6,6 +6,7 @@ import Sounds
 from LightSource import LightSource
 from LightFalloff import LightFalloff
 from LightingUtils import apply_lighting, apply_falloff
+import Player
 
 virtual_res = (256, 256)
 virtual_screen = pygame.Surface(virtual_res)
@@ -112,14 +113,15 @@ def Room(screen, screen_res, events):
 
     virtual_screen.blit(leftBed, (37,37))
     virtual_screen.blit(rightBed, (172,37))
+    Player.animatePlayer(virtual_screen, player_pos, 32, 32)
 
     # Unique things in each room here
     if BedroomNumber == 1:
-        pygame.draw.circle(virtual_screen, "red", player_pos, 16)
+        pass
     elif BedroomNumber == 2:
-        pygame.draw.circle(virtual_screen, "green", player_pos, 16)
+        pass
     elif BedroomNumber == 3:
-        pygame.draw.circle(virtual_screen, "blue", player_pos, 16)
+        pass
 
     # if not Objects.getPinkPower():
     #     if power and level == 1:

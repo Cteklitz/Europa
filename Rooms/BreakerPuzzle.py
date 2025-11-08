@@ -23,7 +23,7 @@ multimeter_toggle_rect = pygame.Rect(170 + 22, 20 + 45, 25, 25)
 numbers = Assets.multiNumbers
 multimeter_status = False
 
-solved = False
+solved = True
 
 '''
 DEV NOTES:

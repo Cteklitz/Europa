@@ -122,7 +122,7 @@ lockedDoorWest = pygame.transform.flip(lockedDoorEast, True, False)
 lockedDoorNorth = pygame.transform.rotate(lockedDoorEast, 90)
 lockedDoorSouth = pygame.transform.rotate(lockedDoorEast, -90)
 
-bigBoygGrayDoorNorth = pygame.transform.scale(grayDoorNorth, (80,32))
+bigBoygGrayDoorNorth = pygame.transform.scale(grayDoorNorth, (160,64))
 
 squishedTiles = []
 for i in range(5):

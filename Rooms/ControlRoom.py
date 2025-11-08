@@ -4,6 +4,7 @@ import Assets
 from LightSource import LightSource
 from LightFalloff import LightFalloff
 from LightingUtils import apply_lighting, apply_falloff
+import Player
 
 pipePuzzle = [
     [2,1,2,6,6],
@@ -198,7 +199,7 @@ class Switch:
                 activeSquares = [[0 for _ in range(5)] for _ in range(5)]
             return True
         return False
-    
+
 def inBounds(x, y):
     if y > 384:
         pygame.mixer.music.stop()
@@ -298,9 +299,9 @@ def Room(screen, screen_res, events):
 
     if player_pos.y > 300:
         virtual_screen.blit(valve.image, valve.rect)
-        pygame.draw.circle(virtual_screen, "red", player_pos, 16)
+        Player.animatePlayer(virtual_screen, player_pos)
     else:
-        pygame.draw.circle(virtual_screen, "red", player_pos, 16)
+        Player.animatePlayer(virtual_screen, player_pos)
         virtual_screen.blit(valve.image, valve.rect)
 
     virtual_screen.blit(circleLight, circleLight.get_rect(center=light_pos))

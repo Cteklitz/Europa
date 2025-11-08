@@ -63,14 +63,24 @@ while running:
         keys = pygame.key.get_pressed()
         x = player_pos.x
         y = player_pos.y
-        if keys[pygame.K_w]:
-            y = y - 325 * dt / ySpeedScale
+        Player.moving = False
         if keys[pygame.K_s]:
-            y = y + 325 * dt / ySpeedScale
+            y = y + 250 * dt / ySpeedScale
+            Player.moving = True
         if keys[pygame.K_a]:
-            x = x - 325 * dt / xSpeedScale
+            Player.left = True
+            x = x - 250 * dt / xSpeedScale
+            Player.moving = True
         if keys[pygame.K_d]:
-            x = x + 325 * dt / xSpeedScale
+            Player.left = False
+            x = x + 250 * dt / xSpeedScale
+            Player.moving = True
+        if keys[pygame.K_w]:
+            Player.up = True
+            y = y - 250 * dt / ySpeedScale
+            Player.moving = True
+        elif Player.moving:
+            Player.up = False
 
         #Checks if horizontal movement results in room change. If so, update the room to new room and set the initial position with positionDeterminer
         check = Room.inBounds(x, player_pos.y)

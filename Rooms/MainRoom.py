@@ -7,6 +7,7 @@ import Items
 from LightSource import LightSource
 from LightFalloff import LightFalloff
 from LightingUtils import apply_lighting, apply_falloff
+import Player
 
 
 virtual_res = (480, 480)
@@ -164,12 +165,11 @@ def Room(screen, screen_res, events):
     virtual_screen.blit(orangeDoor.image, orangeDoor.rect)
 
     if player_pos.y < 240:
-        pygame.draw.circle(virtual_screen, "red", player_pos, 16)
+        Player.animatePlayer(virtual_screen, player_pos, 32, 32)
         virtual_screen.blit(Assets.ctrlRoomDoor, (220, 224))
     else:
         virtual_screen.blit(Assets.ctrlRoomDoor, (220, 224))
-        pygame.draw.circle(virtual_screen, "red", player_pos, 16)
-
+        Player.animatePlayer(virtual_screen, player_pos, 32, 32)
 
     pipeDungeonInfo = Objects.getPipeDungeonInfo()
     pinkPower = Objects.getPinkPower()
@@ -194,4 +194,4 @@ def Room(screen, screen_res, events):
 
     Assets.scaled_draw(virtual_res, virtual_screen, screen_res, screen)
 
-    return player_pos, 2, 2  # can return movement speeds of 2, 2 since room is scaled (can pick any equal values)
+    return player_pos, 2.5, 2.5  # can return movement speeds of 2, 2 since room is scaled (can pick any equal values)

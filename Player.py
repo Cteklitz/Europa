@@ -1,5 +1,7 @@
 import pygame
 import Items
+import Assets
+import Objects
 
 health = 100
 inventory = []
@@ -92,3 +94,62 @@ def consumeItem(index):
     else:
         print(str(index) + " is not a valid inventory value")
         return False
+
+class timer:
+    def __init__(self, seconds, repeat):
+        self.initial_time = -1
+        self.seconds = seconds
+        self.repeat = repeat
+
+    def setInitial(self):
+        if self.initial_time == -1:
+            self.initial_time = pygame.time.get_ticks()
+
+    def Done(self):
+        if self.initial_time != -1:
+            currentTime = (pygame.time.get_ticks() - self.initial_time) / 1000
+            if currentTime < self.seconds:
+                return False
+            if self.repeat:
+                self.initial_time = pygame.time.get_ticks()
+            return True
+
+animateTimer = timer(0.2, True)
+animateTimer.setInitial()
+
+up = False
+left = True
+
+left_down = Assets.load_tileset("Assets/left_down.png", 32, 32)
+right_down = Assets.load_tileset("Assets/right_down.png", 32, 32)
+left_up = Assets.load_tileset("Assets/left_up.png", 32, 32)
+right_up = Assets.load_tileset("Assets/right_up.png", 32, 32)
+
+playerIndex = 0
+moving = False
+
+# blits proper animation based on direction. xScale and yScale are absolute length and width of resulting image
+def animatePlayer(surface, pos, xScale = 64, yScale = 64):
+    global playerIndex, moving, animateTimer
+
+    if not moving:
+        playerIndex = 0
+    elif animateTimer.Done():
+        if playerIndex >= len(left_down) - 1:
+            playerIndex = 0
+        else:
+            playerIndex = playerIndex + 1
+    if up:
+        if left:
+            scaledImage = pygame.transform.scale(left_up[playerIndex], (xScale, yScale))
+            surface.blit(scaledImage, (pos.x-(xScale/2), pos.y-yScale+16))
+        else:
+            scaledImage = pygame.transform.scale(right_up[playerIndex], (xScale, yScale))
+            surface.blit(scaledImage, (pos.x-(xScale/2), pos.y-yScale+16))
+    else:
+        if left:
+            scaledImage = pygame.transform.scale(left_down[playerIndex], (xScale, yScale))
+            surface.blit(scaledImage, (pos.x-(xScale/2), pos.y-yScale+16))
+        else:
+            scaledImage = pygame.transform.scale(right_down[playerIndex], (xScale, yScale))
+            surface.blit(scaledImage, (pos.x-(xScale/2), pos.y-yScale+16))

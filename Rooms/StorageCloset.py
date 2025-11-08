@@ -6,6 +6,7 @@ import Sounds
 from LightSource import LightSource
 from LightFalloff import LightFalloff
 from LightingUtils import apply_lighting, apply_falloff
+import Player
 
 virtual_res = (176, 142)  # Reduced by 50%
 virtual_screen = pygame.Surface(virtual_res)
@@ -121,7 +122,7 @@ def Room(screen, screen_res, events):
     virtual_screen.blit(door, (150,24))  # Reduced by 50%
     virtual_screen.blit(locker, lockerRect)
 
-    pygame.draw.circle(virtual_screen, "red", player_pos, 16)  # Reduced by 50%
+    Player.animatePlayer(virtual_screen, player_pos)
 
     virtual_screen.blit(circleLight, circleLight.get_rect(center=light_pos))
     apply_lighting(virtual_screen, lightsNew, darkness=60, ambient_color=(20, 20, 20), ambient_strength=10)

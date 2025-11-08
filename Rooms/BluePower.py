@@ -6,6 +6,7 @@ import Sounds
 from LightSource import LightSource
 from LightFalloff import LightFalloff
 from LightingUtils import apply_lighting, apply_falloff
+import Player
 
 bluePower = False
 played = False
@@ -196,11 +197,11 @@ def Room(screen, screen_res, events):
     virtual_screen.blit(puddle5, (30,330))
 
     if player_pos.y < 298:
-        pygame.draw.circle(virtual_screen, "red", player_pos, 16)
+        Player.animatePlayer(virtual_screen, player_pos)
         virtual_screen.blit(ladder, (100, 0))
     else:
         virtual_screen.blit(ladder, (100, 0))
-        pygame.draw.circle(virtual_screen, "red", player_pos, 16)
+        Player.animatePlayer(virtual_screen, player_pos)
         
     # apply lighting
     if bluePower:

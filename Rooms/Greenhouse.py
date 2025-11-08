@@ -6,7 +6,7 @@ import Sounds
 from LightSource import LightSource
 from LightFalloff import LightFalloff
 from LightingUtils import apply_lighting, apply_falloff
-
+import Player
 
 virtual_res = (324, 219)
 virtual_screen = pygame.Surface(virtual_res)
@@ -75,8 +75,7 @@ def Room(screen, screen_res, events):
         dark_overlay.fill((0, 0, 0, 150))
         dark_overlay2.fill((0, 0, 0, 150))
 
-    pygame.draw.circle(virtual_screen, "red", player_pos, 16)
-
+    Player.animatePlayer(virtual_screen, player_pos)
     
     if not lit and not Objects.getPinkPower():
         tooDarkRead.update()
@@ -91,4 +90,4 @@ def Room(screen, screen_res, events):
 
     Assets.scaled_draw(virtual_res, virtual_screen, screen_res, screen)
 
-    return player_pos, 2, 2  # can return movement speeds of 2, 2 since room is scaled (can pick any equal values)
+    return player_pos, 3.5, 3.5  # can return movement speeds of 2, 2 since room is scaled (can pick any equal values)

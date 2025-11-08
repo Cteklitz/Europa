@@ -6,6 +6,7 @@ import Sounds
 from LightSource import LightSource
 from LightFalloff import LightFalloff
 from LightingUtils import apply_lighting, apply_falloff
+import Player
 
 virtual_res = (352, 384)
 virtual_screen = pygame.Surface(virtual_res)
@@ -214,7 +215,7 @@ def Room(screen, screen_res, events):
     virtual_screen.blit(flippedDoor, (9,208))
 
     if player_pos.y < 312:
-        pygame.draw.circle(virtual_screen, "red", player_pos, 16)
+        Player.animatePlayer(virtual_screen, player_pos)
 
         for valve in valves:
             valve.update()
@@ -224,7 +225,7 @@ def Room(screen, screen_res, events):
             valve.update()
             virtual_screen.blit(valve.image, valve.rect)
 
-    pygame.draw.circle(virtual_screen, "red", player_pos, 16)
+        Player.animatePlayer(virtual_screen, player_pos)
 
     waterX = 88
     for i in range(4):
