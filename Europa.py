@@ -78,17 +78,18 @@ while running:
             cameFrom = Room
             updateRoom(area.getRoom(Room, check))
             Room.positionDeterminer(cameFrom.__name__)
-        elif check:
-            player_pos.update(x, player_pos.y)
+        else:
+            if check:
+                player_pos.update(x, player_pos.y)
 
-        #Checks if vertical movement results in room change. If so, update the room to new room and set the initial position with positionDeterminer
-        check = Room.inBounds(player_pos.x, y)
-        if type(check) == int:
-            cameFrom = Room
-            updateRoom(area.getRoom(Room, check))
-            Room.positionDeterminer(cameFrom.__name__)
-        elif check:
-            player_pos.update(player_pos.x, y)
+            #Checks if vertical movement results in room change. If so, update the room to new room and set the initial position with positionDeterminer
+            check = Room.inBounds(player_pos.x, y)
+            if type(check) == int:
+                cameFrom = Room
+                updateRoom(area.getRoom(Room, check))
+                Room.positionDeterminer(cameFrom.__name__)
+            elif check:
+                player_pos.update(player_pos.x, y)
 
     # flip() the display to put your work on screen
     pygame.display.flip()
