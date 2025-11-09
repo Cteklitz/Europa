@@ -174,11 +174,11 @@ def PuddleView(screen, screen_res, events):
                 eye_alpha = 0
                 eye_cycle_complete = True  
     
-    if eye_alpha > 0 and cleanup_percent > 1.0 and not playedBell:
+    if eye_alpha > 0 and cleanup_percent > 0.5 and not playedBell:
         Sounds.scaryBell.play()
         playedBell = True
 
-    if eye_alpha > 0 and cleanup_percent < 1.0:
+    if eye_alpha > 0 and cleanup_percent < 0.5:
         eye_surface = eye_image.copy()
         eye_surface.set_alpha(eye_alpha)
         virtual_screen.blit(eye_surface, eye_position)
