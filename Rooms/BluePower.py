@@ -152,9 +152,10 @@ def Room(screen, screen_res, events):
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_e:
                 if switchRect.collidepoint(player_pos) and not bluePower:
-                    Sounds.powerOn.play()
-                    Sounds.powerAmb.play(-1)
-                    Sounds.ominousAmb.stop()
+                    if fixed or not playedPowerDown:
+                        Sounds.powerOn.play()
+                        Sounds.powerAmb.play(-1)
+                        Sounds.ominousAmb.stop()
                     bluePower = True
                     powerSoundTimer.setInitial()
 
@@ -162,7 +163,7 @@ def Room(screen, screen_res, events):
                     exit = True
 
     if powerSoundTimer.Done() and not played:
-        if fixed:
+        if fixed and bluePower:
             played = True
             Sounds.powerOnAmb.play(-1)
         elif not playedPowerDown:
@@ -170,6 +171,7 @@ def Room(screen, screen_res, events):
             powerDownTimer.setInitial()
             playedPowerDown = True
             powerSoundTimer.reset()
+            Sounds.ominousAmb.play(-1)
 
     if powerDownTimer.Done() and playedPowerDown and not fixed:
         bluePower = False
