@@ -140,6 +140,7 @@ def Room(screen, screen_res, events):
             virtual_screen.blit(crumpled_paper, (130, 56), crumpled_paper_rect)
         # eye jumpscare cutscene
         if (cutscene):
+            Player.cutscene = True
             if (eye_closed_scale < 280):
                 pre_jumpscare_sound.play()
                 target_scale = 280
@@ -173,6 +174,8 @@ def Room(screen, screen_res, events):
                 virtual_screen.blit(eye_open, open_eye_rect)
             elif (curr_time - cutscene_start < 16000):
                 virtual_screen.blit(jumpscare_text, (0, 0))
+            else:
+                Player.cutscene = False
     scaled = pygame.transform.scale(virtual_screen, screen_res)
     screen.blit(scaled, (0, 0))
     return player_pos, xScale, yScale

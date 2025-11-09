@@ -7,6 +7,7 @@ health = 100
 inventory = []
 MaxInventorySize = 7
 equipped = None
+cutscene = False
 
 # adds an item to inventory
 def addItem(item):

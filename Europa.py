@@ -9,7 +9,6 @@ os.chdir(scriptDir)
 pygame.init()
 pygame.mixer.init()
 
-
 import Area
 from Rooms import MainRoom
 import Player
@@ -54,7 +53,7 @@ while running:
                 if event.key == pygame.K_ESCAPE:
                     running = False
                 # Open inventory
-                if event.key == pygame.K_TAB:
+                if event.key == pygame.K_TAB and not Player.cutscene:
                     Inventory.open = True
                     for item in Player.inventory:
                         print(item)
