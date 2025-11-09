@@ -169,6 +169,7 @@ def Room(screen, screen_res, events):
                     elif Player.checkItem(Items.electricalTape):
                         if wireRect.collidepoint(player_pos) and not wireRepaired:
                             wireRepaired = True
+                            Sounds.tape.play()
                     elif puddleRegion.collidepoint(player_pos):
                         # Check if puddles are already cleaned
                         try:
