@@ -63,6 +63,7 @@ valve = Objects.TopDownValve(96, 112, divertWater)
 
 def inBounds(x, y):
     level, power = Objects.getPipeDungeonInfo()
+    valveRect = pygame.Rect(93,113,34,20)
     if pinkDoor.rect.collidepoint((x,y)):
         if level == 1 and power or Objects.getPinkPower():
             Sounds.powerAmb.stop()
@@ -78,6 +79,8 @@ def inBounds(x, y):
             Sounds.powerAmb.stop()
             Sounds.ominousAmb.play(-1)
         return 2
+    elif valveRect.collidepoint((x,y)):
+        return False
     elif not outline.contains(Point(x,y)):
         return False
     return True
@@ -161,7 +164,7 @@ def Room(screen, screen_res, events):
 
     valve.update()
 
-    if player_pos.y < 124:
+    if player_pos.y < 132:
         Player.animatePlayer(virtual_screen, player_pos, 32, 32, "top-down")
         virtual_screen.blit(valve.image, valve.rect)
     else:
