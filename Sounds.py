@@ -47,5 +47,6 @@ powerDown = pygame.mixer.Sound("Audio/power_down.mp3")
 tape = pygame.mixer.Sound("Audio/tape.wav")
 
 scaryBell = pygame.mixer.Sound("Audio/scary_bell.wav")
+slowCreepy = pygame.mixer.Sound("Audio/slow_creepy.wav")
 
 pickup = pygame.mixer.Sound("Audio/pickup.wav")
