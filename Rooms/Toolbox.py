@@ -19,6 +19,7 @@ eye4 = pygame.image.load('Assets/toolboxEye4.png')
 eye5 = pygame.image.load('Assets/toolboxEye5.png')
 eye_open = pygame.transform.scale(pygame.image.load('Assets/EYE.png'), (500, 460))
 eye_closed = pygame.image.load('Assets/eyeClosed.png')
+jumpscare_text = pygame.image.load('Assets/GiftForYouText.png')
 eye_closed_scale = 10.0
 eye_closed_pos = pygame.Vector2(130.0, 56.0)
 eyes = [eye1, eye2, eye1, eye3, eye1, eye5, eye1, eye4] # Array holding images of eye in animated eye object
@@ -54,7 +55,7 @@ curr_eye = eyes[0]
 eye_squish_sound = pygame.mixer.Sound("Audio/eyeSquish.wav")
 pre_jumpscare_sound = pygame.mixer.Sound("Audio/evil2Trimmed1.wav")
 jumpscare_sound = pygame.mixer.Sound("Audio/toolboxJumpscare.wav")
-jumpscare_layer_sound = pygame.mixer.Sound("Audio/evil2Trimmed2.wav")
+jumpscare_layer_sound = pygame.mixer.Sound("Audio/evil2.wav")
 paper_crumple_sound = pygame.mixer.Sound("Audio/paperCrumple.wav")
 paper_open_sound = pygame.mixer.Sound("Audio/paperOpen.wav")
 toolbox_open_close_sound = pygame.mixer.Sound("Audio/toolboxOpenClose.wav")
@@ -144,7 +145,7 @@ def Room(screen, screen_res, events):
                 target_scale = 280
                 target_center = pygame.Vector2(virtual_res[0] / 2, virtual_res[1] / 2)
                 start_pos = pygame.Vector2(130.0, 56.0)
-                progress = (eye_closed_scale - 10.0) / (target_scale - 10.0)
+                progress = (eye_closed_scale - 5.0) / (target_scale - 5.0)
                 temp_x = start_pos.x + (target_center.x - start_pos.x) * progress
                 temp_y = start_pos.y + (target_center.y - start_pos.y) * progress
             
@@ -153,15 +154,15 @@ def Room(screen, screen_res, events):
 
                 eye_closed_temp = pygame.transform.scale(eye_closed, (int(eye_closed_scale), int(eye_closed_scale)))
                 
-                eye_closed_scale += 3.0
+                eye_closed_scale += 1.5
                 closed_eye_rect = eye_closed_temp.get_rect(center=eye_closed_pos)
                 
                 virtual_screen.blit(eye_closed_temp, closed_eye_rect)
-            elif (eye_closed_scale >= 280 and curr_time - cutscene_start < 8000):
+            elif (eye_closed_scale >= 280 and curr_time - cutscene_start < 9000):
                 eye_closed_temp = pygame.transform.scale(eye_closed, (280, 280))
                 closed_eye_rect = eye_closed_temp.get_rect(center=(virtual_res[0] / 2, virtual_res[1] / 2))
                 virtual_screen.blit(eye_closed_temp, closed_eye_rect)
-            elif (curr_time - cutscene_start < 11000):
+            elif (curr_time - cutscene_start < 13000):
                 if (not played):
                     pre_jumpscare_sound.stop()
                     channel1 = pygame.mixer.find_channel(True)
@@ -170,6 +171,8 @@ def Room(screen, screen_res, events):
                     channel2.play(jumpscare_sound)
                     played = True
                 virtual_screen.blit(eye_open, open_eye_rect)
+            elif (curr_time - cutscene_start < 16000):
+                virtual_screen.blit(jumpscare_text, (0, 0))
     scaled = pygame.transform.scale(virtual_screen, screen_res)
     screen.blit(scaled, (0, 0))
     return player_pos, xScale, yScale
