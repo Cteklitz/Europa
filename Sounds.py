@@ -41,3 +41,5 @@ toolbox = pygame.mixer.Sound("Audio/toolboxOpenClose.wav")
 
 lockerOpen = pygame.mixer.Sound("Audio/locker_open.wav")
 lockerClose = pygame.mixer.Sound("Audio/locker_close.wav")
+
+powerDown = pygame.mixer.Sound("Audio/power_down.mp3")

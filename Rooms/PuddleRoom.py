@@ -23,7 +23,7 @@ ladderHatchOpen = pygame.transform.scale(ladderHatchOpen_original, new_size)
 
 lightsNew = [LightSource(100, 128, radius=60, strength = 150),
              LightSource(300, 128, radius=60, strength = 150)]
-falloff = [LightFalloff(virtual_screen.get_size(), darkness = 140)]
+falloff = [LightFalloff(virtual_screen.get_size(), darkness = 100)]
 
 brokenWire = pygame.image.load("Assets/BrokenWire.png")
 
