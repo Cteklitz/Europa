@@ -7,6 +7,7 @@ import Items
 from LightSource import LightSource
 from LightFalloff import LightFalloff
 from LightingUtils import apply_lighting, apply_falloff
+import Sounds
 
 virtual_res = (389, 195)
 virtual_screen = pygame.Surface(virtual_res)
@@ -44,6 +45,7 @@ def inBounds(x, y):
     return False
 
 def positionDeterminer(cameFrom):
+    Sounds.lockerOpen.play()
     pass
 
 def Room(screen, screen_res, events):
@@ -55,6 +57,7 @@ def Room(screen, screen_res, events):
     for event in events:
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_BACKSPACE or event.key == pygame.K_ESCAPE:
+                Sounds.lockerClose.play()
                 exit = True
         if event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == 1:
@@ -64,12 +67,12 @@ def Room(screen, screen_res, events):
                 if tapeRect.collidepoint(mouse_pos) and not tapeCollected:     
                     if (Player.addItem(Items.electricalTape)):
                         tapeCollected = True
-                        # TODO: add sound effect for picking up tape
+                        Sounds.book.play()
                 # player clicks mop
                 if mopRect.collidepoint(mouse_pos) and not mopCollected:     
                     if (Player.addItem(Items.mop)):
                         mopCollected = True
-                        # TODO: add sound effect for picking up tape
+                        Sounds.book.play()
 
     # Display background image
     virtual_screen.fill("gray")

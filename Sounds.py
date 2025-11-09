@@ -38,3 +38,6 @@ mopSound = pygame.mixer.Sound("Audio/mopsounds.wav")
 pipe = pygame.mixer.Sound("Audio/pipe.wav")
 
 toolbox = pygame.mixer.Sound("Audio/toolboxOpenClose.wav")
+
+lockerOpen = pygame.mixer.Sound("Audio/locker_open.wav")
+lockerClose = pygame.mixer.Sound("Audio/locker_close.wav")
