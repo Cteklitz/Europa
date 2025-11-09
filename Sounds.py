@@ -50,3 +50,9 @@ scaryBell = pygame.mixer.Sound("Audio/scary_bell.wav")
 slowCreepy = pygame.mixer.Sound("Audio/slow_creepy.wav")
 
 pickup = pygame.mixer.Sound("Audio/pickup.wav")
+
+spark1 = pygame.mixer.Sound("Audio/spark1.wav")
+spark2 = pygame.mixer.Sound("Audio/spark2.wav")
+spark3 = pygame.mixer.Sound("Audio/spark3.wav")
+spark4 = pygame.mixer.Sound("Audio/spark4.wav")
+spark5 = pygame.mixer.Sound("Audio/spark5.wav")

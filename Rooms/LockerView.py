@@ -8,6 +8,7 @@ from LightSource import LightSource
 from LightFalloff import LightFalloff
 from LightingUtils import apply_lighting, apply_falloff
 import Sounds
+import random
 
 virtual_res = (389, 195)
 virtual_screen = pygame.Surface(virtual_res)
@@ -37,6 +38,8 @@ tapeCollected = False
 mopCollected = False
 exit = False
 
+lights = True
+
 def inBounds(x, y):
     global exit
     if exit:
@@ -49,7 +52,7 @@ def positionDeterminer(cameFrom):
     pass
 
 def Room(screen, screen_res, events):
-    global exit, tapeCollected, mopCollected
+    global exit, tapeCollected, mopCollected, lights
     xScale = screen.get_width()/virtual_screen.get_width() 
     yScale = screen.get_height()/virtual_screen.get_height()
     dark_overlay.fill((0, 0, 0, 50))
@@ -81,8 +84,35 @@ def Room(screen, screen_res, events):
     scaled_mop = pygame.transform.scale(mop, (int(mop.get_width() * mop_scale), int(mop.get_height() * mop_scale)))
     #scaled_tape = pygame.transform.scale(yellowElectricalTape, (int(yellowElectricalTape.get_width() * tape_scale), int(yellowElectricalTape.get_height() * tape_scale)))
 
-    apply_lighting(virtual_screen, lightsNew, darkness=20, ambient_color=(50, 50, 50), ambient_strength=10)
-    apply_falloff(falloff, virtual_screen, light_pos)
+    lightRng = random.randint(0, 100)
+    if lightRng < 2:
+        lights = False
+
+        # play flicker sound
+        lightRng = random.randint(1,5)
+        match lightRng:
+            case 1:
+                Sounds.spark1.play()
+            case 2:
+                Sounds.spark2.play()
+            case 3:
+                Sounds.spark3.play()
+            case 4:
+                Sounds.spark4.play()
+            case 5:
+                Sounds.spark5.play()
+
+    # apply lights, make dark if flicker happening
+    if (lights):
+        apply_lighting(virtual_screen, lightsNew, darkness=60, ambient_color=(20, 20, 20), ambient_strength=10)
+        apply_falloff(falloff, virtual_screen, light_pos)
+    else:
+        dark_overlay.fill((0, 0, 0, 180))
+
+    # determine if light flicker should end this frame
+    lightRng = random.randint(0, 100)
+    if not lights and lightRng < 30:
+        lights = True
     
     if not mopCollected:
         virtual_screen.blit(scaled_mop, mop_pos)

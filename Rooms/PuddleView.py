@@ -55,7 +55,7 @@ puddlesCleaned = False
 cleanup_check_timer = 0
 
 # Eye effect variables
-eye_image_original = pygame.image.load("Assets/eye.png")
+eye_image_original = pygame.image.load("Assets/eye_water.png")
 
 eye_size = (eye_image_original.get_width() // 3, eye_image_original.get_height() // 3)
 eye_image = pygame.transform.scale(eye_image_original, eye_size)
