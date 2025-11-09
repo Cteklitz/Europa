@@ -140,6 +140,7 @@ def Room(screen, screen_res, events):
         # eye jumpscare cutscene
         if (cutscene):
             if (eye_closed_scale < 280):
+                pre_jumpscare_sound.play()
                 target_scale = 280
                 target_center = pygame.Vector2(virtual_res[0] / 2, virtual_res[1] / 2)
                 start_pos = pygame.Vector2(130.0, 56.0)
@@ -157,7 +158,6 @@ def Room(screen, screen_res, events):
                 
                 virtual_screen.blit(eye_closed_temp, closed_eye_rect)
             elif (eye_closed_scale >= 280 and curr_time - cutscene_start < 8000):
-                pre_jumpscare_sound.play()
                 eye_closed_temp = pygame.transform.scale(eye_closed, (280, 280))
                 closed_eye_rect = eye_closed_temp.get_rect(center=(virtual_res[0] / 2, virtual_res[1] / 2))
                 virtual_screen.blit(eye_closed_temp, closed_eye_rect)
