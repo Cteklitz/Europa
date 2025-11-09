@@ -6,6 +6,7 @@ import Sounds
 from LightSource import LightSource
 from LightFalloff import LightFalloff
 from LightingUtils import apply_lighting, apply_falloff
+import Player
 
 virtual_res = (256, 256)
 virtual_screen = pygame.Surface(virtual_res)
@@ -95,7 +96,7 @@ def Room(screen, screen_res, events):
     
     virtual_screen.blit(lockedDoor.image, lockedDoor.rect)
 
-    pygame.draw.circle(virtual_screen, "red", player_pos, 16)
+    Player.animatePlayer(virtual_screen, player_pos, 32, 32, "top-down")
 
     if blue: # apply standard lighting if blue power is on
         apply_lighting(virtual_screen, lightsNew, darkness=10, ambient_color=(20, 20, 20), ambient_strength=5)

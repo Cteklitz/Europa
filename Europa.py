@@ -65,14 +65,19 @@ while running:
         y = player_pos.y
         Player.moving = False
         if keys[pygame.K_s]:
+            Player.down = True
             y = y + 250 * dt / ySpeedScale
             Player.moving = True
+        else:
+            Player.down = False
         if keys[pygame.K_a]:
             Player.left = True
+            Player.right = False
             x = x - 250 * dt / xSpeedScale
             Player.moving = True
         if keys[pygame.K_d]:
             Player.left = False
+            Player.right = True
             x = x + 250 * dt / xSpeedScale
             Player.moving = True
         if keys[pygame.K_w]:

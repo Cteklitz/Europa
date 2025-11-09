@@ -6,6 +6,7 @@ import Sounds
 from LightSource import LightSource
 from LightFalloff import LightFalloff
 from LightingUtils import apply_lighting, apply_falloff
+import Player
 
 virtual_res = (256, 256)
 virtual_screen = pygame.Surface(virtual_res)
@@ -161,11 +162,11 @@ def Room(screen, screen_res, events):
     valve.update()
 
     if player_pos.y < 124:
-        pygame.draw.circle(virtual_screen, "red", player_pos, 16)
+        Player.animatePlayer(virtual_screen, player_pos, 32, 32, "top-down")
         virtual_screen.blit(valve.image, valve.rect)
     else:
         virtual_screen.blit(valve.image, valve.rect)
-        pygame.draw.circle(virtual_screen, "red", player_pos, 16)
+        Player.animatePlayer(virtual_screen, player_pos, 32, 32, "top-down")
 
     if not Objects.getPinkPower():
         if power and level == 1:

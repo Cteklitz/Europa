@@ -268,7 +268,7 @@ def Room(screen, screen_res, events):
         puddle_positions = [(250, 80)]  # Only OuterPuddle remains
         draw_electrical_effects(virtual_screen, puddle_positions)
 
-    pygame.draw.circle(virtual_screen, "red", player_pos, 16)
+    Player.animatePlayer(virtual_screen, player_pos, 32, 32, "top-down")
 
     apply_lighting(virtual_screen, lightsNew, darkness=10, ambient_color=(50, 50, 50), ambient_strength=10)
     apply_falloff(falloff, virtual_screen, (lightsNew[0].x, lightsNew[0].y))

@@ -113,7 +113,7 @@ def Room(screen, screen_res, events):
 
     virtual_screen.blit(leftBed, (37,37))
     virtual_screen.blit(rightBed, (172,37))
-    Player.animatePlayer(virtual_screen, player_pos, 32, 32)
+    Player.animatePlayer(virtual_screen, player_pos, 32, 32, "top-down")
 
     # Unique things in each room here
     if BedroomNumber == 1:

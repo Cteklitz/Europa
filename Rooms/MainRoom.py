@@ -165,11 +165,11 @@ def Room(screen, screen_res, events):
     virtual_screen.blit(orangeDoor.image, orangeDoor.rect)
 
     if player_pos.y < 240:
-        Player.animatePlayer(virtual_screen, player_pos, 32, 32)
+        Player.animatePlayer(virtual_screen, player_pos, 32, 32, "top-down")
         virtual_screen.blit(Assets.ctrlRoomDoor, (220, 224))
     else:
         virtual_screen.blit(Assets.ctrlRoomDoor, (220, 224))
-        Player.animatePlayer(virtual_screen, player_pos, 32, 32)
+        Player.animatePlayer(virtual_screen, player_pos, 32, 32, "top-down")
 
     pipeDungeonInfo = Objects.getPipeDungeonInfo()
     pinkPower = Objects.getPinkPower()

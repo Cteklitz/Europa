@@ -120,16 +120,26 @@ animateTimer.setInitial()
 up = False
 left = True
 
+down = True
+right = False
+
+# Isometric animations
 left_down = Assets.load_tileset("Assets/left_down.png", 32, 32)
 right_down = Assets.load_tileset("Assets/right_down.png", 32, 32)
 left_up = Assets.load_tileset("Assets/left_up.png", 32, 32)
 right_up = Assets.load_tileset("Assets/right_up.png", 32, 32)
 
+# Top-Down Animations
+upAnimation = Assets.load_tileset("Assets/topDown_Up.png", 32, 32)
+downAnimation = Assets.load_tileset("Assets/topDown_Down.png", 32, 32)
+leftAnimation = Assets.load_tileset("Assets/topDown_Left.png", 32, 32)
+rightAnimation = Assets.load_tileset("Assets/topDown_Right.png", 32, 32)
+
 playerIndex = 0
 moving = False
 
 # blits proper animation based on direction. xScale and yScale are absolute length and width of resulting image
-def animatePlayer(surface, pos, xScale = 64, yScale = 64):
+def animatePlayer(surface, pos, xScale = 64, yScale = 64, perspective = "isometric"):
     global playerIndex, moving, animateTimer
 
     if not moving:
@@ -139,17 +149,40 @@ def animatePlayer(surface, pos, xScale = 64, yScale = 64):
             playerIndex = 0
         else:
             playerIndex = playerIndex + 1
-    if up:
-        if left:
-            scaledImage = pygame.transform.scale(left_up[playerIndex], (xScale, yScale))
-            surface.blit(scaledImage, (pos.x-(xScale/2), pos.y-yScale+16))
+
+    if perspective == "isometric":
+        if up:
+            if left:
+                scaledImage = pygame.transform.scale(left_up[playerIndex], (xScale, yScale))
+                surface.blit(scaledImage, (pos.x-(xScale/2), pos.y-yScale+16))
+            else:
+                scaledImage = pygame.transform.scale(right_up[playerIndex], (xScale, yScale))
+                surface.blit(scaledImage, (pos.x-(xScale/2), pos.y-yScale+16))
         else:
-            scaledImage = pygame.transform.scale(right_up[playerIndex], (xScale, yScale))
-            surface.blit(scaledImage, (pos.x-(xScale/2), pos.y-yScale+16))
+            if left:
+                scaledImage = pygame.transform.scale(left_down[playerIndex], (xScale, yScale))
+                surface.blit(scaledImage, (pos.x-(xScale/2), pos.y-yScale+16))
+            else:
+                scaledImage = pygame.transform.scale(right_down[playerIndex], (xScale, yScale))
+                surface.blit(scaledImage, (pos.x-(xScale/2), pos.y-yScale+16))
     else:
-        if left:
-            scaledImage = pygame.transform.scale(left_down[playerIndex], (xScale, yScale))
-            surface.blit(scaledImage, (pos.x-(xScale/2), pos.y-yScale+16))
-        else:
-            scaledImage = pygame.transform.scale(right_down[playerIndex], (xScale, yScale))
-            surface.blit(scaledImage, (pos.x-(xScale/2), pos.y-yScale+16))
+        if up:
+            scaledImage = pygame.transform.scale(upAnimation[playerIndex], (32, 32))
+            surface.blit(scaledImage, (pos.x-16, pos.y-16))
+        elif down:
+            scaledImage = pygame.transform.scale(downAnimation[playerIndex], (32, 32))
+            surface.blit(scaledImage, (pos.x-16, pos.y-16))
+        elif left:
+            if not moving:
+                scaledImage = pygame.transform.scale(downAnimation[playerIndex], (32, 32))
+                surface.blit(scaledImage, (pos.x-16, pos.y-16))
+            else:
+                scaledImage = pygame.transform.scale(leftAnimation[playerIndex], (32, 32))
+                surface.blit(scaledImage, (pos.x-16, pos.y-16))
+        elif right:
+            if not moving:
+                scaledImage = pygame.transform.scale(downAnimation[playerIndex], (32, 32))
+                surface.blit(scaledImage, (pos.x-16, pos.y-16))
+            else:
+                scaledImage = pygame.transform.scale(rightAnimation[playerIndex], (32, 32))
+                surface.blit(scaledImage, (pos.x-16, pos.y-16))
