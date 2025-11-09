@@ -121,6 +121,7 @@ def PuddleView(screen, screen_res, events):
                     # Start playing mop sound on loop
                     Sounds.mopSound.play(-1)
                 if repairRect.collidepoint(mouse_pos) and Player.checkItem(Items.electricalTape) and puddlesCleaned:
+                    Sounds.tape.play()
                     Objects.RepairWire()
         elif event.type == pygame.MOUSEBUTTONUP:
             if event.button == 1:
