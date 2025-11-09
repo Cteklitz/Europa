@@ -18,7 +18,9 @@ eye3 = pygame.image.load('Assets/toolboxEye3.png')
 eye4 = pygame.image.load('Assets/toolboxEye4.png') 
 eye5 = pygame.image.load('Assets/toolboxEye5.png')
 eye_open = pygame.transform.scale(pygame.image.load('Assets/EYE.png'), (500, 460))
-eye_closed = pygame.transform.scale(pygame.image.load('Assets/eyeClosed.png'), (280, 280))
+eye_closed = pygame.image.load('Assets/eyeClosed.png')
+eye_closed_scale = 10.0
+eye_closed_pos = pygame.Vector2(130.0, 56.0)
 eyes = [eye1, eye2, eye1, eye3, eye1, eye5, eye1, eye4] # Array holding images of eye in animated eye object
 
 open = False # changes to true when user opens toolbox
@@ -70,7 +72,7 @@ def inBounds(x, y):
     return False
 
 def Room(screen, screen_res, events):
-    global exit, open, multimeter_found, paper_open, first_time, found, curr_index, curr_eye, cutscene, cutscene_start, played
+    global exit, open, multimeter_found, paper_open, first_time, found, curr_index, curr_eye, cutscene, cutscene_start, played, eye_closed_scale, eye_closed_pos, closed_eye_rect
     virtual_screen.fill((159, 161, 160))
     pygame.draw.line(virtual_screen, (0, 0, 0), (0, 100), (screen.get_width(), 100))
     xScale = screen.get_width()/virtual_screen.get_width() 
@@ -125,7 +127,7 @@ def Room(screen, screen_res, events):
         if (not multimeter_found):
             virtual_screen.blit(multimeter, (50, 54), multimeter_rect)
         # Adds animated eye object if paper has been opened and multimeter collected
-        elif (found == 2):
+        elif (found == 2 and played):
             if (curr_time - first_time >= 740):
                 curr_index = (curr_index + 1) % len(eyes)
                 curr_eye = eyes[curr_index] # sets current eye for animation in array
@@ -137,10 +139,29 @@ def Room(screen, screen_res, events):
             virtual_screen.blit(crumpled_paper, (130, 56), crumpled_paper_rect)
         # eye jumpscare cutscene
         if (cutscene):
-            if (curr_time - cutscene_start < 5000):
+            if (eye_closed_scale < 280):
+                target_scale = 280
+                target_center = pygame.Vector2(virtual_res[0] / 2, virtual_res[1] / 2)
+                start_pos = pygame.Vector2(130.0, 56.0)
+                progress = (eye_closed_scale - 10.0) / (target_scale - 10.0)
+                temp_x = start_pos.x + (target_center.x - start_pos.x) * progress
+                temp_y = start_pos.y + (target_center.y - start_pos.y) * progress
+            
+                eye_closed_pos.x = temp_x
+                eye_closed_pos.y = temp_y
+
+                eye_closed_temp = pygame.transform.scale(eye_closed, (int(eye_closed_scale), int(eye_closed_scale)))
+                
+                eye_closed_scale += 3.0
+                closed_eye_rect = eye_closed_temp.get_rect(center=eye_closed_pos)
+                
+                virtual_screen.blit(eye_closed_temp, closed_eye_rect)
+            elif (eye_closed_scale >= 280 and curr_time - cutscene_start < 8000):
                 pre_jumpscare_sound.play()
-                virtual_screen.blit(eye_closed, closed_eye_rect)
-            elif (curr_time - cutscene_start < 10000):
+                eye_closed_temp = pygame.transform.scale(eye_closed, (280, 280))
+                closed_eye_rect = eye_closed_temp.get_rect(center=(virtual_res[0] / 2, virtual_res[1] / 2))
+                virtual_screen.blit(eye_closed_temp, closed_eye_rect)
+            elif (curr_time - cutscene_start < 11000):
                 if (not played):
                     pre_jumpscare_sound.stop()
                     channel1 = pygame.mixer.find_channel(True)
