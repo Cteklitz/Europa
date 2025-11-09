@@ -10,11 +10,13 @@ import Player
 
 bluePower = False
 played = False
+playedPowerDown = False
 
 switchSound = pygame.mixer.Sound("Audio/switch.wav")
 
 powerSoundTimer = Objects.timer(1.5, False)
 pulseTimer = Objects.timer(0.099, True)
+powerDownTimer = Objects.timer(2, False)
 
 virtual_res = (352, 384)
 virtual_screen = pygame.Surface(virtual_res)
@@ -78,9 +80,12 @@ pulse = 8
 setup = False
 
 def lightFunction():
-    global lights, powerSoundTimer, pulseTimer, pulse, setup
+    global lights, powerSoundTimer, pulseTimer, pulse, setup, fixed, bluePower
 
-    if not powerSoundTimer.Done():
+    if not bluePower and not fixed:
+        for light in lights:
+                light[0].state = 1
+    elif not powerSoundTimer.Done():
         for light in lights:
                 light[0].state = 2
     else:
@@ -138,7 +143,9 @@ def positionDeterminer(cameFrom):
     player_pos = pygame.Vector2(116, 300)
 
 def Room(screen, screen_res, events):
-    global bluePower, played, exit, puddle1, puddle2, puddle3
+    global bluePower, played, exit, puddle1, puddle2, puddle3, fixed, playedPowerDown, setup
+    fixed = Objects.getWireRepaired()
+    
 
     # poll for events
     for event in events:
@@ -150,12 +157,24 @@ def Room(screen, screen_res, events):
                     Sounds.ominousAmb.stop()
                     bluePower = True
                     powerSoundTimer.setInitial()
+
                 if ladderExit.collidepoint(player_pos):
                     exit = True
 
     if powerSoundTimer.Done() and not played:
-        played = True
-        Sounds.powerOnAmb.play(-1)
+        if fixed:
+            played = True
+            Sounds.powerOnAmb.play(-1)
+        elif not playedPowerDown:
+            Sounds.powerDown.play()
+            powerDownTimer.setInitial()
+            playedPowerDown = True
+            powerSoundTimer.reset()
+
+    if powerDownTimer.Done() and playedPowerDown and not fixed:
+        bluePower = False
+        setup = False
+        lightFunction()
 
     if bluePower:
         lightFunction()

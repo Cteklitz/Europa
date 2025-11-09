@@ -7,6 +7,7 @@ from LightSource import LightSource
 from LightFalloff import LightFalloff
 from LightingUtils import apply_lighting, apply_falloff
 import Player
+import random
 
 virtual_res = (176, 142)  # Reduced by 50%
 virtual_screen = pygame.Surface(virtual_res)
@@ -54,6 +55,7 @@ falloff = [LightFalloff(virtual_screen.get_size(), darkness = 220)]
 circleLight = pygame.image.load("Assets/CircleLight.png")
         
 lockerView = False
+lights = True
 
 def inBounds(x, y):
     global lockerView
@@ -89,7 +91,7 @@ def positionDeterminer(cameFrom):
         player_pos = pygame.Vector2(66, 80)
 
 def Room(screen, screen_res, events):
-    global lockerView
+    global lockerView, lights
     level, power = Objects.getPipeDungeonInfo()
 
     for event in events:
@@ -100,7 +102,7 @@ def Room(screen, screen_res, events):
 
     # fill the screen with a color to wipe away anything from last frame
     virtual_screen.fill("gray")
-    dark_overlay.fill((0, 0, 0, 50))
+    dark_overlay.fill((0, 0, 0, 70))
 
     pygame.draw.line(virtual_screen, (0,0,0), (31, 0), (31, 78), 1)  # Reduced by 50%
     pygame.draw.line(virtual_screen, (0,0,0), (144, 0), (144, 78), 1)  # Reduced by 50%
@@ -124,9 +126,38 @@ def Room(screen, screen_res, events):
 
     Player.animatePlayer(virtual_screen, player_pos)
 
+    # Flickering Lighting
+    # determine if lights should start a flicker this frame
+    lightRng = random.randint(0, 100)
+    if lightRng < 2:
+        lights = False
+
+        # play flicker sound
+        lightRng = random.randint(1,5)
+        match lightRng:
+            case 1:
+                Sounds.spark1.play()
+            case 2:
+                Sounds.spark2.play()
+            case 3:
+                Sounds.spark3.play()
+            case 4:
+                Sounds.spark4.play()
+            case 5:
+                Sounds.spark5.play()
+
     virtual_screen.blit(circleLight, circleLight.get_rect(center=light_pos))
-    apply_lighting(virtual_screen, lightsNew, darkness=60, ambient_color=(20, 20, 20), ambient_strength=10)
-    apply_falloff(falloff, virtual_screen, light_pos)
+    # apply lights, make dark if flicker happening
+    if (lights):
+        apply_lighting(virtual_screen, lightsNew, darkness=60, ambient_color=(20, 20, 20), ambient_strength=10)
+        apply_falloff(falloff, virtual_screen, light_pos)
+    else:
+        dark_overlay.fill((0, 0, 0, 180))
+
+    # determine if light flicker should end this frame
+    lightRng = random.randint(0, 100)
+    if not lights and lightRng < 30:
+        lights = True
 
     virtual_screen.blit(dark_overlay, (0, 0))
 

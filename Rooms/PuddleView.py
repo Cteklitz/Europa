@@ -55,7 +55,7 @@ puddlesCleaned = False
 cleanup_check_timer = 0
 
 # Eye effect variables
-eye_image_original = pygame.image.load("Assets/eye.png")
+eye_image_original = pygame.image.load("Assets/eye_water.png")
 
 eye_size = (eye_image_original.get_width() // 3, eye_image_original.get_height() // 3)
 eye_image = pygame.transform.scale(eye_image_original, eye_size)
@@ -65,6 +65,9 @@ eye_timer = 0
 eye_position = (360, 80)
 eye_cycle_complete = False
 eye_max_alpha = 204  # 80% of 255 (80% visibility)
+cleanup_percent = 0.0
+
+playedBell = False
 
 def calculate_cleanup_percentage():
     step = 10
@@ -96,7 +99,7 @@ def positionDeterminer(cameFrom):
     pass
 
 def PuddleView(screen, screen_res, events):
-    global eye_alpha, eye_fade_direction, eye_timer, eye_cycle_complete, eye_max_alpha
+    global eye_alpha, eye_fade_direction, eye_timer, eye_cycle_complete, eye_max_alpha, cleanup_percent, playedBell
     global exit, mouse_pos, is_mopping, puddlesCleaned
     
     xScale = screen.get_width()/virtual_screen.get_width() 
@@ -170,8 +173,11 @@ def PuddleView(screen, screen_res, events):
                 eye_alpha = 0
                 eye_cycle_complete = True  
     
-    
-    if eye_alpha > 0:
+    if eye_alpha > 0 and cleanup_percent > 1.0 and not playedBell:
+        Sounds.scaryBell.play()
+        playedBell = True
+
+    if eye_alpha > 0 and cleanup_percent < 1.0:
         eye_surface = eye_image.copy()
         eye_surface.set_alpha(eye_alpha)
         virtual_screen.blit(eye_surface, eye_position)
