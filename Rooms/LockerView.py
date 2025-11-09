@@ -67,12 +67,12 @@ def Room(screen, screen_res, events):
                 if tapeRect.collidepoint(mouse_pos) and not tapeCollected:     
                     if (Player.addItem(Items.electricalTape)):
                         tapeCollected = True
-                        Sounds.book.play()
+                        Sounds.pickup.play()
                 # player clicks mop
                 if mopRect.collidepoint(mouse_pos) and not mopCollected:     
                     if (Player.addItem(Items.mop)):
                         mopCollected = True
-                        Sounds.book.play()
+                        Sounds.pickup.play()
 
     # Display background image
     virtual_screen.fill("gray")
