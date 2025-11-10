@@ -42,6 +42,15 @@ def Room(screen, screen_res, events):
     bedroom = Objects.getBedroomNumber()
     virtual_screen.blit(background, background.get_rect())
 
+    for event in events:
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_BACKSPACE or event.key == pygame.K_ESCAPE:
+                exit = True
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if event.button == 1:
+                print(f"{bedroom}: {bedNumber}")
+                pass
+
     # location specfic things
     match bedroom:
         case 1: # Bedroom 1
@@ -61,16 +70,7 @@ def Room(screen, screen_res, events):
                 case 0: # left bed
                     pass
                 case 1: # right bed
-                    pass
-
-    for event in events:
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_BACKSPACE or event.key == pygame.K_ESCAPE:
-                exit = True
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            if event.button == 1:
-                print(f"{bedroom}: {bedNumber}")
-                pass
+                    pass        
 
     scaled = pygame.transform.scale(virtual_screen, screen_res)
     screen.blit(scaled, (0, 0))
