@@ -77,14 +77,10 @@ def inBounds(x, y):
             Sounds.powerAmb.stop()
             Sounds.ominousAmb.play(-1)
         return 0
-<<<<<<< HEAD
-    elif leftBedRect.collidepoint((x,y)) or rightBedRect.collidepoint((x,y)) or leftDeskRect.collidepoint(x, y) or rightDeskRect.collidepoint(x, y):
-=======
     elif bedView:
         bedView = False
         return 1
     elif leftBedRect.collidepoint((x,y)) or rightBedRect.collidepoint((x,y)):
->>>>>>> 530d69037787ce50b59cb921b62e725574f9e4a3
         return False
     elif not outline.contains(Point(x,y)):
         return False
