@@ -61,6 +61,12 @@ def getBedroomNumber():
 def setBedroomNumber(num):
     Bedroom.BedroomNumber = num
 
+def getBedNumber():
+    return BedView.bedNumber
+
+def setBedNumber(num):
+    BedView.bedNumber = num
+
 class Area:
     def __init__(self, roomLayout):
         self.roomLayout = roomLayout
@@ -105,9 +111,10 @@ PipeDungeon = Area(
             BluePower: [PuddleRoom],
             Toolbox: [BreakerRoom],
             GreenRoom: [MainRoom, Bathroom, Bedroom, Greenhouse],
-            Bedroom: [GreenRoom],
+            Bedroom: [GreenRoom, BedView],
             Greenhouse: [GreenRoom],
-            Bathroom: [GreenRoom]
+            Bathroom: [GreenRoom],
+            BedView: [Bedroom]
     }
 )
 
