@@ -191,8 +191,16 @@ def Room(screen, screen_res, events):
             light.image = Assets.squishedDimTiles[1]
         virtual_screen.blit(pygame.transform.scale(light.image, (36, 8)), light.rect)
 
+    red, yellow, blue = Objects.getColorsPlaced()
     if player_pos.y > 125:
         virtual_screen.blit(mscopetableScale, (105, 100))
+
+        if red:
+            virtual_screen.blit(smolRed, (150, 121))
+        if yellow:
+            virtual_screen.blit(smolYellow, (160, 120))
+        if blue:
+            virtual_screen.blit(smolBlue, (157, 124))
         if Objects.getBeakerSolved():
             virtual_screen.blit(beakercase2, (10, 70))
         else:
@@ -201,6 +209,13 @@ def Room(screen, screen_res, events):
     else:
         Player.animatePlayer(virtual_screen, player_pos)
         virtual_screen.blit(mscopetableScale, (105, 100))
+
+        if red:
+            virtual_screen.blit(smolRed, (150, 121))
+        if yellow:
+            virtual_screen.blit(smolYellow, (160, 120))
+        if blue:
+            virtual_screen.blit(smolBlue, (157, 124))
         if Objects.getBeakerSolved():
             virtual_screen.blit(beakercase2, (10, 70))
         else:
@@ -209,16 +224,6 @@ def Room(screen, screen_res, events):
     virtual_screen.blit(circleLight, circleLight.get_rect(center=light_pos2))
 
     virtual_screen2.blit(whiteboardzoom, (10,20))
-
-    red, yellow, blue = Objects.getColorsPlaced()
-
-    if red:
-        virtual_screen.blit(smolRed, (150, 121))
-    if yellow:
-        virtual_screen.blit(smolYellow, (160, 120))
-    if blue:
-        virtual_screen.blit(smolBlue, (157, 124))
-
     
     if not lit and not Objects.getPinkPower():
         tooDarkRead.update()

@@ -7,6 +7,7 @@ from LightSource import LightSource
 from LightFalloff import LightFalloff
 from LightingUtils import apply_lighting, apply_falloff
 import Player
+import random
 
 virtual_res = (256, 256)
 virtual_screen = pygame.Surface(virtual_res)
@@ -30,6 +31,14 @@ rightBed = pygame.image.load("Assets/rightBed.png")
 leftDesk = pygame.image.load("Assets/leftBedroomDesk.png")
 rightDesk = pygame.image.load("Assets/rightBedroomDesk.png")
 
+leftBedInteractRect = leftBed.get_rect()
+leftBedInteractRect.topleft = (37,37)
+leftBedInteractRect.bottomright = (leftBedInteractRect.bottomright[0] + 20, leftBedInteractRect.bottomright[1])
+
+rightBedInteractRect = rightBed.get_rect()
+rightBedInteractRect.topleft = (172,37)
+rightBedInteractRect.bottomleft = (rightBedInteractRect.bottomleft[0] - 20, rightBedInteractRect.bottomleft[1])
+
 # New Lighting
 pinkLightRadius = 25
 pinkLightStrength = 100
@@ -47,8 +56,13 @@ northDoor = Objects.Door(112, 16, Assets.grayDoorNorth)
 upperWingPower = False
 lowerWingPower = False
 
+bedView = False
+
+lightsOn = True
+greenPowerOn = False
+
 def inBounds(x, y):
-    global leftBed, rightBed
+    global leftBed, rightBed, bedView
     level, power = Objects.getPipeDungeonInfo()
     leftBedRect = leftBed.get_rect()
     leftBedRect.topleft = (37,37)
@@ -63,25 +77,54 @@ def inBounds(x, y):
             Sounds.powerAmb.stop()
             Sounds.ominousAmb.play(-1)
         return 0
+<<<<<<< HEAD
     elif leftBedRect.collidepoint((x,y)) or rightBedRect.collidepoint((x,y)) or leftDeskRect.collidepoint(x, y) or rightDeskRect.collidepoint(x, y):
+=======
+    elif bedView:
+        bedView = False
+        return 1
+    elif leftBedRect.collidepoint((x,y)) or rightBedRect.collidepoint((x,y)):
+>>>>>>> 530d69037787ce50b59cb921b62e725574f9e4a3
         return False
     elif not outline.contains(Point(x,y)):
         return False
     return True
 
 def positionDeterminer(cameFrom):
-    global player_pos
-    player_pos = pygame.Vector2(northDoor.x + northDoor.rect.width/2, northDoor.y + northDoor.rect.height + 5)
+    global player_pos, leftBedInteractRect, rightBedInteractRect
+    bedNum = Objects.getBedNumber()
+    if cameFrom == "Rooms.GreenRoom":
+        player_pos = pygame.Vector2(northDoor.x + northDoor.rect.width/2, northDoor.y + northDoor.rect.height + 5)
+    elif bedNum == 0: # came from left bed view
+        player_pos = pygame.Vector2(leftBedInteractRect.x + 40, leftBedInteractRect.y + 44)
+    else: # came from right bed view
+        player_pos = pygame.Vector2(rightBedInteractRect.x + 8, rightBedInteractRect.y + 44)
 
 def Room(screen, screen_res, events):
-    global upperWingPower, lowerWingPower
+    global upperWingPower, lowerWingPower, bedView, lightsOn, greenPowerOn
     level, power = Objects.getPipeDungeonInfo()
     if not upperWingPower and not lowerWingPower and level == 1 and power:
         lowerWingPower = True
 
-    # for event in events:
-    #     if event.type == pygame.KEYDOWN:
-    #         if event.key == pygame.K_e:
+    # Add greenpower statement
+    if level == 3 and power:
+        greenPowerOn = True
+    else:
+        greenPowerOn = False
+
+    greenPowerOn = True # FOR TESTING
+
+    for event in events:
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_e:
+                # TODO: Only enter bedview if green power is on
+                if leftBedInteractRect.collidepoint(player_pos): # go to left bedview
+                    Objects.setBedNumber(0)
+                    bedView = True
+                elif rightBedInteractRect.collidepoint(player_pos): # go to right bedview
+                    Objects.setBedNumber(1)
+                    bedView = True
+
 
     virtual_screen.fill((105,105,105))
     dark_overlay.fill((0, 0, 0, 150))
@@ -93,6 +136,7 @@ def Room(screen, screen_res, events):
 
     Done = False
 
+    '''
     if not Objects.getPinkPower():
         for light in lights:
             lit = light.update()
@@ -114,7 +158,7 @@ def Room(screen, screen_res, events):
                 Assets.punch_light_hole(virtual_screen, dark_overlay, (112, 112), 300, (1, 0, 1))
                 Done = True
             # virtual_screen.blit(light.image, light.rect)
-
+    '''
     virtual_screen.blit(northDoor.image, northDoor.rect)
 
     virtual_screen.blit(leftBed, (37,37))
@@ -125,11 +169,27 @@ def Room(screen, screen_res, events):
 
     # Unique things in each room here
     if BedroomNumber == 1:
-        pass
+        lightsOn = True
     elif BedroomNumber == 2:
-        pass
+        lightRng = random.randint(0, 100)
+        if lightRng < 2:
+            lightsOn = False
+
+            # play flicker sound
+            lightRng = random.randint(1,5)
+            match lightRng:
+                case 1:
+                    Sounds.spark1.play()
+                case 2:
+                    Sounds.spark2.play()
+                case 3:
+                    Sounds.spark3.play()
+                case 4:
+                    Sounds.spark4.play()
+                case 5:
+                    Sounds.spark5.play()
     elif BedroomNumber == 3:
-        pass
+        lightsOn = True
 
     # if not Objects.getPinkPower():
     #     if power and level == 1:
@@ -157,6 +217,16 @@ def Room(screen, screen_res, events):
     #     apply_falloff(falloff, virtual_screen, (lightsNew[2].x, lightsNew[2].y)) 
     #     apply_falloff(falloff, virtual_screen, (lightsNew[3].x, lightsNew[3].y)) 
     #     apply_falloff(falloff, virtual_screen, (lightsNew[4].x, lightsNew[4].y)) 
+
+    if greenPowerOn and lightsOn and BedroomNumber != 2:
+        Assets.punch_light_hole(virtual_screen, dark_overlay, (112, 112), 300, (1, 0, 1))
+    elif greenPowerOn and lightsOn:
+        Assets.punch_light_hole(virtual_screen, dark_overlay, (112, 112), 300, (1, 0, 1)) # TODO: Make darker here
+
+    # determine if light flicker should end this frame
+    lightRng = random.randint(0, 100)
+    if not lightsOn and lightRng < 30:
+        lightsOn = True
 
     virtual_screen.blit(dark_overlay, (0, 0))
 
