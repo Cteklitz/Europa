@@ -7,6 +7,7 @@ from LightSource import LightSource
 from LightFalloff import LightFalloff
 from LightingUtils import apply_lighting, apply_falloff
 import Player
+import random
 
 virtual_res = (256, 256)
 virtual_screen = pygame.Surface(virtual_res)
@@ -55,6 +56,9 @@ lowerWingPower = False
 
 bedView = False
 
+lightsOn = True
+greenPowerOn = False
+
 def inBounds(x, y):
     global leftBed, rightBed, bedView
     level, power = Objects.getPipeDungeonInfo()
@@ -87,10 +91,18 @@ def positionDeterminer(cameFrom):
         player_pos = pygame.Vector2(rightBedInteractRect.x + 8, rightBedInteractRect.y + 44)
 
 def Room(screen, screen_res, events):
-    global upperWingPower, lowerWingPower, bedView
+    global upperWingPower, lowerWingPower, bedView, lightsOn, greenPowerOn
     level, power = Objects.getPipeDungeonInfo()
     if not upperWingPower and not lowerWingPower and level == 1 and power:
         lowerWingPower = True
+
+    # Add greenpower statement
+    if level == 3 and power:
+        greenPowerOn = True
+    else:
+        greenPowerOn = False
+
+    greenPowerOn = True # FOR TESTING
 
     for event in events:
         if event.type == pygame.KEYDOWN:
@@ -114,6 +126,7 @@ def Room(screen, screen_res, events):
 
     Done = False
 
+    '''
     if not Objects.getPinkPower():
         for light in lights:
             lit = light.update()
@@ -135,7 +148,7 @@ def Room(screen, screen_res, events):
                 Assets.punch_light_hole(virtual_screen, dark_overlay, (112, 112), 300, (1, 0, 1))
                 Done = True
             # virtual_screen.blit(light.image, light.rect)
-
+    '''
     virtual_screen.blit(northDoor.image, northDoor.rect)
 
     virtual_screen.blit(leftBed, (37,37))
@@ -144,11 +157,27 @@ def Room(screen, screen_res, events):
 
     # Unique things in each room here
     if BedroomNumber == 1:
-        pass
+        lightsOn = True
     elif BedroomNumber == 2:
-        pass
+        lightRng = random.randint(0, 100)
+        if lightRng < 2:
+            lightsOn = False
+
+            # play flicker sound
+            lightRng = random.randint(1,5)
+            match lightRng:
+                case 1:
+                    Sounds.spark1.play()
+                case 2:
+                    Sounds.spark2.play()
+                case 3:
+                    Sounds.spark3.play()
+                case 4:
+                    Sounds.spark4.play()
+                case 5:
+                    Sounds.spark5.play()
     elif BedroomNumber == 3:
-        pass
+        lightsOn = True
 
     # if not Objects.getPinkPower():
     #     if power and level == 1:
@@ -176,6 +205,16 @@ def Room(screen, screen_res, events):
     #     apply_falloff(falloff, virtual_screen, (lightsNew[2].x, lightsNew[2].y)) 
     #     apply_falloff(falloff, virtual_screen, (lightsNew[3].x, lightsNew[3].y)) 
     #     apply_falloff(falloff, virtual_screen, (lightsNew[4].x, lightsNew[4].y)) 
+
+    if greenPowerOn and lightsOn and BedroomNumber != 2:
+        Assets.punch_light_hole(virtual_screen, dark_overlay, (112, 112), 300, (1, 0, 1))
+    elif greenPowerOn and lightsOn:
+        Assets.punch_light_hole(virtual_screen, dark_overlay, (112, 112), 300, (1, 0, 1)) # TODO: Make darker here
+
+    # determine if light flicker should end this frame
+    lightRng = random.randint(0, 100)
+    if not lightsOn and lightRng < 30:
+        lightsOn = True
 
     virtual_screen.blit(dark_overlay, (0, 0))
 
