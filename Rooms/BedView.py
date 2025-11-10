@@ -17,6 +17,7 @@ dark_overlay = pygame.Surface(virtual_screen.get_size(), pygame.SRCALPHA)
 
 bedNumber = 0 # 0 for left bed, 1 for right bed
 exit = False
+lightsOn = True
 
 # load assets
 background = Assets.bedBackground
@@ -32,12 +33,12 @@ def inBounds(x, y):
     return False
 
 def Room(screen, screen_res, events):
-    global exit
+    global exit, lightsOn
     virtual_screen.fill((159, 161, 160))
     xScale = screen.get_width()/virtual_screen.get_width() 
     yScale = screen.get_height()/virtual_screen.get_height()
 
-    dark_overlay.fill((0, 0, 0, 50))
+    dark_overlay.fill((0, 0, 0, 100))
 
     bedroom = Objects.getBedroomNumber()
     virtual_screen.blit(background, background.get_rect())
@@ -54,23 +55,53 @@ def Room(screen, screen_res, events):
     # location specfic things
     match bedroom:
         case 1: # Bedroom 1
+            lightsOn = True
+
             match bedNumber:
                 case 0: # left bed
                     pass
                 case 1: # right bed
                     pass
         case 2: # Bedroom 2
+            lightRng = random.randint(0, 100)
+            if lightRng < 2:
+                lightsOn = False
+
+                # play flicker sound
+                lightRng = random.randint(1,5)
+                match lightRng:
+                    case 1:
+                        Sounds.spark1.play()
+                    case 2:
+                        Sounds.spark2.play()
+                    case 3:
+                        Sounds.spark3.play()
+                    case 4:
+                        Sounds.spark4.play()
+                    case 5:
+                        Sounds.spark5.play()
+
             match bedNumber:
                 case 0: # left bed
                     pass
                 case 1: # right bed
                     pass
         case 3: # Bedroom 3
+            lightsOn = True
+
             match bedNumber:
                 case 0: # left bed
                     pass
                 case 1: # right bed
                     pass        
+
+
+    if not lightsOn:
+        virtual_screen.blit(dark_overlay, (0, 0))
+
+    lightRng = random.randint(0, 100)
+    if not lightsOn and lightRng < 30:
+        lightsOn = True
 
     scaled = pygame.transform.scale(virtual_screen, screen_res)
     screen.blit(scaled, (0, 0))
