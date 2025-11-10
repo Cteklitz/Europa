@@ -191,9 +191,9 @@ def Room(screen, screen_res, events):
             light.image = Assets.squishedDimTiles[1]
         virtual_screen.blit(pygame.transform.scale(light.image, (36, 8)), light.rect)
 
+    red, yellow, blue = Objects.getColorsPlaced()
     if player_pos.y > 125:
         virtual_screen.blit(mscopetableScale, (105, 100))
-        red, yellow, blue = Objects.getColorsPlaced()
 
         if red:
             virtual_screen.blit(smolRed, (150, 121))
@@ -209,7 +209,6 @@ def Room(screen, screen_res, events):
     else:
         Player.animatePlayer(virtual_screen, player_pos)
         virtual_screen.blit(mscopetableScale, (105, 100))
-        red, yellow, blue = Objects.getColorsPlaced()
 
         if red:
             virtual_screen.blit(smolRed, (150, 121))
