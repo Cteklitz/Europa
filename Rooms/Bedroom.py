@@ -80,7 +80,7 @@ def inBounds(x, y):
     elif bedView:
         bedView = False
         return 1
-    elif leftBedRect.collidepoint((x,y)) or rightBedRect.collidepoint((x,y)):
+    elif leftBedRect.collidepoint((x,y)) or rightBedRect.collidepoint((x,y)) or leftDeskRect.collidepoint(x, y) or rightDeskRect.collidepoint(x, y):
         return False
     elif not outline.contains(Point(x,y)):
         return False
