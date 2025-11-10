@@ -102,18 +102,21 @@ def inBounds(x, y):
 
     level, power = Objects.getPipeDungeonInfo()
     if southDoor.rect.collidepoint((x,y)):
+        cleanup()
         lowerLevelFloodedText.activated_time = -1
         if level == 2 and power:
             Sounds.powerAmb.stop()
             Sounds.ominousAmb.play(-1)
         return 0
     elif westDoor.rect.collidepoint((x,y)):
+        cleanup()
         lowerLevelFloodedText.activated_time = -1
         if level == 2 and power:
             Sounds.powerAmb.stop()
             Sounds.ominousAmb.play(-1)
         return 1
     elif eastDoor.rect.collidepoint((x,y)):
+        cleanup()
         lowerLevelFloodedText.activated_time = -1
         if level == 2 and power:
             Sounds.powerAmb.stop()
@@ -123,6 +126,7 @@ def inBounds(x, y):
         puddleSelected = False
         return 4  
     elif powerRoom:
+        cleanup()
         if Objects.getBluePower():
             Sounds.powerOnAmb.play(-1)
         powerRoom = False
@@ -153,9 +157,78 @@ def positionDeterminer(cameFrom):
     if cameFrom == "Rooms.BluePower":
         player_pos = pygame.Vector2(123, 75)
 
+def cleanup():
+    #Stop electricity sound when leaving the room
+    if hasattr(Room, 'electricityChannel') and Room.electricityChannel:
+        Room.electricityChannel.stop()
+        Room.electricityPlaying = False
+
 def Room(screen, screen_res, events):
     global powerRoom, puddleSelected, wireRepaired
     level, power = Objects.getPipeDungeonInfo()
+
+    # Proximity-based electricity sound for puddle
+    try:
+        from Rooms import PuddleView
+        puddlesCleaned = PuddleView.getPuddlesCleaned()
+    except:
+        puddlesCleaned = False
+    
+    if not puddlesCleaned:
+        
+        puddleCenter = pygame.Vector2(280, 110)  # Center of puddle area
+        distance = player_pos.distance_to(puddleCenter)
+        
+        # Set volume based on distance
+        maxDistance = 240  # Maximum distance for sound 
+        minDistance = 80   # Minimum distance 
+        
+        if distance <= maxDistance:
+            if distance <= minDistance:
+                volume = 0.6  # Full volume when very close
+            else:
+                volume = 0.6 * (1.0 - (distance - minDistance) / (maxDistance - minDistance))
+            
+            # Calculate directional audio based on horizontal position
+            horizontalDiff = puddleCenter.x - player_pos.x
+            screenWidth = 416
+            
+            maxHorizontalDistance = screenWidth / 2
+            panFactor = horizontalDiff / maxHorizontalDistance
+            panFactor = max(-1.0, min(1.0, panFactor))
+            
+            if panFactor <= 0:
+                
+                leftVolume = volume
+                rightVolume = volume * (1 + panFactor)  # Reduces as sound moves left
+            else:
+                
+                leftVolume = volume * (1 - panFactor)  # Reduces as sound moves right
+                rightVolume = volume
+            
+            # Set stereo volumes
+            Sounds.electricityNoise.set_volume(leftVolume)
+            
+            if not hasattr(Room, 'electricityChannel'):
+                Room.electricityChannel = Sounds.electricityNoise.play(-1)  # Loop indefinitely
+                Room.electricityPlaying = True
+            elif not Room.electricityChannel.get_busy():
+                Room.electricityChannel = Sounds.electricityNoise.play(-1)  # Restart if stopped
+                Room.electricityPlaying = True
+            
+        
+            Room.electricityChannel.set_volume(leftVolume, rightVolume)
+            
+        else:
+            #stop the sound if too far away
+            if hasattr(Room, 'electricityChannel') and Room.electricityChannel:
+                Room.electricityChannel.stop()
+                Room.electricityPlaying = False
+    else:
+        # Puddles are cleaned, stop electricity sound
+        if hasattr(Room, 'electricityChannel') and Room.electricityChannel:
+            Room.electricityChannel.stop()
+            Room.electricityPlaying = False
 
     for event in events:
         if event.type == pygame.KEYDOWN:
