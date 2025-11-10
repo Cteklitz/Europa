@@ -75,7 +75,7 @@ def inBounds(x, y):
     if northDoor.rect.collidepoint((x,y)):
         if level == 1 and power and not upperWingPower and not Objects.getPinkPower():
             Sounds.powerAmb.stop()
-            Sounds.ominousAmb.play(-1)
+            Sounds.ominousAmb.play(-1)    
         return 0
     elif bedView:
         bedView = False
@@ -101,6 +101,9 @@ def Room(screen, screen_res, events):
     level, power = Objects.getPipeDungeonInfo()
     if not upperWingPower and not lowerWingPower and level == 1 and power:
         lowerWingPower = True
+
+    Sounds.radioFar.play()
+    Sounds.radioClose.play()
 
     # Add greenpower statement
     if level == 3 and power:
@@ -167,6 +170,7 @@ def Room(screen, screen_res, events):
     if BedroomNumber == 1:
         lightsOn = True
     elif BedroomNumber == 2:
+        # light flickering
         lightRng = random.randint(0, 100)
         if lightRng < 2:
             lightsOn = False

@@ -58,3 +58,6 @@ spark2 = pygame.mixer.Sound("Audio/spark2.wav")
 spark3 = pygame.mixer.Sound("Audio/spark3.wav")
 spark4 = pygame.mixer.Sound("Audio/spark4.wav")
 spark5 = pygame.mixer.Sound("Audio/spark5.wav")
+
+radioClose = pygame.mixer.Sound("Audio/radio_close.wav")
+radioFar = pygame.mixer.Sound("Audio/radio_far.wav")
