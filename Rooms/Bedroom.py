@@ -28,6 +28,14 @@ lights = [
 leftBed = pygame.image.load("Assets/leftBed.png")
 rightBed = pygame.image.load("Assets/rightBed.png")
 
+leftBedInteractRect = leftBed.get_rect()
+leftBedInteractRect.topleft = (37,37)
+leftBedInteractRect.bottomright = (leftBedInteractRect.bottomright[0] + 20, leftBedInteractRect.bottomright[1])
+
+rightBedInteractRect = rightBed.get_rect()
+rightBedInteractRect.topleft = (172,37)
+rightBedInteractRect.bottomleft = (rightBedInteractRect.bottomleft[0] - 20, rightBedInteractRect.bottomleft[1])
+
 # New Lighting
 pinkLightRadius = 25
 pinkLightStrength = 100
@@ -45,8 +53,10 @@ northDoor = Objects.Door(112, 16, Assets.grayDoorNorth)
 upperWingPower = False
 lowerWingPower = False
 
+bedView = False
+
 def inBounds(x, y):
-    global leftBed, rightBed
+    global leftBed, rightBed, bedView
     level, power = Objects.getPipeDungeonInfo()
     leftBedRect = leftBed.get_rect()
     leftBedRect.topleft = (37,37)
@@ -57,6 +67,9 @@ def inBounds(x, y):
             Sounds.powerAmb.stop()
             Sounds.ominousAmb.play(-1)
         return 0
+    elif bedView:
+        bedView = False
+        return 1
     elif leftBedRect.collidepoint((x,y)) or rightBedRect.collidepoint((x,y)):
         return False
     elif not outline.contains(Point(x,y)):
@@ -64,18 +77,32 @@ def inBounds(x, y):
     return True
 
 def positionDeterminer(cameFrom):
-    global player_pos
-    player_pos = pygame.Vector2(northDoor.x + northDoor.rect.width/2, northDoor.y + northDoor.rect.height + 5)
+    global player_pos, leftBedInteractRect, rightBedInteractRect
+    bedNum = Objects.getBedNumber()
+    if cameFrom == "Rooms.GreenRoom":
+        player_pos = pygame.Vector2(northDoor.x + northDoor.rect.width/2, northDoor.y + northDoor.rect.height + 5)
+    elif bedNum == 0: # came from left bed view
+        player_pos = pygame.Vector2(leftBedInteractRect.x + 40, leftBedInteractRect.y + 44)
+    else: # came from right bed view
+        player_pos = pygame.Vector2(rightBedInteractRect.x + 8, rightBedInteractRect.y + 44)
 
 def Room(screen, screen_res, events):
-    global upperWingPower, lowerWingPower
+    global upperWingPower, lowerWingPower, bedView
     level, power = Objects.getPipeDungeonInfo()
     if not upperWingPower and not lowerWingPower and level == 1 and power:
         lowerWingPower = True
 
-    # for event in events:
-    #     if event.type == pygame.KEYDOWN:
-    #         if event.key == pygame.K_e:
+    for event in events:
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_e:
+                # TODO: Only enter bedview if green power is on
+                if leftBedInteractRect.collidepoint(player_pos): # go to left bedview
+                    Objects.setBedNumber(0)
+                    bedView = True
+                elif rightBedInteractRect.collidepoint(player_pos): # go to right bedview
+                    Objects.setBedNumber(1)
+                    bedView = True
+
 
     virtual_screen.fill((105,105,105))
     dark_overlay.fill((0, 0, 0, 150))
