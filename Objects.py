@@ -240,3 +240,9 @@ def getBedroomNumber():
 
 def setBedroomNumber(num):
     Area.setBedroomNumber(num)
+
+def getBedNumber():
+    return Area.getBedNumber()
+
+def setBedNumber(num):
+    Area.setBedNumber(num)

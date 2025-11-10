@@ -160,6 +160,8 @@ breakerBox = pygame.image.load("Assets/breaker.png")
 
 locker = pygame.image.load("Assets/locker.png")
 
+bedBackground = pygame.image.load("Assets/BedView.png")
+
 ### ITEMS
 pinkKeycard = pygame.image.load("Assets/pink_keycard.png")
 pinkKeycardGround = pygame.image.load("Assets/pink_keycard_ground.png")
