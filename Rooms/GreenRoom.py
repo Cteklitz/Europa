@@ -7,6 +7,7 @@ from LightSource import LightSource
 from LightFalloff import LightFalloff
 from LightingUtils import apply_lighting, apply_falloff
 import Player
+import math
 
 virtual_res = (644, 260)
 virtual_screen = pygame.Surface(virtual_res)
@@ -52,34 +53,41 @@ def inBounds(x, y):
     level, power = Objects.getPipeDungeonInfo()
     bounds = pygame.Rect(48,48,544,160)
     if greenDoor.rect.collidepoint((x,y)):
+        Sounds.radioFar.set_volume(0)
         if level == 3 and power and not upperWingPower and not Objects.getPinkPower():
             Sounds.powerAmb.stop()
             Sounds.ominousAmb.play(-1)
         return 0
     elif bathroomDoor.rect.collidepoint((x,y)):
+        Sounds.radioFar.set_volume(0)
         if level == 3 and power or Objects.getPinkPower():
             Sounds.powerAmb.stop()
             Sounds.ominousAmb.play(-1)
         return 1
     elif bedroom1Door.rect.collidepoint((x,y)):
+        Sounds.radioFar.set_volume(0)
         if level == 3 and power and not lowerWingPower and not Objects.getPinkPower():
             Sounds.powerAmb.stop()
             Sounds.ominousAmb.play(-1)
         Objects.setBedroomNumber(1)
         return 2
     elif bedroom2Door.rect.collidepoint((x,y)):
+        Sounds.radioClose.set_volume(1)
+        Sounds.radioFar.set_volume(0)
         if level == 3 and power and not lowerWingPower and not Objects.getPinkPower():
             Sounds.powerAmb.stop()
             Sounds.ominousAmb.play(-1)
         Objects.setBedroomNumber(2)
         return 2
     elif bedroom3Door.rect.collidepoint((x,y)):
+        Sounds.radioFar.set_volume(0)
         if level == 3 and power and not lowerWingPower and not Objects.getPinkPower():
             Sounds.powerAmb.stop()
             Sounds.ominousAmb.play(-1)
         Objects.setBedroomNumber(3)
         return 2
     elif greenhouseDoor.rect.collidepoint((x,y)):
+        Sounds.radioFar.set_volume(0)
         if level == 3 and power and not lowerWingPower and not Objects.getPinkPower():
             Sounds.powerAmb.stop()
             Sounds.ominousAmb.play(-1)
@@ -90,25 +98,41 @@ def inBounds(x, y):
 
 def positionDeterminer(cameFrom):
     global player_pos
+
+    Sounds.radioClose.set_volume(0)
+    Sounds.radioFar.set_volume(1)
+
     if cameFrom == "Rooms.Bathroom":
         player_pos = pygame.Vector2(bathroomDoor.x + 37, bathroomDoor.y + bathroomDoor.rect.height/2)
-    elif cameFrom == "Rooms.MainRoom":
+    elif cameFrom == "Rooms.MainRoom":       
+        Sounds.radioClose.set_volume(0)
         player_pos = pygame.Vector2(greenDoor.x + greenDoor.rect.width/2, greenDoor.y + greenDoor.rect.height + 5)
     elif cameFrom == "Rooms.Bedroom":
         if Objects.getBedroomNumber() == 1:
             player_pos = pygame.Vector2(bedroom1Door.x + bedroom1Door.rect.width/2, bedroom1Door.y - 5)
         elif Objects.getBedroomNumber() == 2:
+           
             player_pos = pygame.Vector2(bedroom2Door.x + bedroom2Door.rect.width/2, bedroom2Door.y - 5)
         elif Objects.getBedroomNumber() == 3:
             player_pos = pygame.Vector2(bedroom3Door.x + bedroom3Door.rect.width/2, bedroom3Door.y - 5)
     elif cameFrom == "Rooms.Greenhouse":
-        player_pos = pygame.Vector2(greenhouseDoor.x - 5, greenhouseDoor.y + greenhouseDoor.rect.height/2)
+        player_pos = pygame.Vector2(greenhouseDoor.x - 5, greenhouseDoor.y + greenhouseDoor.rect.height/2)   
 
 def Room(screen, screen_res, events):
     global upperWingPower, lowerWingPower
     level, power = Objects.getPipeDungeonInfo()
     if not upperWingPower and not lowerWingPower and level == 3 and power:
         lowerWingPower = True
+
+    Sounds.radioFar.play()
+    Sounds.radioClose.play()
+
+    # set radioFar volume based on distance to bedroom 2
+    dist = math.sqrt((player_pos.x - bedroom2Door.x)**2 + (player_pos.y - bedroom2Door.y)**2)
+    maxDist = math.sqrt((48 - bedroom2Door.x)**2 + (48 - bedroom2Door.y)**2)
+    normDist = dist / maxDist # normalize dist
+    vol = 1 - normDist + 0.3
+    Sounds.radioFar.set_volume(vol)
 
     # for event in events:
     #     if event.type == pygame.KEYDOWN:

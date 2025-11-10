@@ -63,6 +63,7 @@ def Room(screen, screen_res, events):
                 case 1: # right bed
                     pass
         case 2: # Bedroom 2
+            # light flickering
             lightRng = random.randint(0, 100)
             if lightRng < 2:
                 lightsOn = False
