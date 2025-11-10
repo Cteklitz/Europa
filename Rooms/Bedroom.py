@@ -27,6 +27,8 @@ lights = [
 
 leftBed = pygame.image.load("Assets/leftBed.png")
 rightBed = pygame.image.load("Assets/rightBed.png")
+leftDesk = pygame.image.load("Assets/leftBedroomDesk.png")
+rightDesk = pygame.image.load("Assets/rightBedroomDesk.png")
 
 # New Lighting
 pinkLightRadius = 25
@@ -52,12 +54,16 @@ def inBounds(x, y):
     leftBedRect.topleft = (37,37)
     rightBedRect = rightBed.get_rect()
     rightBedRect.topleft = (172,37)
+    leftDeskRect = leftDesk.get_rect()
+    leftDeskRect.topleft = (148, 176)
+    rightDeskRect = rightDesk.get_rect()
+    rightDeskRect.topleft = (45, 176)
     if northDoor.rect.collidepoint((x,y)):
         if level == 1 and power and not upperWingPower and not Objects.getPinkPower():
             Sounds.powerAmb.stop()
             Sounds.ominousAmb.play(-1)
         return 0
-    elif leftBedRect.collidepoint((x,y)) or rightBedRect.collidepoint((x,y)):
+    elif leftBedRect.collidepoint((x,y)) or rightBedRect.collidepoint((x,y)) or leftDeskRect.collidepoint(x, y) or rightDeskRect.collidepoint(x, y):
         return False
     elif not outline.contains(Point(x,y)):
         return False
@@ -113,6 +119,8 @@ def Room(screen, screen_res, events):
 
     virtual_screen.blit(leftBed, (37,37))
     virtual_screen.blit(rightBed, (172,37))
+    virtual_screen.blit(leftDesk, (148,176))
+    virtual_screen.blit(rightDesk, (45,176))
     Player.animatePlayer(virtual_screen, player_pos, 32, 32, "top-down")
 
     # Unique things in each room here
