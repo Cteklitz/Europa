@@ -131,7 +131,8 @@ def Room(screen, screen_res, events):
     dist = math.sqrt((player_pos.x - bedroom2Door.x)**2 + (player_pos.y - bedroom2Door.y)**2)
     maxDist = math.sqrt((48 - bedroom2Door.x)**2 + (48 - bedroom2Door.y)**2)
     normDist = dist / maxDist # normalize dist
-    vol = 1 - normDist + 0.3
+    vol = 1 - normDist + 0.2
+    vol = vol**2 # apply expontial growth so vol scales smoothly
     Sounds.radioFar.set_volume(vol)
 
     # for event in events:
