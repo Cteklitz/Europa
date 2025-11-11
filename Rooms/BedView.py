@@ -20,7 +20,8 @@ exit = False
 lightsOn = True
 
 # load assets
-background = Assets.bedBackground
+backgroundLeft = Assets.bedBackgroundLeft
+backgroundRight = Assets.bedBackgroundRight
 
 def positionDeterminer(cameFrom):
     pass
@@ -40,8 +41,14 @@ def Room(screen, screen_res, events):
 
     dark_overlay.fill((0, 0, 0, 100))
 
+    Sounds.radioFar.play()
+    Sounds.radioClose.play()
+
     bedroom = Objects.getBedroomNumber()
-    virtual_screen.blit(background, background.get_rect())
+    if bedNumber == 0:
+        virtual_screen.blit(backgroundLeft, backgroundLeft.get_rect())
+    else:
+        virtual_screen.blit(backgroundRight, backgroundRight.get_rect())
 
     for event in events:
         if event.type == pygame.KEYDOWN:
@@ -63,6 +70,7 @@ def Room(screen, screen_res, events):
                 case 1: # right bed
                     pass
         case 2: # Bedroom 2
+            # light flickering
             lightRng = random.randint(0, 100)
             if lightRng < 2:
                 lightsOn = False
