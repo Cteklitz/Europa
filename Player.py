@@ -41,7 +41,7 @@ def checkItem(_item):
             return True
         return False # return false if item not found
     else:
-        print("ERROR: Item type not valid")
+        # print("ERROR: Item type not valid")
         return False
 
 # removes an item from the inventory, takes either id or item object
@@ -66,7 +66,7 @@ def removeItem(_item):
                     return True
         return False # return false if item not found
     else:
-        print("ERROR: Item type not valid")
+        # print("ERROR: Item type not valid")
         return False
         
 # Consumes the item at the input index in the player inventory. Will activate any global effects here

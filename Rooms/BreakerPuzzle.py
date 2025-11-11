@@ -23,38 +23,23 @@ multimeter_toggle_rect = pygame.Rect(170 + 22, 20 + 45, 25, 25)
 numbers = Assets.multiNumbers
 multimeter_status = False
 
-solved = True
+# TODO: toggle to True to override BreakerPuzzle
+# solved = True
+solved = False
 
 '''
 DEV NOTES:
-Connections are not drag and drop, they're click-click. Disconnect works by clicking an endpoint since all endpoints
-can only have one connection. In the room loop, I have it such that clicking anywhere besides a node after a first
-click should reset the selection. The way that the code is currently written, the connection evaluation can happen in 
-any order, but make sure that if a valid connection is made from the output node to the operator node before that 
-operator node is fully connected, the final result evaluation pends full connection (should be able to use 
-is_fully_connected for this). The plan that I had for the Multimeter (but have not implemented yet) was that it could 
-have a smaller lower display that shows all 4 of the output connections as +, 0, or -. '+' means you're over, '0' (or 
-'=' maybe) means you got it right, '-' means you're under. So it would show something like XXXX to start (you'd also 
-have the number at the top to say how much you're off by) and then if you went over by 3, it would go to +XXX and the 
-number would go to 3. If you then got the next one wrong, it would sum the differences ([ev1 - av1] + [ev2 - av2]) and 
-display +-XX. The idea behind doing it like that is that it might be confusing if we just tally the difference 
-between the expected results and the actual result: if two or more components of the actual result are wrong but the 
-output tallies to zero because it's +3, -3, X, X = 0, it would be unintuitive. Since I've yet to implement that aspect, 
-it's designer's choice. 
-
-Here are some of the TODOs I have written in my notes (besides general method implementation):
-
-1. Make rectangles opaque (and draw them, not sure if they're drawn or need to be drawn?) so i can see where they need to move
-   * I think I need to get rectangles to correspond to mouse_pos by dividing all my x and y coordinates by xScale, yScale
-
-2. Implement actual unique evaluation/comparison logic in each connection() method
-   * store how much cur_result=None is over (positive), correct (0), or under (negative) in the OutputNode
-
-3. Click on already connected endpoint to detach wire; create disconnect() function (will need a disconnect_back() too) -- DONE for input and output nodes, not sure how to handle for operator nodes
-
-4. Draw wires on valid connection -- DONE
-
-5. Implement Multimeter, check for multimeter equipped
+To solve the Breaker Puzzle, Player must connect input nodes containing integer values through unspecified operator 
+nodes--which perform mathematical expressions using input values--to output nodes that check for the correct 'voltage'. 
+The Player can use a multimeter item that both tells whether each connection is over, under, or correct and totals the 
+cumulative error. Player connects nodes using wires, connecting each level to the next until all output nodes are 
+satisfied.
+We use a Linked List representation with inheritance and abstract methods so that our implementation would allow 
+multiple possible answers to be verified. Each node is able to disconnect from other nodes if (1) its node is clicked 
+(if node only has 1 prong: input, output nodes) or (2) its prongs are clicked (if node has more than 1 prong: operator 
+nodes) while those prongs are connected (There's gotta be a better word than prongs, it just happened to be the only 
+word I could think of. Feel free to refactor variables and comments if you come up with a more representative word!). 
+Each operator node has its own wire color for all of its connections to make wires distinguishable.
 '''
 
 
@@ -126,11 +111,11 @@ class InputNode(Node):
             return False
         return True
 
-    # TODO: returns True if disconnection was successful in both directions, False otherwise
+    # returns True if disconnection was successful in both directions, False otherwise
     def disconnect(self):
         if self.connection_below is not None:
-            print("Disconnecting")
-            if (self.connection_below.disconnect_back(self)):
+            print(f"Disconnecting node: {self} from ")
+            if self.connection_below.disconnect_back(self):
                 self.connection_below = None
                 return True
             else:
@@ -138,9 +123,14 @@ class InputNode(Node):
         else:
             return False
 
-    # TODO: returns True if self can and does disconnect itself from other, False otherwise
+    # returns True if self can and does disconnect itself from other, False otherwise
     def disconnect_back(self, other):
-        pass
+        if self.connection_below is not None:
+            print(f"Disconnecting node: {self} from ")
+            self.connection_below = None
+            return True
+        else:
+            return False
 
 
 class OperatorNode(Node):
@@ -151,73 +141,118 @@ class OperatorNode(Node):
         self.num_inputs_allowed = num_inputs_allowed
         self.operation = operation  # lambda function passed as parameter
         Node.operator_nodes.append(self)  # keep track of operator nodes
+        for i in range(num_inputs_allowed):
+            self.connections_above.append(None)  # set to None so that the first 1-2 indices are defined
+
+        operator_index = len(self.operator_nodes)-1  # note, for indexing, that this node has already been added to operator_nodes
+        self.top_left_rect = pygame.Rect(42+(16*operator_index),48,4,3)
+        self.top_right_rect = None
+        if num_inputs_allowed == 2:
+            self.top_right_rect = pygame.Rect(47+(16*(operator_index)),48,4,3)
+        self.bottom_rect = pygame.Rect(42+(16*operator_index),62,4,3)
+        self.selected_prong = None  # None = None, 0 = tl, 1 = tr, 2 = bottom
+
+    def isClicked(self, pos):
+        # Not great design, but we just use these prong rectangles instead of the node's rectangle
+        if self.top_left_rect.collidepoint(pos):
+            self.selected_prong = 0
+            print(f"Top Left Prong selected")
+        elif self.top_right_rect is not None and self.top_right_rect.collidepoint(pos):
+            self.selected_prong = 1
+            print(f"Top Right Prong selected")
+        elif self.bottom_rect.collidepoint(pos):
+            self.selected_prong = 2
+            print(f"Bottom Prong selected")
+        else:
+            return False
+        return True
 
     def connect(self, other):
-        print("Attempting connection")
+        print(f"Attempting connection from {self} to {other}")
         # check if connection is coming from above or below
-        if other.node_height == 1: # connection comes from above
-            print("Connection coming from above")
-            # check that there is an open input
-            if self.num_inputs_allowed > len(self.connections_above):
-                if (other.connect_back(self)):
-                    self.connections_above.append(other)
-                    #return True
-                else:
-                    return False
-            elif self.connections_above[0] is None:
-                if (other.connect_back(self)):
+        if other.node_height == 1:  # connection comes from above
+            # check that selected prong is open to input, can be connected
+            if self.connections_above[0] is None and self.selected_prong == 0:
+                if other.connect_back(self):
                     self.connections_above[0] = other
-                    #return True
                 else:
+                    print(f"{other} connect_back to {self} failed")
+                    return False
+            elif self.connections_above[1] is None and self.selected_prong == 1:
+                if other.connect_back(self):
+                    self.connections_above[1] = other
+                else:
+                    print(f"{other} connect_back to {self} failed")
                     return False
             else:
-                print("Breaker Puzzle: Operator node does not have open inputs")
+                print(f"Operator Connect to INPUT: selected operator--{self}--prong #{self.selected_prong}, but "
+                      f"connections above are {self.connections_above}")
                 return False
-        elif other.node_height == 3: # connection comes from below
-            print("Connection coming from below")
+        elif other.node_height == 3:  # connection comes from below
             if self.connection_below is not None:  # make sure that output is empty
                 print("Breaker Puzzle connect: Operator <--> Output --- Operator output already connected")
                 return False
             else:
-                if other.connect_back(self):
-                    self.connection_below = other
-                    #return True
+                # if bottom prong selected, try to initiate connection
+                if self.selected_prong == 2:
+                    if other.connect_back(self):
+                        self.connection_below = other
+                    else:
+                        print(f"{other} connect_back to {self} failed")
+                        return False
                 else:
+                    print(f"OPERATOR Connect to OUTPUT: selected operator--{self}--prong #{self.selected_prong}, but "
+                          f"connection below is {self.connection_below}")
                     return False
         elif other.node_height == 2:
             print("Breaker Puzzle: Cannot connect two operator nodes")
-            return False      
+            return False
         else:
-            print(f"Breaker Puzzle: Invalid height value of {other.height}")
+            print(f"Breaker Puzzle Operator Connect: Invalid other-height value of {other.height}")
             return False
 
         # only evaluate if all connections are filled
         if len(self.connections_above) == self.num_inputs_allowed and self.connections_above[0] is not None:
-            self.evaluate_operation(*self.connections_above)  # evaluate operation and store result
+            if self.num_inputs_allowed == 2 and self.connections_above[1] is not None:
+                self.evaluate_operation(*self.connections_above)  # evaluate operation and store result
+            elif self.num_inputs_allowed == 1:
+                self.evaluate_operation(*self.connections_above)
+        print(f"---Node's Connections---\n---Top: {self.connections_above}---\n---Bottom: {self.connection_below}---")
         return True
 
     def connect_back(self, other):
         if self.node_height == other.node_height - 1:  # self is one level above (note that height grows down)
+            # make sure that the correct prong was selected, can be attached
             if self.connection_below is not None:  # make sure that the number of connections is valid
                 print("Breaker Puzzle connect back: Output <--> Operator --- operator already connected")
                 return False
-            self.connection_below = other
-        elif self.node_height == other.node_height + 1:  # self is one level below
-            if len(self.connections_above) == 0:
-                self.connections_above.append(other)
-            elif self.connections_above[0] is None:
-                self.connections_above[0] = other
-            elif len(self.connections_above) == self.num_inputs_allowed:
-                print("Breaker Puzzle connection: Input <--> Operator --- operator has full connections")
-                return False
+            if self.selected_prong == 2:
+                self.connection_below = other
             else:
-                self.connections_above.append(other)
-            # only evaluate if all connections are filled
+                print(f"OPERATOR Connect-Back to OUTPUT: selected operator--{self}--prong #{self.selected_prong}, "
+                      f"but connection below is {self.connection_below}")
+                return False
+        elif self.node_height == other.node_height + 1:  # self is one level below
+            # see which prong was selected, if it can be attached
+            if self.connections_above[0] is None and self.selected_prong == 0:
+                self.connections_above[0] = other
+            elif self.connections_above[1] is None and self.selected_prong == 1:
+                self.connections_above[1] = other
+            else:
+                print(f"OPERATOR Connect-Back to INPUT: selected operator--{self}--prong #{self.selected_prong}, "
+                      f"but connections above are {self.connections_above}")
+                return False
+
+            # only evaluate if all connections are filled  (doesn't look very pretty, but it should work)
             if len(self.connections_above) == self.num_inputs_allowed and self.connections_above[0] is not None:
-                self.evaluate_operation(*self.connections_above)  # evaluate operation and store result
+                if self.num_inputs_allowed == 2 and self.connections_above[1] is not None:
+                    self.evaluate_operation(*self.connections_above)  # evaluate operation and store result
+                elif self.num_inputs_allowed == 1:
+                    self.evaluate_operation(*self.connections_above)
         else:
             print("Breaker Puzzle: cannot connect nodes of same height or height difference > 1.")
             return False
+        print(f"---Node's Connections---\n---Top: {self.connections_above}---\n---Bottom: {self.connection_below}---")
         return True
 
     # check if an operator node has all connections in and out
@@ -235,29 +270,41 @@ class OperatorNode(Node):
                                              val2.signal_strength)  # save lambda function result as cur_result
         return self.cur_result
 
-    # TODO:
-    #  - Note that here disconnect and disconnect_back can be validly called for connections both above and below.
-    #  - Similarly to connect() and connect_back(), must ensure that disconnect_back is checked first with T or F.
-    #  - Set cur_result to None before removing connection.
-    #  - For above, need to compare object addresses to ensure removal of correct array object (should be easy in
-    #    python with objects i would imagine).
-    #  - Return True if disconnect succeeds, False otherwise.
     def disconnect(self):
+        if self.selected_prong is None:
+            return False
+        other = self.connections_above[self.selected_prong] if self.selected_prong < 2 else self.connection_below
+        if other is None:
+            return False  # nothing to disconnect
+        # check if disconnect comes from above or below
+        if other.node_height == 1:  # input node
+            for i in range(len(self.connections_above)):
+                if self.connections_above[i] == other and other.disconnect_back(self):
+                    self.cur_result = None
+                    self.connections_above[i] = None
+                    return True
+            return False
+        elif other.node_height == 3:  # output node
+            if self.connection_below == other and other.disconnect_back(self):
+                self.cur_result = None
+                self.connection_below = None
+                return True
+            else:
+                return False
+        else:
+            return False
         pass
 
     def disconnect_back(self, other):
-        # TODO: Handle case where first connection is disconnected (rn it just moves the other connection over; going to need to rework connect and drawing wires to handle this case)
         # check if disconnect comes from above or below
-        if other.node_height == 1: # input node
+        if other.node_height == 1:  # input node
             for i in range(len(self.connections_above)):
                 if self.connections_above[i] == other:
                     self.cur_result = None
                     self.connections_above[i] = None
-                    if i == 1:
-                        self.connections_above.pop()
                     return True
             return False
-        elif other.node_height == 3: # output node
+        elif other.node_height == 3:  # output node
             if self.connection_below == other:
                 self.cur_result = None
                 self.connection_below = None
@@ -284,8 +331,8 @@ class OutputNode(Node):
         return False
 
     def connect_back(self, other):
-        if len(self.connections_above) == 0: # check that node does not already have connection
-            if other.node_height == 2: # check that other node is an operator node
+        if len(self.connections_above) == 0:  # check that node does not already have connection
+            if other.node_height == 2:  # check that other node is an operator node
                 self.connections_above.append(other)
                 return True
         return False
@@ -298,14 +345,10 @@ class OutputNode(Node):
         return False
 
     def disconnect_back(self, other):
-        pass
-
-
-# TODO: don't need this if we're not connecting directly to multimeter, some other implementation needed
-class MultimeterNode(Node):
-    def __init__(self, display=0):
-        super().__init__()
-        self.display = display
+        if len(self.connections_above) == 1:  # check that node has connection
+            self.connections_above.pop()
+            return True
+        return False
 
 
 # 7 input nodes, 6 operator nodes, 4 output nodes
@@ -326,14 +369,7 @@ nodes = [
     OutputNode(pygame.Rect(43, 93, 12, 14), 3),
     OutputNode(pygame.Rect(68, 93, 12, 14), 5),
     OutputNode(pygame.Rect(93, 93, 12, 14), 16),
-    OutputNode(pygame.Rect(118, 93, 12, 14), 7)
-]
-
-# TODO: delete these after testing is complete
-#nodes[0].connect(nodes[7])
-#print(f"{nodes[7].cur_result} should be 16")
-#nodes[0].connect(nodes[8])
-#print(f"{nodes[8].cur_result} should be None, {nodes[8]} and {nodes[0].connection_below} should not match.")
+    OutputNode(pygame.Rect(118, 93, 12, 14), 7)]
 
 
 def inBounds(x, y):
@@ -369,21 +405,15 @@ def Room(screen, screen_res, events):
                     multimeter_status = not multimeter_status
                     Sounds.pipe.play()
                 elif not solved:
-                    # TODO: correctly placed and working clickable object implementation
-                    #recently_selected = None  # track the most recently selected node
                     # map clicks to nodes/rectangles, do logic
                     anySelected = False
                     for node in nodes:
                         if node.isClicked(mouse_pos):
                             anySelected = True
-                            #print(f"{node.rect}, {mouse_pos}")
-                            #print(f"{recently_selected}")
-                            # if clicked node is end-point and already has connection, disconnect it
-                            if node.node_height % 2 != 0 and node.disconnect():
+                            if node.disconnect():
                                 Sounds.toolbox.play()
                                 recently_selected = None
                                 break
-
                             if recently_selected is None:
                                 print("selected node")
                                 recently_selected = node
@@ -407,15 +437,24 @@ def Room(screen, screen_res, events):
 
     virtual_screen.blit(background, (0, 0))
 
+    # choose wire colors from array
+    color_array = [
+        (255,0,0), (255,128,0), (255,255,0), (255,255,255),
+        (0,255,0), (0,255,255), (0,0,255), (128,128,128),
+        (127,0,255), (255,0,255), (255,0,127), (0,0,0)
+    ]
+
+    wire_count = 0
     # draw wires for connections
-    for node in nodes:
-        if node.node_height == 2: # start all connections from operator nodes
+    for node in Node.operator_nodes:
+        if node.node_height == 2:  # start all connections from operator nodes
             if len(node.connections_above) >= 1 and node.connections_above[0] is not None:
-                pygame.draw.line(virtual_screen, (100,0,0), (node.rect.left + 3, node.rect.top + 1), (node.connections_above[0].rect.left + 5, node.connections_above[0].rect.top + 12), width=2)
+                pygame.draw.line(virtual_screen, color_array[wire_count], (node.rect.left + 3, node.rect.top + 1), (node.connections_above[0].rect.left + 5, node.connections_above[0].rect.top + 12), width=2)
             if len(node.connections_above) == 2 and node.connections_above[1] is not None:
-                pygame.draw.line(virtual_screen, (100,0,0), (node.rect.left + 8, node.rect.top + 1), (node.connections_above[1].rect.left + 5, node.connections_above[1].rect.top + 12), width=2)
+                pygame.draw.line(virtual_screen, color_array[wire_count], (node.rect.left + 8, node.rect.top + 1), (node.connections_above[1].rect.left + 5, node.connections_above[1].rect.top + 12), width=2)
             if node.connection_below is not None:
-                pygame.draw.line(virtual_screen, (100,0,0), (node.rect.left + 3, node.rect.top + 15), (node.connection_below.rect.left + 5, node.connection_below.rect.top + 1), width=2)
+                pygame.draw.line(virtual_screen, color_array[wire_count], (node.rect.left + 3, node.rect.top + 15), (node.connection_below.rect.left + 5, node.connection_below.rect.top + 1), width=2)
+        wire_count += 1  # iterate here so each operator gets own wire color (6<11, don't worry about access errors)
 
     # draw wire from current selected node to mouse
     if recently_selected is not None:
@@ -423,10 +462,14 @@ def Room(screen, screen_res, events):
         mouse_pos = (mouse_x / xScale, mouse_y / yScale)
         if recently_selected.node_height == 1: # input node
             pygame.draw.line(virtual_screen, (100,0,0), (recently_selected.rect.left + 5, recently_selected.rect.top + 12), mouse_pos, width=2)
-        elif recently_selected.node_height == 2: # operator node
-            # idk how to handle this and make it look good, temp implmentation for now
-            pygame.draw.line(virtual_screen, (100,0,0), (recently_selected.rect.left + 3, recently_selected.rect.top + 15), mouse_pos, width=2)
-        elif recently_selected.node_height == 3: # output node
+        elif recently_selected.node_height == 2:  # operator node
+            if recently_selected.selected_prong == 0:
+                pygame.draw.line(virtual_screen, (100,0,0), (recently_selected.rect.left + 3, recently_selected.rect.top + 1), mouse_pos, width=2)
+            elif recently_selected.selected_prong == 1:
+                pygame.draw.line(virtual_screen, (100,0,0), (recently_selected.rect.left + 8, recently_selected.rect.top + 1), mouse_pos, width=2)
+            elif recently_selected.selected_prong == 2:
+                pygame.draw.line(virtual_screen, (100,0,0), (recently_selected.rect.left + 3, recently_selected.rect.top + 15), mouse_pos, width=2)
+        elif recently_selected.node_height == 3:  # output node
             pygame.draw.line(virtual_screen, (100,0,0), (recently_selected.rect.left + 5, recently_selected.rect.top + 1), mouse_pos, width=2)
 
     # evaluate connections
@@ -447,29 +490,7 @@ def Room(screen, screen_res, events):
                     elif output_diffs[i] == 0:
                         display_diffs[i] = '='
             i += 1
-    
-    # TODO: Pick a better font
-    # The toggle toggles whether the total difference or the individual differences are displayed
-    '''
-    font = pygame.font.Font("Assets/Verdana.ttf", 7)
-    if Player.checkItem(Items.multimeter):
-        if multimeter_status: # total difference
-            virtual_screen.blit(multimeter, (170, 20))
-            
-            text = font.render(str(total_diff), False, "white")
-            textRect = text.get_rect()
-            textRect.left = 170 + 19
-            textRect.top = 20 + 25
-            virtual_screen.blit(text, textRect)
-        else:
-            virtual_screen.blit(multimeter_toggled, (170, 20))
-            string = display_diffs[0] + display_diffs[1] + display_diffs[2] + display_diffs[3]
-            text = font.render(string, False, "white")
-            textRect = text.get_rect()
-            textRect.left = 170 + 19
-            textRect.top = 20 + 25
-            virtual_screen.blit(text, textRect)
-    '''
+
     display = [13, 13, 13, 13]
     displayRect = pygame.Rect(170 + 19, 20 + 24, 5, 9)
     if Player.checkItem(Items.multimeter):
@@ -496,14 +517,13 @@ def Room(screen, screen_res, events):
                     case '-':
                         display[i] = 11
                     case '=':
-                        display[i] = 0 # TODO: Equal char
+                        display[i] = 0
 
         virtual_screen.blit(numbers[display[0]], (displayRect.x, displayRect.y))
         virtual_screen.blit(numbers[display[1]], (displayRect.x + 6, displayRect.y))
         virtual_screen.blit(numbers[display[2]], (displayRect.x + 12, displayRect.y))
         virtual_screen.blit(numbers[display[3]], (displayRect.x + 18, displayRect.y))
 
-    
     # check if puzzle is solved
     correct = 0
     for num in output_diffs:
