@@ -97,7 +97,7 @@ class Light:
 
     def update(self):
         level, power = Area.getPipeDungeonInfo()
-        if (level == self.type and power) or (self.type == 1 and Area.getPinkPower()):
+        if (level == self.type and power) or (self.type == 1 and Area.getPinkPower()) or (self.type == 2 and Area.getBluePower()):
             self.image = Assets.tiles[self.type]
             return True
         else:
@@ -164,6 +164,9 @@ class timer:
         if self.initial_time == -1:
             self.initial_time = pygame.time.get_ticks()
 
+    def reset(self):
+        self.initial_time = -1
+
     def Done(self):
         if self.initial_time != -1:
             currentTime = (pygame.time.get_ticks() - self.initial_time) / 1000
@@ -216,3 +219,30 @@ def getOpen():
 
 def getPinkPower():
     return Area.getPinkPower()
+
+def getBluePower():
+    return Area.getBluePower()
+
+def getWaterLevelsSolved():
+    return Area.getWaterLevelsSolved()
+
+def getBreakerSolved():
+    return Area.getBreakerSolved()
+
+def RepairWire():
+    return Area.RepairWire()
+
+def getWireRepaired():
+    return Area.getWireRepaired()
+
+def getBedroomNumber():
+    return Area.getBedroomNumber()
+
+def setBedroomNumber(num):
+    Area.setBedroomNumber(num)
+
+def getBedNumber():
+    return Area.getBedNumber()
+
+def setBedNumber(num):
+    Area.setBedNumber(num)

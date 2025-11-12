@@ -122,7 +122,7 @@ lockedDoorWest = pygame.transform.flip(lockedDoorEast, True, False)
 lockedDoorNorth = pygame.transform.rotate(lockedDoorEast, 90)
 lockedDoorSouth = pygame.transform.rotate(lockedDoorEast, -90)
 
-bigBoygGrayDoorNorth = pygame.transform.scale(grayDoorNorth, (80,32))
+bigBoygGrayDoorNorth = pygame.transform.scale(grayDoorNorth, (160,64))
 
 squishedTiles = []
 for i in range(5):
@@ -146,13 +146,24 @@ for i in range(14):
 
 tooDarkRead = pygame.image.load("Assets/TooDark.png")
 tooDarkSee = pygame.image.load("Assets/TooDarkSee.png")
+trashEmpty = pygame.image.load("Assets/trashEmpty.png")
+somethingInside = pygame.image.load("Assets/somethingInside.png")
 
 letterTiles = load_tileset("Assets/letters.png", 21, 41)
 numberTiles = load_tileset("Assets/numbers.png", 21, 41)
 
+multiNumbers = load_tileset("Assets/multi_numbers.png", 5, 9)
+
 useButton = pygame.image.load("Assets/useButton.png")
 equipButton = pygame.image.load("Assets/equipButton.png")
 unequipButton = pygame.image.load("Assets/unequipButton.png")
+
+breakerBox = pygame.image.load("Assets/breaker.png")
+
+locker = pygame.image.load("Assets/locker.png")
+
+bedBackgroundLeft = pygame.image.load("Assets/BedView.png")
+bedBackgroundRight = pygame.transform.flip(bedBackgroundLeft, True, False)
 
 ### ITEMS
 pinkKeycard = pygame.image.load("Assets/pink_keycard.png")
@@ -161,6 +172,14 @@ pinkKeycardGround = pygame.image.load("Assets/pink_keycard_ground.png")
 bandage = pygame.image.load("Assets/bandage.png")
 bandageGround = pygame.image.load("Assets/bandage_ground.png")
 
+tape = pygame.image.load("Assets/YellowElectricalTape.png")
+tapeGround = pygame.image.load("Assets/tape_lockerview.png")
+tapeInv = pygame.image.load("Assets/YellowElectricalTapeInv.png")
+
+mop = pygame.image.load("Assets/Mop.png")
+mopGround = pygame.image.load("Assets/Mop.png")
+mopInv = pygame.image.load("Assets/MopInv.png")
+
 redPetri = pygame.image.load("Assets/redpetri.png")
 redPetriGround = pygame.image.load("Assets/smolRed.png")
 bluePetri = pygame.image.load("Assets/bluePetri.png")
@@ -168,7 +187,19 @@ bluePetriGround = pygame.image.load("Assets/smolblue.png")
 yellowPetri = pygame.image.load("Assets/yellowPetri.png")
 yellowPetriGround = pygame.image.load("Assets/smolyellow.png")
 
+brokenThermometerInv = pygame.image.load("Assets/BrokenThermometerInv.png")
+brokenThermometerGround = pygame.image.load("Assets/BrokenThermometerInv.png")
+
 letterTile = pygame.image.load("Assets/letter_tile.png")
 
 trianglePuzzleCorner = pygame.image.load("Assets/trianglePuzzleCorner.png")
 trianglePuzzleBackground = pygame.image.load("Assets/trianglePuzzleBackground.png")
+
+toolboxGround = pygame.image.load("Assets/ToolboxGround.png")
+multiInv = pygame.image.load("Assets/multimeterInv.png")
+multimeter = pygame.image.load("Assets/multimeter.png")
+multimeter_toggled = pygame.image.load("Assets/multimeter_flipped.png")
+
+puddle1 = pygame.image.load("Assets/Puddle1.png")
+puddle2 = pygame.image.load("Assets/Puddle2.png")
+puddle3 = pygame.image.load("Assets/Puddle3.png")

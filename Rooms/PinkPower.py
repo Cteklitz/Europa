@@ -6,6 +6,7 @@ import Sounds
 from LightSource import LightSource
 from LightFalloff import LightFalloff
 from LightingUtils import apply_lighting, apply_falloff
+import Player
 
 pinkPower = False
 played = False
@@ -195,7 +196,7 @@ def Room(screen, screen_res, events):
 
     virtual_screen.blit(door, (300,208))
 
-    pygame.draw.circle(virtual_screen, "red", player_pos, 16)
+    Player.animatePlayer(virtual_screen, player_pos)
 
     # apply lighting
     if pinkPower:

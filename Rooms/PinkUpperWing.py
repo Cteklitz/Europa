@@ -6,7 +6,7 @@ import Sounds
 from LightSource import LightSource
 from LightFalloff import LightFalloff
 from LightingUtils import apply_lighting, apply_falloff
-
+import Player
 
 virtual_res = (324, 219)
 virtual_screen = pygame.Surface(virtual_res)
@@ -55,6 +55,7 @@ falloff = [LightFalloff(virtual_screen.get_size(), darkness = 140)]
 
 background = pygame.image.load("Assets/PinkUpperWing.png")
 door = pygame.image.load("Assets/pinkupperwingdoor.png")
+scaledDoor = pygame.transform.scale(door, (door.get_height()*2, door.get_height()*2))
 powerdoor = pygame.image.load("Assets/powerdoor.png")
 whiteboardimg = pygame.image.load("Assets/whiteboard.png")
 whiteboardzoom = pygame.image.load("Assets/whiteboardzoom.png")
@@ -75,7 +76,7 @@ tooDarkReadScale = pygame.transform.scale(Assets.tooDarkRead, (Assets.tooDarkRea
 tooDarkRead = Objects.briefText(virtual_screen, tooDarkReadScale, 10, 180, 3)
 tooDarkSeeScale = pygame.transform.scale(Assets.tooDarkSee, (Assets.tooDarkSee.get_width()/1.25,Assets.tooDarkSee.get_height()/1.25))
 tooDarkSee = Objects.briefText(virtual_screen, tooDarkSeeScale, 15, 180, 3)
-
+guy = pygame.image.load("Assets/guy.png")
 
 def inBounds(x, y):
     global trianglePuzzle1, trianglePuzzle2, beaker, tableRect, table, tooDarkRead
@@ -116,8 +117,6 @@ def positionDeterminer(cameFrom):
     global player_pos
     if cameFrom == "Rooms.PinkRoom":
         player_pos = pygame.Vector2(exitWalk.centerx + 2, exitWalk.centery - 5)
-
-
 
 def Room(screen, screen_res, events):
     global trianglePuzzle1, trianglePuzzle2, whiteboard, beaker, table, tableboundRect, tooDarkRead
@@ -167,6 +166,7 @@ def Room(screen, screen_res, events):
         virtual_screen.blit(tripuzzlesolved, (232,66))
     virtual_screen.blit(powerdoor, (31,188))
     virtual_screen.blit(door, (221,188))
+    # virtual_screen.blit(scaledDoor, (205,188))
 
     for i in range(4):
         virtual_screen.blit(Assets.squishedPipes2[1], (64 + 36*i, 177))
@@ -191,16 +191,31 @@ def Room(screen, screen_res, events):
             light.image = Assets.squishedDimTiles[1]
         virtual_screen.blit(pygame.transform.scale(light.image, (36, 8)), light.rect)
 
+    red, yellow, blue = Objects.getColorsPlaced()
     if player_pos.y > 125:
         virtual_screen.blit(mscopetableScale, (105, 100))
+
+        if red:
+            virtual_screen.blit(smolRed, (150, 121))
+        if yellow:
+            virtual_screen.blit(smolYellow, (160, 120))
+        if blue:
+            virtual_screen.blit(smolBlue, (157, 124))
         if Objects.getBeakerSolved():
             virtual_screen.blit(beakercase2, (10, 70))
         else:
             virtual_screen.blit(beakercase, (10, 70))
-        pygame.draw.circle(virtual_screen, "red", player_pos, 16)
+        Player.animatePlayer(virtual_screen, player_pos)
     else:
-        pygame.draw.circle(virtual_screen, "red", player_pos, 16)
+        Player.animatePlayer(virtual_screen, player_pos)
         virtual_screen.blit(mscopetableScale, (105, 100))
+
+        if red:
+            virtual_screen.blit(smolRed, (150, 121))
+        if yellow:
+            virtual_screen.blit(smolYellow, (160, 120))
+        if blue:
+            virtual_screen.blit(smolBlue, (157, 124))
         if Objects.getBeakerSolved():
             virtual_screen.blit(beakercase2, (10, 70))
         else:
@@ -209,16 +224,6 @@ def Room(screen, screen_res, events):
     virtual_screen.blit(circleLight, circleLight.get_rect(center=light_pos2))
 
     virtual_screen2.blit(whiteboardzoom, (10,20))
-
-    red, yellow, blue = Objects.getColorsPlaced()
-
-    if red:
-        virtual_screen.blit(smolRed, (150, 121))
-    if yellow:
-        virtual_screen.blit(smolYellow, (160, 120))
-    if blue:
-        virtual_screen.blit(smolBlue, (157, 124))
-
     
     if not lit and not Objects.getPinkPower():
         tooDarkRead.update()
@@ -237,4 +242,4 @@ def Room(screen, screen_res, events):
     else:
         Assets.scaled_draw(virtual_res, virtual_screen2, screen_res, screen)
 
-    return player_pos, 2, 2  # can return movement speeds of 2, 2 since room is scaled (can pick any equal values)
+    return player_pos, 3.5, 3.5  # can return movement speeds of 2, 2 since room is scaled (can pick any equal values)

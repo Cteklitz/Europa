@@ -3,6 +3,7 @@ import Assets
 import Objects
 from shapely.geometry import Point, Polygon
 import Sounds
+import Player
 
 virtual_res = (750,750)
 virtual_screen = pygame.Surface(virtual_res)
@@ -57,6 +58,7 @@ def Room(screen, screen_res, events):
 
     if selected == "Blue":
         if not cutscene:
+            Player.cutscene = True
             if not play:
                 Sounds.powerAmb.stop()
                 spooky.play()
@@ -79,6 +81,7 @@ def Room(screen, screen_res, events):
                                 Sounds.powerAmb.play(-1)
                                 exit = True
                                 cutscene = True
+                                Player.cutscene = False
         else:
             virtual_screen.blit(blue, (0,0))
     elif selected == "Red":

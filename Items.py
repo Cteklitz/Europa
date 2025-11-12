@@ -25,4 +25,10 @@ yellowPetri = Item("yellowPetri", "Petri Dish", "A petri dish containing yellow 
 
 letterTile = Item("letterTile", "Tile", "A ceramic tile with a letter incribed on it", Assets.letterTile, Assets.letterTile, "equip")
 
+electricalTape = Item("electricalTape", "Electric Tape", "A plastic tape used for repairing electrical devices and wires", Assets.tapeInv, Assets.tapeGround, "equip")
+mop = Item("mop", "Mop", "A standard mop used to clean floors", Assets.mopInv, Assets.mopGround, "equip")
+
+multimeter = Item("multimeter", "Multimeter", "An electrical instrument used to measure things such as voltage, current, and resistance", Assets.multiInv, Assets.multiInv, "equip")
+
+brokenThermometer = Item("brokenThermometer", "Broken Thermometer", "A damaged thermometer that no longer functions properly, leaking with mercury", Assets.brokenThermometerInv, Assets.brokenThermometerGround, "equip")
 

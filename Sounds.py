@@ -32,3 +32,34 @@ combo = pygame.mixer.Sound("Audio/combo.wav")
 
 powerOn = pygame.mixer.Sound("Audio/powerOnAmbStart.wav")
 powerOnAmb = pygame.mixer.Sound("Audio/powerOnAmb.wav")
+
+openingDoor = pygame.mixer.music.load("Audio/opensesame.wav")
+
+mopSound = pygame.mixer.Sound("Audio/mopsounds.wav")
+
+electricityNoise = pygame.mixer.Sound("Audio/ElectricityNoise.wav")
+
+pipe = pygame.mixer.Sound("Audio/pipe.wav")
+
+toolbox = pygame.mixer.Sound("Audio/toolboxOpenClose.wav")
+
+lockerOpen = pygame.mixer.Sound("Audio/locker_open.wav")
+lockerClose = pygame.mixer.Sound("Audio/locker_close.wav")
+
+powerDown = pygame.mixer.Sound("Audio/power_down.mp3")
+
+tape = pygame.mixer.Sound("Audio/tape.wav")
+
+scaryBell = pygame.mixer.Sound("Audio/scary_bell.wav")
+slowCreepy = pygame.mixer.Sound("Audio/slow_creepy.wav")
+
+pickup = pygame.mixer.Sound("Audio/pickup.wav")
+
+spark1 = pygame.mixer.Sound("Audio/spark1.wav")
+spark2 = pygame.mixer.Sound("Audio/spark2.wav")
+spark3 = pygame.mixer.Sound("Audio/spark3.wav")
+spark4 = pygame.mixer.Sound("Audio/spark4.wav")
+spark5 = pygame.mixer.Sound("Audio/spark5.wav")
+
+radioClose = pygame.mixer.Sound("Audio/radio_close.wav")
+radioFar = pygame.mixer.Sound("Audio/radio_far.wav")

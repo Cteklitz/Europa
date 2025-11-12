@@ -3,6 +3,7 @@ import Assets
 import Objects
 from shapely.geometry import Point, Polygon
 import Sounds
+import Player
 
 virtual_res = (384,271)
 virtual_screen = pygame.Surface(virtual_res)
@@ -167,6 +168,7 @@ def Room(screen, screen_res, events):
                                 pygame.mixer.music.stop()
                                 Sounds.page.play()
                                 content4 = True
+                                Player.cutscene = True
 
     virtual_screen.fill("gray")
     virtual_screen2.fill("black")
@@ -238,6 +240,7 @@ def Room(screen, screen_res, events):
                                 content4 = False
                                 book4 = False
                                 cutscene = True
+                                Player.cutscene = False
         virtual_screen2.blit(scaled_eye, (centerPos[0] - scaled_width // 2, centerPos[1] - scaled_height // 2))
         if timer6.Done():
             virtual_screen2.blit(Onewayout, (0,0))

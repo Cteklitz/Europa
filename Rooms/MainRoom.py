@@ -7,6 +7,7 @@ import Items
 from LightSource import LightSource
 from LightFalloff import LightFalloff
 from LightingUtils import apply_lighting, apply_falloff
+import Player
 
 
 virtual_res = (480, 480)
@@ -22,12 +23,14 @@ octagon = Polygon(bounds)
 lightSources = [LightSource(240, 240, radius=60, strength = 200)]
 pinkLight1 = LightSource(63, 207, radius=50, strength=100, color=(120,0,120))
 pinkLight2 = LightSource(63, 273, radius=50, strength=100, color=(120,0,120))
+blueLight1 = LightSource(401 + 16, 192 + 16, radius=50, strength=100, color=(0,162,232))
+blueLight2 = LightSource(401 + 16, 256 + 16, radius=50, strength=100, color=(0,162,232))
 
 # this is to allow for a dynamic amount of lights to be on without affecting the room brightness
 # falloffs[n] is the falloff for when there are n lights in the room, it should be applied to each of the n lights 
 # also this solution sucks! makes the game take super long to launch since calcing the darkness is slow
 # will try and think of a way to fix it ig
-max_lights = 4
+max_lights = 6
 darkness = 180
 falloffs = []
 for i in range(1, max_lights):
@@ -70,10 +73,16 @@ def inBounds(x, y):
         return 1
     elif blueDoor.rect.collidepoint((x,y)):
         level, power = Objects.getPipeDungeonInfo()
-        if power and level == 2:
+        if power and level == 2 or Objects.getBluePower():
             Sounds.ominousAmb.stop()
             Sounds.powerAmb.play(-1)
         return 2
+    elif greenDoor.rect.collidepoint((x,y)):
+        level, power = Objects.getPipeDungeonInfo()
+        if power and level == 3:
+            Sounds.ominousAmb.stop()
+            Sounds.powerAmb.play(-1)
+        return 3
     elif ctrlRmWallRect.collidepoint((x,y)):
         return False
     elif not octagon.contains(Point(x,y)):
@@ -156,15 +165,15 @@ def Room(screen, screen_res, events):
     virtual_screen.blit(orangeDoor.image, orangeDoor.rect)
 
     if player_pos.y < 240:
-        pygame.draw.circle(virtual_screen, "red", player_pos, 16)
+        Player.animatePlayer(virtual_screen, player_pos, 32, 32, "top-down")
         virtual_screen.blit(Assets.ctrlRoomDoor, (220, 224))
     else:
         virtual_screen.blit(Assets.ctrlRoomDoor, (220, 224))
-        pygame.draw.circle(virtual_screen, "red", player_pos, 16)
-
+        Player.animatePlayer(virtual_screen, player_pos, 32, 32, "top-down")
 
     pipeDungeonInfo = Objects.getPipeDungeonInfo()
     pinkPower = Objects.getPinkPower()
+    bluePower = Objects.getBluePower()
 
     # clear colored lights from lightSources
     while (len(lightSources) > 1):
@@ -173,6 +182,9 @@ def Room(screen, screen_res, events):
     if pinkPower or (pipeDungeonInfo[0] == 1 and pipeDungeonInfo[1] == True): # checks if the pink door should be lit
         lightSources.append(pinkLight1)
         lightSources.append(pinkLight2)
+    if bluePower or (pipeDungeonInfo[0] == 2 and pipeDungeonInfo[1] == True): # checks if the blue door should be lit
+        lightSources.append(blueLight1)
+        lightSources.append(blueLight2)
     
     apply_lighting(virtual_screen, lightSources, darkness=10, ambient_color=(50, 50, 50), ambient_strength=10)
     for i in range(len(lightSources)): # apply falloff for each light in lightSources
@@ -182,4 +194,4 @@ def Room(screen, screen_res, events):
 
     Assets.scaled_draw(virtual_res, virtual_screen, screen_res, screen)
 
-    return player_pos, 2, 2  # can return movement speeds of 2, 2 since room is scaled (can pick any equal values)
+    return player_pos, 2.5, 2.5  # can return movement speeds of 2, 2 since room is scaled (can pick any equal values)

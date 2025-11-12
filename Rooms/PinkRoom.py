@@ -6,6 +6,7 @@ import Sounds
 from LightSource import LightSource
 from LightFalloff import LightFalloff
 from LightingUtils import apply_lighting, apply_falloff
+import Player
 
 virtual_res = (256, 256)
 virtual_screen = pygame.Surface(virtual_res)
@@ -62,6 +63,7 @@ valve = Objects.TopDownValve(96, 112, divertWater)
 
 def inBounds(x, y):
     level, power = Objects.getPipeDungeonInfo()
+    valveRect = pygame.Rect(93,113,34,20)
     if pinkDoor.rect.collidepoint((x,y)):
         if level == 1 and power or Objects.getPinkPower():
             Sounds.powerAmb.stop()
@@ -77,6 +79,8 @@ def inBounds(x, y):
             Sounds.powerAmb.stop()
             Sounds.ominousAmb.play(-1)
         return 2
+    elif valveRect.collidepoint((x,y)):
+        return False
     elif not outline.contains(Point(x,y)):
         return False
     return True
@@ -160,12 +164,12 @@ def Room(screen, screen_res, events):
 
     valve.update()
 
-    if player_pos.y < 124:
-        pygame.draw.circle(virtual_screen, "red", player_pos, 16)
+    if player_pos.y < 132:
+        Player.animatePlayer(virtual_screen, player_pos, 32, 32, "top-down")
         virtual_screen.blit(valve.image, valve.rect)
     else:
         virtual_screen.blit(valve.image, valve.rect)
-        pygame.draw.circle(virtual_screen, "red", player_pos, 16)
+        Player.animatePlayer(virtual_screen, player_pos, 32, 32, "top-down")
 
     if not Objects.getPinkPower():
         if power and level == 1:
@@ -187,8 +191,9 @@ def Room(screen, screen_res, events):
             apply_falloff(falloffPartial, virtual_screen, (lightsNew[3].x, lightsNew[3].y)) 
             
     else:
-        if len(lightsNew) == 4:
-            lightsNew.pop()
+        if len(lightsNew) != 5: # reset lights array if the right amount of lights is not in it
+            while len(lightsNew) > 3:
+                    lightsNew.pop()
         if len(lightsNew) == 3:
             lightsNew.append(upperWingPinkLight)
             lightsNew.append(lowerWingPinkLight)

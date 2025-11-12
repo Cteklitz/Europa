@@ -271,6 +271,7 @@ def Room(screen, screen_res, events):
     else:
         virtual_screen.blit(giveup, (190, 410))
         cutscene = True
+        Player.cutscene = True
         if not gaveup:
             timer1.setInitial()
             virtual_screen.blit(lucky, (5,5))
@@ -283,6 +284,7 @@ def Room(screen, screen_res, events):
                 opentriangleSound.play()
                 played = True
             virtual_screen.blit(opentriangle, (190, 410))
+            Player.cutscene = False
             if not collected:
                 pygame.draw.rect(virtual_screen, (195,195,195), (230, 420, 130, 60))
                 pygame.draw.rect(virtual_screen, "black", (230, 420, 130, 60), 1)

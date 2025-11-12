@@ -49,6 +49,7 @@ chairRect3 = pygame.Rect(205,21,76,57)
 chairRect4 = pygame.Rect(298,21,76,57)
 
 letterRect = pygame.Rect(168,119,42,28)
+
 def inBounds(x, y):
     global exit
     if exit:
