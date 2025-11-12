@@ -103,6 +103,7 @@ def inBounds(x, y):
     level, power = Objects.getPipeDungeonInfo()
     if southDoor.rect.collidepoint((x,y)):
         cleanup()
+        Sounds.electricityNoise.stop()
         if not Objects.getBluePower():
             Sounds.ominousAmb.stop()
             Sounds.powerAmb.play(-1)
