@@ -62,7 +62,7 @@ def inBounds(x, y):
         greenPowerOn = True
     else:
         greenPowerOn = False
-    greenPowerOn = True # FOR TESTING
+    #greenPowerOn = True # FOR TESTING
 
     if greenDoor.rect.collidepoint((x,y)):
         Sounds.radioFar.set_volume(0)
@@ -118,7 +118,7 @@ def positionDeterminer(cameFrom):
         greenPowerOn = True
     else:
         greenPowerOn = False
-    greenPowerOn = True # FOR TESTING
+    #greenPowerOn = True # FOR TESTING
 
     Sounds.radioClose.set_volume(0)
     if (greenPowerOn):
@@ -147,7 +147,7 @@ def Room(screen, screen_res, events):
         greenPowerOn = True
     else:
         greenPowerOn = False
-    greenPowerOn = True # FOR TESTING
+    #greenPowerOn = True # FOR TESTING
     if not upperWingPower and not lowerWingPower and level == 3 and power:
         lowerWingPower = True
 

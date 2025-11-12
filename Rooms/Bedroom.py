@@ -139,8 +139,7 @@ def Room(screen, screen_res, events):
         greenPowerOn = True
     else:
         greenPowerOn = False
-
-    greenPowerOn = True # FOR TESTING
+    #greenPowerOn = True # FOR TESTING
 
     for event in events:
         if event.type == pygame.KEYDOWN:
@@ -228,19 +227,20 @@ def Room(screen, screen_res, events):
         if lightRng < 2:
             lightsOn = False
 
+            if greenPowerOn:
             # play flicker sound
-            lightRng = random.randint(1,5)
-            match lightRng:
-                case 1:
-                    Sounds.spark1.play()
-                case 2:
-                    Sounds.spark2.play()
-                case 3:
-                    Sounds.spark3.play()
-                case 4:
-                    Sounds.spark4.play()
-                case 5:
-                    Sounds.spark5.play()
+                lightRng = random.randint(1,5)
+                match lightRng:
+                    case 1:
+                        Sounds.spark1.play()
+                    case 2:
+                        Sounds.spark2.play()
+                    case 3:
+                        Sounds.spark3.play()
+                    case 4:
+                        Sounds.spark4.play()
+                    case 5:
+                        Sounds.spark5.play()
     elif BedroomNumber == 3:
         lightsOn = True
 

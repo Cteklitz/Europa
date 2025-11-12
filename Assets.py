@@ -165,6 +165,9 @@ locker = pygame.image.load("Assets/locker.png")
 bedBackgroundLeft = pygame.image.load("Assets/BedView.png")
 bedBackgroundRight = pygame.transform.flip(bedBackgroundLeft, True, False)
 
+radioOn = pygame.image.load("Assets/radio.png")
+radioOff = pygame.image.load("Assets/radioOff.png")
+
 ### ITEMS
 pinkKeycard = pygame.image.load("Assets/pink_keycard.png")
 pinkKeycardGround = pygame.image.load("Assets/pink_keycard_ground.png")

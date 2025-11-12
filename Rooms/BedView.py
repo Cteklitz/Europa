@@ -23,6 +23,9 @@ lightsOn = True
 backgroundLeft = Assets.bedBackgroundLeft
 backgroundRight = Assets.bedBackgroundRight
 
+radioOn = Assets.radioOn
+radioOff = Assets.radioOff
+
 def positionDeterminer(cameFrom):
     pass
 
@@ -38,6 +41,14 @@ def Room(screen, screen_res, events):
     virtual_screen.fill((159, 161, 160))
     xScale = screen.get_width()/virtual_screen.get_width() 
     yScale = screen.get_height()/virtual_screen.get_height()
+
+    level, power = Objects.getPipeDungeonInfo()
+    # Add greenpower statement
+    if level == 3 and power:
+        greenPowerOn = True
+    else:
+        greenPowerOn = False
+    #greenPowerOn = True # FOR TESTING
 
     dark_overlay.fill((0, 0, 0, 100))
 
@@ -74,21 +85,25 @@ def Room(screen, screen_res, events):
 
                 # play flicker sound
                 lightRng = random.randint(1,5)
-                match lightRng:
-                    case 1:
-                        Sounds.spark1.play()
-                    case 2:
-                        Sounds.spark2.play()
-                    case 3:
-                        Sounds.spark3.play()
-                    case 4:
-                        Sounds.spark4.play()
-                    case 5:
-                        Sounds.spark5.play()
+                if greenPowerOn:
+                    match lightRng:
+                        case 1:
+                            Sounds.spark1.play()
+                        case 2:
+                            Sounds.spark2.play()
+                        case 3:
+                            Sounds.spark3.play()
+                        case 4:
+                            Sounds.spark4.play()
+                        case 5:
+                            Sounds.spark5.play()
 
             match bedNumber:
                 case 0: # left bed
-                    pass
+                    if greenPowerOn:
+                        virtual_screen.blit(radioOn, (97,94))
+                    else:
+                        virtual_screen.blit(radioOff, (97,94))
                 case 1: # right bed
                     pass
         case 3: # Bedroom 3
@@ -100,6 +115,8 @@ def Room(screen, screen_res, events):
                 case 1: # right bed
                     pass        
 
+    if not greenPowerOn:
+        lightsOn = False
 
     if not lightsOn:
         virtual_screen.blit(dark_overlay, (0, 0))
