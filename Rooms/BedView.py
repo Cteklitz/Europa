@@ -41,9 +41,6 @@ def Room(screen, screen_res, events):
 
     dark_overlay.fill((0, 0, 0, 100))
 
-    Sounds.radioFar.play()
-    Sounds.radioClose.play()
-
     bedroom = Objects.getBedroomNumber()
     if bedNumber == 0:
         virtual_screen.blit(backgroundLeft, backgroundLeft.get_rect())

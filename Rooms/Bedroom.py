@@ -134,9 +134,6 @@ def Room(screen, screen_res, events):
     global bedView, lightsOn, greenPowerOn, notePuzzle, deskView
     level, power = Objects.getPipeDungeonInfo()
 
-    Sounds.radioFar.play()
-    Sounds.radioClose.play()
-
     # Add greenpower statement
     if level == 3 and power:
         greenPowerOn = True
@@ -172,7 +169,7 @@ def Room(screen, screen_res, events):
                         trashEmpty.activated_time = pygame.time.get_ticks()
                     else:
                         somethingInside.activated_time = pygame.time.get_ticks()
-                        notePuzzle = True
+                        notePuzzle = True          
 
     virtual_screen.fill((105,105,105))
     dark_overlay.fill((0, 0, 0, 150))
