@@ -30,3 +30,5 @@ mop = Item("mop", "Mop", "A standard mop used to clean floors", Assets.mopInv, A
 
 multimeter = Item("multimeter", "Multimeter", "An electrical instrument used to measure things such as voltage, current, and resistance", Assets.multiInv, Assets.multiInv, "equip")
 
+brokenThermometer = Item("brokenThermometer", "Broken Thermometer", "A damaged thermometer that no longer functions properly, leaking with mercury", Assets.brokenThermometerInv, Assets.brokenThermometerGround, "equip")
+

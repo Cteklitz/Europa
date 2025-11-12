@@ -7,7 +7,9 @@ from LightSource import LightSource
 from LightFalloff import LightFalloff
 from LightingUtils import apply_lighting, apply_falloff
 import Player
+import Items
 import random
+from Rooms import BedroomDeskView
 
 virtual_res = (256, 256)
 virtual_screen = pygame.Surface(virtual_res)
@@ -30,10 +32,16 @@ leftBed = pygame.image.load("Assets/leftBed.png")
 rightBed = pygame.image.load("Assets/rightBed.png")
 leftDesk = pygame.image.load("Assets/leftBedroomDesk.png")
 rightDesk = pygame.image.load("Assets/rightBedroomDesk.png")
+thermometerOnDesk = pygame.image.load("Assets/ThermometerOnDesk.png")
+
 
 trash = pygame.image.load("Assets/Trash.png")
 trashInteractRect = trash.get_rect()
 trashInteractRect.topleft = (108,185)
+
+leftDeskInteractRect = leftDesk.get_rect()
+leftDeskInteractRect.topleft = (25, 160)
+leftDeskInteractRect.bottomright = (leftDeskInteractRect.bottomright[0] + 20, leftDeskInteractRect.bottomright[1])
 
 leftBedInteractRect = leftBed.get_rect()
 leftBedInteractRect.topleft = (37,37)
@@ -63,13 +71,14 @@ trashEmpty = Objects.briefText(virtual_screen, Assets.trashEmpty, 0, 90, 3)
 somethingInside = Objects.briefText(virtual_screen, Assets.somethingInside, 0, 90, 3)
 
 bedView = False
+deskView = False
 
 lightsOn = True
 greenPowerOn = False
 notePuzzle = False
 
 def inBounds(x, y):
-    global leftBed, rightBed, bedView, notePuzzle
+    global leftBed, rightBed, bedView, notePuzzle, deskView
     level, power = Objects.getPipeDungeonInfo()
     leftBedRect = leftBed.get_rect()
     leftBedRect.topleft = (37,37)
@@ -91,6 +100,9 @@ def inBounds(x, y):
     elif bedView:
         bedView = False
         return 1
+    elif deskView:
+        deskView = False
+        return 3  # Return BedroomDeskView
     elif notePuzzle:
         if somethingInside.activated_time == -1:
             notePuzzle = False
@@ -105,19 +117,21 @@ def inBounds(x, y):
     return True
 
 def positionDeterminer(cameFrom):
-    global player_pos, leftBedInteractRect, rightBedInteractRect
+    global player_pos, leftBedInteractRect, rightBedInteractRect, leftDeskInteractRect
     bedNum = Objects.getBedNumber()
     if cameFrom == "Rooms.GreenRoom":
         player_pos = pygame.Vector2(northDoor.x + northDoor.rect.width/2, northDoor.y + northDoor.rect.height + 5)
     elif cameFrom == "Rooms.TornNotePuzzle":
         player_pos = pygame.Vector2(northDoor.x + northDoor.rect.width/2, 190)
+    elif cameFrom == "Rooms.BedroomDeskView": # came from desk view
+        player_pos = pygame.Vector2(leftDeskInteractRect.x + 40, leftDeskInteractRect.y - 10)
     elif bedNum == 0: # came from left bed view
         player_pos = pygame.Vector2(leftBedInteractRect.x + 40, leftBedInteractRect.y + 44)
     else: # came from right bed view
         player_pos = pygame.Vector2(rightBedInteractRect.x + 8, rightBedInteractRect.y + 44)
 
 def Room(screen, screen_res, events):
-    global bedView, lightsOn, greenPowerOn, notePuzzle
+    global bedView, lightsOn, greenPowerOn, notePuzzle, deskView
     level, power = Objects.getPipeDungeonInfo()
 
     Sounds.radioFar.play()
@@ -141,6 +155,8 @@ def Room(screen, screen_res, events):
                 elif rightBedInteractRect.collidepoint(player_pos): # go to right bedview
                     Objects.setBedNumber(1)
                     bedView = True
+                elif leftDeskInteractRect.collidepoint(player_pos) and BedroomNumber == 1: # go to bedroom 1 desk view
+                    deskView = True
                 elif trashInteractRect.collidepoint(player_pos):
                     if not greenPowerOn:
                         tooDarkSee.activated_time = pygame.time.get_ticks()
@@ -189,7 +205,13 @@ def Room(screen, screen_res, events):
     virtual_screen.blit(rightBed, (172,37))
     virtual_screen.blit(rightDesk, (148,168))
     virtual_screen.blit(leftDesk, (45,168))
+    
+    # Draw thermometer on desk only if not collected and in bedroom 1
+    if BedroomNumber == 1 and not BedroomDeskView.thermometerCollected:
+        virtual_screen.blit(thermometerOnDesk, (60,175))  # Positioned on the desk
+    
     virtual_screen.blit(trash, (108,185))
+    
     Player.animatePlayer(virtual_screen, player_pos, 32, 32, "top-down")
 
     # Unique things in each room here

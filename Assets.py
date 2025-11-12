@@ -187,6 +187,9 @@ bluePetriGround = pygame.image.load("Assets/smolblue.png")
 yellowPetri = pygame.image.load("Assets/yellowPetri.png")
 yellowPetriGround = pygame.image.load("Assets/smolyellow.png")
 
+brokenThermometerInv = pygame.image.load("Assets/BrokenThermometerInv.png")
+brokenThermometerGround = pygame.image.load("Assets/BrokenThermometerInv.png")
+
 letterTile = pygame.image.load("Assets/letter_tile.png")
 
 trianglePuzzleCorner = pygame.image.load("Assets/trianglePuzzleCorner.png")
