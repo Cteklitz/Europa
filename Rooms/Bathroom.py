@@ -53,10 +53,13 @@ toiletStallPos2 = (109, 38)
 toiletPos2 = (111, 69)
 
 # position and state for shower stalls
-showerStallOpen1 = False
+showertoiletStallOpen1 = False
 showerStallPos1 = (68 ,38)
-showerStallOpen2 = False
+showertoiletStallOpen2 = False
 showerStallPos2 = (27, 38)
+
+toilet1InteractRect = pygame.Rect(toiletStallPos1[0], toiletStallPos1[1], 50, 95)
+toilet2InteractRect = pygame.Rect(toiletStallPos2[0], toiletStallPos2[1], 50, 95)
 
 def inBounds(x, y):
     global tooDarkRead
@@ -84,7 +87,9 @@ def Room(screen, screen_res, events):
     xScale = screen.get_width()/virtual_screen.get_width() 
     yScale = screen.get_height()/virtual_screen.get_height()
     for event in events:
+
         # opens and closes toilet stall doors
+        '''
         if event.type == pygame.MOUSEBUTTONDOWN:
                 click_x, click_y = event.pos
                 click_x_unscaled = click_x/xScale
@@ -99,6 +104,14 @@ def Room(screen, screen_res, events):
                         toiletStallOpen2 = True
                     else:
                         toiletStallOpen2 = False
+        '''
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_e:
+                if toilet1InteractRect.collidepoint(player_pos):
+                    toiletStallOpen1 = not toiletStallOpen1
+                elif toilet2InteractRect.collidepoint(player_pos):
+                    toiletStallOpen2 = not toiletStallOpen2
+            
     level, power = Objects.getPipeDungeonInfo()
     upperWingPower, _ = Objects.getPinkWingInfo()
     lit = (upperWingPower and level == 1 and power) or Objects.getPinkPower()
@@ -120,11 +133,11 @@ def Room(screen, screen_res, events):
         virtual_screen.blit(closedToiletStall, toiletStallPos2)
     else:
         virtual_screen.blit(openToiletStall, toiletStallPos2)
-    if (not showerStallOpen1):
+    if (not showertoiletStallOpen1):
         virtual_screen.blit(closedShowerStall, showerStallPos1)
     else:
         virtual_screen.blit(openShowerStall, showerStallPos1)
-    if (not showerStallOpen2):
+    if (not showertoiletStallOpen2):
         virtual_screen.blit(closedShowerStall, showerStallPos2)
     else:
         virtual_screen.blit(openShowerStall, showerStallPos2)
