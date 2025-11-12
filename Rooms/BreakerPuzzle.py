@@ -26,6 +26,7 @@ multimeter_status = False
 # TODO: toggle to True to override BreakerPuzzle
 # solved = True
 solved = False
+played = False
 
 '''
 DEV NOTES:
@@ -385,7 +386,7 @@ def positionDeterminer(cameFrom):
 
 recently_selected = None 
 def Room(screen, screen_res, events):
-    global exit, solved, beakerPuzzle, collected, recently_selected, multimeter_status
+    global exit, solved, beakerPuzzle, collected, recently_selected, multimeter_status, played
     xScale = screen.get_width() / virtual_screen.get_width()
     yScale = screen.get_height() / virtual_screen.get_height()
 
@@ -427,7 +428,7 @@ def Room(screen, screen_res, events):
                     if not anySelected:
                         print("deselected node")
                         recently_selected = None  # allow user to reset their node selection by clicking elsewhere
-                    pass
+                    pass         
 
     virtual_screen.fill((195, 195, 195))
     dark_overlay.fill((0, 0, 0, 150))
@@ -532,6 +533,11 @@ def Room(screen, screen_res, events):
                 correct += 1
     if correct == 4:
         solved = True
+
+    if solved and not played:
+        played = True
+        pygame.mixer.music.load("Audio/opensesame.wav")
+        pygame.mixer.music.play(start=3.0)
         
     scaled = pygame.transform.scale(virtual_screen, screen_res)
     screen.blit(scaled, (0, 0))

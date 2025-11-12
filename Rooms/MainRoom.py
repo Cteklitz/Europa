@@ -73,7 +73,7 @@ def inBounds(x, y):
         return 1
     elif blueDoor.rect.collidepoint((x,y)):
         level, power = Objects.getPipeDungeonInfo()
-        if power and level == 2:
+        if power and level == 2 or Objects.getBluePower():
             Sounds.ominousAmb.stop()
             Sounds.powerAmb.play(-1)
         return 2

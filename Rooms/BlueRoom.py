@@ -38,7 +38,7 @@ def inBounds(x, y):
     global open
     level, power = Objects.getPipeDungeonInfo()
     if blueDoor.rect.collidepoint((x,y)):
-        if level == 2 and power:
+        if (level == 2 and power) or Objects.getBluePower():
             Sounds.powerAmb.stop()
             Sounds.ominousAmb.play(-1)
         return 0

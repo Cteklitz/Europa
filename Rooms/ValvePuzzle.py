@@ -39,6 +39,9 @@ def inBounds(x, y):
     doorRect = pygame.Rect(9,208,door.get_width(),door.get_height())
     consoleRect = pygame.Rect(int(virtual_screen.get_width()/2) - 64 - 16, 225, console.get_width() + 32, console.get_height())
     if doorRect.collidepoint(x,y):
+        if not Objects.getBluePower():
+            Sounds.powerAmb.stop()
+            Sounds.ominousAmb.play(-1)
         return 0
     if consoleRect.collidepoint(x,y):
         return False

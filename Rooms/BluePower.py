@@ -166,11 +166,13 @@ def Room(screen, screen_res, events):
         if fixed and bluePower:
             played = True
             Sounds.powerOnAmb.play(-1)
+            Sounds.powerAmb.play(-1)
         elif not playedPowerDown:
             Sounds.powerDown.play()
             powerDownTimer.setInitial()
             playedPowerDown = True
             powerSoundTimer.reset()
+            Sounds.powerAmb.stop()
             Sounds.ominousAmb.play(-1)
 
     if powerDownTimer.Done() and playedPowerDown and not fixed:

@@ -62,6 +62,9 @@ def inBounds(x, y):
 
     doorRect = pygame.Rect(150, 24, door.get_width(), door.get_height())  # Reduced by 50%
     if doorRect.collidepoint(x,y):
+        if Objects.getBluePower():
+            Sounds.ominousAmb.stop()
+            Sounds.powerAmb.play(-1)
         return 0
     elif lockerView:
         lockerView = False

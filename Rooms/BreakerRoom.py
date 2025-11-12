@@ -54,15 +54,12 @@ def inBounds(x, y):
         toolbox = False
         return 3
     if westDoor.rect.collidepoint((x,y)):
-        if level == 2 and power:
-            Sounds.powerAmb.stop()
-            Sounds.ominousAmb.play(-1)
         return 0
     elif northDoor.rect.collidepoint((x,y)):
-        if level == 2 and power:
-            Sounds.powerAmb.stop()
-            Sounds.ominousAmb.play(-1)
         if solved:
+            if not Objects.getBluePower():
+                Sounds.powerAmb.stop()
+                Sounds.ominousAmb.play(-1)
             return 1
         else:
             return False

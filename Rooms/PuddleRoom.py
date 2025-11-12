@@ -103,24 +103,23 @@ def inBounds(x, y):
     level, power = Objects.getPipeDungeonInfo()
     if southDoor.rect.collidepoint((x,y)):
         cleanup()
+        if not Objects.getBluePower():
+            Sounds.ominousAmb.stop()
+            Sounds.powerAmb.play(-1)
         lowerLevelFloodedText.activated_time = -1
-        if level == 2 and power:
-            Sounds.powerAmb.stop()
-            Sounds.ominousAmb.play(-1)
         return 0
     elif westDoor.rect.collidepoint((x,y)):
         cleanup()
+        Sounds.powerAmb.stop()
+        Sounds.ominousAmb.play(-1)
         lowerLevelFloodedText.activated_time = -1
-        if level == 2 and power:
-            Sounds.powerAmb.stop()
-            Sounds.ominousAmb.play(-1)
         return 1
     elif eastDoor.rect.collidepoint((x,y)):
         cleanup()
+        if not Objects.getBluePower():
+            Sounds.ominousAmb.stop()
+            Sounds.powerAmb.play(-1)
         lowerLevelFloodedText.activated_time = -1
-        if level == 2 and power:
-            Sounds.powerAmb.stop()
-            Sounds.ominousAmb.play(-1)
         return 2
     elif puddleSelected:
         puddleSelected = False
@@ -210,9 +209,9 @@ def Room(screen, screen_res, events):
             Sounds.electricityNoise.set_volume(leftVolume)
             
             if not hasattr(Room, 'electricityChannel'):
-                Room.electricityChannel = Sounds.electricityNoise.play(-1)  # Loop indefinitely
-                Room.electricityPlaying = True
-            elif not Room.electricityChannel.get_busy():
+                Room.electricityChannel = Sounds.electricityNoise.play(5)  # Loop indefinitely
+                Room.electricityPlaying = False
+            if not Room.electricityPlaying and distance <= maxDistance:
                 Room.electricityChannel = Sounds.electricityNoise.play(-1)  # Restart if stopped
                 Room.electricityPlaying = True
             
@@ -241,8 +240,8 @@ def Room(screen, screen_res, events):
                     
                     elif Player.checkItem(Items.electricalTape):
                         if wireRect.collidepoint(player_pos) and not wireRepaired:
-                            wireRepaired = True
                             Sounds.tape.play()
+                            wireRepaired = True
                     elif puddleRegion.collidepoint(player_pos):
                         # Check if puddles are already cleaned
                         try:
