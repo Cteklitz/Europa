@@ -45,7 +45,6 @@ def getLetterCount():
     return LockedDoor.letterCount
 
 def getWaterLevelsSolved():
-    return True
     return ValvePuzzle.solved
 
 def getBreakerSolved():
