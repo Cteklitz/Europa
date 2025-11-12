@@ -30,11 +30,23 @@ wall_lights = [
 ]
 falloff = [LightFalloff(virtual_screen.get_size(), darkness = 140)]
 
+# load and scale assets
 background = pygame.image.load("Assets/Bathroom.png")
+closedStall = pygame.image.load("Assets/toiletStallClosed.png")
+openStall = pygame.image.load("Assets/toiletStallOpen.png")
+toilet = pygame.image.load("Assets/toilet.png")
 tooDarkReadScale = pygame.transform.scale(Assets.tooDarkRead, (Assets.tooDarkRead.get_width()/1.25,Assets.tooDarkRead.get_height()/1.25))
 tooDarkRead = Objects.briefText(virtual_screen, tooDarkReadScale, 10, 180, 3)
 tooDarkSeeScale = pygame.transform.scale(Assets.tooDarkSee, (Assets.tooDarkSee.get_width()/1.25,Assets.tooDarkSee.get_height()/1.25))
 tooDarkSee = Objects.briefText(virtual_screen, tooDarkSeeScale, 15, 180, 3)
+
+#positional and state for toilet stalls
+stallOpen1 = False
+stallPos1 = (154, 38)
+toiletPos1 = (156, 69)
+stallOpen2 = False
+stallPos2 = (113, 38)
+toiletPos2 = (115, 69)
 
 def inBounds(x, y):
     global tooDarkRead
@@ -57,10 +69,26 @@ def positionDeterminer(cameFrom):
         player_pos = pygame.Vector2(exitRect.centerx - 15, exitRect.centery + 10)
 
 def Room(screen, screen_res, events):
-    global trianglePuzzle1, trianglePuzzle2, whiteboard, beaker, table, tableboundRect, tooDarkRead
+    global trianglePuzzle1, trianglePuzzle2, whiteboard, beaker, table, tableboundRect, tooDarkRead, stallOpen1, stallOpen2
 
     xScale = screen.get_width()/virtual_screen.get_width() 
     yScale = screen.get_height()/virtual_screen.get_height()
+    for event in events:
+        # opens and closes toilet stall doors
+        if event.type == pygame.MOUSEBUTTONDOWN:
+                click_x, click_y = event.pos
+                click_x_unscaled = click_x/xScale
+                click_y_unscaled = click_y/yScale
+                if (159 < click_x_unscaled < 197 and  42 < click_y_unscaled < 124):
+                    if (stallOpen1 == False):
+                        stallOpen1 = True
+                    else:
+                        stallOpen1 = False
+                elif (121 < click_x_unscaled < 159 and  42 < click_y_unscaled < 124):
+                    if (stallOpen2 == False):
+                        stallOpen2 = True
+                    else:
+                        stallOpen2 = False
     level, power = Objects.getPipeDungeonInfo()
     upperWingPower, _ = Objects.getPinkWingInfo()
     lit = (upperWingPower and level == 1 and power) or Objects.getPinkPower()
@@ -70,6 +98,19 @@ def Room(screen, screen_res, events):
     #         if event.key == pygame.K_e:
 
     virtual_screen.blit(background, (0,0))
+    virtual_screen.blit(toilet, toiletPos1)
+    virtual_screen.blit(toilet, toiletPos2)
+
+    # draws open or closed stalls depending on state
+    if (not stallOpen1):
+        virtual_screen.blit(closedStall, stallPos1)
+    else:
+        virtual_screen.blit(openStall, stallPos1)
+    if (not stallOpen2):
+        virtual_screen.blit(closedStall, stallPos2)
+    else:
+        virtual_screen.blit(openStall, stallPos2)
+    
     virtual_screen2.fill((195, 195, 195))
     if not lit:
         dark_overlay.fill((0, 0, 0, 150))
