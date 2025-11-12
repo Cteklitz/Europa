@@ -35,6 +35,8 @@ background = pygame.image.load("Assets/Bathroom.png")
 closedStall = pygame.image.load("Assets/toiletStallClosed.png")
 openStall = pygame.image.load("Assets/toiletStallOpen.png")
 toilet = pygame.image.load("Assets/toilet.png")
+mirror = pygame.image.load("Assets/Mirror.png")
+bathroomSink = pygame.image.load("Assets/BathroomSink.png")
 tooDarkReadScale = pygame.transform.scale(Assets.tooDarkRead, (Assets.tooDarkRead.get_width()/1.25,Assets.tooDarkRead.get_height()/1.25))
 tooDarkRead = Objects.briefText(virtual_screen, tooDarkReadScale, 10, 180, 3)
 tooDarkSeeScale = pygame.transform.scale(Assets.tooDarkSee, (Assets.tooDarkSee.get_width()/1.25,Assets.tooDarkSee.get_height()/1.25))
@@ -110,6 +112,11 @@ def Room(screen, screen_res, events):
         virtual_screen.blit(closedStall, stallPos2)
     else:
         virtual_screen.blit(openStall, stallPos2)
+    
+    virtual_screen.blit(mirror, (210, 47))
+    
+    virtual_screen.blit(bathroomSink, (210, 80))
+    virtual_screen.blit(bathroomSink, (250, 80))
     
     virtual_screen2.fill((195, 195, 195))
     if not lit:
