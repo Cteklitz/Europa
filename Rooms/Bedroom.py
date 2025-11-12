@@ -78,9 +78,9 @@ def inBounds(x, y):
     rightBedRect = rightBed.get_rect()
     rightBedRect.topleft = (172,37)
     rightDeskRect = rightDesk.get_rect()
-    rightDeskRect.topleft = (148, 176)
+    rightDeskRect.topleft = (148, 168)
     leftDeskRect = leftDesk.get_rect()
-    leftDeskRect.topleft = (45, 176)
+    leftDeskRect.topleft = (45, 168)
     #rightDeskRect.topleft = (45, 176)
     trashRect = pygame.Rect(112,190, 30, 40)
     backWallRect = pygame.Rect(100,200, 60, 60)
@@ -182,8 +182,8 @@ def Room(screen, screen_res, events):
 
     virtual_screen.blit(leftBed, (37,37))
     virtual_screen.blit(rightBed, (172,37))
-    virtual_screen.blit(rightDesk, (148,176))
-    virtual_screen.blit(leftDesk, (45,176))
+    virtual_screen.blit(rightDesk, (148,168))
+    virtual_screen.blit(leftDesk, (45,168))
     virtual_screen.blit(trash, (108,185))
     Player.animatePlayer(virtual_screen, player_pos, 32, 32, "top-down")
 
