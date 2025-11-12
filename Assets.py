@@ -146,6 +146,8 @@ for i in range(14):
 
 tooDarkRead = pygame.image.load("Assets/TooDark.png")
 tooDarkSee = pygame.image.load("Assets/TooDarkSee.png")
+trashEmpty = pygame.image.load("Assets/trashEmpty.png")
+somethingInside = pygame.image.load("Assets/somethingInside.png")
 
 letterTiles = load_tileset("Assets/letters.png", 21, 41)
 numberTiles = load_tileset("Assets/numbers.png", 21, 41)

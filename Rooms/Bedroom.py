@@ -31,6 +31,10 @@ rightBed = pygame.image.load("Assets/rightBed.png")
 leftDesk = pygame.image.load("Assets/leftBedroomDesk.png")
 rightDesk = pygame.image.load("Assets/rightBedroomDesk.png")
 
+trash = pygame.image.load("Assets/Trash.png")
+trashInteractRect = trash.get_rect()
+trashInteractRect.topleft = (108,185)
+
 leftBedInteractRect = leftBed.get_rect()
 leftBedInteractRect.topleft = (37,37)
 leftBedInteractRect.bottomright = (leftBedInteractRect.bottomright[0] + 20, leftBedInteractRect.bottomright[1])
@@ -53,6 +57,11 @@ falloffPartial = [LightFalloff(virtual_screen.get_size(), darkness = 75)]
 
 northDoor = Objects.Door(112, 16, Assets.grayDoorNorth)
 
+tooDarkSeeScaled = pygame.transform.scale(Assets.tooDarkSee, (Assets.tooDarkSee.get_width()/1.5, Assets.tooDarkSee.get_height()/1.5))
+tooDarkSee = Objects.briefText(virtual_screen, tooDarkSeeScaled, 5, 90, 3)
+trashEmpty = Objects.briefText(virtual_screen, Assets.trashEmpty, 0, 90, 3)
+somethingInside = Objects.briefText(virtual_screen, Assets.somethingInside, 0, 90, 3)
+
 upperWingPower = False
 lowerWingPower = False
 
@@ -72,15 +81,19 @@ def inBounds(x, y):
     leftDeskRect.topleft = (148, 176)
     rightDeskRect = rightDesk.get_rect()
     rightDeskRect.topleft = (45, 176)
+    trashRect = pygame.Rect(112,190, 30, 40)
+    backWallRect = pygame.Rect(100,200, 60, 60)
+
     if northDoor.rect.collidepoint((x,y)):
-        if level == 1 and power and not upperWingPower and not Objects.getPinkPower():
-            Sounds.powerAmb.stop()
-            Sounds.ominousAmb.play(-1)    
+        tooDarkSee.activated_time = -1
+        trashEmpty.activated_time = -1
+        somethingInside.activated_time = -1
         return 0
     elif bedView:
         bedView = False
         return 1
-    elif leftBedRect.collidepoint((x,y)) or rightBedRect.collidepoint((x,y)) or leftDeskRect.collidepoint(x, y) or rightDeskRect.collidepoint(x, y):
+    elif leftBedRect.collidepoint((x,y)) or rightBedRect.collidepoint((x,y)) or leftDeskRect.collidepoint(x, y) or rightDeskRect.collidepoint(x, y) \
+    or trashRect.collidepoint(x,y) or backWallRect.collidepoint(x, y):
         return False
     elif not outline.contains(Point(x,y)):
         return False
@@ -123,7 +136,13 @@ def Room(screen, screen_res, events):
                 elif rightBedInteractRect.collidepoint(player_pos): # go to right bedview
                     Objects.setBedNumber(1)
                     bedView = True
-
+                elif trashInteractRect.collidepoint(player_pos):
+                    if not greenPowerOn:
+                        tooDarkSee.activated_time = pygame.time.get_ticks()
+                    elif BedroomNumber == 1 or BedroomNumber == 2:
+                        trashEmpty.activated_time = pygame.time.get_ticks()
+                    else:
+                        somethingInside.activated_time = pygame.time.get_ticks()
 
     virtual_screen.fill((105,105,105))
     dark_overlay.fill((0, 0, 0, 150))
@@ -164,6 +183,7 @@ def Room(screen, screen_res, events):
     virtual_screen.blit(rightBed, (172,37))
     virtual_screen.blit(leftDesk, (148,176))
     virtual_screen.blit(rightDesk, (45,176))
+    virtual_screen.blit(trash, (108,185))
     Player.animatePlayer(virtual_screen, player_pos, 32, 32, "top-down")
 
     # Unique things in each room here
@@ -229,6 +249,10 @@ def Room(screen, screen_res, events):
         lightsOn = True
 
     virtual_screen.blit(dark_overlay, (0, 0))
+
+    tooDarkSee.update()
+    trashEmpty.update()
+    somethingInside.update()
 
     Assets.scaled_draw(virtual_res, virtual_screen, screen_res, screen)
 
