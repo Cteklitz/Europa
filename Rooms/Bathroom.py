@@ -50,6 +50,9 @@ stallOpen2 = False
 stallPos2 = (113, 38)
 toiletPos2 = (115, 69)
 
+stall1InteractRect = pygame.Rect(stallPos1[0], stallPos1[1], 50, 95)
+stall2InteractRect = pygame.Rect(stallPos2[0], stallPos2[1], 50, 95)
+
 def inBounds(x, y):
     global tooDarkRead
     if exitRect.collidepoint((x,y)):
@@ -76,7 +79,9 @@ def Room(screen, screen_res, events):
     xScale = screen.get_width()/virtual_screen.get_width() 
     yScale = screen.get_height()/virtual_screen.get_height()
     for event in events:
+
         # opens and closes toilet stall doors
+        '''
         if event.type == pygame.MOUSEBUTTONDOWN:
                 click_x, click_y = event.pos
                 click_x_unscaled = click_x/xScale
@@ -91,6 +96,14 @@ def Room(screen, screen_res, events):
                         stallOpen2 = True
                     else:
                         stallOpen2 = False
+        '''
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_e:
+                if stall1InteractRect.collidepoint(player_pos):
+                    stallOpen1 = not stallOpen1
+                elif stall2InteractRect.collidepoint(player_pos):
+                    stallOpen2 = not stallOpen2
+            
     level, power = Objects.getPipeDungeonInfo()
     upperWingPower, _ = Objects.getPinkWingInfo()
     lit = (upperWingPower and level == 1 and power) or Objects.getPinkPower()
