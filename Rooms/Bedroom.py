@@ -148,15 +148,23 @@ def Room(screen, screen_res, events):
     for event in events:
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_e:
-                # TODO: Only enter bedview if green power is on
                 if leftBedInteractRect.collidepoint(player_pos): # go to left bedview
-                    Objects.setBedNumber(0)
-                    bedView = True
+                    if greenPowerOn:
+                        Objects.setBedNumber(0)
+                        bedView = True
+                    else:
+                        tooDarkSee.activated_time = pygame.time.get_ticks()
                 elif rightBedInteractRect.collidepoint(player_pos): # go to right bedview
-                    Objects.setBedNumber(1)
-                    bedView = True
+                    if greenPowerOn:
+                        Objects.setBedNumber(1)
+                        bedView = True
+                    else:
+                        tooDarkSee.activated_time = pygame.time.get_ticks()
                 elif leftDeskInteractRect.collidepoint(player_pos) and BedroomNumber == 1: # go to bedroom 1 desk view
-                    deskView = True
+                    if greenPowerOn:
+                        deskView = True
+                    else:
+                        tooDarkSee.activated_time = pygame.time.get_ticks()
                 elif trashInteractRect.collidepoint(player_pos):
                     if not greenPowerOn:
                         tooDarkSee.activated_time = pygame.time.get_ticks()
