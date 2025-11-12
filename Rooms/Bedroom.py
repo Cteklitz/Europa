@@ -62,16 +62,14 @@ tooDarkSee = Objects.briefText(virtual_screen, tooDarkSeeScaled, 5, 90, 3)
 trashEmpty = Objects.briefText(virtual_screen, Assets.trashEmpty, 0, 90, 3)
 somethingInside = Objects.briefText(virtual_screen, Assets.somethingInside, 0, 90, 3)
 
-upperWingPower = False
-lowerWingPower = False
-
 bedView = False
 
 lightsOn = True
 greenPowerOn = False
+notePuzzle = False
 
 def inBounds(x, y):
-    global leftBed, rightBed, bedView
+    global leftBed, rightBed, bedView, notePuzzle
     level, power = Objects.getPipeDungeonInfo()
     leftBedRect = leftBed.get_rect()
     leftBedRect.topleft = (37,37)
@@ -93,6 +91,12 @@ def inBounds(x, y):
     elif bedView:
         bedView = False
         return 1
+    elif notePuzzle:
+        if somethingInside.activated_time == -1:
+            notePuzzle = False
+            return 2
+        else:
+            return False
     elif leftBedRect.collidepoint((x,y)) or rightBedRect.collidepoint((x,y)) or leftDeskRect.collidepoint(x, y) or rightDeskRect.collidepoint(x, y) \
     or trashRect.collidepoint(x,y) or backWallRect.collidepoint(x, y):
         return False
@@ -105,16 +109,16 @@ def positionDeterminer(cameFrom):
     bedNum = Objects.getBedNumber()
     if cameFrom == "Rooms.GreenRoom":
         player_pos = pygame.Vector2(northDoor.x + northDoor.rect.width/2, northDoor.y + northDoor.rect.height + 5)
+    elif cameFrom == "Rooms.TornNotePuzzle":
+        player_pos = pygame.Vector2(northDoor.x + northDoor.rect.width/2, 190)
     elif bedNum == 0: # came from left bed view
         player_pos = pygame.Vector2(leftBedInteractRect.x + 40, leftBedInteractRect.y + 44)
     else: # came from right bed view
         player_pos = pygame.Vector2(rightBedInteractRect.x + 8, rightBedInteractRect.y + 44)
 
 def Room(screen, screen_res, events):
-    global upperWingPower, lowerWingPower, bedView, lightsOn, greenPowerOn
+    global bedView, lightsOn, greenPowerOn, notePuzzle
     level, power = Objects.getPipeDungeonInfo()
-    if not upperWingPower and not lowerWingPower and level == 1 and power:
-        lowerWingPower = True
 
     Sounds.radioFar.play()
     Sounds.radioClose.play()
@@ -144,6 +148,7 @@ def Room(screen, screen_res, events):
                         trashEmpty.activated_time = pygame.time.get_ticks()
                     else:
                         somethingInside.activated_time = pygame.time.get_ticks()
+                        notePuzzle = True
 
     virtual_screen.fill((105,105,105))
     dark_overlay.fill((0, 0, 0, 150))
