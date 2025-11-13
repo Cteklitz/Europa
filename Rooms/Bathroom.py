@@ -85,6 +85,8 @@ def inBounds(x, y):
         level, power = Objects.getPipeDungeonInfo()
         tooDarkRead.activated_time = -1
         tooDarkSee.activated_time = -1
+        Sounds.sink.stop()
+        Sounds.sink2.stop()
         return 0
     elif not bounds.contains(Point(x,y)):
         return False
@@ -93,6 +95,10 @@ def inBounds(x, y):
 def positionDeterminer(cameFrom):
     global player_pos
     if cameFrom == "Rooms.GreenRoom":
+        if sinkOn1:
+            Sounds.sink.play()
+        if sinkOn2:
+            Sounds.sink2.play()
         player_pos = pygame.Vector2(exitRect.centerx - 15, exitRect.centery + 10)
 
 def Room(screen, screen_res, events):
