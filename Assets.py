@@ -168,6 +168,9 @@ trianglePuzzleBackground = pygame.image.load("Assets/trianglePuzzleBackground.pn
 bedBackgroundLeft = pygame.image.load("Assets/BedView.png")
 bedBackgroundRight = pygame.transform.flip(bedBackgroundLeft, True, False)
 
+radioOn = pygame.image.load("Assets/radio.png")
+radioOff = pygame.image.load("Assets/radioOff.png")
+
 eye = pygame.image.load("Assets/EYE.png")
 movingEyes = []
 for i in range(1, 9):
@@ -209,3 +212,6 @@ letterTile = pygame.image.load("Assets/letter_tile.png")
 multiInv = pygame.image.load("Assets/multimeterInv.png")
 multimeter = pygame.image.load("Assets/multimeter.png")
 multimeter_toggled = pygame.image.load("Assets/multimeter_flipped.png")
+
+bleachInv = pygame.image.load("Assets/bleachInv.png")
+bleachGround = pygame.image.load("Assets/bleachGround.png")

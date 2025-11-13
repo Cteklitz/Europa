@@ -46,9 +46,24 @@ bedroom2Door = Objects.Door(304, 208, Assets.grayDoorSouth)
 bedroom3Door = Objects.Door(496, 208, Assets.grayDoorSouth)
 greenhouseDoor = Objects.Door(592, 112, Assets.grayDoorEast)
 
+upperWingPower = False
+lowerWingPower = False
+
+Sounds.radioFar.play(-1)
+Sounds.radioFar.set_volume(0)
+Sounds.radioClose.play(-1)
+Sounds.radioClose.set_volume(0)
+
 def inBounds(x, y):
     level, power = Objects.getPipeDungeonInfo()
     bounds = pygame.Rect(48,48,544,160)
+    # Add greenpower statement
+    if level == 3 and power:
+        greenPowerOn = True
+    else:
+        greenPowerOn = False
+    #greenPowerOn = True # FOR TESTING
+
     if greenDoor.rect.collidepoint((x,y)):
         Sounds.radioFar.set_volume(0)
         if level == 3 and power:
@@ -63,7 +78,8 @@ def inBounds(x, y):
         Objects.setBedroomNumber(1)
         return 2
     elif bedroom2Door.rect.collidepoint((x,y)):
-        Sounds.radioClose.set_volume(1)
+        if greenPowerOn:
+            Sounds.radioClose.set_volume(1)
         Sounds.radioFar.set_volume(0)
         if level == 3 and power:
             Sounds.powerAmb.stop()
@@ -84,8 +100,17 @@ def inBounds(x, y):
 def positionDeterminer(cameFrom):
     global player_pos
 
+    level, power = Objects.getPipeDungeonInfo()
+    # Add greenpower statement
+    if level == 3 and power:
+        greenPowerOn = True
+    else:
+        greenPowerOn = False
+    #greenPowerOn = True # FOR TESTING
+
     Sounds.radioClose.set_volume(0)
-    Sounds.radioFar.set_volume(1)
+    if (greenPowerOn):
+        Sounds.radioFar.set_volume(1)
 
     if cameFrom == "Rooms.Bathroom":
         player_pos = pygame.Vector2(bathroomDoor.x + 37, bathroomDoor.y + bathroomDoor.rect.height/2)
@@ -95,8 +120,7 @@ def positionDeterminer(cameFrom):
     elif cameFrom == "Rooms.Bedroom":
         if Objects.getBedroomNumber() == 1:
             player_pos = pygame.Vector2(bedroom1Door.x + bedroom1Door.rect.width/2, bedroom1Door.y - 5)
-        elif Objects.getBedroomNumber() == 2:
-           
+        elif Objects.getBedroomNumber() == 2:          
             player_pos = pygame.Vector2(bedroom2Door.x + bedroom2Door.rect.width/2, bedroom2Door.y - 5)
         elif Objects.getBedroomNumber() == 3:
             player_pos = pygame.Vector2(bedroom3Door.x + bedroom3Door.rect.width/2, bedroom3Door.y - 5)
@@ -105,9 +129,12 @@ def positionDeterminer(cameFrom):
 
 def Room(screen, screen_res, events):
     level, power = Objects.getPipeDungeonInfo()
-
-    Sounds.radioFar.play()
-    Sounds.radioClose.play()
+    # Add greenpower statement
+    if level == 3 and power:
+        greenPowerOn = True
+    else:
+        greenPowerOn = False
+    #greenPowerOn = True # FOR TESTING
 
     # set radioFar volume based on distance to bedroom 2
     dist = math.sqrt((player_pos.x - bedroom2Door.x)**2 + (player_pos.y - bedroom2Door.y)**2)
@@ -116,6 +143,9 @@ def Room(screen, screen_res, events):
     vol = 1 - normDist + 0.2
     vol = vol**2 # apply expontial growth so vol scales smoothly
     Sounds.radioFar.set_volume(vol)
+
+    if not greenPowerOn:
+        Sounds.radioFar.set_volume(0)
 
     # for event in events:
     #     if event.type == pygame.KEYDOWN:

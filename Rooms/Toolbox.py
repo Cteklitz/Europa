@@ -58,9 +58,7 @@ jumpscare_sound = pygame.mixer.Sound("Audio/toolboxJumpscare.wav")
 jumpscare_layer_sound = pygame.mixer.Sound("Audio/evil2.wav")
 paper_crumple_sound = pygame.mixer.Sound("Audio/paperCrumple.wav")
 paper_open_sound = pygame.mixer.Sound("Audio/paperOpen.wav")
-toolbox_open_close_sound = pygame.mixer.Sound("Audio/toolboxOpenClose.wav")
 
-pre_jumpscare_sound.set_volume(.05) # make audio quieter prejumpscare
 
 def positionDeterminer(cameFrom):
     pass
@@ -112,10 +110,10 @@ def Room(screen, screen_res, events):
             # opens and closes toolbox if animated eye object is not present
             elif(285 < click_x < 1310 and 350 < click_y < 855) and not paper_open and found!=2:
                 if(open):
-                    toolbox_open_close_sound.play()
+                    Sounds.openClose.play()
                     open = False
                 else:
-                    toolbox_open_close_sound.play()
+                    Sounds.openClose.play()
                     open = True
             # plays squished sound if eye clicked
             elif eye_click_rect.collidepoint((click_x_unscaled, click_y_unscaled)) and found == 2:
@@ -163,7 +161,7 @@ def Room(screen, screen_res, events):
                 eye_closed_temp = pygame.transform.scale(eye_closed, (280, 280))
                 closed_eye_rect = eye_closed_temp.get_rect(center=(virtual_res[0] / 2, virtual_res[1] / 2))
                 virtual_screen.blit(eye_closed_temp, closed_eye_rect)
-            elif (curr_time - cutscene_start < 13000):
+            elif (curr_time - cutscene_start < 14000):
                 if (not played):
                     pre_jumpscare_sound.stop()
                     channel1 = pygame.mixer.find_channel(True)
@@ -172,7 +170,7 @@ def Room(screen, screen_res, events):
                     channel2.play(jumpscare_sound)
                     played = True
                 virtual_screen.blit(eye_open, open_eye_rect)
-            elif (curr_time - cutscene_start < 16000):
+            elif (curr_time - cutscene_start < 18000):
                 virtual_screen.blit(jumpscare_text, (0, 0))
             else:
                 Player.cutscene = False

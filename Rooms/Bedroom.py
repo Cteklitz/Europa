@@ -138,29 +138,33 @@ def Room(screen, screen_res, events):
     global bedView, lightsOn, greenPowerOn, notePuzzle, deskView
     level, power = Objects.getPipeDungeonInfo()
 
-    Sounds.radioFar.play()
-    Sounds.radioClose.play()
-
     # Add greenpower statement
     if level == 3 and power:
         greenPowerOn = True
     else:
         greenPowerOn = False
-
-    greenPowerOn = True # FOR TESTING
+    #greenPowerOn = True # FOR TESTING
 
     for event in events:
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_e:
-                # TODO: Only enter bedview if green power is on
                 if leftBedInteractRect.collidepoint(player_pos): # go to left bedview
-                    Objects.setBedNumber(0)
-                    bedView = True
+                    if greenPowerOn:
+                        Objects.setBedNumber(0)
+                        bedView = True
+                    else:
+                        tooDarkSee.activated_time = pygame.time.get_ticks()
                 elif rightBedInteractRect.collidepoint(player_pos): # go to right bedview
-                    Objects.setBedNumber(1)
-                    bedView = True
+                    if greenPowerOn:
+                        Objects.setBedNumber(1)
+                        bedView = True
+                    else:
+                        tooDarkSee.activated_time = pygame.time.get_ticks()
                 elif leftDeskInteractRect.collidepoint(player_pos) and BedroomNumber == 1: # go to bedroom 1 desk view
-                    deskView = True
+                    if greenPowerOn:
+                        deskView = True
+                    else:
+                        tooDarkSee.activated_time = pygame.time.get_ticks()
                 elif trashInteractRect.collidepoint(player_pos):
                     if not greenPowerOn:
                         tooDarkSee.activated_time = pygame.time.get_ticks()
@@ -168,7 +172,7 @@ def Room(screen, screen_res, events):
                         trashEmpty.activated_time = pygame.time.get_ticks()
                     else:
                         somethingInside.activated_time = pygame.time.get_ticks()
-                        notePuzzle = True
+                        notePuzzle = True          
 
     virtual_screen.fill((105,105,105))
     dark_overlay.fill((0, 0, 0, 150))
@@ -227,19 +231,20 @@ def Room(screen, screen_res, events):
         if lightRng < 2:
             lightsOn = False
 
+            if greenPowerOn:
             # play flicker sound
-            lightRng = random.randint(1,5)
-            match lightRng:
-                case 1:
-                    Sounds.spark1.play()
-                case 2:
-                    Sounds.spark2.play()
-                case 3:
-                    Sounds.spark3.play()
-                case 4:
-                    Sounds.spark4.play()
-                case 5:
-                    Sounds.spark5.play()
+                lightRng = random.randint(1,5)
+                match lightRng:
+                    case 1:
+                        Sounds.spark1.play()
+                    case 2:
+                        Sounds.spark2.play()
+                    case 3:
+                        Sounds.spark3.play()
+                    case 4:
+                        Sounds.spark4.play()
+                    case 5:
+                        Sounds.spark5.play()
     elif BedroomNumber == 3:
         lightsOn = True
 

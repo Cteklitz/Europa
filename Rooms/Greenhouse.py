@@ -30,7 +30,9 @@ wall_lights = [
 ]
 falloff = [LightFalloff(virtual_screen.get_size(), darkness = 140)]
 
+# load assets
 background = pygame.image.load("Assets/Greenhouse.png")
+hogweed = pygame.image.load("Assets/GiantHogweed.png")
 tooDarkReadScale = pygame.transform.scale(Assets.tooDarkRead, (Assets.tooDarkRead.get_width()/1.25,Assets.tooDarkRead.get_height()/1.25))
 tooDarkRead = Objects.briefText(virtual_screen, tooDarkReadScale, 10, 180, 3)
 tooDarkSeeScale = pygame.transform.scale(Assets.tooDarkSee, (Assets.tooDarkSee.get_width()/1.25,Assets.tooDarkSee.get_height()/1.25))
@@ -38,16 +40,16 @@ tooDarkSee = Objects.briefText(virtual_screen, tooDarkSeeScale, 15, 180, 3)
 
 def inBounds(x, y):
     global tooDarkRead
+    hogweedRect = hogweed.get_rect()
+    hogweedRect.topleft = (34, 26)
     if exitRect.collidepoint((x,y)):
         level, power = Objects.getPipeDungeonInfo()
-        upperWingPower, _ = Objects.getPinkWingInfo()
-        if level == 1 and power and not upperWingPower and not Objects.getPinkPower():
-            Sounds.ominousAmb.stop()
-            Sounds.powerAmb.play(-1)
         tooDarkRead.activated_time = -1
         tooDarkSee.activated_time = -1
         return 0
     elif not bounds.contains(Point(x,y)):
+        return False
+    elif hogweedRect.collidepoint(x,y):
         return False
     return True
 
@@ -70,6 +72,7 @@ def Room(screen, screen_res, events):
     #         if event.key == pygame.K_e:
 
     virtual_screen.blit(background, (0,0))
+    virtual_screen.blit(hogweed, (34, 26))
     virtual_screen2.fill((195, 195, 195))
     if not lit:
         dark_overlay.fill((0, 0, 0, 150))

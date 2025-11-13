@@ -1,6 +1,7 @@
 import pygame
 import Assets
 import Objects
+import Items
 from shapely.geometry import Point, Polygon
 import Sounds
 from LightSource import LightSource
@@ -32,32 +33,47 @@ falloff = [LightFalloff(virtual_screen.get_size(), darkness = 140)]
 
 # load and scale assets
 background = pygame.image.load("Assets/Bathroom.png")
-closedStall = pygame.image.load("Assets/toiletStallClosed.png")
-openStall = pygame.image.load("Assets/toiletStallOpen.png")
+closedToiletStall = pygame.image.load("Assets/toiletStallClosed.png")
+openToiletStall = pygame.image.load("Assets/toiletStallOpen.png")
 toilet = pygame.image.load("Assets/toilet.png")
+closedShowerStall = pygame.image.load("Assets/showerStallClosed.png")
+openShowerStall = pygame.image.load("Assets/showerStallOpen.png")
 mirror = pygame.image.load("Assets/Mirror.png")
 bathroomSink = pygame.image.load("Assets/BathroomSink.png")
+bleach = pygame.image.load("Assets/bleachGround.png")
 tooDarkReadScale = pygame.transform.scale(Assets.tooDarkRead, (Assets.tooDarkRead.get_width()/1.25,Assets.tooDarkRead.get_height()/1.25))
 tooDarkRead = Objects.briefText(virtual_screen, tooDarkReadScale, 10, 180, 3)
 tooDarkSeeScale = pygame.transform.scale(Assets.tooDarkSee, (Assets.tooDarkSee.get_width()/1.25,Assets.tooDarkSee.get_height()/1.25))
 tooDarkSee = Objects.briefText(virtual_screen, tooDarkSeeScale, 15, 180, 3)
 
-#positional and state for toilet stalls
-stallOpen1 = False
-stallPos1 = (154, 38)
-toiletPos1 = (156, 69)
-stallOpen2 = False
-stallPos2 = (113, 38)
-toiletPos2 = (115, 69)
+# position and state for toilet stalls
+toiletStallOpen1 = False
+toiletStallPos1 = (150, 38)
+toiletPos1 = (152, 69)
+toiletStallOpen2 = False
+toiletStallPos2 = (109, 38)
+toiletPos2 = (111, 69)
+
+# position and state for shower stalls
+showerStallOpen1 = False
+showerStallPos1 = (68 ,38)
+showerStallOpen2 = False
+showerStallPos2 = (27, 38)
+
+bleach = Objects.groundItem(showerStallPos2[0] + 8, showerStallPos2[1] + 66, Items.bleach)
+
+# interact rects
+toilet1InteractRect = pygame.Rect(toiletStallPos1[0], toiletStallPos1[1], 50, 95)
+toilet2InteractRect = pygame.Rect(toiletStallPos2[0], toiletStallPos2[1], 50, 95)
+shower1InteractRect = pygame.Rect(showerStallPos1[0], showerStallPos1[1], 50, 95)
+shower2InteractRect = pygame.Rect(showerStallPos2[0], showerStallPos2[1], 50, 95)
+
+
 
 def inBounds(x, y):
     global tooDarkRead
     if exitRect.collidepoint((x,y)):
         level, power = Objects.getPipeDungeonInfo()
-        upperWingPower, _ = Objects.getPinkWingInfo()
-        if level == 1 and power and not upperWingPower and not Objects.getPinkPower():
-            Sounds.ominousAmb.stop()
-            Sounds.powerAmb.play(-1)
         tooDarkRead.activated_time = -1
         tooDarkSee.activated_time = -1
         return 0
@@ -71,26 +87,33 @@ def positionDeterminer(cameFrom):
         player_pos = pygame.Vector2(exitRect.centerx - 15, exitRect.centery + 10)
 
 def Room(screen, screen_res, events):
-    global trianglePuzzle1, trianglePuzzle2, whiteboard, beaker, table, tableboundRect, tooDarkRead, stallOpen1, stallOpen2
+    global trianglePuzzle1, trianglePuzzle2, whiteboard, beaker, table, tableboundRect, tooDarkRead, toiletStallOpen1, toiletStallOpen2, showerStallOpen1, showerStallOpen2
 
     xScale = screen.get_width()/virtual_screen.get_width() 
     yScale = screen.get_height()/virtual_screen.get_height()
     for event in events:
-        # opens and closes toilet stall doors
-        if event.type == pygame.MOUSEBUTTONDOWN:
-                click_x, click_y = event.pos
-                click_x_unscaled = click_x/xScale
-                click_y_unscaled = click_y/yScale
-                if (159 < click_x_unscaled < 197 and  42 < click_y_unscaled < 124):
-                    if (stallOpen1 == False):
-                        stallOpen1 = True
-                    else:
-                        stallOpen1 = False
-                elif (121 < click_x_unscaled < 159 and  42 < click_y_unscaled < 124):
-                    if (stallOpen2 == False):
-                        stallOpen2 = True
-                    else:
-                        stallOpen2 = False
+
+        # opens and closes stall doors
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_e:
+                if (showerStallOpen2 and not bleach.collected):
+                    Sounds.pickup.play()
+                    bleach.check_collision(player_pos)
+                elif toilet1InteractRect.collidepoint(player_pos):
+                    Sounds.openClose.play()
+                    toiletStallOpen1 = not toiletStallOpen1
+                elif toilet2InteractRect.collidepoint(player_pos):
+                    Sounds.openClose.play()
+                    toiletStallOpen2 = not toiletStallOpen2
+                elif shower1InteractRect.collidepoint(player_pos):
+                    Sounds.curtain.play()
+                    showerStallOpen1 = not showerStallOpen1
+                elif shower2InteractRect.collidepoint(player_pos):
+                    Sounds.curtain.play()
+                    showerStallOpen2 = not showerStallOpen2
+                
+                
+            
     level, power = Objects.getPipeDungeonInfo()
     upperWingPower, _ = Objects.getPinkWingInfo()
     lit = (upperWingPower and level == 1 and power) or Objects.getPinkPower()
@@ -102,21 +125,30 @@ def Room(screen, screen_res, events):
     virtual_screen.blit(background, (0,0))
     virtual_screen.blit(toilet, toiletPos1)
     virtual_screen.blit(toilet, toiletPos2)
+    Objects.groundItem.draw(bleach, virtual_screen)
 
     # draws open or closed stalls depending on state
-    if (not stallOpen1):
-        virtual_screen.blit(closedStall, stallPos1)
+    if (not toiletStallOpen1):
+        virtual_screen.blit(closedToiletStall, toiletStallPos1)
     else:
-        virtual_screen.blit(openStall, stallPos1)
-    if (not stallOpen2):
-        virtual_screen.blit(closedStall, stallPos2)
+        virtual_screen.blit(openToiletStall, toiletStallPos1)
+    if (not toiletStallOpen2):
+        virtual_screen.blit(closedToiletStall, toiletStallPos2)
     else:
-        virtual_screen.blit(openStall, stallPos2)
+        virtual_screen.blit(openToiletStall, toiletStallPos2)
+    if (not showerStallOpen1):
+        virtual_screen.blit(closedShowerStall, showerStallPos1)
+    else:
+        virtual_screen.blit(openShowerStall, showerStallPos1)
+    if (not showerStallOpen2):
+        virtual_screen.blit(closedShowerStall, showerStallPos2)
+    else:
+        virtual_screen.blit(openShowerStall, showerStallPos2)
     
-    virtual_screen.blit(mirror, (210, 47))
+    virtual_screen.blit(mirror, (206, 47))
     
-    virtual_screen.blit(bathroomSink, (210, 80))
-    virtual_screen.blit(bathroomSink, (250, 80))
+    virtual_screen.blit(bathroomSink, (206, 80))
+    virtual_screen.blit(bathroomSink, (246, 80))
     
     virtual_screen2.fill((195, 195, 195))
     if not lit:
