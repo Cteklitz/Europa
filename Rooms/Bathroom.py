@@ -1,6 +1,7 @@
 import pygame
 import Assets
 import Objects
+import Items
 from shapely.geometry import Point, Polygon
 import Sounds
 from LightSource import LightSource
@@ -39,6 +40,7 @@ closedShowerStall = pygame.image.load("Assets/showerStallClosed.png")
 openShowerStall = pygame.image.load("Assets/showerStallOpen.png")
 mirror = pygame.image.load("Assets/Mirror.png")
 bathroomSink = pygame.image.load("Assets/BathroomSink.png")
+bleach = pygame.image.load("Assets/bleachGround.png")
 tooDarkReadScale = pygame.transform.scale(Assets.tooDarkRead, (Assets.tooDarkRead.get_width()/1.25,Assets.tooDarkRead.get_height()/1.25))
 tooDarkRead = Objects.briefText(virtual_screen, tooDarkReadScale, 10, 180, 3)
 tooDarkSeeScale = pygame.transform.scale(Assets.tooDarkSee, (Assets.tooDarkSee.get_width()/1.25,Assets.tooDarkSee.get_height()/1.25))
@@ -58,10 +60,13 @@ showerStallPos1 = (68 ,38)
 showerStallOpen2 = False
 showerStallPos2 = (27, 38)
 
+bleach = Objects.groundItem(showerStallPos2[0] + 8, showerStallPos2[1] + 66, Items.bleach)
+
 toilet1InteractRect = pygame.Rect(toiletStallPos1[0], toiletStallPos1[1], 50, 95)
 toilet2InteractRect = pygame.Rect(toiletStallPos2[0], toiletStallPos2[1], 50, 95)
 shower1InteractRect = pygame.Rect(showerStallPos1[0], showerStallPos1[1], 50, 95)
 shower2InteractRect = pygame.Rect(showerStallPos2[0], showerStallPos2[1], 50, 95)
+
 
 def inBounds(x, y):
     global tooDarkRead
@@ -93,14 +98,17 @@ def Room(screen, screen_res, events):
         # opens and closes stall doors
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_e:
-                if toilet1InteractRect.collidepoint(player_pos):
+                if (showerStallOpen2 and not bleach.collected):
+                    bleach.check_collision(player_pos)
+                elif toilet1InteractRect.collidepoint(player_pos):
                     toiletStallOpen1 = not toiletStallOpen1
                 elif toilet2InteractRect.collidepoint(player_pos):
                     toiletStallOpen2 = not toiletStallOpen2
-                if shower1InteractRect.collidepoint(player_pos):
+                elif shower1InteractRect.collidepoint(player_pos):
                     showerStallOpen1 = not showerStallOpen1
-                if shower2InteractRect.collidepoint(player_pos):
+                elif shower2InteractRect.collidepoint(player_pos):
                     showerStallOpen2 = not showerStallOpen2
+                
                 
             
     level, power = Objects.getPipeDungeonInfo()
@@ -114,6 +122,7 @@ def Room(screen, screen_res, events):
     virtual_screen.blit(background, (0,0))
     virtual_screen.blit(toilet, toiletPos1)
     virtual_screen.blit(toilet, toiletPos2)
+    Objects.groundItem.draw(bleach, virtual_screen)
 
     # draws open or closed stalls depending on state
     if (not toiletStallOpen1):

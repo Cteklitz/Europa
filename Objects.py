@@ -10,11 +10,13 @@ class groundItem:
         self.x = xpos
         self.y = ypos
         self.item = item
+        self.width = item[4].get_width()
+        self.height = item[4].get_height()
         self.rect = item.ground_sprite.get_rect(topleft=(xpos, ypos))
         self.collected = False
 
     def check_collision(self, player_pos):
-        in_range = (self.x - 8 < player_pos.x < self.x + 8) and (self.y - 8 < player_pos.y < self.y + 8)
+        in_range = (self.x - 3 < player_pos.x < self.x + self.width + 3) and (self.y - 3 < player_pos.y < self.y + self.height + 3)
 
         if in_range and not self.collected:
             if (Player.addItem(self.item)):

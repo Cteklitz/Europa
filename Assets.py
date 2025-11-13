@@ -203,6 +203,9 @@ multiInv = pygame.image.load("Assets/multimeterInv.png")
 multimeter = pygame.image.load("Assets/multimeter.png")
 multimeter_toggled = pygame.image.load("Assets/multimeter_flipped.png")
 
+bleachInv = pygame.image.load("Assets/bleachInv.png")
+bleachGround = pygame.image.load("Assets/bleachGround.png")
+
 puddle1 = pygame.image.load("Assets/Puddle1.png")
 puddle2 = pygame.image.load("Assets/Puddle2.png")
 puddle3 = pygame.image.load("Assets/Puddle3.png")
