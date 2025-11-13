@@ -105,7 +105,10 @@ def Room(screen, screen_res, events):
         # opens and closes stall doors
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_e:
-                if toilet1InteractRect.collidepoint(player_pos):
+                if (showerStallOpen2 and not bleach.collected):
+                    if bleach.check_collision(player_pos):
+                        Sounds.pickup.play()
+                elif toilet1InteractRect.collidepoint(player_pos):
                     Sounds.openClose.play()
                     toiletStallOpen1 = not toiletStallOpen1
                 elif toilet2InteractRect.collidepoint(player_pos):

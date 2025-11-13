@@ -26,6 +26,8 @@ class groundItem:
                 print("Inventory is full!")
                 return False
                 # TODO: Add proper inventory is full msg
+        
+        return False
 
     def draw(self, virtual_screen):
         if (self.collected == False):
