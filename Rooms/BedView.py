@@ -110,12 +110,12 @@ def Room(screen, screen_res, events):
 
             match bedNumber:
                 case 0: # left bed
+                    pass
+                case 1: # right bed
                     if greenPowerOn:
                         virtual_screen.blit(radioOn, (97,94))
                     else:
                         virtual_screen.blit(radioOff, (97,94))
-                case 1: # right bed
-                    pass
         case 3: # Bedroom 3
             lightsOn = True
 
