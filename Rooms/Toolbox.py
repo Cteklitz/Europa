@@ -80,7 +80,8 @@ def Room(screen, screen_res, events):
     for event in events:
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_BACKSPACE or event.key == pygame.K_ESCAPE and not paper_open:
-                exit = True
+                if not cutscene:
+                    exit = True
         if event.type == pygame.MOUSEBUTTONDOWN:
             click_x, click_y = event.pos
             click_x_unscaled = click_x/xScale
