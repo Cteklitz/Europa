@@ -230,7 +230,7 @@ def Room(screen, screen_res, events):
                                 Sounds.brainwash.stop()
                                 level, power = Objects.getPipeDungeonInfo()
                                 _, lowerWingPower = Objects.getPinkWingInfo()
-                                if level == 1 and power and lowerWingPower:
+                                if (level == 1 and power and lowerWingPower) or Objects.getPinkPower():
                                     Sounds.ominousAmb.stop()
                                     Sounds.powerAmb.play(-1)
                                 else:

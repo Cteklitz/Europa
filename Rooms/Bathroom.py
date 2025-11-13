@@ -83,10 +83,6 @@ def inBounds(x, y):
     global tooDarkRead
     if exitRect.collidepoint((x,y)):
         level, power = Objects.getPipeDungeonInfo()
-        upperWingPower, _ = Objects.getPinkWingInfo()
-        if level == 1 and power and not upperWingPower and not Objects.getPinkPower():
-            Sounds.ominousAmb.stop()
-            Sounds.powerAmb.play(-1)
         tooDarkRead.activated_time = -1
         tooDarkSee.activated_time = -1
         return 0
@@ -109,10 +105,7 @@ def Room(screen, screen_res, events):
         # opens and closes stall doors
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_e:
-                if (showerStallOpen2 and not bleach.collected):
-                    Sounds.pickup.play()
-                    bleach.check_collision(player_pos)
-                elif toilet1InteractRect.collidepoint(player_pos):
+                if toilet1InteractRect.collidepoint(player_pos):
                     Sounds.openClose.play()
                     toiletStallOpen1 = not toiletStallOpen1
                 elif toilet2InteractRect.collidepoint(player_pos):
@@ -122,8 +115,12 @@ def Room(screen, screen_res, events):
                     Sounds.curtain.play()
                     showerStallOpen1 = not showerStallOpen1
                 elif shower2InteractRect.collidepoint(player_pos):
-                    Sounds.curtain.play()
-                    showerStallOpen2 = not showerStallOpen2
+                    if (showerStallOpen2 and not bleach.collected):
+                        Sounds.pickup.play()
+                        bleach.check_collision(player_pos)
+                    else:
+                        Sounds.curtain.play()
+                        showerStallOpen2 = not showerStallOpen2
                 elif sink1InteractRect.collidepoint(player_pos):
                     if (not sinkOn1):
                         Sounds.sink.play(loops = -1)

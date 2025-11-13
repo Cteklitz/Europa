@@ -44,10 +44,6 @@ def inBounds(x, y):
     hogweedRect.topleft = (34, 26)
     if exitRect.collidepoint((x,y)):
         level, power = Objects.getPipeDungeonInfo()
-        upperWingPower, _ = Objects.getPinkWingInfo()
-        if level == 1 and power and not upperWingPower and not Objects.getPinkPower():
-            Sounds.ominousAmb.stop()
-            Sounds.powerAmb.play(-1)
         tooDarkRead.activated_time = -1
         tooDarkSee.activated_time = -1
         return 0

@@ -66,44 +66,37 @@ def inBounds(x, y):
 
     if greenDoor.rect.collidepoint((x,y)):
         Sounds.radioFar.set_volume(0)
-        if level == 3 and power and not upperWingPower and not Objects.getPinkPower():
+        Sounds.radioClose.set_volume(0)
+        if level == 3 and power:
             Sounds.powerAmb.stop()
             Sounds.ominousAmb.play(-1)
         return 0
     elif bathroomDoor.rect.collidepoint((x,y)):
         Sounds.radioFar.set_volume(0)
-        if level == 3 and power or Objects.getPinkPower():
-            Sounds.powerAmb.stop()
-            Sounds.ominousAmb.play(-1)
+        Sounds.radioClose.set_volume(0)
         return 1
     elif bedroom1Door.rect.collidepoint((x,y)):
         Sounds.radioFar.set_volume(0)
-        if level == 3 and power and not lowerWingPower and not Objects.getPinkPower():
-            Sounds.powerAmb.stop()
-            Sounds.ominousAmb.play(-1)
+        Sounds.radioClose.set_volume(0)
         Objects.setBedroomNumber(1)
         return 2
     elif bedroom2Door.rect.collidepoint((x,y)):
         if greenPowerOn:
             Sounds.radioClose.set_volume(1)
         Sounds.radioFar.set_volume(0)
-        if level == 3 and power and not lowerWingPower and not Objects.getPinkPower():
+        if level == 3 and power:
             Sounds.powerAmb.stop()
             Sounds.ominousAmb.play(-1)
         Objects.setBedroomNumber(2)
         return 2
     elif bedroom3Door.rect.collidepoint((x,y)):
         Sounds.radioFar.set_volume(0)
-        if level == 3 and power and not lowerWingPower and not Objects.getPinkPower():
-            Sounds.powerAmb.stop()
-            Sounds.ominousAmb.play(-1)
+        Sounds.radioClose.set_volume(0)
         Objects.setBedroomNumber(3)
         return 2
     elif greenhouseDoor.rect.collidepoint((x,y)):
         Sounds.radioFar.set_volume(0)
-        if level == 3 and power and not lowerWingPower and not Objects.getPinkPower():
-            Sounds.powerAmb.stop()
-            Sounds.ominousAmb.play(-1)
+        Sounds.radioClose.set_volume(0)
         return 3
     elif not bounds.collidepoint((x,y)):
         return False
@@ -140,7 +133,6 @@ def positionDeterminer(cameFrom):
         player_pos = pygame.Vector2(greenhouseDoor.x - 5, greenhouseDoor.y + greenhouseDoor.rect.height/2)   
 
 def Room(screen, screen_res, events):
-    global upperWingPower, lowerWingPower
     level, power = Objects.getPipeDungeonInfo()
     # Add greenpower statement
     if level == 3 and power:
@@ -148,8 +140,6 @@ def Room(screen, screen_res, events):
     else:
         greenPowerOn = False
     #greenPowerOn = True # FOR TESTING
-    if not upperWingPower and not lowerWingPower and level == 3 and power:
-        lowerWingPower = True
 
     # set radioFar volume based on distance to bedroom 2
     dist = math.sqrt((player_pos.x - bedroom2Door.x)**2 + (player_pos.y - bedroom2Door.y)**2)
@@ -190,14 +180,7 @@ def Room(screen, screen_res, events):
         for light in lights:
             lit = light.update()
             if not Done and lit:
-                if upperWingPower:
-                    shadowRect = pygame.Rect(0,144,112,112)
-                    shadow = virtual_screen.subsurface(shadowRect).copy()
-                elif lowerWingPower:
-                    shadowRect = pygame.Rect(0,0,112,112)
-                    shadow = virtual_screen.subsurface(shadowRect).copy()
                 Assets.punch_light_hole(virtual_screen, dark_overlay, (virtual_screen.get_width()/2, virtual_screen.get_height()/2), 500, (1, 0, 1))
-                virtual_screen.blit(shadow, shadowRect)
                 Done = True
             virtual_screen.blit(light.image, light.rect)
     else:

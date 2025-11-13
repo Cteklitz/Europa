@@ -144,11 +144,6 @@ for i in range(14):
     squished = pygame.transform.scale(pipes[i], (41, 11))
     squishedPipes2.append(squished)
 
-tooDarkRead = pygame.image.load("Assets/TooDark.png")
-tooDarkSee = pygame.image.load("Assets/TooDarkSee.png")
-trashEmpty = pygame.image.load("Assets/trashEmpty.png")
-somethingInside = pygame.image.load("Assets/somethingInside.png")
-
 letterTiles = load_tileset("Assets/letters.png", 21, 41)
 numberTiles = load_tileset("Assets/numbers.png", 21, 41)
 
@@ -161,12 +156,31 @@ unequipButton = pygame.image.load("Assets/unequipButton.png")
 breakerBox = pygame.image.load("Assets/breaker.png")
 
 locker = pygame.image.load("Assets/locker.png")
+toolboxGround = pygame.image.load("Assets/ToolboxGround.png")
+
+puddle1 = pygame.image.load("Assets/Puddle1.png")
+puddle2 = pygame.image.load("Assets/Puddle2.png")
+puddle3 = pygame.image.load("Assets/Puddle3.png")
+
+trianglePuzzleCorner = pygame.image.load("Assets/trianglePuzzleCorner.png")
+trianglePuzzleBackground = pygame.image.load("Assets/trianglePuzzleBackground.png")
 
 bedBackgroundLeft = pygame.image.load("Assets/BedView.png")
 bedBackgroundRight = pygame.transform.flip(bedBackgroundLeft, True, False)
 
 radioOn = pygame.image.load("Assets/radio.png")
 radioOff = pygame.image.load("Assets/radioOff.png")
+
+eye = pygame.image.load("Assets/EYE.png")
+movingEyes = []
+for i in range(1, 9):
+    movingEyes.append(pygame.image.load(f"Assets/movingEYE{i}.png"))
+
+### TEXT
+tooDarkRead = pygame.image.load("Assets/TooDark.png")
+tooDarkSee = pygame.image.load("Assets/TooDarkSee.png")
+trashEmpty = pygame.image.load("Assets/trashEmpty.png")
+somethingInside = pygame.image.load("Assets/somethingInside.png")
 
 ### ITEMS
 pinkKeycard = pygame.image.load("Assets/pink_keycard.png")
@@ -195,17 +209,9 @@ brokenThermometerGround = pygame.image.load("Assets/BrokenThermometerInv.png")
 
 letterTile = pygame.image.load("Assets/letter_tile.png")
 
-trianglePuzzleCorner = pygame.image.load("Assets/trianglePuzzleCorner.png")
-trianglePuzzleBackground = pygame.image.load("Assets/trianglePuzzleBackground.png")
-
-toolboxGround = pygame.image.load("Assets/ToolboxGround.png")
 multiInv = pygame.image.load("Assets/multimeterInv.png")
 multimeter = pygame.image.load("Assets/multimeter.png")
 multimeter_toggled = pygame.image.load("Assets/multimeter_flipped.png")
 
 bleachInv = pygame.image.load("Assets/bleachInv.png")
 bleachGround = pygame.image.load("Assets/bleachGround.png")
-
-puddle1 = pygame.image.load("Assets/Puddle1.png")
-puddle2 = pygame.image.load("Assets/Puddle2.png")
-puddle3 = pygame.image.load("Assets/Puddle3.png")

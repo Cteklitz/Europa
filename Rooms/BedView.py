@@ -12,8 +12,11 @@ import random
 
 virtual_res = (250, 150)
 virtual_screen = pygame.Surface(virtual_res)
+virtual_res2 = (750, 450)
+virtual_screen2 = pygame.Surface(virtual_res2)
 player_pos = pygame.Vector2(192, 128)
 dark_overlay = pygame.Surface(virtual_screen.get_size(), pygame.SRCALPHA)
+dark_overlay2 = pygame.Surface(virtual_screen2.get_size(), pygame.SRCALPHA)
 
 bedNumber = 0 # 0 for left bed, 1 for right bed
 exit = False
@@ -26,6 +29,7 @@ backgroundRight = Assets.bedBackgroundRight
 radioOn = Assets.radioOn
 radioOff = Assets.radioOff
 
+spookyBackground = pygame.image.load("Assets/scaryBedView.png")
 def positionDeterminer(cameFrom):
     pass
 
@@ -39,6 +43,7 @@ def inBounds(x, y):
 def Room(screen, screen_res, events):
     global exit, lightsOn
     virtual_screen.fill((159, 161, 160))
+    # virtual_screen2.fill((159, 161, 160))
     xScale = screen.get_width()/virtual_screen.get_width() 
     yScale = screen.get_height()/virtual_screen.get_height()
 
@@ -51,12 +56,20 @@ def Room(screen, screen_res, events):
     #greenPowerOn = True # FOR TESTING
 
     dark_overlay.fill((0, 0, 0, 100))
+    dark_overlay2.fill((0, 0, 0, 100))
+
+    Sounds.radioFar.play()
+    Sounds.radioClose.play()
 
     bedroom = Objects.getBedroomNumber()
     if bedNumber == 0:
         virtual_screen.blit(backgroundLeft, backgroundLeft.get_rect())
     else:
         virtual_screen.blit(backgroundRight, backgroundRight.get_rect())
+
+    virtual_screen2.blit(spookyBackground, spookyBackground.get_rect())
+    scaledEye = pygame.transform.scale(Assets.eye, (Assets.eye.get_width()/4, Assets.eye.get_height()/4))
+    virtual_screen2.blit(scaledEye, (360,90), Assets.eye.get_rect())
 
     for event in events:
         if event.type == pygame.KEYDOWN:
@@ -120,11 +133,15 @@ def Room(screen, screen_res, events):
 
     if not lightsOn:
         virtual_screen.blit(dark_overlay, (0, 0))
+        virtual_screen2.blit(dark_overlay2, (0, 0))
 
     lightRng = random.randint(0, 100)
     if not lightsOn and lightRng < 30:
         lightsOn = True
 
-    scaled = pygame.transform.scale(virtual_screen, screen_res)
+    if bedNumber == 0 and bedroom == 2:
+        scaled = pygame.transform.scale(virtual_screen2, screen_res)
+    else:
+        scaled = pygame.transform.scale(virtual_screen, screen_res)
     screen.blit(scaled, (0, 0))
     return player_pos, xScale, yScale

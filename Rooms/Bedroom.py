@@ -96,6 +96,10 @@ def inBounds(x, y):
         tooDarkSee.activated_time = -1
         trashEmpty.activated_time = -1
         somethingInside.activated_time = -1
+        if BedroomNumber == 2:
+            if level == 3 and power:
+                Sounds.ominousAmb.stop()
+                Sounds.powerAmb.play(-1)
         return 0
     elif bedView:
         bedView = False
