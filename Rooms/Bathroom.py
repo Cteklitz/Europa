@@ -62,10 +62,12 @@ showerStallPos2 = (27, 38)
 
 bleach = Objects.groundItem(showerStallPos2[0] + 8, showerStallPos2[1] + 66, Items.bleach)
 
+# interact rects
 toilet1InteractRect = pygame.Rect(toiletStallPos1[0], toiletStallPos1[1], 50, 95)
 toilet2InteractRect = pygame.Rect(toiletStallPos2[0], toiletStallPos2[1], 50, 95)
 shower1InteractRect = pygame.Rect(showerStallPos1[0], showerStallPos1[1], 50, 95)
 shower2InteractRect = pygame.Rect(showerStallPos2[0], showerStallPos2[1], 50, 95)
+
 
 
 def inBounds(x, y):
@@ -99,14 +101,19 @@ def Room(screen, screen_res, events):
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_e:
                 if (showerStallOpen2 and not bleach.collected):
+                    Sounds.pickup.play()
                     bleach.check_collision(player_pos)
                 elif toilet1InteractRect.collidepoint(player_pos):
+                    Sounds.openClose.play()
                     toiletStallOpen1 = not toiletStallOpen1
                 elif toilet2InteractRect.collidepoint(player_pos):
+                    Sounds.openClose.play()
                     toiletStallOpen2 = not toiletStallOpen2
                 elif shower1InteractRect.collidepoint(player_pos):
+                    Sounds.curtain.play()
                     showerStallOpen1 = not showerStallOpen1
                 elif shower2InteractRect.collidepoint(player_pos):
+                    Sounds.curtain.play()
                     showerStallOpen2 = not showerStallOpen2
                 
                 

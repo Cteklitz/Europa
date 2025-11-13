@@ -63,3 +63,6 @@ spark5 = pygame.mixer.Sound("Audio/spark5.wav")
 
 radioClose = pygame.mixer.Sound("Audio/radio_close.wav")
 radioFar = pygame.mixer.Sound("Audio/radio_far.wav")
+
+curtain = pygame.mixer.Sound("Audio/curtain.wav")
+openClose = pygame.mixer.Sound("Audio/toolboxOpenClose.wav")

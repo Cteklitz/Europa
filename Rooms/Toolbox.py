@@ -58,7 +58,7 @@ jumpscare_sound = pygame.mixer.Sound("Audio/toolboxJumpscare.wav")
 jumpscare_layer_sound = pygame.mixer.Sound("Audio/evil2.wav")
 paper_crumple_sound = pygame.mixer.Sound("Audio/paperCrumple.wav")
 paper_open_sound = pygame.mixer.Sound("Audio/paperOpen.wav")
-toolbox_open_close_sound = pygame.mixer.Sound("Audio/toolboxOpenClose.wav")
+
 
 def positionDeterminer(cameFrom):
     pass
@@ -110,10 +110,10 @@ def Room(screen, screen_res, events):
             # opens and closes toolbox if animated eye object is not present
             elif(285 < click_x < 1310 and 350 < click_y < 855) and not paper_open and found!=2:
                 if(open):
-                    toolbox_open_close_sound.play()
+                    Sounds.openClose.play()
                     open = False
                 else:
-                    toolbox_open_close_sound.play()
+                    Sounds.openClose.play()
                     open = True
             # plays squished sound if eye clicked
             elif eye_click_rect.collidepoint((click_x_unscaled, click_y_unscaled)) and found == 2:
