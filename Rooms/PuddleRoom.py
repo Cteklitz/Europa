@@ -212,15 +212,11 @@ def Room(screen, screen_res, events):
                 Room.electricityChannel = Sounds.electricityNoise.play(-1)  # Loop indefinitely
                 Room.electricityChannel.pause()
                 Room.electricityPlaying = False
-            if distance <= maxDistance and not Room.electricityPlaying:
+            elif not Room.electricityPlaying:
                 Room.electricityChannel.unpause()
                 Room.electricityPlaying = True
-            elif distance > maxDistance and Room.electricityPlaying:
-                Room.electricityChannel.pause()
-                Room.electricityPlaying = False
-            
-        
-            Room.electricityChannel.set_volume(leftVolume, rightVolume)
+            else:
+                Room.electricityChannel.set_volume(leftVolume, rightVolume)
             
         else:
             #stop the sound if too far away
