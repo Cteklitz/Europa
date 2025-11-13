@@ -215,3 +215,5 @@ multimeter_toggled = pygame.image.load("Assets/multimeter_flipped.png")
 
 bleachInv = pygame.image.load("Assets/bleachInv.png")
 bleachGround = pygame.image.load("Assets/bleachGround.png")
+hogweedLeaf = pygame.image.load("Assets/hogweedLeafInv.png")
+hogweedPlant = pygame.image.load("Assets/GiantHogweed.png")

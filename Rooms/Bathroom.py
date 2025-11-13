@@ -115,9 +115,8 @@ def Room(screen, screen_res, events):
                     Sounds.curtain.play()
                     showerStallOpen1 = not showerStallOpen1
                 elif shower2InteractRect.collidepoint(player_pos):
-                    if (showerStallOpen2 and not bleach.collected):
+                    if (showerStallOpen2 and bleach.check_collision(player_pos)):
                         Sounds.pickup.play()
-                        bleach.check_collision(player_pos)
                     else:
                         Sounds.curtain.play()
                         showerStallOpen2 = not showerStallOpen2

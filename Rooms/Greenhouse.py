@@ -1,6 +1,7 @@
 import pygame
 import Assets
 import Objects
+import Items
 from shapely.geometry import Point, Polygon
 import Sounds
 from LightSource import LightSource
@@ -38,6 +39,7 @@ tooDarkRead = Objects.briefText(virtual_screen, tooDarkReadScale, 10, 180, 3)
 tooDarkSeeScale = pygame.transform.scale(Assets.tooDarkSee, (Assets.tooDarkSee.get_width()/1.25,Assets.tooDarkSee.get_height()/1.25))
 tooDarkSee = Objects.briefText(virtual_screen, tooDarkSeeScale, 15, 180, 3)
 
+hogweedLeaf = Objects.groundItem(34, 26, Items.hogweedLeaf)
 def inBounds(x, y):
     global tooDarkRead
     hogweedRect = hogweed.get_rect()
@@ -67,9 +69,12 @@ def Room(screen, screen_res, events):
     upperWingPower, _ = Objects.getPinkWingInfo()
     lit = (upperWingPower and level == 1 and power) or Objects.getPinkPower()
 
-    # for event in events:
-    #     if event.type == pygame.KEYDOWN:
-    #         if event.key == pygame.K_e:
+    for event in events:
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_e:
+                if (hogweedLeaf.check_collision(player_pos)):
+                        Sounds.pickup.play()
+                        
 
     virtual_screen.blit(background, (0,0))
     virtual_screen.blit(hogweed, (34, 26))
