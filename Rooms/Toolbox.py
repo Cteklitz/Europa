@@ -60,8 +60,6 @@ paper_crumple_sound = pygame.mixer.Sound("Audio/paperCrumple.wav")
 paper_open_sound = pygame.mixer.Sound("Audio/paperOpen.wav")
 toolbox_open_close_sound = pygame.mixer.Sound("Audio/toolboxOpenClose.wav")
 
-pre_jumpscare_sound.set_volume(.05) # make audio quieter prejumpscare
-
 def positionDeterminer(cameFrom):
     pass
 
@@ -163,7 +161,7 @@ def Room(screen, screen_res, events):
                 eye_closed_temp = pygame.transform.scale(eye_closed, (280, 280))
                 closed_eye_rect = eye_closed_temp.get_rect(center=(virtual_res[0] / 2, virtual_res[1] / 2))
                 virtual_screen.blit(eye_closed_temp, closed_eye_rect)
-            elif (curr_time - cutscene_start < 13000):
+            elif (curr_time - cutscene_start < 14000):
                 if (not played):
                     pre_jumpscare_sound.stop()
                     channel1 = pygame.mixer.find_channel(True)
@@ -172,7 +170,7 @@ def Room(screen, screen_res, events):
                     channel2.play(jumpscare_sound)
                     played = True
                 virtual_screen.blit(eye_open, open_eye_rect)
-            elif (curr_time - cutscene_start < 16000):
+            elif (curr_time - cutscene_start < 18000):
                 virtual_screen.blit(jumpscare_text, (0, 0))
             else:
                 Player.cutscene = False
