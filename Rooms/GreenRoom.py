@@ -66,15 +66,18 @@ def inBounds(x, y):
 
     if greenDoor.rect.collidepoint((x,y)):
         Sounds.radioFar.set_volume(0)
+        Sounds.radioClose.set_volume(0)
         if level == 3 and power:
             Sounds.powerAmb.stop()
             Sounds.ominousAmb.play(-1)
         return 0
     elif bathroomDoor.rect.collidepoint((x,y)):
         Sounds.radioFar.set_volume(0)
+        Sounds.radioClose.set_volume(0)
         return 1
     elif bedroom1Door.rect.collidepoint((x,y)):
         Sounds.radioFar.set_volume(0)
+        Sounds.radioClose.set_volume(0)
         Objects.setBedroomNumber(1)
         return 2
     elif bedroom2Door.rect.collidepoint((x,y)):
@@ -88,10 +91,12 @@ def inBounds(x, y):
         return 2
     elif bedroom3Door.rect.collidepoint((x,y)):
         Sounds.radioFar.set_volume(0)
+        Sounds.radioClose.set_volume(0)
         Objects.setBedroomNumber(3)
         return 2
     elif greenhouseDoor.rect.collidepoint((x,y)):
         Sounds.radioFar.set_volume(0)
+        Sounds.radioClose.set_volume(0)
         return 3
     elif not bounds.collidepoint((x,y)):
         return False
