@@ -56,6 +56,8 @@ def Room(screen, screen_res, events):
         virtual_screen.blit(backgroundRight, backgroundRight.get_rect())
 
     virtual_screen2.blit(spookyBackground, spookyBackground.get_rect())
+    scaledEye = pygame.transform.scale(Assets.eye, (Assets.eye.get_width()/4, Assets.eye.get_height()/4))
+    virtual_screen2.blit(scaledEye, (360,90), Assets.eye.get_rect())
 
     for event in events:
         if event.type == pygame.KEYDOWN:

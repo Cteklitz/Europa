@@ -33,8 +33,6 @@ combo = pygame.mixer.Sound("Audio/combo.wav")
 powerOn = pygame.mixer.Sound("Audio/powerOnAmbStart.wav")
 powerOnAmb = pygame.mixer.Sound("Audio/powerOnAmb.wav")
 
-openingDoor = pygame.mixer.music.load("Audio/opensesame.wav")
-
 mopSound = pygame.mixer.Sound("Audio/mopsounds.wav")
 
 electricityNoise = pygame.mixer.Sound("Audio/ElectricityNoise.wav")
