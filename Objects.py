@@ -21,9 +21,12 @@ class groundItem:
         if in_range and not self.collected:
             if (Player.addItem(self.item)):
                 self.collected = True
+                return True
             else:
                 print("Inventory is full!")
                 # TODO: Add proper inventory is full msg
+        
+        return False
 
     def draw(self, virtual_screen):
         if (self.collected == False):
