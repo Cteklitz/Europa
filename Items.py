@@ -35,3 +35,5 @@ brokenThermometer = Item("brokenThermometer", "Broken Thermometer", "A damaged t
 bleach = Item("bleachInv", "Bleach", "A solution of sodium hypochlorite in water commonly used in laundry and household cleaning", Assets.bleachInv, Assets.bleachGround, "equip")
 
 hogweedLeaf = Item("hogweedLeaf", "Hogweed Leaf", "Leaf of a large, invasive plant with a toxic sap containing furanocoumarins", Assets.hogweedLeaf, Assets.hogweedPlant, "equip")
+
+benzene = Item("benzene", "Benzene", "A colorless, flammable chemical", Assets.benzeneInv, Assets.benzeneDrawer, "equip")

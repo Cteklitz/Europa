@@ -23,6 +23,8 @@ bluepetri = pygame.image.load("Assets/bluepetri.png")
 blueRect = pygame.Rect(97, 63, 13, 8)
 tableRect = pygame.Rect(15,48,184,31)
 
+
+
 redPlaced = False
 yellowPlaced = False
 bluePlaced = False
@@ -35,6 +37,9 @@ MSRect = pygame.Rect(40,24,32,43)
 
 exit = False
 luckyNumber = random.randint(1,12)
+luckyNumber2 = luckyNumber
+while luckyNumber2 == luckyNumber:
+    luckyNumber2 = random.randint(1,12)
 redFound = False
 selected = "None"
 microscope = False
@@ -54,6 +59,7 @@ for y in range(3):
         drawers.append(Drawer(33+(37*x), 90+(13*y)))
 
 luckyRect = pygame.Rect(drawers[luckyNumber-1].rect.x+14, drawers[luckyNumber-1].rect.y, 11,5)
+benzene = Objects.groundItem(drawers[luckyNumber2 - 1].x + 12, drawers[luckyNumber2 - 1].y, Items.benzene)
 
 def inBounds(x, y):
     global exit, microscope
@@ -69,7 +75,7 @@ def positionDeterminer(cameFrom):
     pass
 
 def Room(screen, screen_res, events):
-    global exit, redFound, visible, selected, microscope, redPlaced, yellowPlaced, bluePlaced
+    global exit, redFound, visible, visible2, selected, microscope, redPlaced, yellowPlaced, bluePlaced
     xScale = screen.get_width()/virtual_screen.get_width() 
     yScale = screen.get_height()/virtual_screen.get_height()
 
@@ -78,15 +84,22 @@ def Room(screen, screen_res, events):
     lit = upperWingPower and level == 1 and power
 
     visible = False
+    visible2 = False
 
-    if drawers[luckyNumber-1].state == "open":
+    if drawers[luckyNumber - 1].state == "open":
         above = luckyNumber - 5
         if above >= 0:
             if drawers[above].state == "closed":
                 visible = True
         else:
             visible = True
-
+    if drawers[luckyNumber2 - 1].state == "open":
+        above = luckyNumber2 - 5
+        if above >= 0:
+            if drawers[above].state == "closed":
+                visible2 = True
+        else:
+            visible2 = True
     for event in events:
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_BACKSPACE:
@@ -95,8 +108,11 @@ def Room(screen, screen_res, events):
             if event.button == 1:
                 mouse_x, mouse_y = pygame.mouse.get_pos()
                 mouse_pos = (mouse_x/xScale, mouse_y/yScale)
+                mouse_pos_vec = pygame.Vector2(mouse_x/xScale, mouse_y/yScale)
                 # player clicks red petri
-                if luckyRect.collidepoint(mouse_pos) and not redFound and visible:           
+                if visible2 and benzene.check_collision(mouse_pos_vec):
+                    Sounds.pickup.play()
+                elif luckyRect.collidepoint(mouse_pos) and not redFound and visible:           
                     if (Player.addItem(Items.redPetri)):
                         Sounds.glass1.play()
                         redFound = True
@@ -164,6 +180,8 @@ def Room(screen, screen_res, events):
             virtual_screen.blit(opendrawer, (drawer.rect.x, drawer.rect.y-4))
             if count == luckyNumber and not redFound and visible:
                 virtual_screen.blit(redpetri, luckyRect, area=pygame.Rect(0, 0, 11, 5))
+            elif count == luckyNumber2 and not benzene.collected and visible2:
+                Objects.groundItem.draw(benzene, virtual_screen)
         count -= 1
 
     if not redPlaced or selected == "Red":
