@@ -66,3 +66,5 @@ radioFar = pygame.mixer.Sound("Audio/radio_far.wav")
 
 curtain = pygame.mixer.Sound("Audio/curtain.wav")
 openClose = pygame.mixer.Sound("Audio/toolboxOpenClose.wav")
+sink = pygame.mixer.Sound("Audio/sink.wav")
+sink2 = pygame.mixer.Sound("Audio/sink.wav")
