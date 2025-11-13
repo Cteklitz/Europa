@@ -220,3 +220,6 @@ hogweedPlant = pygame.image.load("Assets/GiantHogweed.png")
 
 benzeneInv = pygame.image.load("Assets/BenzeneInv.png")
 benzeneDrawer = pygame.image.load("Assets/BenzeneDrawer.png")
+
+lighterInv = pygame.image.load("Assets/LighterInv.png")
+lighterBed = pygame.image.load("Assets/LighterBed.png")

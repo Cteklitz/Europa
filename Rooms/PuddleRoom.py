@@ -103,7 +103,6 @@ def inBounds(x, y):
     level, power = Objects.getPipeDungeonInfo()
     if southDoor.rect.collidepoint((x,y)):
         cleanup()
-        Sounds.electricityNoise.stop()
         if not Objects.getBluePower():
             Sounds.ominousAmb.stop()
             Sounds.powerAmb.play(-1)
@@ -160,7 +159,7 @@ def positionDeterminer(cameFrom):
 def cleanup():
     #Stop electricity sound when leaving the room
     if hasattr(Room, 'electricityChannel') and Room.electricityChannel:
-        Room.electricityChannel.stop()
+        Room.electricityChannel.pause()
         Room.electricityPlaying = False
 
 def Room(screen, screen_res, events):
@@ -210,11 +209,15 @@ def Room(screen, screen_res, events):
             Sounds.electricityNoise.set_volume(leftVolume)
             
             if not hasattr(Room, 'electricityChannel'):
-                Room.electricityChannel = Sounds.electricityNoise.play(5)  # Loop indefinitely
+                Room.electricityChannel = Sounds.electricityNoise.play(-1)  # Loop indefinitely
+                Room.electricityChannel.pause()
                 Room.electricityPlaying = False
-            if not Room.electricityPlaying and distance <= maxDistance:
-                Room.electricityChannel = Sounds.electricityNoise.play(-1)  # Restart if stopped
+            if distance <= maxDistance and not Room.electricityPlaying:
+                Room.electricityChannel.unpause()
                 Room.electricityPlaying = True
+            elif distance > maxDistance and Room.electricityPlaying:
+                Room.electricityChannel.pause()
+                Room.electricityPlaying = False
             
         
             Room.electricityChannel.set_volume(leftVolume, rightVolume)
@@ -241,7 +244,8 @@ def Room(screen, screen_res, events):
                     
                     elif Player.checkItem(Items.electricalTape):
                         if wireRect.collidepoint(player_pos) and not wireRepaired:
-                            Sounds.tape.play()
+                            channel1 = pygame.mixer.Channel(5)
+                            channel1.play(Sounds.tape)
                             wireRepaired = True
                     elif puddleRegion.collidepoint(player_pos):
                         # Check if puddles are already cleaned

@@ -30,6 +30,7 @@ radioOn = Assets.radioOn
 radioOff = Assets.radioOff
 
 spookyBackground = pygame.image.load("Assets/scaryBedView.png")
+lighter = Objects.groundItem(55, 95, Items.lighter)
 def positionDeterminer(cameFrom):
     pass
 
@@ -86,7 +87,16 @@ def Room(screen, screen_res, events):
                 case 0: # left bed
                     pass
                 case 1: # right bed
-                    pass
+                    for event in events:
+                        if event.type == pygame.MOUSEBUTTONDOWN:
+                            click_x, click_y = event.pos
+                            click_x_unscaled = click_x/xScale
+                            click_y_unscaled = click_y/yScale
+                            mouse_pos = pygame.Vector2(click_x_unscaled, click_y_unscaled)
+                            if lighter.check_collision(mouse_pos):
+                                Sounds.pickup.play()
+                    Objects.groundItem.draw(lighter, virtual_screen)
+
         case 2: # Bedroom 2
             # light flickering
             lightRng = random.randint(0, 100)
