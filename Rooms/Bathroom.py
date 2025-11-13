@@ -40,6 +40,7 @@ closedShowerStall = pygame.image.load("Assets/showerStallClosed.png")
 openShowerStall = pygame.image.load("Assets/showerStallOpen.png")
 mirror = pygame.image.load("Assets/Mirror.png")
 bathroomSink = pygame.image.load("Assets/BathroomSink.png")
+bathroomSinkOn = pygame.image.load("Assets/BathroomSinkOn.png")
 bleach = pygame.image.load("Assets/bleachGround.png")
 tooDarkReadScale = pygame.transform.scale(Assets.tooDarkRead, (Assets.tooDarkRead.get_width()/1.25,Assets.tooDarkRead.get_height()/1.25))
 tooDarkRead = Objects.briefText(virtual_screen, tooDarkReadScale, 10, 180, 3)
@@ -60,6 +61,12 @@ showerStallPos1 = (68 ,38)
 showerStallOpen2 = False
 showerStallPos2 = (27, 38)
 
+#position and state for sinks
+sinkOn1 = False
+sinkPos1 = (206, 80)
+sinkOn2 = False
+sinkPos2 = (246, 80)
+
 bleach = Objects.groundItem(showerStallPos2[0] + 8, showerStallPos2[1] + 66, Items.bleach)
 
 # interact rects
@@ -67,6 +74,8 @@ toilet1InteractRect = pygame.Rect(toiletStallPos1[0], toiletStallPos1[1], 50, 95
 toilet2InteractRect = pygame.Rect(toiletStallPos2[0], toiletStallPos2[1], 50, 95)
 shower1InteractRect = pygame.Rect(showerStallPos1[0], showerStallPos1[1], 50, 95)
 shower2InteractRect = pygame.Rect(showerStallPos2[0], showerStallPos2[1], 50, 95)
+sink1InteractRect = pygame.Rect(sinkPos1[0], sinkPos1[1], bathroomSink.get_width(), bathroomSink.get_height())
+sink2InteractRect = pygame.Rect(sinkPos2[0], sinkPos2[1], bathroomSink.get_width(), bathroomSink.get_height())
 
 
 
@@ -87,7 +96,7 @@ def positionDeterminer(cameFrom):
         player_pos = pygame.Vector2(exitRect.centerx - 15, exitRect.centery + 10)
 
 def Room(screen, screen_res, events):
-    global trianglePuzzle1, trianglePuzzle2, whiteboard, beaker, table, tableboundRect, tooDarkRead, toiletStallOpen1, toiletStallOpen2, showerStallOpen1, showerStallOpen2
+    global trianglePuzzle1, trianglePuzzle2, whiteboard, beaker, table, tableboundRect, tooDarkRead, toiletStallOpen1, toiletStallOpen2, showerStallOpen1, showerStallOpen2, sinkOn1, sinkOn2
 
     xScale = screen.get_width()/virtual_screen.get_width() 
     yScale = screen.get_height()/virtual_screen.get_height()
@@ -111,6 +120,20 @@ def Room(screen, screen_res, events):
                 elif shower2InteractRect.collidepoint(player_pos):
                     Sounds.curtain.play()
                     showerStallOpen2 = not showerStallOpen2
+                elif sink1InteractRect.collidepoint(player_pos):
+                    if (not sinkOn1):
+                        Sounds.sink.play(loops = -1)
+                        sinkOn1 = True
+                    else:
+                        Sounds.sink.stop()
+                        sinkOn1 = False
+                elif sink2InteractRect.collidepoint(player_pos):
+                    if (not sinkOn2):
+                        Sounds.sink2.play(loops = -1)
+                        sinkOn2 = True
+                    else:
+                        Sounds.sink2.stop()
+                        sinkOn2 = False
                 
                 
             
@@ -144,11 +167,16 @@ def Room(screen, screen_res, events):
         virtual_screen.blit(closedShowerStall, showerStallPos2)
     else:
         virtual_screen.blit(openShowerStall, showerStallPos2)
-    
+    if (not sinkOn1):
+        virtual_screen.blit(bathroomSink, sinkPos1)
+    else:
+        virtual_screen.blit(bathroomSinkOn, sinkPos1)
+    if (not sinkOn2):
+        virtual_screen.blit(bathroomSink, sinkPos2)
+    else:
+        virtual_screen.blit(bathroomSinkOn, sinkPos2)
     virtual_screen.blit(mirror, (206, 47))
     
-    virtual_screen.blit(bathroomSink, (206, 80))
-    virtual_screen.blit(bathroomSink, (246, 80))
     
     virtual_screen2.fill((195, 195, 195))
     if not lit:
