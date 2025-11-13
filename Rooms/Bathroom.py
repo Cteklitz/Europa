@@ -108,7 +108,11 @@ def Room(screen, screen_res, events):
                 if (showerStallOpen2 and not bleach.collected):
                     if bleach.check_collision(player_pos):
                         Sounds.pickup.play()
-                elif toilet1InteractRect.collidepoint(player_pos):
+                elif shower2InteractRect.collidepoint(player_pos):
+                    Sounds.curtain.play()
+                    
+                    showerStallOpen2 = not showerStallOpen2
+                if toilet1InteractRect.collidepoint(player_pos):
                     Sounds.openClose.play()
                     toiletStallOpen1 = not toiletStallOpen1
                 elif toilet2InteractRect.collidepoint(player_pos):
@@ -117,9 +121,6 @@ def Room(screen, screen_res, events):
                 elif shower1InteractRect.collidepoint(player_pos):
                     Sounds.curtain.play()
                     showerStallOpen1 = not showerStallOpen1
-                elif shower2InteractRect.collidepoint(player_pos):
-                    Sounds.curtain.play()
-                    showerStallOpen2 = not showerStallOpen2
                 elif sink1InteractRect.collidepoint(player_pos):
                     if (not sinkOn1):
                         Sounds.sink.play(loops = -1)
