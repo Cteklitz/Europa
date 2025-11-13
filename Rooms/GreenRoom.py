@@ -82,7 +82,7 @@ def inBounds(x, y):
         return 2
     elif bedroom2Door.rect.collidepoint((x,y)):
         if greenPowerOn:
-            Sounds.radioClose.set_volume(1)
+            Sounds.radioClose.set_volume(.1)
         Sounds.radioFar.set_volume(0)
         if level == 3 and power:
             Sounds.powerAmb.stop()
@@ -115,7 +115,7 @@ def positionDeterminer(cameFrom):
 
     Sounds.radioClose.set_volume(0)
     if (greenPowerOn):
-        Sounds.radioFar.set_volume(1)
+        Sounds.radioFar.set_volume(.75)
 
     if cameFrom == "Rooms.Bathroom":
         player_pos = pygame.Vector2(bathroomDoor.x + 37, bathroomDoor.y + bathroomDoor.rect.height/2)
@@ -145,7 +145,7 @@ def Room(screen, screen_res, events):
     dist = math.sqrt((player_pos.x - bedroom2Door.x)**2 + (player_pos.y - bedroom2Door.y)**2)
     maxDist = math.sqrt((48 - bedroom2Door.x)**2 + (48 - bedroom2Door.y)**2)
     normDist = dist / maxDist # normalize dist
-    vol = 1 - normDist + 0.2
+    vol = .75 - normDist + 0.2
     vol = vol**2 # apply expontial growth so vol scales smoothly
     Sounds.radioFar.set_volume(vol)
 

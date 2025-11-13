@@ -236,7 +236,8 @@ def Room(screen, screen_res, events):
                                 if i != triangle:
                                     solved = False
                             if solved and not gaveup:
-                                girlLaughing.play()
+                                channel1 = pygame.mixer.find_channel(True)
+                                channel1.play(girlLaughing)
                 elif letterRect.collidepoint((scaled_mouse_x, scaled_mouse_y)):
                     if (Player.addItem(Items.letterTile)):
                         opentriangleSound.play()

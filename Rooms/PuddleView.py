@@ -137,6 +137,7 @@ def PuddleView(screen, screen_res, events):
             cleanup_percent = calculate_cleanup_percentage()
             if cleanup_percent >= 95.0:
                 puddlesCleaned = True
+                Sounds.electricityNoise.stop()
             cleanup_check_timer = 0
 
     virtual_screen.fill((195, 195, 195))

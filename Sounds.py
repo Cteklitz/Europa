@@ -6,7 +6,7 @@ heartbeat = pygame.mixer.Sound("Audio/heartbeat.wav")
 ominousAmb = pygame.mixer.Sound("Audio/mainroomambience-1.wav")
 powerAmb = pygame.mixer.Sound("Audio/powerambience.wav")
 
-brainwash = pygame.mixer.Sound("Audio/weird noises..wav")
+brainwash = pygame.mixer.Sound("Audio/weird noises.-2.wav")
 book = pygame.mixer.Sound("Audio/book.wav")
 page = pygame.mixer.Sound("Audio/page.wav")
 
@@ -52,6 +52,7 @@ scaryBell = pygame.mixer.Sound("Audio/scary_bell.wav")
 slowCreepy = pygame.mixer.Sound("Audio/slow_creepy.wav")
 
 pickup = pygame.mixer.Sound("Audio/pickup.wav")
+pickup.set_volume(.8)
 
 spark1 = pygame.mixer.Sound("Audio/spark1.wav")
 spark2 = pygame.mixer.Sound("Audio/spark2.wav")
@@ -63,7 +64,9 @@ radioClose = pygame.mixer.Sound("Audio/radio_close.wav")
 radioFar = pygame.mixer.Sound("Audio/radio_far.wav")
 
 curtain = pygame.mixer.Sound("Audio/curtain.wav")
+curtain.set_volume(.5)
 openClose = pygame.mixer.Sound("Audio/toolboxOpenClose.wav")
+openClose.set_volume(.5)
 sink = pygame.mixer.Sound("Audio/sink.wav")
 sink.set_volume(.3)
 sink2 = pygame.mixer.Sound("Audio/sink.wav")
