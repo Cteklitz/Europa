@@ -175,7 +175,10 @@ def PuddleView(screen, screen_res, events):
                 eye_cycle_complete = True  
     
     if eye_alpha > 0 and cleanup_percent > 0.5 and not playedBell:
-        Sounds.scaryBell.play()
+        bell_channel = pygame.mixer.Channel(7)
+        bell_channel.stop()
+        bell_channel.play(Sounds.scaryBell)
+        bell_channel.set_volume(1.0)
         playedBell = True
 
     if eye_alpha > 0 and cleanup_percent < 0.5:
