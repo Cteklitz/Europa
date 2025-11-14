@@ -23,11 +23,20 @@ bluepetri = pygame.image.load("Assets/bluepetri.png")
 blueRect = pygame.Rect(97, 63, 13, 8)
 tableRect = pygame.Rect(15,48,184,31)
 
+# Used for flame animation when bunsen burner on
+flame1 = pygame.image.load("Assets/BunsenBurnerFire.png")
+flame2 = pygame.image.load("Assets/BunsenBurnerFire2.png")
+flame = [flame1, flame2]
+firstTime = pygame.time.get_ticks()
+currIndex = 0
+currFlame = flame[0]
+bunsenRect = pygame.Rect(143, 30, 30, 42)
 
 
 redPlaced = False
 yellowPlaced = False
 bluePlaced = False
+bunsenOn = False
 
 Cover = pygame.Surface((13, 8))
 Cover.fill((127,127,127))
@@ -72,20 +81,23 @@ def inBounds(x, y):
     return False
 
 def positionDeterminer(cameFrom):
-    pass
+    if cameFrom == "Rooms.PinkUpperWing":
+        if bunsenOn:
+            Sounds.bunsen.set_volume(.6)
+            Sounds.bunsen.play(loops = -1)
 
 def Room(screen, screen_res, events):
-    global exit, redFound, visible, visible2, selected, microscope, redPlaced, yellowPlaced, bluePlaced
+    global exit, redFound, visible, visible2, selected, microscope, redPlaced, yellowPlaced, bluePlaced, bunsenOn, firstTime, currIndex, currFlame
     xScale = screen.get_width()/virtual_screen.get_width() 
     yScale = screen.get_height()/virtual_screen.get_height()
 
     level, power = Objects.getPipeDungeonInfo()
     upperWingPower, _ = Objects.getPinkWingInfo()
     lit = upperWingPower and level == 1 and power
+    currTime = pygame.time.get_ticks()
 
     visible = False
     visible2 = False
-
     if drawers[luckyNumber - 1].state == "open":
         above = luckyNumber - 5
         if above >= 0:
@@ -103,11 +115,13 @@ def Room(screen, screen_res, events):
     for event in events:
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_BACKSPACE:
+                Sounds.bunsen.stop()
                 exit = True
         if event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == 1:
                 mouse_x, mouse_y = pygame.mouse.get_pos()
                 mouse_pos = (mouse_x/xScale, mouse_y/yScale)
+                print(mouse_pos)
                 mouse_pos_vec = pygame.Vector2(mouse_x/xScale, mouse_y/yScale)
                 # player clicks red petri
                 if visible2 and benzene.check_collision(mouse_pos_vec):
@@ -122,6 +136,13 @@ def Room(screen, screen_res, events):
                     selected = "Yellow"
                 elif blueRect.collidepoint(mouse_pos) and bluePlaced:
                     selected = "Blue"
+                elif bunsenRect.collidepoint(mouse_pos) and not bunsenOn:
+                    if Player.checkItem(Items.lighter):
+                        Sounds.lighter.play()
+                        pygame.time.delay(1200)
+                        Sounds.bunsen.set_volume(0.6)
+                        Sounds.bunsen.play(loops = -1)
+                        bunsenOn = True
                 elif msRect.collidepoint(mouse_pos):
                     if Player.checkItem(Items.redPetri):
                         Player.removeItem(Items.redPetri)
@@ -166,7 +187,7 @@ def Room(screen, screen_res, events):
                                 drawer.state = "closed"
                                 drawer.rect.y -= 4
                             break
-                    
+          
     virtual_screen.fill((195, 195, 195))
     dark_overlay.fill((0, 0, 0, 150))
 
@@ -196,7 +217,12 @@ def Room(screen, screen_res, events):
         virtual_screen.blit(Cover, blueRect)
         if selected == "Blue":
             virtual_screen.blit(bluepetri, msRect)
-
+    if bunsenOn:
+        if (currTime - firstTime >= 30):
+                currIndex = (currIndex + 1) % len(flame)
+                currFlame = flame[currIndex] # sets current flame for animation in array
+                firstTime = currTime
+        virtual_screen.blit(currFlame, (155, 47))
     scaled = pygame.transform.scale(virtual_screen, screen_res)
     screen.blit(scaled, (0, 0))
 

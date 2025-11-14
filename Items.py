@@ -38,4 +38,4 @@ hogweedLeaf = Item("hogweedLeaf", "Hogweed Leaf", "Leaf of a large, invasive pla
 
 benzene = Item("benzene", "Benzene", "A colorless, flammable chemical", Assets.benzeneInv, Assets.benzeneDrawer, "equip")
 
-lighter = Item("lighter", "Lighter", "A device that produces a small flame", Assets.lighterInv, Assets.lighterBed, "use")
+lighter = Item("lighter", "Lighter", "A device that produces a small flame", Assets.lighterInv, Assets.lighterBed, "equip")

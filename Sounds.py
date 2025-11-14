@@ -71,3 +71,6 @@ sink = pygame.mixer.Sound("Audio/sink.wav")
 sink.set_volume(.3)
 sink2 = pygame.mixer.Sound("Audio/sink.wav")
 sink2.set_volume(.3)
+
+bunsen = pygame.mixer.Sound("Audio/bunsen.wav")
+lighter = pygame.mixer.Sound("Audio/lighter.wav")

@@ -1,5 +1,6 @@
 import pygame
 import Assets
+import Area
 import Objects
 from shapely.geometry import Point, Polygon
 import Sounds
@@ -77,6 +78,7 @@ tooDarkRead = Objects.briefText(virtual_screen, tooDarkReadScale, 10, 180, 3)
 tooDarkSeeScale = pygame.transform.scale(Assets.tooDarkSee, (Assets.tooDarkSee.get_width()/1.25,Assets.tooDarkSee.get_height()/1.25))
 tooDarkSee = Objects.briefText(virtual_screen, tooDarkSeeScale, 15, 180, 3)
 guy = pygame.image.load("Assets/guy.png")
+flame = pygame.image.load("Assets/BunsenFireZoomedOut.png")
 
 def inBounds(x, y):
     global trianglePuzzle1, trianglePuzzle2, beaker, tableRect, table, tooDarkRead
@@ -117,6 +119,13 @@ def positionDeterminer(cameFrom):
     global player_pos
     if cameFrom == "Rooms.PinkRoom":
         player_pos = pygame.Vector2(exitWalk.centerx + 2, exitWalk.centery - 5)
+        if (Area.getBunsenOn()):
+            Sounds.bunsen.set_volume(.1)
+            Sounds.bunsen.play(loops = -1)
+    if cameFrom == "Rooms.MscopeTable":
+        if (Area.getBunsenOn()):
+            Sounds.bunsen.set_volume(.1)
+            Sounds.bunsen.play(loops = -1)
 
 def Room(screen, screen_res, events):
     global trianglePuzzle1, trianglePuzzle2, whiteboard, beaker, table, tableboundRect, tooDarkRead
@@ -146,10 +155,16 @@ def Room(screen, screen_res, events):
                     if beakerRect.collidepoint(player_pos):
                         beaker = True
                     if tableboundRect.collidepoint(player_pos):
+                        Sounds.bunsen.stop()
                         table = True
             if event.key == pygame.K_BACKSPACE:
                 if whiteboard:
                     whiteboard = False
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if event.button == 1:
+                mouse_x, mouse_y = pygame.mouse.get_pos()
+                mouse_pos = (mouse_x/xScale, mouse_y/yScale)
+                print(mouse_pos)
 
     virtual_screen.blit(background, (0,0))
     virtual_screen2.fill((195, 195, 195))
@@ -194,7 +209,8 @@ def Room(screen, screen_res, events):
     red, yellow, blue = Objects.getColorsPlaced()
     if player_pos.y > 125:
         virtual_screen.blit(mscopetableScale, (105, 100))
-
+        if Area.getBunsenOn():
+            virtual_screen.blit(flame, (194, 110))
         if red:
             virtual_screen.blit(smolRed, (150, 121))
         if yellow:
@@ -222,6 +238,8 @@ def Room(screen, screen_res, events):
             virtual_screen.blit(beakercase, (10, 70))
     virtual_screen.blit(circleLight, circleLight.get_rect(center=light_pos))
     virtual_screen.blit(circleLight, circleLight.get_rect(center=light_pos2))
+
+    
 
     virtual_screen2.blit(whiteboardzoom, (10,20))
     

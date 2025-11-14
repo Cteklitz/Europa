@@ -11,6 +11,9 @@ def getPipeDungeonInfo():
 def getPinkWingInfo():
     return PinkRoom.upperWingPower, PinkRoom.lowerWingPower
 
+def getBunsenOn():
+    return MscopeTable.bunsenOn
+
 def getCutscene():
     return BookcaseView.cutscene
 
