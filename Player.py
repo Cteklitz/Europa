@@ -5,7 +5,7 @@ import Objects
 
 health = 100
 inventory = []
-MaxInventorySize = 7
+MaxInventorySize = 20
 equipped = None
 cutscene = False
 
