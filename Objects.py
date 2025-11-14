@@ -103,7 +103,8 @@ class Light:
 
     def update(self):
         level, power = Area.getPipeDungeonInfo()
-        if (level == self.type and power) or (self.type == 1 and Area.getPinkPower()) or (self.type == 2 and Area.getBluePower()):
+        if (level == self.type and power) or (self.type == 1 and Area.getPinkPower()) or (self.type == 2 and Area.getBluePower()) \
+        or (self.type == 3 and Area.getGreenPower()):
             self.image = Assets.tiles[self.type]
             return True
         else:
@@ -228,6 +229,9 @@ def getPinkPower():
 
 def getBluePower():
     return Area.getBluePower()
+
+def getGreenPower():
+    return Area.getGreenPower()
 
 def getWaterLevelsSolved():
     return Area.getWaterLevelsSolved()

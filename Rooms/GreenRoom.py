@@ -8,6 +8,7 @@ from LightFalloff import LightFalloff
 from LightingUtils import apply_lighting, apply_falloff
 import Player
 import math
+import Items
 
 virtual_res = (644, 260)
 virtual_screen = pygame.Surface(virtual_res)
@@ -21,7 +22,7 @@ lights = [
     Objects.Light(48, 48, 3),
     Objects.Light(48, 176, 3),
     Objects.Light(208, 176, 3),
-    Objects.Light(400, 48, 3),
+    Objects.Light(304, 48, 3),
     Objects.Light(400, 176, 3),
     Objects.Light(560, 48, 3),
     Objects.Light(560, 176, 3)
@@ -45,15 +46,17 @@ bedroom1Door = Objects.Door(112, 208, Assets.grayDoorSouth)
 bedroom2Door = Objects.Door(304, 208, Assets.grayDoorSouth)
 bedroom3Door = Objects.Door(496, 208, Assets.grayDoorSouth)
 greenhouseDoor = Objects.Door(592, 112, Assets.grayDoorEast)
+greenPowerDoor = Objects.Door(400,16, Assets.grayDoorNorth)
 
-upperWingPower = False
-lowerWingPower = False
+unlocked = False
+keycardScannerInteractRect = pygame.Rect(greenPowerDoor.rect.x+32,greenPowerDoor.rect.y+32,25,6)
 
 def inBounds(x, y):
+    global unlocked
     level, power = Objects.getPipeDungeonInfo()
     bounds = pygame.Rect(48,48,544,160)
     # Add greenpower statement
-    if level == 3 and power:
+    if (level == 3 and power) or Objects.getGreenPower():
         greenPowerOn = True
     else:
         greenPowerOn = False
@@ -62,7 +65,7 @@ def inBounds(x, y):
     if greenDoor.rect.collidepoint((x,y)): # Go to main area
         Sounds.radioFar.stop()
         Sounds.radioClose.stop()
-        if level == 3 and power:
+        if (level == 3 and power) or Objects.getGreenPower():
             Sounds.powerAmb.stop()
             Sounds.ominousAmb.play(-1)
         return 0
@@ -79,7 +82,7 @@ def inBounds(x, y):
         if greenPowerOn:
             Sounds.radioClose.set_volume(.1)
         Sounds.radioFar.set_volume(0)
-        if level == 3 and power:
+        if (level == 3 and power) or Objects.getGreenPower():
             Sounds.powerAmb.stop()
             Sounds.ominousAmb.play(-1)
         Objects.setBedroomNumber(2)
@@ -93,6 +96,15 @@ def inBounds(x, y):
         Sounds.radioFar.set_volume(0)
         Sounds.radioClose.set_volume(0)
         return 3
+    elif greenPowerDoor.rect.collidepoint((x,y)) and unlocked:
+        Sounds.radioFar.set_volume(0)
+        Sounds.radioClose.set_volume(0)
+        if Objects.getGreenPower():
+            Sounds.powerOnAmb.play(-1)
+        else:
+            Sounds.powerAmb.stop()
+            Sounds.ominousAmb.play(-1)
+        return 4
     elif not bounds.collidepoint((x,y)):
         return False
     return True
@@ -102,7 +114,7 @@ def positionDeterminer(cameFrom):
 
     level, power = Objects.getPipeDungeonInfo()
     # Add greenpower statement
-    if level == 3 and power:
+    if (level == 3 and power) or Objects.getGreenPower():
         greenPowerOn = True
     else:
         greenPowerOn = False
@@ -129,11 +141,14 @@ def positionDeterminer(cameFrom):
             player_pos = pygame.Vector2(bedroom3Door.x + bedroom3Door.rect.width/2, bedroom3Door.y - 5)
     elif cameFrom == "Rooms.Greenhouse":
         player_pos = pygame.Vector2(greenhouseDoor.x - 5, greenhouseDoor.y + greenhouseDoor.rect.height/2)   
+    elif cameFrom == "Rooms.GreenPower":
+        player_pos = pygame.Vector2(greenPowerDoor.x + greenPowerDoor.rect.width/2, greenPowerDoor.y + greenPowerDoor.rect.height + 5)
 
 def Room(screen, screen_res, events):
+    global player_pos, unlocked
     level, power = Objects.getPipeDungeonInfo()
     # Add greenpower statement
-    if level == 3 and power:
+    if (level == 3 and power) or Objects.getGreenPower():
         greenPowerOn = True
     else:
         greenPowerOn = False
@@ -150,9 +165,15 @@ def Room(screen, screen_res, events):
     if not greenPowerOn:
         Sounds.radioFar.set_volume(0)
 
-    # for event in events:
-    #     if event.type == pygame.KEYDOWN:
-    #         if event.key == pygame.K_e:
+    for event in events:
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_e:
+                if keycardScannerInteractRect.collidepoint(player_pos) and Player.checkItem(Items.greenKeycard) and not unlocked:
+                    pygame.mixer.music.load("Audio/opensesame.wav")
+                    pygame.mixer.music.play(start=3.0)
+                    Sounds.accessGranted.play()
+                    unlocked = True
+                    Player.removeItem(Items.greenKeycard)
 
     virtual_screen.fill((105,105,105))
     dark_overlay.fill((0, 0, 0, 150))
@@ -174,7 +195,7 @@ def Room(screen, screen_res, events):
 
     Done = False
 
-    if not Objects.getPinkPower():
+    if not Objects.getGreenPower():
         for light in lights:
             lit = light.update()
             if not Done and lit:
@@ -195,6 +216,21 @@ def Room(screen, screen_res, events):
     virtual_screen.blit(bedroom2Door.image, bedroom2Door.rect)
     virtual_screen.blit(bedroom3Door.image, bedroom3Door.rect)
     virtual_screen.blit(greenhouseDoor.image, greenhouseDoor.rect)
+    if unlocked:
+        virtual_screen.blit(greenPowerDoor.image, greenPowerDoor.rect)
+    else:
+        virtual_screen.blit(Assets.lockedDoorNorth, greenPowerDoor.rect)
+
+    virtual_screen.blit(Assets.pipes[12], (greenDoor.rect.x, greenDoor.rect.y+32))
+    virtual_screen.blit(Assets.pipes[18], (greenDoor.rect.x, greenDoor.rect.y+64))
+
+    for x in range(greenDoor.rect.x+32, greenPowerDoor.rect.x, 32):
+        virtual_screen.blit(Assets.pipes[10], (x, greenDoor.rect.y+64))
+
+    virtual_screen.blit(Assets.pipes[12], (greenPowerDoor.rect.x, greenPowerDoor.rect.y+32))
+    virtual_screen.blit(Assets.pipes[14], (greenPowerDoor.rect.x, greenPowerDoor.rect.y+64))
+
+    virtual_screen.blit(Assets.keycardScanner, (greenPowerDoor.rect.x+32,greenPowerDoor.rect.y))
 
     Player.animatePlayer(virtual_screen, player_pos, 32, 32, "top-down")
 

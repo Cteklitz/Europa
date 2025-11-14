@@ -25,6 +25,8 @@ pinkLight1 = LightSource(63, 207, radius=50, strength=100, color=(120,0,120))
 pinkLight2 = LightSource(63, 273, radius=50, strength=100, color=(120,0,120))
 blueLight1 = LightSource(401 + 16, 192 + 16, radius=50, strength=100, color=(0,162,232))
 blueLight2 = LightSource(401 + 16, 256 + 16, radius=50, strength=100, color=(0,162,232))
+greenLight1 = LightSource(192 + 16, 398 + 16, radius=50, strength=100, color=(181, 230, 29))
+greenLight2 = LightSource(256 + 16, 398 + 16, radius=50, strength=100, color=(181, 230, 29))
 
 # this is to allow for a dynamic amount of lights to be on without affecting the room brightness
 # falloffs[n] is the falloff for when there are n lights in the room, it should be applied to each of the n lights 
@@ -52,7 +54,7 @@ blueDoor = Objects.Door(433, 224, Assets.blueDoorEast)
 greenDoor = Objects.Door(224, 430, Assets.greenDoorSouth)
 orangeDoor = Objects.Door(224, 12, Assets.orangeDoorNorth)
 
-pinkKeycard = Objects.groundItem(150, 150, Items.pinkKeycard)
+greenKeycard = Objects.groundItem(150, 150, Items.greenKeycard)
 bandage = Objects.groundItem(300, 265, Items.bandage)
 
 Sounds.ominousAmb.play(-1)
@@ -79,7 +81,7 @@ def inBounds(x, y):
         return 2
     elif greenDoor.rect.collidepoint((x,y)):
         level, power = Objects.getPipeDungeonInfo()
-        if power and level == 3:
+        if (power and level == 3) or Objects.getGreenPower():
             Sounds.ominousAmb.stop()
             Sounds.powerAmb.play(-1)
         return 3
@@ -110,13 +112,13 @@ def Room(screen, screen_res, events):
         pygame.draw.line(virtual_screen, "black", octagon1[i], octagon2[i], 1)
 
     # draw ground items
-    Objects.groundItem.draw(pinkKeycard, virtual_screen)
+    Objects.groundItem.draw(greenKeycard, virtual_screen)
     Objects.groundItem.draw(bandage, virtual_screen)
 
     for event in events:
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_e:
-                pinkKeycard.check_collision(player_pos)
+                greenKeycard.check_collision(player_pos)
                 bandage.check_collision(player_pos)
 
     lastType = 0
@@ -174,6 +176,7 @@ def Room(screen, screen_res, events):
     pipeDungeonInfo = Objects.getPipeDungeonInfo()
     pinkPower = Objects.getPinkPower()
     bluePower = Objects.getBluePower()
+    greenPower = Objects.getGreenPower()
 
     # clear colored lights from lightSources
     while (len(lightSources) > 1):
@@ -185,6 +188,9 @@ def Room(screen, screen_res, events):
     if bluePower or (pipeDungeonInfo[0] == 2 and pipeDungeonInfo[1] == True): # checks if the blue door should be lit
         lightSources.append(blueLight1)
         lightSources.append(blueLight2)
+    if greenPower or (pipeDungeonInfo[0] == 3 and pipeDungeonInfo[1] == True): # checks if the green door should be lit
+        lightSources.append(greenLight1)
+        lightSources.append(greenLight2)
     
     apply_lighting(virtual_screen, lightSources, darkness=10, ambient_color=(50, 50, 50), ambient_strength=10)
     for i in range(len(lightSources)): # apply falloff for each light in lightSources
