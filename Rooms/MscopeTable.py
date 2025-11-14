@@ -83,7 +83,7 @@ def inBounds(x, y):
 def positionDeterminer(cameFrom):
     if cameFrom == "Rooms.PinkUpperWing":
         if bunsenOn:
-            Sounds.bunsen.set_volume(.6)
+            Sounds.bunsen.set_volume(.45)
             Sounds.bunsen.play(loops = -1)
 
 def Room(screen, screen_res, events):
@@ -139,7 +139,7 @@ def Room(screen, screen_res, events):
                     if Player.checkItem(Items.lighter):
                         Sounds.lighter.play()
                         pygame.time.delay(1200)
-                        Sounds.bunsen.set_volume(0.6)
+                        Sounds.bunsen.set_volume(0.45)
                         Sounds.bunsen.play(loops = -1)
                         bunsenOn = True
                 elif msRect.collidepoint(mouse_pos):
