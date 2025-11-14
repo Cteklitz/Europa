@@ -49,11 +49,6 @@ greenhouseDoor = Objects.Door(592, 112, Assets.grayDoorEast)
 upperWingPower = False
 lowerWingPower = False
 
-Sounds.radioFar.play(-1)
-Sounds.radioFar.set_volume(0)
-Sounds.radioClose.play(-1)
-Sounds.radioClose.set_volume(0)
-
 def inBounds(x, y):
     level, power = Objects.getPipeDungeonInfo()
     bounds = pygame.Rect(48,48,544,160)
@@ -64,9 +59,9 @@ def inBounds(x, y):
         greenPowerOn = False
     #greenPowerOn = True # FOR TESTING
 
-    if greenDoor.rect.collidepoint((x,y)):
-        Sounds.radioFar.set_volume(0)
-        Sounds.radioClose.set_volume(0)
+    if greenDoor.rect.collidepoint((x,y)): # Go to main area
+        Sounds.radioFar.stop()
+        Sounds.radioClose.stop()
         if level == 3 and power:
             Sounds.powerAmb.stop()
             Sounds.ominousAmb.play(-1)
@@ -119,7 +114,10 @@ def positionDeterminer(cameFrom):
 
     if cameFrom == "Rooms.Bathroom":
         player_pos = pygame.Vector2(bathroomDoor.x + 37, bathroomDoor.y + bathroomDoor.rect.height/2)
-    elif cameFrom == "Rooms.MainRoom":       
+    elif cameFrom == "Rooms.MainRoom":    
+        Sounds.radioFar.play(-1)
+        Sounds.radioFar.set_volume(0)
+        Sounds.radioClose.play(-1)
         Sounds.radioClose.set_volume(0)
         player_pos = pygame.Vector2(greenDoor.x + greenDoor.rect.width/2, greenDoor.y + greenDoor.rect.height + 5)
     elif cameFrom == "Rooms.Bedroom":
