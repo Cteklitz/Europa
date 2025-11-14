@@ -190,6 +190,7 @@ tooDarkRead = pygame.image.load("Assets/TooDark.png")
 tooDarkSee = pygame.image.load("Assets/TooDarkSee.png")
 trashEmpty = pygame.image.load("Assets/trashEmpty.png")
 somethingInside = pygame.image.load("Assets/somethingInside.png")
+safeText = pygame.image.load("Assets/safe_text.png")
 
 ### ITEMS
 pinkKeycard = pygame.image.load("Assets/pink_keycard.png")

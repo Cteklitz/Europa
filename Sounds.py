@@ -78,3 +78,5 @@ bunsen = pygame.mixer.Sound("Audio/bunsen.wav")
 lighter = pygame.mixer.Sound("Audio/lighter.wav")
 
 unlock = pygame.mixer.Sound("Audio/unlock.wav")
+
+scary = pygame.mixer.Sound("Audio/scary.wav")
