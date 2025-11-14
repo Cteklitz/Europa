@@ -97,7 +97,7 @@ def inBounds(x, y):
         trashEmpty.activated_time = -1
         somethingInside.activated_time = -1
         if BedroomNumber == 2:
-            if level == 3 and power:
+            if (level == 3 and power) or Objects.getGreenPower():
                 Sounds.ominousAmb.stop()
                 Sounds.powerAmb.play(-1)
         return 0
@@ -139,7 +139,7 @@ def Room(screen, screen_res, events):
     level, power = Objects.getPipeDungeonInfo()
 
     # Add greenpower statement
-    if level == 3 and power:
+    if (level == 3 and power) or Objects.getGreenPower():
         greenPowerOn = True
     else:
         greenPowerOn = False

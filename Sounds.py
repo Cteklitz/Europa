@@ -71,3 +71,5 @@ sink = pygame.mixer.Sound("Audio/sink.wav")
 sink.set_volume(.3)
 sink2 = pygame.mixer.Sound("Audio/sink.wav")
 sink2.set_volume(.3)
+
+accessGranted = pygame.mixer.Sound("Audio/accessgranted.mp3")

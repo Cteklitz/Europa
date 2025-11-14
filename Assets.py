@@ -176,6 +176,8 @@ movingEyes = []
 for i in range(1, 9):
     movingEyes.append(pygame.image.load(f"Assets/movingEYE{i}.png"))
 
+keycardScanner = pygame.image.load("Assets/keycardScanner.png")
+
 ### TEXT
 tooDarkRead = pygame.image.load("Assets/TooDark.png")
 tooDarkSee = pygame.image.load("Assets/TooDarkSee.png")
@@ -185,6 +187,8 @@ somethingInside = pygame.image.load("Assets/somethingInside.png")
 ### ITEMS
 pinkKeycard = pygame.image.load("Assets/pink_keycard.png")
 pinkKeycardGround = pygame.image.load("Assets/pink_keycard_ground.png")
+greenKeycard = pygame.image.load("Assets/green_keycard.png")
+greenKeycardGround = pygame.image.load("Assets/green_keycard_ground.png")
 
 bandage = pygame.image.load("Assets/bandage.png")
 bandageGround = pygame.image.load("Assets/bandage_ground.png")
