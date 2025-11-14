@@ -121,7 +121,6 @@ def Room(screen, screen_res, events):
             if event.button == 1:
                 mouse_x, mouse_y = pygame.mouse.get_pos()
                 mouse_pos = (mouse_x/xScale, mouse_y/yScale)
-                print(mouse_pos)
                 mouse_pos_vec = pygame.Vector2(mouse_x/xScale, mouse_y/yScale)
                 # player clicks red petri
                 if visible2 and benzene.check_collision(mouse_pos_vec):

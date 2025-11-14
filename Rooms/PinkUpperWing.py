@@ -165,7 +165,6 @@ def Room(screen, screen_res, events):
             if event.button == 1:
                 mouse_x, mouse_y = pygame.mouse.get_pos()
                 mouse_pos = (mouse_x/xScale, mouse_y/yScale)
-                print(mouse_pos)
 
     virtual_screen.blit(background, (0,0))
     virtual_screen2.fill((195, 195, 195))
