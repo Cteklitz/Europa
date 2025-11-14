@@ -146,7 +146,7 @@ def Room(screen, screen_res, events):
             
     level, power = Objects.getPipeDungeonInfo()
     # Add greenpower statement
-    if level == 3 and power:
+    if (level == 3 and power) or Objects.getGreenPower():
         lit = True
     else:
         lit = False
