@@ -83,6 +83,7 @@ flame = pygame.image.load("Assets/BunsenFireZoomedOut.png")
 def inBounds(x, y):
     global trianglePuzzle1, trianglePuzzle2, beaker, tableRect, table, tooDarkRead
     if exitRect.collidepoint((x,y)):
+        Sounds.bunsen.stop()
         level, power = Objects.getPipeDungeonInfo()
         upperWingPower, _ = Objects.getPinkWingInfo()
         if level == 1 and power and not upperWingPower and not Objects.getPinkPower():
