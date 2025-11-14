@@ -23,6 +23,7 @@ bounds = Polygon([(19,110),(298,110),(308,181), (308,203), (16,203), (16,181)])
 
 exitRect = pygame.Rect(10, 141, 10, 44)
 
+lit = False
 light_pos = (70, 50)
 light_pos2 = (240, 50)
 wall_lights = [
@@ -61,13 +62,19 @@ def positionDeterminer(cameFrom):
         player_pos = pygame.Vector2(exitRect.centerx + 15, exitRect.centery + 10)
 
 def Room(screen, screen_res, events):
-    global trianglePuzzle1, trianglePuzzle2, whiteboard, beaker, table, tableboundRect, tooDarkRead
+    global trianglePuzzle1, trianglePuzzle2, whiteboard, beaker, table, tableboundRect, tooDarkRead, lit
 
     xScale = screen.get_width()/virtual_screen.get_width() 
     yScale = screen.get_height()/virtual_screen.get_height()
     level, power = Objects.getPipeDungeonInfo()
     upperWingPower, _ = Objects.getPinkWingInfo()
-    lit = (upperWingPower and level == 1 and power) or Objects.getPinkPower()
+    level, power = Objects.getPipeDungeonInfo()
+
+    # Add greenpower statement
+    if level == 3 and power:
+        lit = True
+    else:
+        lit = False
 
     for event in events:
         if event.type == pygame.KEYDOWN:
