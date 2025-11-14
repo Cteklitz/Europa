@@ -80,7 +80,7 @@ def inBounds(x, y):
         return 2
     elif bedroom2Door.rect.collidepoint((x,y)):
         if greenPowerOn:
-            Sounds.radioClose.set_volume(.1)
+            Sounds.radioClose.set_volume(.15)
         Sounds.radioFar.set_volume(0)
         if (level == 3 and power) or Objects.getGreenPower():
             Sounds.powerAmb.stop()

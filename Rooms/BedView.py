@@ -19,7 +19,7 @@ dark_overlay = pygame.Surface(virtual_screen.get_size(), pygame.SRCALPHA)
 dark_overlay2 = pygame.Surface(virtual_screen2.get_size(), pygame.SRCALPHA)
 
 soundTimer = Objects.timer(Sounds.scary.get_length() - 1.0, False)
-textTimer = Objects.timer(4.0, False)
+textTimer = Objects.timer(5.0, False)
 
 bedNumber = 0 # 0 for left bed, 1 for right bed
 exit = False
@@ -141,9 +141,11 @@ def Room(screen, screen_res, events):
                         Sounds.scary.play()
                         playedSpooky = True
                         soundTimer.setInitial()
+                        Sounds.radioFar.set_volume(0.07)
                     if soundTimer.Done() and not textTimer.Done():
                         Sounds.scary.stop()
                         textTimer.setInitial()
+                        Sounds.radioFar.set_volume(0.15)
                     if textTimer.Done() and not spookyDone:
                         spookyDone = True
                 case 1: # right bed
