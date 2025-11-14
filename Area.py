@@ -55,6 +55,7 @@ def getWaterLevelsSolved():
     return ValvePuzzle.solved
 
 def getBreakerSolved():
+    return True
     return BreakerPuzzle.solved
 
 def RepairWire():
@@ -74,6 +75,9 @@ def getBedNumber():
 
 def setBedNumber(num):
     BedView.bedNumber = num
+
+def getEyeLockerUnlocked():
+    return LockerView.unlocked
 
 class Area:
     def __init__(self, roomLayout):

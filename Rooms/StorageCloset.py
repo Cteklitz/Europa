@@ -20,8 +20,12 @@ floor = pygame.image.load("Assets/floor_small.png")
 door = pygame.image.load("Assets/powerRoomDoor.png")
 
 locker = Assets.locker
-lockerRect = pygame.Rect(50, 19, 32, 64)
-lockerInteractRect = pygame.Rect(50, 19, 32, 64)
+lockerRect = pygame.Rect(53, 19, 32, 64)
+lockerInteractRect = pygame.Rect(35, 19, 70, 64)
+
+eyeLocker = Assets.eyeLocker
+eyeLockerUnlocked = Assets.eyeLockerUnlocked
+eyeLockerRect = pygame.Rect(35, 26, 20, 57)
 
 dimLightScale1 = pygame.transform.scale(Assets.squishedDimTiles[1], (Assets.squishedDimTiles[1].get_width()/4, Assets.squishedDimTiles[1].get_height()*0.75))
 dimLightScale2 = pygame.transform.scale(Assets.squishedDimTiles[1], (Assets.squishedDimTiles[1].get_width()/4.4, Assets.squishedDimTiles[1].get_height()*0.75))
@@ -123,9 +127,14 @@ def Room(screen, screen_res, events):
         virtual_screen.blit(Assets.dimTiles[2], (32,62))  # Reduced by 50%
         virtual_screen.blit(Assets.dimTiles[2], (128,62))  # Reduced by 50%
     '''
+    unlocked = Objects.getEyeLockerUnlocked()
 
     virtual_screen.blit(door, (150,24))  # Reduced by 50%
     virtual_screen.blit(locker, lockerRect)
+    if not unlocked:
+        virtual_screen.blit(eyeLocker, eyeLockerRect)
+    else:
+        virtual_screen.blit(eyeLockerUnlocked, eyeLockerRect)
 
     Player.animatePlayer(virtual_screen, player_pos)
 

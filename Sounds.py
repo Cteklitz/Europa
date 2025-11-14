@@ -76,3 +76,5 @@ accessGranted = pygame.mixer.Sound("Audio/accessgranted.mp3")
 
 bunsen = pygame.mixer.Sound("Audio/bunsen.wav")
 lighter = pygame.mixer.Sound("Audio/lighter.wav")
+
+unlock = pygame.mixer.Sound("Audio/unlock.wav")

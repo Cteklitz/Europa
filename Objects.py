@@ -256,3 +256,6 @@ def getBedNumber():
 
 def setBedNumber(num):
     Area.setBedNumber(num)
+
+def getEyeLockerUnlocked():
+    return Area.getEyeLockerUnlocked()

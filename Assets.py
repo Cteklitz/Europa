@@ -178,6 +178,13 @@ for i in range(1, 9):
 
 keycardScanner = pygame.image.load("Assets/keycardScanner.png")
 
+lockerViewClosed = pygame.image.load("Assets/LockerViewClosed.png")
+lockerViewOpen = pygame.image.load("Assets/LockerViewOpen.png")
+eyeLocker = pygame.image.load("Assets/eye_locker.png")
+eyeLockerUnlocked = pygame.image.load("Assets/eye_locker_unlocked.png")
+lock = pygame.image.load("Assets/lock.png")
+lockInterface = pygame.image.load("Assets/eyelock_interface.png")
+
 ### TEXT
 tooDarkRead = pygame.image.load("Assets/TooDark.png")
 tooDarkSee = pygame.image.load("Assets/TooDarkSee.png")
