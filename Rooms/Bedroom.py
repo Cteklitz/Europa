@@ -96,6 +96,8 @@ def inBounds(x, y):
         tooDarkSee.activated_time = -1
         trashEmpty.activated_time = -1
         somethingInside.activated_time = -1
+        # Stop any playing trash sounds when leaving room
+        Sounds.TrashSounds.stop()
         if BedroomNumber == 2:
             if (level == 3 and power) or Objects.getGreenPower():
                 Sounds.ominousAmb.stop()
@@ -109,6 +111,8 @@ def inBounds(x, y):
         return 3  # Return BedroomDeskView
     elif notePuzzle:
         if somethingInside.activated_time == -1:
+            # Stop trash sounds when briefText finishes
+            Sounds.TrashSounds.stop()
             notePuzzle = False
             return 2
         else:
@@ -171,6 +175,8 @@ def Room(screen, screen_res, events):
                     elif BedroomNumber == 1 or BedroomNumber == 2:
                         trashEmpty.activated_time = pygame.time.get_ticks()
                     else:
+                        # Play trash searching sound during the wait time
+                        Sounds.TrashSounds.play()
                         somethingInside.activated_time = pygame.time.get_ticks()
                         notePuzzle = True          
 

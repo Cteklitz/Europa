@@ -86,3 +86,5 @@ unlock = pygame.mixer.Sound("Audio/unlock.wav")
 
 scary = pygame.mixer.Sound("Audio/scary.wav")
 scary.set_volume(0.5)
+
+TrashSounds = pygame.mixer.Sound("Audio/TrashSounds.wav")
