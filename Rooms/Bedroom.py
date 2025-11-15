@@ -104,12 +104,15 @@ def inBounds(x, y):
                 Sounds.powerAmb.play(-1)
         return 0
     elif bedView:
+        trashEmpty.activated_time = -1
         bedView = False
         return 1
     elif deskView:
+        trashEmpty.activated_time = -1
         deskView = False
         return 3  # Return BedroomDeskView
     elif notePuzzle:
+        trashEmpty.activated_time = -1
         if somethingInside.activated_time == -1:
             # Stop trash sounds when briefText finishes
             Sounds.TrashSounds.stop()
