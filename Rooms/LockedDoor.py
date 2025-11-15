@@ -110,8 +110,8 @@ def Room(screen, screen_res, events):
     virtual_screen.fill((195, 195, 195))
     dark_overlay.fill((0, 0, 0, 150))
 
-    if lit:
-        Assets.punch_light_hole(virtual_screen, dark_overlay, (virtual_screen.get_width()/2, virtual_screen.get_height()/2), 500, (100, 0, 100))
+    # if lit:
+    #     Assets.punch_light_hole(virtual_screen, dark_overlay, (virtual_screen.get_width()/2, virtual_screen.get_height()/2), 500, (100, 0, 100))
 
     if cutscene:
         if timer2.Done():

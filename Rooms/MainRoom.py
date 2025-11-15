@@ -32,7 +32,7 @@ greenLight2 = LightSource(256 + 16, 398 + 16, radius=50, strength=100, color=(18
 # falloffs[n] is the falloff for when there are n lights in the room, it should be applied to each of the n lights 
 # also this solution sucks! makes the game take super long to launch since calcing the darkness is slow
 # will try and think of a way to fix it ig
-max_lights = 6
+max_lights = 9
 darkness = 180
 falloffs = []
 for i in range(1, max_lights):
