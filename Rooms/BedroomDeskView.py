@@ -55,7 +55,7 @@ def Room(screen, screen_res, events):
                         pickup_channel.play(Sounds.pickup)
 
     # Display floor color background 
-    virtual_screen.fill((105, 105, 105))
+    virtual_screen.fill("gray")
     
     if deskViewBg:
         virtual_screen.blit(deskViewBg, (0, 0))

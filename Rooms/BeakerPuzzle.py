@@ -137,6 +137,8 @@ def Room(screen, screen_res, events):
 
     Assets.punch_light_hole(virtual_screen, dark_overlay, (virtual_screen.get_width()/2, virtual_screen.get_height()/2), 500, (0, 0, 0))
 
+    pygame.draw.line(virtual_screen, "black", (0,484),(750,484),5)
+
     virtual_screen.blit(beakerCaseScale, (137, 18))
 
     for beaker in beakers:
