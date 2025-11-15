@@ -138,6 +138,7 @@ def Room(screen, screen_res, events):
             match bedNumber:
                 case 0: # left bed
                     if not playedSpooky: # initiate spooky cutscene
+                        Player.cutscene = True
                         Sounds.scary.play()
                         playedSpooky = True
                         soundTimer.setInitial()
@@ -148,6 +149,7 @@ def Room(screen, screen_res, events):
                         Sounds.radioFar.set_volume(0.15)
                     if textTimer.Done() and not spookyDone: # finish cutscene
                         spookyDone = True
+                        Player.cutscene = False
                 case 1: # right bed
                     if greenPowerOn:
                         virtual_screen.blit(radioOn, (97,94))
