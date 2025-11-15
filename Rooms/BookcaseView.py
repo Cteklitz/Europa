@@ -174,8 +174,8 @@ def Room(screen, screen_res, events):
     virtual_screen2.fill("black")
     dark_overlay.fill((0, 0, 0, 150))
 
-    if lit or Objects.getPinkPower():
-        Assets.punch_light_hole(virtual_screen, dark_overlay, (virtual_screen.get_width()/2, virtual_screen.get_height()/2), 500, (100, 0, 100))
+    # if lit or Objects.getPinkPower():
+    #     Assets.punch_light_hole(virtual_screen, dark_overlay, (virtual_screen.get_width()/2, virtual_screen.get_height()/2), 500, (100, 0, 100))
 
     if not cutscene:
         virtual_screen.blit(bookcaseView, (0, 0))
@@ -245,7 +245,8 @@ def Room(screen, screen_res, events):
         if timer6.Done():
             virtual_screen2.blit(Onewayout, (0,0))
 
-    virtual_screen.blit(dark_overlay, (0, 0))
+    if not (lit or Objects.getPinkPower()):
+        virtual_screen.blit(dark_overlay, (0, 0))
 
     if not lit and not Objects.getPinkPower():
         tooDark.update()

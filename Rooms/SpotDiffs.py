@@ -48,7 +48,8 @@ chairRect2 = pygame.Rect(110,21,76,57)
 chairRect3 = pygame.Rect(205,21,76,57)
 chairRect4 = pygame.Rect(298,21,76,57)
 
-letterRect = pygame.Rect(168,119,42,28)
+# letterRect = pygame.Rect(168,119,42,28)
+letterRect = pygame.Rect(180,117,32,6)
 
 def inBounds(x, y):
     global exit
@@ -110,7 +111,7 @@ def Room(screen, screen_res, events):
 
     virtual_screen.fill((195, 195, 195))
 
-    Assets.punch_light_hole(virtual_screen, dark_overlay, (virtual_screen.get_width()/2, virtual_screen.get_height()/2), 500, (100, 0, 100))
+    # Assets.punch_light_hole(virtual_screen, dark_overlay, (virtual_screen.get_width()/2, virtual_screen.get_height()/2), 500, (100, 0, 100))
 
     if not chestOpen:
         virtual_screen.blit(background, (0,0))
