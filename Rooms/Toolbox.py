@@ -99,7 +99,7 @@ def Room(screen, screen_res, events):
                             cutscene = True
                             cutscene_start = pygame.time.get_ticks()
             # Opens and closes paper
-            elif crumpled_paper_click_rect.collidepoint((click_x_unscaled, click_y_unscaled)) and open:
+            elif crumpled_paper_click_rect.collidepoint((click_x_unscaled, click_y_unscaled)) and open and not Player.cutscene:
                 if (not paper_open):
                     paper_open_sound.play()
                     paper_open = True
@@ -112,7 +112,7 @@ def Room(screen, screen_res, events):
                             cutscene = True
                             cutscene_start = pygame.time.get_ticks()
             # opens and closes toolbox if animated eye object is not present
-            elif(285 < click_x < 1310 and 350 < click_y < 855) and not paper_open and found!=2:
+            elif(285 < click_x < 1310 and 350 < click_y < 855) and not paper_open and found!=2 and not Player.cutscene:
                 if(open):
                     Sounds.openClose.play()
                     open = False
@@ -120,7 +120,7 @@ def Room(screen, screen_res, events):
                     Sounds.openClose.play()
                     open = True
             # plays squished sound if eye clicked
-            elif eye_click_rect.collidepoint((click_x_unscaled, click_y_unscaled)) and found == 2:
+            elif eye_click_rect.collidepoint((click_x_unscaled, click_y_unscaled)) and found == 2 and not Player.cutscene:
                 eye_squish_sound.play()
     if (not open):
         virtual_screen.blit(closed_toolbox, toolbox_rect)
