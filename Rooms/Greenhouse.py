@@ -47,6 +47,9 @@ def inBounds(x, y):
     hogweedRect.topleft = (34, 26)
     if exitRect.collidepoint((x,y)):
         level, power = Objects.getPipeDungeonInfo()
+        if (level == 3 and power) or Objects.getGreenPower():
+            pygame.mixer.music.stop()
+            pygame.mixer.music.set_volume(1)
         tooDarkRead.activated_time = -1
         tooDarkSee.activated_time = -1
         return 0
