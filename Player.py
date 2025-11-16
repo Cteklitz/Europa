@@ -8,6 +8,7 @@ inventory = []
 MaxInventorySize = 20
 equipped = None
 cutscene = False
+events = 0
 
 # adds an item to inventory
 def addItem(item):
@@ -130,6 +131,15 @@ right_down = Assets.load_tileset("Assets/right_down.png", 32, 32)
 left_up = Assets.load_tileset("Assets/left_up.png", 32, 32)
 right_up = Assets.load_tileset("Assets/right_up.png", 32, 32)
 
+left_down2 = Assets.load_tileset("Assets/left_down2.png", 32, 32)
+right_down2 = Assets.load_tileset("Assets/right_down2.png", 32, 32)
+
+left_down3 = Assets.load_tileset("Assets/left_down3.png", 32, 32)
+right_down3 = Assets.load_tileset("Assets/right_down3.png", 32, 32)
+
+left_down4 = Assets.load_tileset("Assets/left_down4.png", 32, 32)
+right_down4 = Assets.load_tileset("Assets/right_down4.png", 32, 32)
+
 # Top-Down Animations
 upAnimation = Assets.load_tileset("Assets/topDown_Up.png", 32, 32)
 downAnimation = Assets.load_tileset("Assets/topDown_Down.png", 32, 32)
@@ -161,10 +171,24 @@ def animatePlayer(surface, pos, xScale = 64, yScale = 64, perspective = "isometr
                 surface.blit(scaledImage, (pos.x-(xScale/2), pos.y-yScale+16))
         else:
             if left:
-                scaledImage = pygame.transform.scale(left_down[playerIndex], (xScale, yScale))
+                if events == 0:
+                    scaledImage = pygame.transform.scale(left_down[playerIndex], (xScale, yScale))
+                elif events <= 2:
+                    scaledImage = pygame.transform.scale(left_down2[playerIndex], (xScale, yScale))
+                elif events <= 4:
+                    scaledImage = pygame.transform.scale(left_down3[playerIndex], (xScale, yScale))
+                elif events > 4:
+                    scaledImage = pygame.transform.scale(left_down4[playerIndex], (xScale, yScale))
                 surface.blit(scaledImage, (pos.x-(xScale/2), pos.y-yScale+16))
             else:
-                scaledImage = pygame.transform.scale(right_down[playerIndex], (xScale, yScale))
+                if events == 0:
+                    scaledImage = pygame.transform.scale(right_down[playerIndex], (xScale, yScale))
+                elif events <= 2:
+                    scaledImage = pygame.transform.scale(right_down2[playerIndex], (xScale, yScale))
+                elif events <= 4:
+                    scaledImage = pygame.transform.scale(right_down3[playerIndex], (xScale, yScale))
+                elif events > 4:
+                    scaledImage = pygame.transform.scale(right_down4[playerIndex], (xScale, yScale))
                 surface.blit(scaledImage, (pos.x-(xScale/2), pos.y-yScale+16))
     else:
         if up:

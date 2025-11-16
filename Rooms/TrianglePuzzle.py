@@ -216,6 +216,7 @@ def Room(screen, screen_res, events):
                     if giveupRect.collidepoint(scaled_mouse_x, scaled_mouse_y):
                         solved = True
                         gaveup = True
+                        Player.events += 1
                         clapping.play()
                         timer2.setInitial()
                         for key in trianglePuzzle:

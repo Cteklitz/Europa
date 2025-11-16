@@ -96,6 +96,7 @@ def Room(screen, screen_res, events):
                         multimeter_found = True
                         found += 1
                         if found == 2:
+                            Player.events += 1
                             cutscene = True
                             cutscene_start = pygame.time.get_ticks()
             # Opens and closes paper

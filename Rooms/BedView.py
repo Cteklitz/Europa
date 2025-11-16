@@ -139,6 +139,7 @@ def Room(screen, screen_res, events):
                 case 0: # left bed
                     if not playedSpooky: # initiate spooky cutscene
                         Player.cutscene = True
+                        Player.events += 1
                         Sounds.scary.play()
                         playedSpooky = True
                         soundTimer.setInitial()
