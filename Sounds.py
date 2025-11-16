@@ -1,6 +1,8 @@
 import pygame
 
 valveSound = pygame.mixer.Sound("Audio/valve.wav")
+switchSound = pygame.mixer.Sound("Audio/switch.wav")
+
 heartbeat = pygame.mixer.Sound("Audio/heartbeat.wav")
 
 ominousAmb = pygame.mixer.Sound("Audio/mainroomambience-1.wav")

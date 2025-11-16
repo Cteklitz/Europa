@@ -14,6 +14,7 @@ dark_overlay = pygame.Surface(virtual_screen.get_size(), pygame.SRCALPHA)
 player_pos = pygame.Vector2(192, 128)
 
 background = pygame.image.load("Assets/mscopetablezoom.png")
+background2 = pygame.image.load("Assets/mscopetablezoomOn.png")
 opendrawer = pygame.image.load("Assets/opendrawer.png")
 redpetri = pygame.image.load("Assets/redpetri.png")
 redRect = pygame.Rect(81, 56, 13, 8)
@@ -31,12 +32,13 @@ firstTime = pygame.time.get_ticks()
 currIndex = 0
 currFlame = flame[0]
 bunsenRect = pygame.Rect(143, 30, 30, 42)
-
+switchRect = pygame.Rect(148, 62, 5, 5)
 
 redPlaced = False
 yellowPlaced = False
 bluePlaced = False
-bunsenOn = False
+bunsen = False
+on = True
 
 Cover = pygame.Surface((13, 8))
 Cover.fill((127,127,127))
@@ -82,12 +84,12 @@ def inBounds(x, y):
 
 def positionDeterminer(cameFrom):
     if cameFrom == "Rooms.PinkUpperWing":
-        if bunsenOn:
+        if bunsen and on:
             Sounds.bunsen.set_volume(.45)
             Sounds.bunsen.play(loops = -1)
 
 def Room(screen, screen_res, events):
-    global exit, redFound, visible, visible2, selected, microscope, redPlaced, yellowPlaced, bluePlaced, bunsenOn, firstTime, currIndex, currFlame
+    global exit, redFound, visible, visible2, selected, microscope, redPlaced, yellowPlaced, bluePlaced, bunsen, firstTime, currIndex, currFlame, on
     xScale = screen.get_width()/virtual_screen.get_width() 
     yScale = screen.get_height()/virtual_screen.get_height()
 
@@ -135,13 +137,22 @@ def Room(screen, screen_res, events):
                     selected = "Yellow"
                 elif blueRect.collidepoint(mouse_pos) and bluePlaced:
                     selected = "Blue"
-                elif bunsenRect.collidepoint(mouse_pos) and not bunsenOn:
+                elif bunsenRect.collidepoint(mouse_pos) and not bunsen:
                     if Player.checkItem(Items.lighter):
                         Sounds.lighter.play()
                         pygame.time.delay(1200)
+                        if on:
+                            Sounds.bunsen.set_volume(0.45)
+                            Sounds.bunsen.play(loops = -1)
+                        bunsen = True
+                elif switchRect.collidepoint(mouse_pos):
+                    Sounds.switchSound.play()
+                    if not on:
                         Sounds.bunsen.set_volume(0.45)
                         Sounds.bunsen.play(loops = -1)
-                        bunsenOn = True
+                    else:
+                        Sounds.bunsen.stop()
+                    on = not on
                 elif msRect.collidepoint(mouse_pos):
                     if Player.checkItem(Items.redPetri):
                         Player.removeItem(Items.redPetri)
@@ -192,7 +203,10 @@ def Room(screen, screen_res, events):
 
     Assets.punch_light_hole(virtual_screen, dark_overlay, (virtual_screen.get_width()/2, virtual_screen.get_height()/2), 500, (0, 0, 0))
 
-    virtual_screen.blit(background, (0,0))
+    if on:
+        virtual_screen.blit(background2, (0,0))
+    else:
+        virtual_screen.blit(background, (0,0))
 
     count = 12
     for drawer in reversed(drawers):
@@ -216,7 +230,7 @@ def Room(screen, screen_res, events):
         virtual_screen.blit(Cover, blueRect)
         if selected == "Blue":
             virtual_screen.blit(bluepetri, msRect)
-    if bunsenOn:
+    if bunsen and on:
         if (currTime - firstTime >= 30):
                 currIndex = (currIndex + 1) % len(flame)
                 currFlame = flame[currIndex] # sets current flame for animation in array
