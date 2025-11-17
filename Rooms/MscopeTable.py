@@ -286,14 +286,11 @@ def Room(screen, screen_res, events):
                     currIndex = (currIndex + 1) % len(flame)
                     currFlame = flame[currIndex] # sets current flame for animation in array
                     firstTime = currTime
-            virtual_screen.blit(currFlame, (155, 47))
         else:
             if (currTime - firstTime >= 30):
                     currIndex = (currIndex + 1) % len(flameLow)
                     currFlame = flameLow[currIndex] # sets current flame for animation in array
                     firstTime = currTime
-            virtual_screen.blit(currFlame, (155, 47))
-
         virtual_screen.blit(currFlame, (155, 47))
     if correctIngredients:
         beakerLiquidRect = pygame.Rect(0, beakerLiquid.get_height() - amountFilled * 2 - 2, beakerLiquid.get_width(),  amountFilled * 2)
@@ -314,7 +311,7 @@ def Room(screen, screen_res, events):
         scaled = pygame.transform.scale(virtual_screen, screen_res)
         screen.blit(scaled, (0, 0))
         pygame.display.flip()
-        pygame.time.delay(1000)
+        pygame.time.delay(700)
         virtual_screen.blit(explosion, (137, 20))
         Sounds.explosion.play()
         scaled = pygame.transform.scale(virtual_screen, screen_res)
