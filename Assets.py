@@ -235,3 +235,5 @@ benzeneDrawer = pygame.image.load("Assets/BenzeneDrawer.png")
 
 lighterInv = pygame.image.load("Assets/LighterInv.png")
 lighterBed = pygame.image.load("Assets/LighterBed.png")
+
+herbicide = pygame.image.load("Assets/herbicide.png")

@@ -88,3 +88,9 @@ scary = pygame.mixer.Sound("Audio/scary.wav")
 scary.set_volume(0.5)
 
 TrashSounds = pygame.mixer.Sound("Audio/TrashSounds.wav")
+
+pour = pygame.mixer.Sound("Audio/pour.wav")
+
+explosion= pygame.mixer.Sound("Audio/explosion.wav")
+
+plop = pygame.mixer.Sound("Audio/plop.wav")
