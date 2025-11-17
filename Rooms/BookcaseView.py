@@ -169,6 +169,7 @@ def Room(screen, screen_res, events):
                                 Sounds.page.play()
                                 content4 = True
                                 Player.cutscene = True
+                                Player.events += 1
 
     virtual_screen.fill("gray")
     virtual_screen2.fill("black")

@@ -14,6 +14,7 @@ dark_overlay = pygame.Surface(virtual_screen.get_size(), pygame.SRCALPHA)
 player_pos = pygame.Vector2(192, 128)
 
 background = pygame.image.load("Assets/mscopetablezoom.png")
+background2 = pygame.image.load("Assets/mscopetablezoomOn.png")
 opendrawer = pygame.image.load("Assets/opendrawer.png")
 redpetri = pygame.image.load("Assets/redpetri.png")
 redRect = pygame.Rect(81, 56, 13, 8)
@@ -36,7 +37,7 @@ firstTime = pygame.time.get_ticks()
 currIndex = 0
 currFlame = flame[0]
 bunsenRect = pygame.Rect(143, 30, 30, 42)
-
+switchRect = pygame.Rect(148, 62, 5, 5)
 
 redPlaced = False
 yellowPlaced = False
@@ -93,7 +94,7 @@ def inBounds(x, y):
 
 def positionDeterminer(cameFrom):
     if cameFrom == "Rooms.PinkUpperWing":
-        if bunsenOn:
+        if bunsen and on:
             Sounds.bunsen.set_volume(.45)
             Sounds.bunsen.play(loops = -1)
 
@@ -261,7 +262,7 @@ def Room(screen, screen_res, events):
         virtual_screen.blit(Cover, blueRect)
         if selected == "Blue":
             virtual_screen.blit(bluepetri, msRect)
-    if bunsenOn:
+    if bunsen and on:
         if (currTime - firstTime >= 30):
                 currIndex = (currIndex + 1) % len(flame)
                 currFlame = flame[currIndex] # sets current flame for animation in array

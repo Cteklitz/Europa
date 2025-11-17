@@ -62,6 +62,7 @@ def Room(screen, screen_res, events):
             if not play:
                 Sounds.powerAmb.stop()
                 spooky.play()
+                Player.events += 1
                 play = True
             virtual_screen.blit(eye1, (0,0))
             timer1.setInitial()
