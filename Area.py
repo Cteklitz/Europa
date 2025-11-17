@@ -12,8 +12,7 @@ def getPinkWingInfo():
     return PinkRoom.upperWingPower, PinkRoom.lowerWingPower
 
 def getBunsenOn():
-    return MscopeTable.bunsenOn
-    #and MscopeTable.on
+    return MscopeTable.bunsen and MscopeTable.on
 
 def getCutscene():
     return BookcaseView.cutscene
