@@ -94,7 +94,8 @@ def inBounds(x, y):
 
 def positionDeterminer(cameFrom):
     if cameFrom == "Rooms.PinkUpperWing":
-        if bunsen and on:
+        #if bunsen and on:
+        if bunsenOn:
             Sounds.bunsen.set_volume(.45)
             Sounds.bunsen.play(loops = -1)
 
@@ -262,7 +263,8 @@ def Room(screen, screen_res, events):
         virtual_screen.blit(Cover, blueRect)
         if selected == "Blue":
             virtual_screen.blit(bluepetri, msRect)
-    if bunsen and on:
+    #if bunsen and on:
+    if bunsenOn:
         if (currTime - firstTime >= 30):
                 currIndex = (currIndex + 1) % len(flame)
                 currFlame = flame[currIndex] # sets current flame for animation in array
