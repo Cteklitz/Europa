@@ -15,6 +15,7 @@ player_pos = pygame.Vector2(192, 128)
 
 background = pygame.image.load("Assets/mscopetablezoom.png")
 background2 = pygame.image.load("Assets/mscopetablezoomOn.png")
+background3 = pygame.image.load("Assets/mscopetablezoomBunsenComplete.png")
 opendrawer = pygame.image.load("Assets/opendrawer.png")
 redpetri = pygame.image.load("Assets/redpetri.png")
 redRect = pygame.Rect(81, 56, 13, 8)
@@ -42,15 +43,20 @@ currFlame = flame[0]
 bunsenRect = pygame.Rect(143, 30, 30, 42)
 switchRect = pygame.Rect(148, 62, 5, 5)
 
+bunsen = False
+on = True
+explosionHappening = False
+correctIngredients = False
+collected = False
+amountFilled = 0
+herbicideIngredients = {"leaf": 0, "bleach": 0, "benzene": 0, "mercury": 0}
+heat = [True, True, True, True]
+heatIndex = 0
+
 redPlaced = False
 yellowPlaced = False
 bluePlaced = False
-bunsen = False
-on = False
-explosionHappening = False
-correctIngredients = False
-amountFilled = 0
-herbicideIngredients = {"leaf": 0, "bleach": 0, "benzene": 0, "mercury": 0}
+channel1 = pygame.mixer.Channel(5)
 
 Cover = pygame.Surface((13, 8))
 Cover.fill((127,127,127))
@@ -98,12 +104,15 @@ def inBounds(x, y):
 
 def positionDeterminer(cameFrom):
     if cameFrom == "Rooms.PinkUpperWing":
-        if bunsen and on:
-            Sounds.bunsen.set_volume(.45)
-            Sounds.bunsen.play(loops = -1)
+        if not correctIngredients:
+            if bunsen and on:
+                Sounds.bunsen.set_volume(.45)
+                Sounds.bunsen.play(loops = -1)
 
 def Room(screen, screen_res, events):
-    global exit, redFound, visible, visible2, selected, microscope, redPlaced, yellowPlaced, bluePlaced, bunsen, firstTime, currIndex, currFlame, beakerLiquidTint, beakerLiquidRect, amountFilled, beakerLiquid, herbicideIngredients, explosionHappening, correctIngredients, on
+    global exit, redFound, visible, visible2, selected, microscope, redPlaced, yellowPlaced, bluePlaced, bunsen, firstTime, currIndex, currFlame, \
+    beakerLiquidTint, beakerLiquidRect, amountFilled, beakerLiquid, herbicideIngredients, explosionHappening, correctIngredients, on, heatIndex, collected
+
     xScale = screen.get_width()/virtual_screen.get_width() 
     yScale = screen.get_height()/virtual_screen.get_height()
 
@@ -120,7 +129,10 @@ def Room(screen, screen_res, events):
     Assets.punch_light_hole(virtual_screen, dark_overlay, (virtual_screen.get_width()/2, virtual_screen.get_height()/2), 500, (0, 0, 0))
     
     if on:
-        virtual_screen.blit(background2, (0,0))
+        if not correctIngredients:
+            virtual_screen.blit(background2, (0,0))
+        else:
+            virtual_screen.blit(background3, (0,0))
     else:
         virtual_screen.blit(background, (0,0))
 
@@ -147,14 +159,13 @@ def Room(screen, screen_res, events):
             if event.button == 1:
                 mouse_x, mouse_y = pygame.mouse.get_pos()
                 mouse_pos = (mouse_x/xScale, mouse_y/yScale)
-                print(mouse_pos)
                 mouse_pos_vec = pygame.Vector2(mouse_x/xScale, mouse_y/yScale)
                 # player clicks red petri
                 if visible2 and benzene.check_collision(mouse_pos_vec):
                     Sounds.pickup.play()
                 elif luckyRect.collidepoint(mouse_pos) and not redFound and visible:           
                     if (Player.addItem(Items.redPetri)):
-                        Sounds.glass1.play()
+                        channel1.play(Sounds.glass1)
                         redFound = True
                 elif redRect.collidepoint(mouse_pos) and redPlaced:
                     selected = "Red"
@@ -169,60 +180,78 @@ def Room(screen, screen_res, events):
                         pygame.time.delay(1200)
                         Sounds.bunsen.set_volume(.2)
                         Sounds.bunsen.play(loops = -1)
-                    bunsen = True
-                elif switchRect.collidepoint(mouse_pos):
-                    Sounds.switchSound.play()
-                    if not on:
-                        Sounds.bunsen.stop()
-                        Sounds.bunsen.set_volume(0.45)
-                        Sounds.bunsen.play(loops = -1)
-                    else:
-                        Sounds.bunsen.stop()
-                        Sounds.bunsen.set_volume(.2)
-                        Sounds.bunsen.play()
-                    on = not on
-                    # adds ingredient to beaker
-                elif bunsenRect.collidepoint(mouse_pos) and bunsen:
-                    if Player.checkItem(Items.bleach):
-                        herbicideIngredients["bleach"] = amountFilled + 1
-                        beakerLiquidTint = (40, 40, 40, 100)
-                        beakerLiquid.fill(beakerLiquidTint, special_flags=pygame.BLEND_ADD)
-                        Sounds.pour.play()
-                    elif Player.checkItem(Items.hogweedLeaf):
-                        herbicideIngredients["leaf"] = amountFilled + 1
-                        beakerLiquidTint = (150, 0, 150, 120)
-                        beakerLiquid.fill(beakerLiquidTint, special_flags=pygame.BLEND_SUB)
-                        Sounds.plop.play()
-                    elif Player.checkItem(Items.brokenThermometer):
-                        herbicideIngredients["mercury"] = amountFilled + 1
-                        beakerLiquidTint = (0, 150, 150, 120)
-                        beakerLiquid.fill(beakerLiquidTint, special_flags=pygame.BLEND_SUB)
-                        Sounds.pour.play()
-                    elif Player.checkItem(Items.benzene):
-                        herbicideIngredients["benzene"] = amountFilled + 1
-                        beakerLiquidTint = (40, 40, 40, 100)
-                        beakerLiquid.fill(beakerLiquidTint, special_flags=pygame.BLEND_ADD)
-                        Sounds.pour.play()
-                    else:
-                        break
-                    amountFilled += 1
-                    if herbicideIngredients == {"bleach": 3, "leaf": 1, "benzene": 2, "mercury":4}:
-                        correctIngredients = True
-                    elif (amountFilled == 4):
-                        explosionHappening = True
-                    beakerLiquidRect = pygame.Rect(0, beakerLiquid.get_height() - amountFilled * 2 - 2, beakerLiquid.get_width(),  amountFilled * 2)
+                        bunsen = True
+                if not correctIngredients:
+                    if switchRect.collidepoint(mouse_pos):
+                        Sounds.switchSound.play()
+                        if not on:
+                            Sounds.bunsen.stop()
+                            Sounds.bunsen.set_volume(0.45)
+                            Sounds.bunsen.play(loops = -1)
+                        else:
+                            Sounds.bunsen.stop()
+                            Sounds.bunsen.set_volume(.2)
+                            Sounds.bunsen.play()
+                        on = not on
+                        # adds ingredient to beaker
+                    elif bunsenRect.collidepoint(mouse_pos) and bunsen:
+                        if Player.checkItem(Items.bleach):
+                            herbicideIngredients["bleach"] = amountFilled + 1
+                            heatIndex = 2
+                            heat[heatIndex] = on
+                            beakerLiquidTint = (40, 40, 40, 100)
+                            beakerLiquid.fill(beakerLiquidTint, special_flags=pygame.BLEND_ADD)
+                            Sounds.pour.play()
+                            Player.equipped = None
+                        elif Player.checkItem(Items.hogweedLeaf):
+                            herbicideIngredients["leaf"] = amountFilled + 1
+                            heatIndex = 0
+                            heat[heatIndex] = on
+                            beakerLiquidTint = (150, 0, 150, 120)
+                            beakerLiquid.fill(beakerLiquidTint, special_flags=pygame.BLEND_SUB)
+                            Sounds.plop.play()
+                            Player.equipped = None
+                        elif Player.checkItem(Items.brokenThermometer):
+                            herbicideIngredients["mercury"] = amountFilled + 1
+                            heatIndex = 3
+                            heat[heatIndex] = on
+                            beakerLiquidTint = (0, 150, 150, 120)
+                            beakerLiquid.fill(beakerLiquidTint, special_flags=pygame.BLEND_SUB)
+                            Sounds.pour.play()
+                            Player.equipped = None
+                        elif Player.checkItem(Items.benzene):
+                            herbicideIngredients["benzene"] = amountFilled + 1
+                            heatIndex = 1
+                            heat[heatIndex] = on
+                            beakerLiquidTint = (40, 40, 40, 100)
+                            beakerLiquid.fill(beakerLiquidTint, special_flags=pygame.BLEND_ADD)
+                            Sounds.pour.play()
+                            Player.equipped = None
+                        else:
+                            break
+                        amountFilled += 1
+                        if herbicideIngredients == {"bleach": 3, "leaf": 1, "benzene": 2, "mercury":4} and   \
+                        heat == [False, False, True, True]:
+                            correctIngredients = True
+                            Sounds.bunsen.stop()
+                        elif (amountFilled == 4):
+                            explosionHappening = True
+                        beakerLiquidRect = pygame.Rect(0, beakerLiquid.get_height() - amountFilled * 2 - 2, beakerLiquid.get_width(),  amountFilled * 2)
 
-                elif msRect.collidepoint(mouse_pos):
+                if msRect.collidepoint(mouse_pos):
                     if Player.checkItem(Items.redPetri):
                         Player.removeItem(Items.redPetri)
+                        channel1.play(Sounds.glass1)
                         redPlaced = True
                         selected = "Red"
                     elif Player.checkItem(Items.yellowPetri):
                         Player.removeItem(Items.yellowPetri)
+                        channel1.play(Sounds.glass1)
                         yellowPlaced = True
                         selected = "Yellow"
                     elif Player.checkItem(Items.bluePetri):
                         Player.removeItem(Items.bluePetri)
+                        channel1.play(Sounds.glass1)
                         bluePlaced = True
                         selected = "Blue"
                     else:
@@ -233,12 +262,15 @@ def Room(screen, screen_res, events):
                     # TODO: add "Place petri dishes?" prompt or smth
                     if Player.checkItem(Items.redPetri):
                         Player.removeItem(Items.redPetri)
+                        channel1.play(Sounds.glass1)
                         redPlaced = True
                     if Player.checkItem(Items.yellowPetri):
                         Player.removeItem(Items.yellowPetri)
+                        channel1.play(Sounds.glass1)
                         yellowPlaced = True
                     if Player.checkItem(Items.bluePetri):
                         Player.removeItem(Items.bluePetri)
+                        channel1.play(Sounds.glass1)
                         bluePlaced = True
                 elif MSRect.collidepoint(mouse_pos) and selected != "None":
                     microscope = True
@@ -291,8 +323,9 @@ def Room(screen, screen_res, events):
                     currIndex = (currIndex + 1) % len(flameLow)
                     currFlame = flameLow[currIndex] # sets current flame for animation in array
                     firstTime = currTime
-        virtual_screen.blit(currFlame, (155, 47))
-    if correctIngredients:
+        if not correctIngredients:
+            virtual_screen.blit(currFlame, (155, 47))
+    if correctIngredients and not collected:
         beakerLiquidRect = pygame.Rect(0, beakerLiquid.get_height() - amountFilled * 2 - 2, beakerLiquid.get_width(),  amountFilled * 2)
         virtual_screen.blit(beakerLiquidOriginal, (149, 30))
         virtual_screen.blit(beakerLiquid, (149, 30 + (14 - (amountFilled * 2))), beakerLiquidRect)
@@ -303,7 +336,7 @@ def Room(screen, screen_res, events):
         pygame.time.delay(1000)
         Sounds.pickup.play()
         Player.addItem(Items.herbicide)
-        correctIngredients = False
+        collected = True
     elif explosionHappening:
         virtual_screen.blit(beakerLiquidOriginal, (149, 30))
         virtual_screen.blit(beakerLiquid, (149, 30 + (14 - (amountFilled * 2))), beakerLiquidRect)

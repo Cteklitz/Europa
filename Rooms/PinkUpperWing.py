@@ -1,6 +1,5 @@
 import pygame
 import Assets
-import Area
 import Objects
 from shapely.geometry import Point, Polygon
 import Sounds
@@ -120,11 +119,11 @@ def positionDeterminer(cameFrom):
     global player_pos
     if cameFrom == "Rooms.PinkRoom":
         player_pos = pygame.Vector2(exitWalk.centerx + 2, exitWalk.centery - 5)
-        if (Area.getBunsenOn()):
+        if (Objects.getBunsenOn()):
             Sounds.bunsen.set_volume(.1)
             Sounds.bunsen.play(loops = -1)
     if cameFrom == "Rooms.MscopeTable":
-        if (Area.getBunsenOn()):
+        if (Objects.getBunsenOn()):
             Sounds.bunsen.set_volume(.1)
             Sounds.bunsen.play(loops = -1)
 
@@ -209,7 +208,7 @@ def Room(screen, screen_res, events):
     red, yellow, blue = Objects.getColorsPlaced()
     if player_pos.y > 125:
         virtual_screen.blit(mscopetableScale, (105, 100))
-        if Area.getBunsenOn():
+        if Objects.getBunsenOn():
             virtual_screen.blit(flame, (194, 110))
         if red:
             virtual_screen.blit(smolRed, (150, 121))
