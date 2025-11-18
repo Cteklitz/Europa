@@ -13,6 +13,7 @@ import Area
 from Rooms import TitleScreen, MainRoom
 import Player
 import Inventory
+import Controls
 
 screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
 screenRes = screen.get_size()
@@ -42,7 +43,11 @@ def updateRoom(room):
 while running:
     events = pygame.event.get()
     if Inventory.open:
-        Inventory.Inventory(screen, screenRes, events)
+        if not Inventory.Inventory(screen, screenRes, events):
+            running = False
+    elif Controls.open:
+        if not Controls.Controls(screen, screenRes, events):
+            running = False
     else:
         player_pos, xSpeedScale, ySpeedScale = area.getPos(screen, screenRes, events, Room)
 
@@ -57,6 +62,10 @@ while running:
                     Inventory.open = True
                     for item in Player.inventory:
                         print(item)
+                # Open controls
+                if event.key == pygame.K_h and not Player.cutscene and Room != TitleScreen:
+                    MainRoom.pressedH = True
+                    Controls.open = True
 
         #Movement
         keys = pygame.key.get_pressed()

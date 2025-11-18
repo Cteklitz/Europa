@@ -100,7 +100,7 @@ def Room(screen, screen_res, events):
 
     if not startMusic:
         pygame.mixer.music.load("Audio/Europa.wav")
-        pygame.mixer.music.set_volume(0.1)
+        pygame.mixer.music.set_volume(0.08)
         pygame.mixer.music.play(-1) 
         startMusic = True
         gap.initial_time = pygame.time.get_ticks()

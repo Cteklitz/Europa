@@ -36,14 +36,20 @@ equipRect = pygame.Rect(685,550,170,53)
 
 descRect = pygame.Rect(353,323,510,285)
 
+running = True
+
 def Inventory(screen, screen_res, events):
-    global open, index, selected
+    global open, index, selected, running
     xScale = screen.get_width()/virtual_screen.get_width() 
     yScale = screen.get_height()/virtual_screen.get_height()
 
     for event in events:
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_TAB:
+        if event.type == pygame.QUIT:
+            running = False      
+        elif event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_ESCAPE:
+                running  = False
+            if event.key == pygame.K_TAB or event.key == pygame.K_BACKSPACE:
                 open = False
         elif event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == 1:
@@ -107,3 +113,5 @@ def Inventory(screen, screen_res, events):
 
     scaled = pygame.transform.scale(virtual_screen, screen_res)
     screen.blit(scaled, (0, 0))
+
+    return running
