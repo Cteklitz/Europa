@@ -265,8 +265,6 @@ def Room(screen, screen_res, events):
                         selected = "Blue"
                     else:
                         selected = "None"
-
-                    print(selected)
                 elif tableRect.collidepoint(mouse_pos):
                     # TODO: add "Place petri dishes?" prompt or smth
                     if Player.checkItem(Items.redPetri):
