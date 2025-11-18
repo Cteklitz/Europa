@@ -54,7 +54,6 @@ blueDoor = Objects.Door(433, 224, Assets.blueDoorEast)
 greenDoor = Objects.Door(224, 430, Assets.greenDoorSouth)
 orangeDoor = Objects.Door(224, 12, Assets.orangeDoorNorth)
 
-greenKeycard = Objects.groundItem(150, 150, Items.greenKeycard)
 bandage = Objects.groundItem(300, 265, Items.bandage)
 
 # Sounds.ominousAmb.play(-1)
@@ -118,13 +117,11 @@ def Room(screen, screen_res, events):
         pygame.draw.line(virtual_screen, "black", octagon1[i], octagon2[i], 1)
 
     # draw ground items
-    Objects.groundItem.draw(greenKeycard, virtual_screen)
     Objects.groundItem.draw(bandage, virtual_screen)
 
     for event in events:
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_e:
-                greenKeycard.check_collision(player_pos)
                 bandage.check_collision(player_pos)
 
     lastType = 0

@@ -43,6 +43,13 @@ tooDarkSee = Objects.briefText(virtual_screen, tooDarkSeeScale, 15, 180, 3)
 hogweedLeaf = Objects.groundItem(34, 26, Items.hogweedLeaf)
 poppy = Objects.groundItem(155, 100, Items.poppy)
 flytrap = pygame.image.load("Assets/VenusFlytrap.png")
+flytrapRect = flytrap.get_rect()
+flytrapRect.topleft = (238, 30)
+flytrapInteractRect = pygame.Rect(234, 26, flytrap.get_width() + 8, flytrap.get_height() + 8)
+deadFlytrap = pygame.image.load("Assets/DeadVenusFlytrap.png")
+
+flytrapDead = False
+keycard = Objects.groundItem(281, 135, Items.greenKeycard)
 
 def inBounds(x, y):
     global tooDarkRead
@@ -50,6 +57,7 @@ def inBounds(x, y):
     hogweedRect.topleft = (34, 26)
     poppyRect = Assets.poppyBush.get_rect()
     poppyRect.topleft = (155, 100)
+
     if exitRect.collidepoint((x,y)):
         level, power = Objects.getPipeDungeonInfo()
         if (level == 3 and power) or Objects.getGreenPower():
@@ -64,6 +72,8 @@ def inBounds(x, y):
         return False
     elif poppyRect.collidepoint(x,y):
         return False
+    elif flytrapRect.collidepoint(x,y):
+        return False
     return True
 
 def positionDeterminer(cameFrom):
@@ -72,7 +82,7 @@ def positionDeterminer(cameFrom):
         player_pos = pygame.Vector2(exitRect.centerx + 15, exitRect.centery + 10)
 
 def Room(screen, screen_res, events):
-    global trianglePuzzle1, trianglePuzzle2, whiteboard, beaker, table, tableboundRect, tooDarkRead, lit
+    global trianglePuzzle1, trianglePuzzle2, whiteboard, beaker, table, tableboundRect, tooDarkRead, lit, flytrapDead
 
     xScale = screen.get_width()/virtual_screen.get_width() 
     yScale = screen.get_height()/virtual_screen.get_height()
@@ -93,12 +103,22 @@ def Room(screen, screen_res, events):
                     Sounds.pickup.play()
                 elif(poppy.check_collision(player_pos)):
                      Sounds.pickup.play()
+                elif(flytrapInteractRect.collidepoint(player_pos) and Player.checkItem(Items.herbicide)):
+                    Player.removeItem(Items.herbicide)
+                    flytrapDead = True
+                elif(keycard.check_collision(player_pos)):
+                     Sounds.pickup.play()
+                
                         
 
     virtual_screen.blit(background, (0,0))
     virtual_screen.blit(hogweed, (34, 26))
     virtual_screen.blit(Assets.poppyBush, (155, 100))
-    virtual_screen.blit(flytrap, (238, 30))
+    if not flytrapDead:
+        virtual_screen.blit(flytrap, (238, 30))
+    else:
+        virtual_screen.blit(deadFlytrap, (237, 31))
+        Objects.groundItem.draw(keycard, virtual_screen)
     virtual_screen2.fill((195, 195, 195))
     if not lit:
         dark_overlay.fill((0, 0, 0, 150))
