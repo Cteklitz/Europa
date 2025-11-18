@@ -31,6 +31,7 @@ lights = [
 leftBed = pygame.image.load("Assets/leftBed.png")
 rightBed = pygame.image.load("Assets/rightBed.png")
 leftDesk = pygame.image.load("Assets/leftBedroomDesk.png")
+leftBookDesk = pygame.image.load("Assets/leftBedroomBookDesk.png")
 rightDesk = pygame.image.load("Assets/rightBedroomDesk.png")
 thermometerOnDesk = pygame.image.load("Assets/ThermometerOnDesk.png")
 
@@ -167,7 +168,7 @@ def Room(screen, screen_res, events):
                         bedView = True
                     else:
                         tooDarkSee.activated_time = pygame.time.get_ticks()
-                elif leftDeskInteractRect.collidepoint(player_pos) and BedroomNumber == 1: # go to bedroom 1 desk view
+                elif leftDeskInteractRect.collidepoint(player_pos) and (BedroomNumber == 1 or BedroomNumber == 3): # go to desk view
                     if greenPowerOn:
                         deskView = True
                     else:
@@ -221,7 +222,10 @@ def Room(screen, screen_res, events):
     virtual_screen.blit(leftBed, (37,37))
     virtual_screen.blit(rightBed, (172,37))
     virtual_screen.blit(rightDesk, (148,168))
-    virtual_screen.blit(leftDesk, (45,168))
+    if BedroomNumber == 3:
+        virtual_screen.blit(leftBookDesk, (45,168))
+    else:
+        virtual_screen.blit(leftDesk, (45,168))
     
     # Draw thermometer on desk only if not collected and in bedroom 1
     if BedroomNumber == 1 and not BedroomDeskView.thermometerCollected:
