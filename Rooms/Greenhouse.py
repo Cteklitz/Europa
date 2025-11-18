@@ -42,6 +42,7 @@ tooDarkSee = Objects.briefText(virtual_screen, tooDarkSeeScale, 15, 180, 3)
 
 hogweedLeaf = Objects.groundItem(34, 26, Items.hogweedLeaf)
 poppy = Objects.groundItem(155, 100, Items.poppy)
+flytrap = pygame.image.load("Assets/VenusFlytrap.png")
 
 def inBounds(x, y):
     global tooDarkRead
@@ -97,6 +98,7 @@ def Room(screen, screen_res, events):
     virtual_screen.blit(background, (0,0))
     virtual_screen.blit(hogweed, (34, 26))
     virtual_screen.blit(Assets.poppyBush, (155, 100))
+    virtual_screen.blit(flytrap, (238, 30))
     virtual_screen2.fill((195, 195, 195))
     if not lit:
         dark_overlay.fill((0, 0, 0, 150))
