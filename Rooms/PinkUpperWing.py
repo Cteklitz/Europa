@@ -238,13 +238,7 @@ def Room(screen, screen_res, events):
     virtual_screen.blit(circleLight, circleLight.get_rect(center=light_pos))
     virtual_screen.blit(circleLight, circleLight.get_rect(center=light_pos2))
 
-    
-
     virtual_screen2.blit(whiteboardzoom, (10,20))
-    
-    if not lit and not Objects.getPinkPower():
-        tooDarkRead.update()
-        tooDarkSee.update()
 
     if not lit:
         virtual_screen.blit(dark_overlay, (0, 0))
@@ -253,6 +247,10 @@ def Room(screen, screen_res, events):
         apply_lighting(virtual_screen, wall_lights, darkness=10, ambient_color=(50, 50, 50), ambient_strength=10)
         apply_falloff(falloff, virtual_screen, light_pos)
         apply_falloff(falloff, virtual_screen, light_pos2)
+
+    if not lit and not Objects.getPinkPower():
+        tooDarkRead.update()
+        tooDarkSee.update()
 
     if not whiteboard:
         Assets.scaled_draw(virtual_res, virtual_screen, screen_res, screen)

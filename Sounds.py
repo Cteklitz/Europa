@@ -5,8 +5,10 @@ switchSound = pygame.mixer.Sound("Audio/switch.wav")
 
 heartbeat = pygame.mixer.Sound("Audio/heartbeat.wav")
 
-ominousAmb = pygame.mixer.Sound("Audio/mainroomambience-1.wav")
-powerAmb = pygame.mixer.Sound("Audio/powerambience.wav")
+ominousAmb = pygame.mixer.Sound("Audio/mainroomambience.wav")
+ominousAmb.set_volume(0.075)
+powerAmb = pygame.mixer.Sound("Audio/powerambience-1.wav")
+powerAmb.set_volume(0.80)
 
 brainwash = pygame.mixer.Sound("Audio/weird noises.-2.wav")
 book = pygame.mixer.Sound("Audio/book.wav")
@@ -92,9 +94,9 @@ scary.set_volume(0.5)
 TrashSounds = pygame.mixer.Sound("Audio/TrashSounds.wav")
 
 pour = pygame.mixer.Sound("Audio/pour.wav")
-pour.set_volume(0.3)
+pour.set_volume(0.1)
 
 explosion= pygame.mixer.Sound("Audio/explosion.wav")
 
 plop = pygame.mixer.Sound("Audio/plop.wav")
-plop.set_volume(0.3)
+plop.set_volume(0.1)

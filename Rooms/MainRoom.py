@@ -57,7 +57,7 @@ orangeDoor = Objects.Door(224, 12, Assets.orangeDoorNorth)
 greenKeycard = Objects.groundItem(150, 150, Items.greenKeycard)
 bandage = Objects.groundItem(300, 265, Items.bandage)
 
-Sounds.ominousAmb.play(-1)
+# Sounds.ominousAmb.play(-1)
 
 def inBounds(x, y):
     ctrlRmRect = pygame.Rect(220, 252, 36, 4)
@@ -94,6 +94,9 @@ def inBounds(x, y):
 def positionDeterminer(cameFrom):
     global player_pos
     ctrlRmRect = pygame.Rect(220, 252, 36, 4)
+    if cameFrom == "Rooms.TitleScreen":
+        pygame.mixer.music.set_volume(1)
+        Sounds.ominousAmb.play(-1)
     if cameFrom == "Rooms.ControlRoom":
         player_pos = pygame.Vector2(ctrlRmRect.x + ctrlRmRect.width/2, ctrlRmRect.y + ctrlRmRect.height+5)
     if cameFrom == "Rooms.PinkRoom":

@@ -10,7 +10,7 @@ pygame.init()
 pygame.mixer.init()
 
 import Area
-from Rooms import MainRoom
+from Rooms import TitleScreen, MainRoom
 import Player
 import Inventory
 
@@ -20,7 +20,7 @@ clock = pygame.time.Clock()
 running = True
 dt = 0
 area = Area.PipeDungeon
-Room = MainRoom
+Room = TitleScreen
 
 # Each room file must contain these three functions:
 # 1. Room(screen, screen_res, events) - Contains the loop of what is being drawn for that room, logic to update variables based on input, etc.
@@ -53,7 +53,7 @@ while running:
                 if event.key == pygame.K_ESCAPE:
                     running = False
                 # Open inventory
-                if event.key == pygame.K_TAB and not Player.cutscene:
+                if event.key == pygame.K_TAB and not Player.cutscene and Room != TitleScreen:
                     Inventory.open = True
                     for item in Player.inventory:
                         print(item)

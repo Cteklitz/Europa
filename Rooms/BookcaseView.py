@@ -69,7 +69,7 @@ timer4 = Objects.timer(4, False)
 timer5 = Objects.timer(6, False)
 timer6 = Objects.timer(0, False)
 timer7 = Objects.timer(0.01, True)
-timer8 = Objects.timer(1, False)
+timer8 = Objects.timer(1.13, False)
 
 def positionDeterminer(cameFrom):
     pass

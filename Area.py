@@ -1,4 +1,4 @@
-from Rooms import ControlRoom, MainRoom, PinkRoom, PinkLowerWing, BookcaseView, OrangeYellow, \
+from Rooms import TitleScreen, ControlRoom, MainRoom, PinkRoom, PinkLowerWing, BookcaseView, OrangeYellow, \
 Safe, PinkUpperWing, TrianglePuzzle, TriangleSolution, BeakerPuzzle, MscopeTable, Microscope, \
 LockedDoor, Desk, SpotDiffs, PinkPower, BlueRoom, BreakerRoom, PuddleRoom, Toolbox, BreakerPuzzle,     \
 StorageCloset, ValvePuzzle, BluePower, LockerView, PuddleView, GreenRoom, Bedroom, Greenhouse, Bathroom, BedView, \
@@ -58,7 +58,6 @@ def getWaterLevelsSolved():
     return ValvePuzzle.solved
 
 def getBreakerSolved():
-    return True
     return BreakerPuzzle.solved
 
 def RepairWire():
@@ -98,6 +97,7 @@ class Area:
 PipeDungeon = Area(
     # Map/Dictionary that is a list of all of the rooms in the Area and what rooms they are connected to.
     roomLayout = {
+            TitleScreen: [MainRoom],
             ControlRoom: [MainRoom],
             MainRoom: [ControlRoom, PinkRoom, BlueRoom, GreenRoom],
             PinkRoom: [MainRoom, PinkLowerWing, PinkUpperWing],
