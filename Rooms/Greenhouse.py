@@ -43,6 +43,7 @@ tooDarkSee = Objects.briefText(virtual_screen, tooDarkSeeScale, 15, 180, 3)
 hogweedLeaf = Objects.groundItem(34, 26, Items.hogweedLeaf)
 poppy = Objects.groundItem(155, 100, Items.poppy)
 flytrap = pygame.image.load("Assets/VenusFlytrap.png")
+sleepingFlytrap = pygame.image.load("Assets/VenusFlytrapSleeping.png")
 flytrapRect = flytrap.get_rect()
 flytrapRect.topleft = (238, 30)
 flytrapInteractRect = pygame.Rect(234, 26, flytrap.get_width() + 8, flytrap.get_height() + 8)
@@ -50,9 +51,11 @@ deadFlytrap = pygame.image.load("Assets/DeadVenusFlytrap.png")
 
 flytrapDead = False
 keycard = Objects.groundItem(281, 135, Items.greenKeycard)
+jumpscare = False
+jumpscareTime = Objects.timer(5, False)
 
 def inBounds(x, y):
-    global tooDarkRead
+    global tooDarkRead, jumpscare
     hogweedRect = hogweed.get_rect()
     hogweedRect.topleft = (34, 26)
     poppyRect = Assets.poppyBush.get_rect()
@@ -66,6 +69,13 @@ def inBounds(x, y):
         tooDarkRead.activated_time = -1
         tooDarkSee.activated_time = -1
         return 0
+    elif jumpscare:
+        if not jumpscareTime.Done():
+            return False
+        else:
+            jumpscare = False
+            jumpscareTime.initial_time = -1
+            return 0
     elif not bounds.contains(Point(x,y)):
         return False
     elif hogweedRect.collidepoint(x,y):
@@ -82,7 +92,7 @@ def positionDeterminer(cameFrom):
         player_pos = pygame.Vector2(exitRect.centerx + 15, exitRect.centery + 10)
 
 def Room(screen, screen_res, events):
-    global trianglePuzzle1, trianglePuzzle2, whiteboard, beaker, table, tableboundRect, tooDarkRead, lit, flytrapDead
+    global trianglePuzzle1, trianglePuzzle2, whiteboard, beaker, table, tableboundRect, tooDarkRead, lit, flytrapDead, jumpscare
 
     xScale = screen.get_width()/virtual_screen.get_width() 
     yScale = screen.get_height()/virtual_screen.get_height()
@@ -104,18 +114,27 @@ def Room(screen, screen_res, events):
                 elif(poppy.check_collision(player_pos)):
                      Sounds.pickup.play()
                 elif(flytrapInteractRect.collidepoint(player_pos) and Player.checkItem(Items.herbicide)):
-                    Player.removeItem(Items.herbicide)
-                    flytrapDead = True
+                    if not lit:
+                        Player.removeItem(Items.herbicide)
+                        flytrapDead = True
+                    else:
+                        jumpscare = True
+                        jumpscareTime.initial_time = pygame.time.get_ticks()
+                        pygame.mixer.music.stop()
+                        pygame.mixer.music.set_volume(1)
+                        roar = pygame.mixer.Sound("Audio/roar.mp3")
+                        roar.play()
                 elif(keycard.check_collision(player_pos)):
                      Sounds.pickup.play()
-                
-                        
 
     virtual_screen.blit(background, (0,0))
     virtual_screen.blit(hogweed, (34, 26))
     virtual_screen.blit(Assets.poppyBush, (155, 100))
     if not flytrapDead:
-        virtual_screen.blit(flytrap, (238, 30))
+        if lit:
+            virtual_screen.blit(flytrap, (238, 30))
+        else:
+            virtual_screen.blit(sleepingFlytrap, (238, 30))
     else:
         virtual_screen.blit(deadFlytrap, (237, 31))
         Objects.groundItem.draw(keycard, virtual_screen)
@@ -125,7 +144,7 @@ def Room(screen, screen_res, events):
         dark_overlay2.fill((0, 0, 0, 150))
 
     Player.animatePlayer(virtual_screen, player_pos)
-    
+
     if not lit and not Objects.getPinkPower():
         tooDarkRead.update()
         tooDarkSee.update()
@@ -136,6 +155,14 @@ def Room(screen, screen_res, events):
     else:
         apply_lighting(virtual_screen, wall_lights, darkness=10, ambient_color=(50, 50, 50), ambient_strength=10)
         apply_falloff(falloff, virtual_screen, light_pos)
+
+    if jumpscare:
+        eye_open = pygame.transform.scale(pygame.image.load('Assets/EYE.png'), (500, 460))
+        open_eye_rect = eye_open.get_rect()
+        open_eye_rect.center = (324/2 - 4, 219/2 - 5)
+        virtual_screen.blit(eye_open, open_eye_rect)
+        teeth = pygame.image.load("Assets/jumpscareTeeth.png")
+        virtual_screen.blit(teeth, (0,0))
 
     Assets.scaled_draw(virtual_res, virtual_screen, screen_res, screen)
 
