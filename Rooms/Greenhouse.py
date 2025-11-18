@@ -41,10 +41,14 @@ tooDarkSeeScale = pygame.transform.scale(Assets.tooDarkSee, (Assets.tooDarkSee.g
 tooDarkSee = Objects.briefText(virtual_screen, tooDarkSeeScale, 15, 180, 3)
 
 hogweedLeaf = Objects.groundItem(34, 26, Items.hogweedLeaf)
+poppy = Objects.groundItem(155, 100, Items.poppy)
+
 def inBounds(x, y):
     global tooDarkRead
     hogweedRect = hogweed.get_rect()
     hogweedRect.topleft = (34, 26)
+    poppyRect = Assets.poppyBush.get_rect()
+    poppyRect.topleft = (155, 100)
     if exitRect.collidepoint((x,y)):
         level, power = Objects.getPipeDungeonInfo()
         if (level == 3 and power) or Objects.getGreenPower():
@@ -56,6 +60,8 @@ def inBounds(x, y):
     elif not bounds.contains(Point(x,y)):
         return False
     elif hogweedRect.collidepoint(x,y):
+        return False
+    elif poppyRect.collidepoint(x,y):
         return False
     return True
 
@@ -83,11 +89,14 @@ def Room(screen, screen_res, events):
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_e:
                 if (hogweedLeaf.check_collision(player_pos)):
-                        Sounds.pickup.play()
+                    Sounds.pickup.play()
+                elif(poppy.check_collision(player_pos)):
+                     Sounds.pickup.play()
                         
 
     virtual_screen.blit(background, (0,0))
     virtual_screen.blit(hogweed, (34, 26))
+    virtual_screen.blit(Assets.poppyBush, (155, 100))
     virtual_screen2.fill((195, 195, 195))
     if not lit:
         dark_overlay.fill((0, 0, 0, 150))

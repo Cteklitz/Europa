@@ -229,6 +229,8 @@ bleachInv = pygame.image.load("Assets/bleachInv.png")
 bleachGround = pygame.image.load("Assets/bleachGround.png")
 hogweedLeaf = pygame.image.load("Assets/hogweedLeafInv.png")
 hogweedPlant = pygame.image.load("Assets/GiantHogweed.png")
+poppy = pygame.image.load("Assets/Poppy.png")
+poppyBush = pygame.image.load("Assets/PoppyBush.png")
 
 benzeneInv = pygame.image.load("Assets/BenzeneInv.png")
 benzeneDrawer = pygame.image.load("Assets/BenzeneDrawer.png")

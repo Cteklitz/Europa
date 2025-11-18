@@ -36,6 +36,8 @@ bleach = Item("bleachInv", "Bleach", "A solution of sodium hypochlorite in water
 
 hogweedLeaf = Item("hogweedLeaf", "Hogweed Leaf", "Leaf of a large, invasive plant with a toxic sap containing furanocoumarins", Assets.hogweedLeaf, Assets.hogweedPlant, "equip")
 
+poppy = Item("poppy", "Poppy", "A poppy flower. An ingredient frequently used in John Thompson's experiments.", Assets.poppy, Assets.poppyBush, "equip")
+
 benzene = Item("benzene", "Benzene", "A colorless, flammable chemical", Assets.benzeneInv, Assets.benzeneDrawer, "equip")
 
 lighter = Item("lighter", "Lighter", "A device that produces a small flame", Assets.lighterInv, Assets.lighterBed, "equip")

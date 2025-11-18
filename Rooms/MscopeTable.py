@@ -227,6 +227,12 @@ def Room(screen, screen_res, events):
                             beakerLiquid.fill(beakerLiquidTint, special_flags=pygame.BLEND_ADD)
                             Sounds.pour.play()
                             Player.equipped = None
+                        elif Player.checkItem(Items.poppy):
+                            herbicideIngredients = {"leaf": 0, "bleach": 0, "benzene": 0, "mercury": 0}
+                            beakerLiquidTint = (0, 150, 150, 120)
+                            beakerLiquid.fill(beakerLiquidTint, special_flags=pygame.BLEND_SUB)
+                            Sounds.plop.play()
+                            Player.equipped = None
                         else:
                             break
                         amountFilled += 1
