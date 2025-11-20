@@ -536,7 +536,7 @@ def Room(screen, screen_res, events):
 
     if solved and not played:
         played = True
-        pygame.mixer.music.load("Audio/opensesame.wav")
+        Sounds.loadMusic("Audio/opensesame.wav")
         pygame.mixer.music.play(start=3.0)
         
     scaled = pygame.transform.scale(virtual_screen, screen_res)

@@ -66,7 +66,7 @@ def inBounds(x, y):
     ctrlRmWallRect = pygame.Rect(208, 224, 63, 28)
 
     if ctrlRmRect.collidepoint((x,y)):
-        pygame.mixer.music.load("Audio/electricbuzz.wav")
+        Sounds.loadMusic("Audio/electricbuzz.wav")
         pygame.mixer.music.play(-1)
         return 0
     elif pinkDoor.rect.collidepoint((x,y)):

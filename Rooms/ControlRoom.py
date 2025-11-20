@@ -5,6 +5,7 @@ from LightSource import LightSource
 from LightFalloff import LightFalloff
 from LightingUtils import apply_lighting, apply_falloff
 import Player
+import Sounds
 
 pipePuzzle = [
     [2,1,2,6,6],
@@ -124,9 +125,9 @@ def draw_map(screen, tiles, map_data, xpos, ypos):
             y = ypos + row_idx * TILE_H
             screen.blit(tile_surf, (x, y))
 
-pipeSound = pygame.mixer.Sound("Audio/pipe.wav")
-valveSound = pygame.mixer.Sound("Audio/valve.wav")
-switchSound = pygame.mixer.Sound("Audio/switch.wav")
+pipeSound = Sounds.loadAudio("Audio/pipe.wav")
+valveSound = Sounds.loadAudio("Audio/valve.wav")
+switchSound = Sounds.loadAudio("Audio/switch.wav")
 
 circleLight = pygame.image.load("Assets/CircleLight.png")
 

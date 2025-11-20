@@ -44,7 +44,7 @@ clicked = False
 scroll = Objects.timer(0.0175, True)
 ypos = 0
 
-submerge = pygame.mixer.Sound("Audio/submerge.wav")
+submerge = Sounds.loadAudio("Audio/submerge.wav")
 submerge.set_volume(0.1)
 submergeTimer = Objects.timer(11, False)
 
@@ -98,8 +98,8 @@ def Room(screen, screen_res, events):
     scaled = pygame.transform.scale(virtual_view, screen_res)
     screen.blit(scaled, (0, 0))
 
-    if not startMusic:
-        pygame.mixer.music.load("Audio/wading_into_the_unknown.wav")
+    if not startMusic:     
+        Sounds.loadMusic("Audio/wading_into_the_unknown.wav")
         pygame.mixer.music.set_volume(0.08)
         pygame.mixer.music.play(-1) 
         startMusic = True

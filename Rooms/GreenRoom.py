@@ -97,7 +97,7 @@ def inBounds(x, y):
         Sounds.radioClose.set_volume(0)
         if (level == 3 and power) or Objects.getGreenPower():
             # Sounds.powerAmb.stop()
-            pygame.mixer.music.load("Audio/Canopy.wav")
+            Sounds.loadMusic("Audio/Canopy.wav")
             pygame.mixer.music.set_volume(0.05)
             pygame.mixer.music.play(-1)   
         return 3

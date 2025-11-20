@@ -52,14 +52,14 @@ curr_index = 0
 curr_eye = eyes[0]
 
 # sounds
-eye_squish_sound = pygame.mixer.Sound("Audio/eyeSquish.wav")
+eye_squish_sound = Sounds.loadAudio("Audio/eyeSquish.wav")
 eye_squish_sound.set_volume(.5)
-pre_jumpscare_sound = pygame.mixer.Sound("Audio/evil2Trimmed1.wav")
-jumpscare_sound = pygame.mixer.Sound("Audio/toolboxJumpscare.wav")
-jumpscare_layer_sound = pygame.mixer.Sound("Audio/evil2.wav")
-paper_crumple_sound = pygame.mixer.Sound("Audio/paperCrumple.wav")
+pre_jumpscare_sound = Sounds.loadAudio("Audio/evil2Trimmed1.wav")
+jumpscare_sound = Sounds.loadAudio("Audio/toolboxJumpscare.wav")
+jumpscare_layer_sound = Sounds.loadAudio("Audio/evil2.wav")
+paper_crumple_sound = Sounds.loadAudio("Audio/paperCrumple.wav")
 paper_crumple_sound.set_volume(.3)
-paper_open_sound = pygame.mixer.Sound("Audio/paperOpen.wav")
+paper_open_sound = Sounds.loadAudio("Audio/paperOpen.wav")
 paper_open_sound.set_volume(.3)
 
 

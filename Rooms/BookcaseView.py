@@ -148,7 +148,7 @@ def Room(screen, screen_res, events):
                                 book3 = True
                             elif THETRUTHRect.contains(Point(scaled_mouse_x, scaled_mouse_y)) and not cutscene:
                                 Sounds.powerAmb.stop()
-                                pygame.mixer.music.load("Audio/dark ambience.wav")
+                                Sounds.loadMusic("Audio/dark ambience.wav")
                                 pygame.mixer.music.play(-1)
                                 screen2 = True
                                 book4 = True

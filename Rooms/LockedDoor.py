@@ -16,7 +16,7 @@ player_pos = pygame.Vector2(192, 128)
 lockedDoor = pygame.image.load("Assets/EYEDOOR.png")
 openDoor = pygame.image.load("Assets/EYEDOOROPEN.png")
 
-openSound = pygame.mixer.Sound("Audio/opensesame.wav")
+openSound = Sounds.loadAudio("Audio/opensesame.wav")
 
 exit = False
 enter = False

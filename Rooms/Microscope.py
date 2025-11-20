@@ -31,7 +31,7 @@ timer3 = Objects.timer(5, False)
 timer4 = Objects.timer(5, False)
 timer5 = Objects.timer(4.5, False)
 
-spooky = pygame.mixer.Sound("Audio/microscope.wav")
+spooky = Sounds.loadAudio("Audio/microscope.wav")
 
 def inBounds(x, y):
     global exit
