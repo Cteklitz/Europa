@@ -19,6 +19,15 @@ dark_overlay2 = pygame.Surface(virtual_screen2.get_size(), pygame.SRCALPHA)
 
 player_pos = pygame.Vector2(239, 180)
 
+fertilizer = pygame.image.load("Assets/Fertilizer.png")
+fertilizer_pos = (20, 90)
+
+rake = pygame.image.load("Assets/Rake.png")
+rake_pos = (45, 75)
+
+waterCan = pygame.image.load("Assets/WaterCan.png")
+waterCan_pos = (15, 120)
+
 bounds = Polygon([(19,110),(298,110),(308,181), (308,203), (16,203), (16,181)])
 
 exitRect = pygame.Rect(10, 141, 10, 44)
@@ -138,6 +147,11 @@ def Room(screen, screen_res, events):
     else:
         virtual_screen.blit(deadFlytrap, (237, 31))
         Objects.groundItem.draw(keycard, virtual_screen)
+    
+    virtual_screen.blit(fertilizer, fertilizer_pos)
+    virtual_screen.blit(waterCan, waterCan_pos)
+    virtual_screen.blit(rake, rake_pos)
+    
     virtual_screen2.fill((195, 195, 195))
     if not lit:
         dark_overlay.fill((0, 0, 0, 150))
