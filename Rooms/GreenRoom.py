@@ -174,7 +174,7 @@ def Room(screen, screen_res, events):
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_e:
                 if keycardScannerInteractRect.collidepoint(player_pos) and Player.checkItem(Items.greenKeycard) and not unlocked:
-                    pygame.mixer.music.load("Audio/opensesame.wav")
+                    Sounds.loadMusic("Audio/opensesame.wav")
                     pygame.mixer.music.play(start=3.0)
                     Sounds.accessGranted.play()
                     unlocked = True
