@@ -7,6 +7,10 @@ virtual_res = (900, 650)
 virtual_screen = pygame.Surface(virtual_res)
 open = False
 inventory = pygame.image.load("Assets/InventoryMenu.png")
+emptySlot = pygame.image.load("Assets/emptyslot.png")
+fullSlot = pygame.image.load("Assets/fullslot.png")
+slotsBase = (407, 240)
+slotsbuffer = 2
 
 index = 0
 imagePositions = [
@@ -57,14 +61,14 @@ def Inventory(screen, screen_res, events):
                 mouse_pos = (mouse_x/xScale, mouse_y/yScale)
                 if leftArrowRect.collidepoint(mouse_pos):
                     if index == 0:
-                        index = Player.MaxInventorySize - 1
+                        index = Player.MaxInventorySize - 4
                     else: 
-                        index = index - 1
+                        index = index - 4
                 if rightArrowRect.collidepoint(mouse_pos):
-                    if index == Player.MaxInventorySize - 1:
+                    if index == Player.MaxInventorySize - 4:
                         index = 0
                     else:
-                        index = index + 1
+                        index = index + 4
                 if findIndex() < len(Player.inventory):
                     if equipRect.collidepoint(mouse_pos) and Player.inventory[findIndex()].buttonType == "equip":
                         Player.consumeItem(findIndex())
@@ -110,6 +114,12 @@ def Inventory(screen, screen_res, events):
                     virtual_screen.blit(Assets.equipButton, equipRect)
             else:
                     virtual_screen.blit(Assets.useButton, useRect)
+
+    for i in range(int(Player.MaxInventorySize / 4)):
+        if index not in range (i * 4, (i + 1) * 4):
+            virtual_screen.blit(emptySlot, (slotsBase[0] + (i * (slotsbuffer + emptySlot.get_width())), slotsBase[1]))
+        else:
+            virtual_screen.blit(fullSlot, (slotsBase[0] + (i * (slotsbuffer + emptySlot.get_width())), slotsBase[1]))
 
     scaled = pygame.transform.scale(virtual_screen, screen_res)
     screen.blit(scaled, (0, 0))

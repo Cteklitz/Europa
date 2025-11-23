@@ -5,7 +5,7 @@ import Objects
 
 health = 100
 inventory = []
-MaxInventorySize = 20
+MaxInventorySize = 20 # MUST ALWAYS BE DIVISIBLE BY 4!!!!
 equipped = None
 cutscene = False
 events = 0
