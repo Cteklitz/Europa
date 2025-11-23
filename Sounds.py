@@ -1,15 +1,21 @@
 import pygame
 
+globalVolume = 1.0
+
 def loadAudio(filename):
     try:
         # Try to load .ogg
         base_name = filename.replace(".wav", "").replace(".mp3", "")
         ogg_filename = f"Compressed_{base_name}.ogg"
-        return pygame.mixer.Sound(ogg_filename)
+        sound = pygame.mixer.Sound(ogg_filename)
+        sound.set_volume(globalVolume ** 2)
+        return sound
     except:
         # If .ogg fails, try the original file in "Raw Audio/" directory
         try:
-            return pygame.mixer.Sound(filename)
+            sound = pygame.mixer.Sound(filename)
+            sound.set_volume(globalVolume ** 2)
+            return sound
         except:
             raise
 
@@ -23,6 +29,11 @@ def loadMusic(filename):
             pygame.mixer.music.load(filename)
         except:
             raise
+
+def setVolume(self, volume):
+    volume = volume ** 2 # use exponential scaling for volume
+    volume = volume * (globalVolume ** 2) # adjust by global volume
+    self.set_volume(volume)
 
 valveSound = loadAudio("Audio/valve.wav")
 switchSound = loadAudio("Audio/switch.wav")
