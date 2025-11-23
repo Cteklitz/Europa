@@ -229,6 +229,12 @@ class OperatorNode(Node):
                 return False
             if self.selected_prong == 2:
                 self.connection_below = other
+                # only evaluate if all connections are filled  (doesn't look very pretty, but it should work)
+                if len(self.connections_above) == self.num_inputs_allowed and self.connections_above[0] is not None:
+                    if self.num_inputs_allowed == 2 and self.connections_above[1] is not None:
+                        self.evaluate_operation(*self.connections_above)  # evaluate operation and store result
+                    elif self.num_inputs_allowed == 1:
+                        self.evaluate_operation(*self.connections_above)                
             else:
                 print(f"OPERATOR Connect-Back to OUTPUT: selected operator--{self}--prong #{self.selected_prong}, "
                       f"but connection below is {self.connection_below}")
