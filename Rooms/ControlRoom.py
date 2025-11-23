@@ -144,16 +144,17 @@ class Valve:
     def check_collision(self, player_pos, solved):
         in_range = (self.x - 8 < player_pos.x < self.x + 40) and (self.y - 8 < player_pos.y < self.y + 40)
 
-        if in_range and self.activated_time == -1:
-            valveSound.play()
-            self.image = Assets.valveSprites[1]
+        if in_range and self.activated_time == -1:          
             if not solved:
+                valveSound.play()
+                self.image = Assets.valveSprites[1]
                 changed = rotatePipes(pipePuzzle)
                 if changed:
                     pipeSound.play()
                 checkSolution(pipePuzzle, solution)
             else:
-                self.action()
+                pass
+                #self.action()
             self.activated_time = pygame.time.get_ticks()
 
     def update(self):
