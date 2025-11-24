@@ -251,3 +251,4 @@ lighterBed = pygame.image.load("Assets/LighterBed.png")
 herbicide = pygame.image.load("Assets/herbicide.png")
 
 airlockValve = pygame.image.load("Assets/airlock_valve.png")
+airlockValveInv = pygame.image.load("Assets/airlock_valve_inv.png")
