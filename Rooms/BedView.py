@@ -31,6 +31,7 @@ backgroundRight = Assets.bedBackgroundRight
 
 radioOn = Assets.radioOn
 radioOff = Assets.radioOff
+radioRect = pygame.Rect(97,94,37,32)
 
 text = Assets.safeText
 
@@ -57,6 +58,8 @@ def Room(screen, screen_res, events):
     # virtual_screen2.fill((159, 161, 160))
     xScale = screen.get_width()/virtual_screen.get_width() 
     yScale = screen.get_height()/virtual_screen.get_height()
+
+    radioStatus = Objects.getRadioOn()
 
     level, power = Objects.getPipeDungeonInfo()
     # Add greenpower statement
@@ -92,8 +95,19 @@ def Room(screen, screen_res, events):
                     exit = True
         if event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == 1:
-                print(f"{bedroom}: {bedNumber}")
-                pass
+                if bedroom == 2:
+                    if bedNumber == 1:
+                        mouse_x, mouse_y = pygame.mouse.get_pos()
+                        mouse_pos = (mouse_x/xScale, mouse_y/yScale)
+                        if radioRect.collidepoint(mouse_pos) and greenPowerOn:
+                            Objects.toggleRadio()
+                            Sounds.combo.play()
+                            if radioStatus:
+                                Sounds.radioClose.stop()
+                                Sounds.radioFar.stop()
+                            else:
+                                Sounds.radioClose.play(-1)
+                                Sounds.radioFar.play(-1)
 
     # location specfic things
     match bedroom:
@@ -153,7 +167,10 @@ def Room(screen, screen_res, events):
                         Player.cutscene = False
                 case 1: # right bed
                     if greenPowerOn:
-                        virtual_screen.blit(radioOn, (97,94))
+                        if radioStatus:
+                            virtual_screen.blit(radioOn, (97,94))
+                        else:
+                            virtual_screen.blit(radioOff, (97,94))
                     else:
                         virtual_screen.blit(radioOff, (97,94))
         case 3: # Bedroom 3
