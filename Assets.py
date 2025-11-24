@@ -154,6 +154,16 @@ equipButton = pygame.image.load("Assets/equipButton.png")
 unequipButton = pygame.image.load("Assets/unequipButton.png")
 
 breakerBox = pygame.image.load("Assets/breaker.png")
+spark1 = pygame.image.load("Assets/spark1.png")
+spark2 = pygame.image.load("Assets/spark2.png")
+spark3 = pygame.image.load("Assets/spark3.png")
+spark4 = pygame.image.load("Assets/spark4.png")
+spark5 = pygame.image.load("Assets/spark5.png")
+spark6 = pygame.image.load("Assets/spark6.png")
+spark7 = pygame.image.load("Assets/spark7.png")
+spark8 = pygame.image.load("Assets/spark8.png")
+spark9 = pygame.image.load("Assets/spark9.png")
+sparks = [spark1, spark2, spark3, spark4, spark5, spark6, spark7, spark8, spark9]
 
 locker = pygame.image.load("Assets/locker.png")
 toolboxGround = pygame.image.load("Assets/ToolboxGround.png")

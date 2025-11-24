@@ -463,6 +463,27 @@ def Room(screen, screen_res, events):
                 pygame.draw.line(virtual_screen, color_array[wire_count], (node.rect.left + 3, node.rect.top + 15), (node.connection_below.rect.left + 5, node.connection_below.rect.top + 1), width=2)
         wire_count += 1  # iterate here so each operator gets own wire color (6<11, don't worry about access errors)
 
+    # draw sparks
+    for node in nodes:
+        if node != recently_selected:
+            sparkRng = random.randint(0,600)
+            if node.node_height == 1: # input node
+                if node.connection_below == None: # only draw spark if no wire connected
+                    if sparkRng < 1:
+                        sparkRng = random.randint(0, len(Assets.sparks) - 1)
+                        virtual_screen.blit(Assets.sparks[sparkRng], (node.rect.topleft[0] + 4, node.rect.topleft[1] + 12))
+                        sparkRng = random.randint(0, len(Sounds.sparks) - 1)
+                        Sounds.sparks[sparkRng].play()
+            elif node.node_height == 2: # operator node
+                if len(node.connections_above) > 1 and node.connections_above[0] is not None: # only draw spark if connections above full
+                    if node.connection_below == None: # only draw spark if no wire connected
+                        if sparkRng < 1:
+                            sparkRng = random.randint(0, len(Assets.sparks) - 1)
+                            virtual_screen.blit(Assets.sparks[sparkRng], (node.rect.topleft[0] + 2, node.rect.topleft[1] + 15))
+                            sparkRng = random.randint(0, len(Sounds.sparks) - 1)
+                            Sounds.sparks[sparkRng].play()
+
+
     # draw wire from current selected node to mouse
     if recently_selected is not None:
         mouse_x, mouse_y = pygame.mouse.get_pos()
