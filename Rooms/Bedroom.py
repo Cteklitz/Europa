@@ -141,6 +141,8 @@ def positionDeterminer(cameFrom):
         player_pos = pygame.Vector2(leftBedInteractRect.x + 40, leftBedInteractRect.y + 44)
     else: # came from right bed view
         player_pos = pygame.Vector2(rightBedInteractRect.x + 8, rightBedInteractRect.y + 44)
+        if BedroomNumber == 2:
+            Sounds.setVolume(Sounds.radioClose, 0.4) # set radio volume back to normal if came from the bedview containing radio, as it was increased when viewing
 
 def Room(screen, screen_res, events):
     global bedView, lightsOn, greenPowerOn, notePuzzle, deskView
@@ -165,6 +167,7 @@ def Room(screen, screen_res, events):
                 elif rightBedInteractRect.collidepoint(player_pos): # go to right bedview
                     if greenPowerOn:
                         Objects.setBedNumber(1)
+                        Sounds.setVolume(Sounds.radioClose, 0.5) # make radio volume louder when in the bedview containing the radio
                         bedView = True
                     else:
                         tooDarkSee.activated_time = pygame.time.get_ticks()

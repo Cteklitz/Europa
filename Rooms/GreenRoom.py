@@ -82,7 +82,7 @@ def inBounds(x, y):
         return 2
     elif bedroom2Door.rect.collidepoint((x,y)):
         if greenPowerOn:
-            Sounds.radioClose.set_volume(.15)
+            Sounds.setVolume(Sounds.radioClose, 0.4)
         Sounds.radioFar.set_volume(0)
         if (level == 3 and power) or Objects.getGreenPower():
             Sounds.powerAmb.stop()
@@ -167,8 +167,7 @@ def Room(screen, screen_res, events):
     maxDist = math.sqrt((48 - bedroom2Door.x)**2 + (48 - bedroom2Door.y)**2)
     normDist = dist / maxDist # normalize dist
     vol = .75 - normDist + 0.2
-    vol = vol**2 # apply expontial growth so vol scales smoothly
-    Sounds.radioFar.set_volume(vol)
+    Sounds.setVolume(Sounds.radioFar, vol)
 
     if not greenPowerOn:
         Sounds.radioFar.set_volume(0)
