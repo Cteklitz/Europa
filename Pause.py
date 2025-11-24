@@ -38,6 +38,12 @@ def Pause(screen, screen_res, events):
     virtual_screen.blit(resume, resumeRect)
     virtual_screen.blit(exit, exitRect)
 
+    font = pygame.font.Font("Assets/asusrog_regular.ttf", 76)
+    text = font.render("PAUSED", False, "white")
+    textRect = text.get_rect()
+    textRect.center = (450, 50)
+    virtual_screen.blit(text, textRect)
+
     scaled = pygame.transform.scale(virtual_screen, screen_res)
     screen.blit(scaled, (0, 0))
 
