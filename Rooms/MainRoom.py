@@ -52,7 +52,7 @@ lights = [
 pinkDoor = Objects.Door(15, 224, Assets.pinkDoorWest)
 blueDoor = Objects.Door(433, 224, Assets.blueDoorEast)
 greenDoor = Objects.Door(224, 430, Assets.greenDoorSouth)
-orangeDoor = Objects.Door(224, 12, Assets.orangeDoorNorth)
+yellowDoor = Objects.Door(224, 12, Assets.orangeDoorNorth)
 
 bandage = Objects.groundItem(300, 265, Items.bandage)
 
@@ -87,6 +87,12 @@ def inBounds(x, y):
             Sounds.ominousAmb.stop()
             Sounds.powerAmb.play(-1)
         return 3
+    elif yellowDoor.rect.collidepoint((x,y)):
+        level, power = Objects.getPipeDungeonInfo()
+        if (power and level == 4) and Objects.getGreenPower() and Objects.getBluePower() and Objects.getPinkPower():
+            Sounds.ominousAmb.stop()
+            Sounds.powerAmb.play(-1)
+        return 4
     elif ctrlRmWallRect.collidepoint((x,y)):
         return False
     elif not octagon.contains(Point(x,y)):
@@ -167,7 +173,7 @@ def Room(screen, screen_res, events):
     virtual_screen.blit(pinkDoor.image, pinkDoor.rect)
     virtual_screen.blit(blueDoor.image, blueDoor.rect)
     virtual_screen.blit(greenDoor.image, greenDoor.rect)
-    virtual_screen.blit(orangeDoor.image, orangeDoor.rect)
+    virtual_screen.blit(yellowDoor.image, yellowDoor.rect)
 
     if player_pos.y < 240:
         Player.animatePlayer(virtual_screen, player_pos, 32, 32, "top-down")
