@@ -31,12 +31,14 @@ mop = pygame.image.load("Assets/Mop.png")
 yellowElectricalTape = pygame.image.load("Assets/tape_lockerview.png")
 numberTiles = Assets.numberTiles
 lockInterface = Assets.lockInterface
+valve = Assets.airlockValve
 
 tapeRect = pygame.Rect(tape_pos[0], tape_pos[1], 16, 16)
 mopRect = pygame.Rect(mop_pos[0], mop_pos[1], 60, 100)
 lockRect = pygame.Rect(16, 96, 8, 9)
 eyeDoorRect = pygame.Rect(12, 12, 67, 172)
 lockInterfaceRect = pygame.Rect(4, 105, 119, 51)
+valveRect = pygame.Rect(16, 139, 41, 41)
 
 light_pos = (389 / 2, 0)
 lightsNew = [LightSource(light_pos[0], light_pos[1], radius=100, strength = 50)]
@@ -44,6 +46,7 @@ falloff = [LightFalloff(virtual_screen.get_size(), darkness = 160)]
 
 tapeCollected = False
 mopCollected = False
+valveCollected = False
 exit = False
 unlocked = False # if the eye locker has been unlocked
 open = False # if the eye locker is open
@@ -73,7 +76,7 @@ def positionDeterminer(cameFrom):
     pass
 
 def Room(screen, screen_res, events):
-    global exit, tapeCollected, mopCollected, lights, unlocked, open, interface
+    global exit, tapeCollected, mopCollected, lights, unlocked, open, interface, valveCollected
     xScale = screen.get_width()/virtual_screen.get_width() 
     yScale = screen.get_height()/virtual_screen.get_height()
     dark_overlay.fill((0, 0, 0, 50))
@@ -107,6 +110,10 @@ def Room(screen, screen_res, events):
                 if eyeDoorRect.collidepoint(mouse_pos) and unlocked and not open:
                     open = True
                     Sounds.lockerOpen.play()
+                if valveRect.collidepoint(mouse_pos) and open:
+                    if Player.addItem(Items.valve):
+                        Sounds.pickup.play()
+                        valveCollected = True
                 
                 # lock interface
                 if interface:
@@ -170,6 +177,8 @@ def Room(screen, screen_res, events):
         virtual_screen.blit(scaled_mop, mop_pos)
     if not tapeCollected:
         virtual_screen.blit(yellowElectricalTape, tape_pos)
+    if open and not valveCollected:
+        virtual_screen.blit(valve, valveRect)
 
     if interface:
         virtual_screen.blit(lockInterface, lockInterfaceRect)
