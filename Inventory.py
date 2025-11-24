@@ -52,7 +52,7 @@ def Inventory(screen, screen_res, events):
             running = False      
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
-                running  = False
+                open = False
             if event.key == pygame.K_TAB or event.key == pygame.K_BACKSPACE:
                 open = False
         elif event.type == pygame.MOUSEBUTTONDOWN:
@@ -91,7 +91,7 @@ def Inventory(screen, screen_res, events):
         if len(Player.inventory) > i:
             virtual_screen.blit(Player.inventory[i].inventory_sprite, slot)
             font = pygame.font.Font("Assets/Minecraft.ttf", 24)
-            text = font.render(Player.inventory[i].name, True, "white")
+            text = font.render(Player.inventory[i].name, False, "white")
             textRect = text.get_rect()
             textRect.center = (slot[0]+50, slot[1]+105)
             virtual_screen.blit(text, textRect)

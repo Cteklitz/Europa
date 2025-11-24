@@ -16,7 +16,7 @@ def Controls(screen, screen_res, events):
             running = False
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
-                running  = False
+                open = False
             elif event.key == pygame.K_h or event.key == pygame.K_BACKSPACE:
                 open = False
 
