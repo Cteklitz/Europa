@@ -57,7 +57,7 @@ def draw_text(surface, text, color, rect, font):
 
     y_offset = 0
     for line in lines:
-        line_surf = font.render(line, True, color)
+        line_surf = font.render(line, False, color)
         surface.blit(line_surf, (rect.x, rect.y + y_offset))
         y_offset += font.get_height()
 
