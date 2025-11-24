@@ -41,9 +41,9 @@ switchSound = loadAudio("Audio/switch.wav")
 heartbeat = loadAudio("Audio/heartbeat.wav")
 
 ominousAmb = loadAudio("Audio/mainroomambience.wav")
-ominousAmb.set_volume(0.075)
+setVolume(ominousAmb, 0.274)
 powerAmb = loadAudio("Audio/powerambience-1.wav")
-powerAmb.set_volume(0.80)
+setVolume(powerAmb, 0.89)
 
 brainwash = loadAudio("Audio/weird noises.-2.wav")
 book = loadAudio("Audio/book.wav")
@@ -60,7 +60,7 @@ magnets = [magnet1, magnet2, magnet3]
 glass = [glass1, glass2]
 
 for magnet in magnets:
-    magnet.set_volume(0.75)
+    setVolume(magnet, 0.867)
 
 draweropen = loadAudio("Audio/draweropen.wav")
 drawerclose = loadAudio("Audio/drawerclose.wav")
@@ -98,23 +98,23 @@ spark2 = loadAudio("Audio/spark2.wav")
 spark3 = loadAudio("Audio/spark3.wav")
 spark4 = loadAudio("Audio/spark4.wav")
 spark5 = loadAudio("Audio/spark5.wav")
-spark1.set_volume(0.4)
-spark2.set_volume(0.4)
-spark3.set_volume(0.4)
-spark4.set_volume(0.4)
-spark5.set_volume(0.4)
+setVolume(spark1, 0.6)
+setVolume(spark2, 0.6)
+setVolume(spark3, 0.6)
+setVolume(spark4, 0.6)
+setVolume(spark5, 0.6)
 
 radioClose = loadAudio("Audio/radio_close.wav")
 radioFar = loadAudio("Audio/radio_far.wav")
 
 curtain = loadAudio("Audio/curtain.wav")
-curtain.set_volume(.5)
+setVolume(curtain, 0.71)
 openClose = loadAudio("Audio/toolboxOpenClose.wav")
-openClose.set_volume(.5)
+setVolume(openClose, 0.71)
 sink = loadAudio("Audio/sink.wav")
-sink.set_volume(.3)
+setVolume(sink, 0.55)
 sink2 = loadAudio("Audio/sink.wav")
-sink2.set_volume(.3)
+setVolume(sink2, 0.55)
 
 accessGranted = loadAudio("Audio/accessgranted.mp3")
 
@@ -124,14 +124,17 @@ lighter = loadAudio("Audio/lighter.wav")
 unlock = loadAudio("Audio/unlock.wav")
 
 scary = loadAudio("Audio/scary.wav")
-scary.set_volume(0.5)
+setVolume(scary, 0.71)
 
 TrashSounds = loadAudio("Audio/TrashSounds.wav")
 
 pour = loadAudio("Audio/pour.wav")
-pour.set_volume(0.1)
+setVolume(pour, 0.316)
 
 explosion = loadAudio("Audio/explosion.wav")
 
 plop = loadAudio("Audio/plop.wav")
-plop.set_volume(0.1)
+setVolume(plop, 0.316)
+
+pauseMusic = loadAudio("Audio/wading_into_the_unknown.wav")
+setVolume(pauseMusic, 0.4)

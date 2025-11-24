@@ -14,6 +14,8 @@ from Rooms import TitleScreen, MainRoom
 import Player
 import Inventory
 import Controls
+import Pause
+import Sounds
 
 screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
 screenRes = screen.get_size()
@@ -48,6 +50,9 @@ while running:
     elif Controls.open:
         if not Controls.Controls(screen, screenRes, events):
             running = False
+    elif Pause.open:
+        if not Pause.Pause(screen, screenRes, events):
+            running = False
     else:
         player_pos, xSpeedScale, ySpeedScale = area.getPos(screen, screenRes, events, Room)
 
@@ -56,7 +61,9 @@ while running:
                     running = False
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
-                    running = False
+                    #running = False
+                    Pause.open = True
+                    Sounds.pauseMusic.play()
                 # Open inventory
                 if event.key == pygame.K_TAB and not Player.cutscene and Room != TitleScreen:
                     Inventory.open = True
