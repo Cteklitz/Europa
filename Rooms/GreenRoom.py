@@ -51,6 +51,8 @@ greenPowerDoor = Objects.Door(400,16, Assets.grayDoorNorth)
 unlocked = False
 keycardScannerInteractRect = pygame.Rect(greenPowerDoor.rect.x+32,greenPowerDoor.rect.y+32,25,6)
 
+radioOn = True
+
 def inBounds(x, y):
     global unlocked
     level, power = Objects.getPipeDungeonInfo()
@@ -132,9 +134,10 @@ def positionDeterminer(cameFrom):
     if cameFrom == "Rooms.Bathroom":
         player_pos = pygame.Vector2(bathroomDoor.x + 37, bathroomDoor.y + bathroomDoor.rect.height/2)
     elif cameFrom == "Rooms.MainRoom":    
-        Sounds.radioFar.play(-1)
+        if radioOn:
+            Sounds.radioFar.play(-1)
+            Sounds.radioClose.play(-1)
         Sounds.radioFar.set_volume(0)
-        Sounds.radioClose.play(-1)
         Sounds.radioClose.set_volume(0)
         player_pos = pygame.Vector2(greenDoor.x + greenDoor.rect.width/2, greenDoor.y + greenDoor.rect.height + 5)
     elif cameFrom == "Rooms.Bedroom":

@@ -262,3 +262,9 @@ def getEyeLockerUnlocked():
 
 def getBunsenOn():
     return Area.getBunsenOn()
+
+def getRadioOn():
+    return Area.getRadioOn()
+
+def toggleRadio():
+    Area.toggleRadio()
