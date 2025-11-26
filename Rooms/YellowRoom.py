@@ -85,7 +85,10 @@ def inBounds(x, y):
 
 def positionDeterminer(cameFrom):
     global player_pos
-    player_pos = pygame.Vector2(175, 340)
+    if cameFrom == "Rooms.MainRoom":
+        player_pos = pygame.Vector2(175, 340)
+    if cameFrom == "Rooms.YellowHallway":
+        player_pos = pygame.Vector2(175, 261)
 
 def Room(screen, screen_res, events):
     global greenPower, played

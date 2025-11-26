@@ -19,13 +19,10 @@ virtual_view_res = (virtual_screen.get_width()/2, virtual_screen.get_height())
 player_pos = pygame.Vector2(192, 128)
 
 lights = [
-    Objects.SquishedLight(48, 48, 4),
-    Objects.SquishedLight(48, 176, 4),
-    Objects.SquishedLight(208, 176, 4),
-    Objects.SquishedLight(304, 48, 4),
-    Objects.SquishedLight(400, 176, 4),
-    Objects.SquishedLight(560, 48, 4),
-    Objects.SquishedLight(560, 176, 4)
+    Objects.SquishedLight(0, 113, 4),
+    Objects.SquishedLight(208, 113, 4),
+    Objects.SquishedLight(400, 113, 4),
+    Objects.SquishedLight(604, 113, 4)
 ]
 
 # New Lighting
@@ -40,16 +37,15 @@ lightsNew = [LightSource(ambientLightPos[0], ambientLightPos[1], radius=60, stre
 falloff = [LightFalloff(virtual_screen.get_size(), darkness = 50)]
 falloffPartial = [LightFalloff(virtual_screen.get_size(), darkness = 75)]
 
-greenDoor = Objects.Door(208, 16, Assets.greenDoorNorth)
-bathroomDoor = Objects.Door(16, 112, Assets.grayDoorWest)
-bedroom1Door = Objects.Door(112, 208, Assets.grayDoorSouth)
-bedroom2Door = Objects.Door(304, 208, Assets.grayDoorSouth)
-bedroom3Door = Objects.Door(496, 208, Assets.grayDoorSouth)
-greenhouseDoor = Objects.Door(592, 112, Assets.grayDoorEast)
-greenPowerDoor = Objects.Door(400,16, Assets.grayDoorNorth)
+exitDoorImg = pygame.transform.scale(Assets.grayDoorSouth, (75,75))
+ValveDoor = pygame.image.load("Assets/ValveDoor.png")
+MissingValveDoor = pygame.image.load("Assets/MissingValveDoor.png")
+ValveDoor1 = Objects.Door(88, 48, ValveDoor)
+ValveDoor2 = Objects.Door(288, 48, ValveDoor)
+ValveDoor3 = Objects.Door(488, 48, MissingValveDoor)
+exitDoor = Objects.Door(283, 161, exitDoorImg)
 
 unlocked = False
-keycardScannerInteractRect = pygame.Rect(greenPowerDoor.rect.x+32,greenPowerDoor.rect.y+32,25,6)
 
 # outer rect
 outerRect = pygame.Rect(0,0,640,240)
@@ -59,7 +55,8 @@ innerRect = pygame.Rect(0,112,640,50)
 def inBounds(x, y):
     global unlocked
     level, power = Objects.getPipeDungeonInfo()
-    bounds = pygame.Rect(48,48,544,160)
+    bounds = pygame.Rect(innerRect.x+32,innerRect.y-8, innerRect.width-64,innerRect.height-4)
+    exitWalkRect = pygame.Rect(exitDoor.x, exitDoor.y - 20, exitDoor.rect.width, exitDoor.rect.height)
     # Add greenpower statement
     if (level == 3 and power) or Objects.getGreenPower():
         greenPowerOn = True
@@ -67,95 +64,39 @@ def inBounds(x, y):
         greenPowerOn = False
     #greenPowerOn = True # FOR TESTING
 
-    if greenDoor.rect.collidepoint((x,y)):
-        Sounds.radioFar.stop()
-        Sounds.radioClose.stop()
-        if (level == 3 and power) or Objects.getGreenPower():
-            Sounds.powerAmb.stop()
-            Sounds.ominousAmb.play(-1)
+    if exitDoor.rect.collidepoint((x,y)):
         return 0
-    elif bathroomDoor.rect.collidepoint((x,y)):
+    elif ValveDoor3.rect.collidepoint((x,y)):
         Sounds.radioFar.set_volume(0)
         Sounds.radioClose.set_volume(0)
         return 1
-    elif not innerRect.collidepoint((x,y)):
+    elif exitWalkRect.collidepoint((x,y)):
+        return True
+    elif not bounds.collidepoint((x,y)):
         return False
     return True
 
 def positionDeterminer(cameFrom):
     global player_pos
 
-    level, power = Objects.getPipeDungeonInfo()
-    # Add greenpower statement
-    if (level == 3 and power) or Objects.getGreenPower():
-        greenPowerOn = True
-    else:
-        greenPowerOn = False
-    #greenPowerOn = True # FOR TESTING
-
-    Sounds.radioClose.set_volume(0)
-    if (greenPowerOn):
-        Sounds.radioFar.set_volume(.75)
-
-    if cameFrom == "Rooms.Bathroom":
-        player_pos = pygame.Vector2(bathroomDoor.x + 37, bathroomDoor.y + bathroomDoor.rect.height/2)
-    elif cameFrom == "Rooms.MainRoom":    
-        player_pos = pygame.Vector2(greenDoor.x + greenDoor.rect.width/2, greenDoor.y + greenDoor.rect.height + 5)
-    elif cameFrom == "Rooms.Bedroom":
-        if Objects.getBedroomNumber() == 1:
-            player_pos = pygame.Vector2(bedroom1Door.x + bedroom1Door.rect.width/2, bedroom1Door.y - 5)
-        elif Objects.getBedroomNumber() == 2:          
-            player_pos = pygame.Vector2(bedroom2Door.x + bedroom2Door.rect.width/2, bedroom2Door.y - 5)
-        elif Objects.getBedroomNumber() == 3:
-            player_pos = pygame.Vector2(bedroom3Door.x + bedroom3Door.rect.width/2, bedroom3Door.y - 5)
-    elif cameFrom == "Rooms.Greenhouse":
-        player_pos = pygame.Vector2(greenhouseDoor.x - 5, greenhouseDoor.y + greenhouseDoor.rect.height/2)   
-    elif cameFrom == "Rooms.GreenPower":
-        player_pos = pygame.Vector2(greenPowerDoor.x + greenPowerDoor.rect.width/2, greenPowerDoor.y + greenPowerDoor.rect.height + 5)
+    if cameFrom == "Rooms.YellowRoom":    
+        player_pos = pygame.Vector2(exitDoor.x + exitDoor.rect.width/2, exitDoor.y - 5)
+    elif cameFrom == "Rooms.SubRoom":
+        player_pos = pygame.Vector2(ValveDoor3.x + ValveDoor3.rect.width/2, ValveDoor3.y + 69)
 
 def Room(screen, screen_res, events):
     global player_pos, unlocked
     level, power = Objects.getPipeDungeonInfo()
-    # Add greenpower statement
-    if (level == 3 and power) or Objects.getGreenPower():
-        greenPowerOn = True
-    else:
-        greenPowerOn = False
-    #greenPowerOn = True # FOR TESTING
 
-    # set radioFar volume based on distance to bedroom 2
-    dist = math.sqrt((player_pos.x - bedroom2Door.x)**2 + (player_pos.y - bedroom2Door.y)**2)
-    maxDist = math.sqrt((48 - bedroom2Door.x)**2 + (48 - bedroom2Door.y)**2)
-    normDist = dist / maxDist # normalize dist
-    vol = .75 - normDist + 0.2
-    Sounds.setVolume(Sounds.radioFar, vol)
-
-    if not greenPowerOn:
-        Sounds.radioFar.set_volume(0)
-
-    for event in events:
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_e:
-                if keycardScannerInteractRect.collidepoint(player_pos) and Player.checkItem(Items.greenKeycard) and not unlocked:
-                    Sounds.loadMusic("Audio/opensesame.wav")
-                    pygame.mixer.music.play(start=3.0)
-                    Sounds.accessGranted.play()
-                    unlocked = True
-                    Player.removeItem(Items.greenKeycard)
+    # for event in events:
+    #     if event.type == pygame.KEYDOWN:
+    #         if event.key == pygame.K_e:
 
     virtual_screen.fill((105,105,105))
     dark_overlay.fill((0, 0, 0, 150))
     pygame.draw.rect(virtual_screen, "gray", outerRect)
     pygame.draw.rect(virtual_screen, "black", outerRect, 1)
     pygame.draw.rect(virtual_screen, "black", innerRect, 1)
-    
-    for i in (0, 1):
-        for j in (0, 1):
-            x1 = outerRect.left + i * outerRect.width
-            y1 = outerRect.top + j * outerRect.height
-            x2 = innerRect.left + i * innerRect.width
-            y2 = innerRect.top + j * innerRect.height
-            pygame.draw.line(virtual_screen, "black", (x1, y1), (x2, y2))
 
     Done = False
 
@@ -163,27 +104,10 @@ def Room(screen, screen_res, events):
         light.image = Assets.squishedTiles[4]
         virtual_screen.blit(pygame.transform.scale(light.image, (36, 8)), light.rect)
 
-    virtual_screen.blit(greenDoor.image, greenDoor.rect)
-    virtual_screen.blit(bathroomDoor.image, bathroomDoor.rect)
-    virtual_screen.blit(bedroom1Door.image, bedroom1Door.rect)
-    virtual_screen.blit(bedroom2Door.image, bedroom2Door.rect)
-    virtual_screen.blit(bedroom3Door.image, bedroom3Door.rect)
-    virtual_screen.blit(greenhouseDoor.image, greenhouseDoor.rect)
-    if unlocked:
-        virtual_screen.blit(greenPowerDoor.image, greenPowerDoor.rect)
-    else:
-        virtual_screen.blit(Assets.lockedDoorNorth, greenPowerDoor.rect)
-
-    virtual_screen.blit(Assets.pipes[12], (greenDoor.rect.x, greenDoor.rect.y+32))
-    virtual_screen.blit(Assets.pipes[18], (greenDoor.rect.x, greenDoor.rect.y+64))
-
-    for x in range(greenDoor.rect.x+32, greenPowerDoor.rect.x, 32):
-        virtual_screen.blit(Assets.pipes[10], (x, greenDoor.rect.y+64))
-
-    virtual_screen.blit(Assets.pipes[12], (greenPowerDoor.rect.x, greenPowerDoor.rect.y+32))
-    virtual_screen.blit(Assets.pipes[14], (greenPowerDoor.rect.x, greenPowerDoor.rect.y+64))
-
-    virtual_screen.blit(Assets.keycardScanner, (greenPowerDoor.rect.x+32,greenPowerDoor.rect.y))
+    virtual_screen.blit(ValveDoor1.image, ValveDoor1.rect)
+    virtual_screen.blit(ValveDoor2.image, ValveDoor2.rect)
+    virtual_screen.blit(ValveDoor3.image, ValveDoor3.rect)
+    virtual_screen.blit(exitDoor.image, exitDoor.rect)
 
     Player.animatePlayer(virtual_screen, player_pos)
 
