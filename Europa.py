@@ -60,10 +60,14 @@ while running:
             if event.type == pygame.QUIT:
                     running = False
             elif event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE and not Player.cutscene and Room != TitleScreen:
-                # Open pause menu
-                    Pause.open = True
-                    Sounds.pauseMusic.play()
+                if event.key == pygame.K_ESCAPE and not Player.cutscene:
+                    if Room == TitleScreen:
+                        # Quit game
+                        running = False
+                    else:
+                        # Open pause menu
+                        Pause.open = True
+                        Sounds.pauseMusic.play()
                 # Open inventory
                 if event.key == pygame.K_TAB and not Player.cutscene and Room != TitleScreen:
                     Inventory.open = True
