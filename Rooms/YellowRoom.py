@@ -62,26 +62,23 @@ lightsNew = [LightSource(lightPos[0][0], lightPos[0][1], radius=60, strength = 2
 falloff = [LightFalloff((virtual_res[0], virtual_res[1]), darkness = 25)]
         
 def inBounds(x, y):
-    global greenPower
+    doorRect = openDoor.get_rect()
+    doorRect.topleft = (112,128)
     if y > 384:
-        level, power = Objects.getPipeDungeonInfo()
-        if not greenPower and level == 3 and power:
-            Sounds.powerAmb.play(-1)
-            Sounds.ominousAmb.stop()
-        if greenPower:
-            Sounds.powerOnAmb.stop()
         return 0
-    if x < 16 or x > 336:
+    elif doorRect.collidepoint((x,y)):
+        return 1
+    elif x < 16 or x > 336:
         return False
-    if x < 64:
+    elif x < 64:
         if y > 384 - (x + 64):
             return True
         return False
-    if x >= 64 and x < 288:
+    elif x >= 64 and x < 288:
         if y > 256:
             return True
         return False
-    if x >= 288:
+    elif x >= 288:
         if y > 384 - (352 - x + 64):
             return True
         return False
