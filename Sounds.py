@@ -139,3 +139,6 @@ setVolume(plop, 0.316)
 
 pauseMusic = loadAudio("Audio/wading_into_the_unknown.wav")
 setVolume(pauseMusic, 0.4)
+
+blink = loadAudio("Audio/blink.wav")
+setVolume(blink, 0.20)

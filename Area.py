@@ -24,7 +24,8 @@ def getTriangleSolved():
     return TrianglePuzzle.solved
 
 def getBeakerSolved():
-    return BeakerPuzzle.solved
+    # return BeakerPuzzle.solved
+    return True
 
 def getSpotDiffsSolved():
     return SpotDiffs.chestOpen
@@ -39,17 +40,20 @@ def getSelected():
     return MscopeTable.selected
 
 def getOpen():
-    return LockedDoor.solved
-    #return True
+    #return LockedDoor.solved
+    return True
 
 def getPinkPower():
-    return PinkPower.pinkPower
+    # return PinkPower.pinkPower
+    return True
 
 def getBluePower():
-    return BluePower.bluePower
+    # return BluePower.bluePower
+    return True
 
 def getGreenPower():
-    return GreenPower.greenPower
+    # return GreenPower.greenPower
+    return True
 
 def getLetterCount():
     return LockedDoor.letterCount
@@ -58,7 +62,8 @@ def getWaterLevelsSolved():
     return ValvePuzzle.solved
 
 def getBreakerSolved():
-    return BreakerPuzzle.solved
+    # return BreakerPuzzle.solved
+    return True
 
 def RepairWire():
     PuddleRoom.wireRepaired = True
@@ -79,7 +84,8 @@ def setBedNumber(num):
     BedView.bedNumber = num
 
 def getEyeLockerUnlocked():
-    return LockerView.unlocked
+    return True
+    # return LockerView.unlocked
 
 class Area:
     def __init__(self, roomLayout):
