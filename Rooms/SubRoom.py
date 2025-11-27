@@ -85,6 +85,7 @@ exitRect = pygame.Rect(4, 175, 21, 115)
 
 def inBounds(x, y):
     if exitRect.collidepoint((x,y)):
+        Sounds.whispers.stop()
         return 0
     elif not bounds.contains(Point(x,y)):
         return False
@@ -93,6 +94,7 @@ def inBounds(x, y):
 def positionDeterminer(cameFrom):
     global player_pos
     if cameFrom == "Rooms.YellowHallway":
+        Sounds.whispers.play(-1)
         player_pos = pygame.Vector2(exitRect.centerx + 35, exitRect.centery + 25)
 
 def Room(screen, screen_res, events):

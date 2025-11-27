@@ -142,3 +142,6 @@ setVolume(pauseMusic, 0.4)
 
 blink = loadAudio("Audio/blink.wav")
 setVolume(blink, 0.20)
+
+whispers = loadAudio("Audio/whispers.wav")
+setVolume(whispers, 0.20)
