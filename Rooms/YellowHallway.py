@@ -40,6 +40,7 @@ falloffPartial = [LightFalloff(virtual_screen.get_size(), darkness = 75)]
 exitDoorImg = pygame.transform.scale(Assets.grayDoorSouth, (75,75))
 ValveDoor = pygame.image.load("Assets/ValveDoor.png")
 MissingValveDoor = pygame.image.load("Assets/MissingValveDoor.png")
+window = pygame.transform.scale(pygame.image.load("Assets/EmptyWindow.png"), (125, 55))
 ValveDoor1 = Objects.Door(88, 48, ValveDoor)
 ValveDoor2 = Objects.Door(288, 48, ValveDoor)
 ValveDoor3 = Objects.Door(488, 48, MissingValveDoor)
@@ -88,7 +89,14 @@ def Room(screen, screen_res, events):
     global player_pos, unlocked
     level, power = Objects.getPipeDungeonInfo()
 
-    # for event in events:
+    xScale = screen.get_width()/virtual_screen.get_width() 
+    yScale = screen.get_height()/virtual_screen.get_height()
+    for event in events:
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            click_x, click_y = event.pos
+            click_x_unscaled = click_x/xScale
+            click_y_unscaled = click_y/yScale
+            print(click_x_unscaled, click_y_unscaled)
     #     if event.type == pygame.KEYDOWN:
     #         if event.key == pygame.K_e:
 
@@ -108,7 +116,10 @@ def Room(screen, screen_res, events):
     virtual_screen.blit(ValveDoor2.image, ValveDoor2.rect)
     virtual_screen.blit(ValveDoor3.image, ValveDoor3.rect)
     virtual_screen.blit(exitDoor.image, exitDoor.rect)
-
+    virtual_screen.blit(window, (-42, 22))
+    virtual_screen.blit(window, (157, 22))
+    virtual_screen.blit(window, (358, 22))
+    virtual_screen.blit(window, (558, 22))
     Player.animatePlayer(virtual_screen, player_pos)
 
     # if not Objects.getPinkPower():
