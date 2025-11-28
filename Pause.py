@@ -11,6 +11,16 @@ resumeRect = pygame.Rect(325, 150, 250, 75)
 exitRect = pygame.Rect(325, 250, 250, 75)
 running = True
 
+# Variables to store current music playing so that it can resume once unpaused
+musicPath = None
+volume = None
+
+def loadMusic():
+    global musicPath, volume
+    pygame.mixer.music.load(musicPath)
+    pygame.mixer.music.set_volume(volume)
+    pygame.mixer.music.play(-1)
+
 def Pause(screen, screen_res, events):
     global open, running
     xScale = screen.get_width()/virtual_screen.get_width() 
@@ -22,14 +32,26 @@ def Pause(screen, screen_res, events):
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_h or event.key == pygame.K_BACKSPACE or pygame.K_ESCAPE:
                 open = False
-                Sounds.pauseMusic.stop()
+                # Resume in-game audio
+                pygame.mixer.unpause()
+                pygame.mixer.music.stop()
+                if musicPath != None:
+                    loadMusic()
+                else:
+                    pygame.mixer.music.set_volume(1)
         if event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == 1:
                 mouse_x, mouse_y = pygame.mouse.get_pos()
                 mouse_pos = (mouse_x/xScale, mouse_y/yScale)
                 if resumeRect.collidepoint(mouse_pos):
                     open = False
-                    Sounds.pauseMusic.stop()
+                    # Resume in-game audio
+                    pygame.mixer.unpause()
+                    pygame.mixer.music.stop()
+                    if musicPath != None:
+                        loadMusic()
+                    else:
+                        pygame.mixer.music.set_volume(1)
                 elif exitRect.collidepoint(mouse_pos):
                     running = False
 

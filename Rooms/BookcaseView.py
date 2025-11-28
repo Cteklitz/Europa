@@ -4,6 +4,7 @@ import Objects
 from shapely.geometry import Point, Polygon
 import Sounds
 import Player
+import Pause
 
 virtual_res = (384,271)
 virtual_screen = pygame.Surface(virtual_res)
@@ -119,6 +120,7 @@ def Room(screen, screen_res, events):
                         if book4:
                             pygame.mixer.music.stop()
                             Sounds.powerAmb.play(-1)
+                            Pause.musicPath = None
                             book4 = False
                         screen2 = False
                     else:
@@ -157,6 +159,8 @@ def Room(screen, screen_res, events):
                                 Sounds.powerAmb.stop()
                                 Sounds.loadMusic("Audio/dark ambience.wav")
                                 pygame.mixer.music.play(-1)
+                                Pause.musicPath = "Audio/dark ambience.wav"
+                                Pause.volume = 1
                                 screen2 = True
                                 book4 = True
                         elif bigBookRect.contains(Point(scaled_mouse_x2, scaled_mouse_y2)):
@@ -177,6 +181,7 @@ def Room(screen, screen_res, events):
                                 content4 = True
                                 Player.cutscene = True
                                 Player.events += 1
+                                Pause.musicPath = None
 
     virtual_screen.fill("gray")
     virtual_screen2.fill("black")

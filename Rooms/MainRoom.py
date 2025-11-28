@@ -8,7 +8,7 @@ from LightSource import LightSource
 from LightFalloff import LightFalloff
 from LightingUtils import apply_lighting, apply_falloff
 import Player
-
+import Pause
 
 virtual_res = (480, 480)
 
@@ -68,6 +68,8 @@ def inBounds(x, y):
     if ctrlRmRect.collidepoint((x,y)):
         Sounds.loadMusic("Audio/electricbuzz.wav")
         pygame.mixer.music.play(-1)
+        Pause.musicPath = "Audio/electricbuzz.wav"
+        Pause.volume = 1
         return 0
     elif pinkDoor.rect.collidepoint((x,y)):
         level, power = Objects.getPipeDungeonInfo()

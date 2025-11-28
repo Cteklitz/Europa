@@ -6,6 +6,7 @@ from LightFalloff import LightFalloff
 from LightingUtils import apply_lighting, apply_falloff
 import Player
 import Sounds
+import Pause
 
 pipePuzzle = [
     [2,1,2,6,6],
@@ -205,6 +206,7 @@ class Switch:
 def inBounds(x, y):
     if y > 384:
         pygame.mixer.music.stop()
+        Pause.musicPath = None
         return 0
     if x < 16 or x > 336:
         return False

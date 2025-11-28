@@ -67,7 +67,12 @@ while running:
                     else:
                         # Open pause menu
                         Pause.open = True
-                        Sounds.pauseMusic.play()
+                        # Pause in-game audio
+                        pygame.mixer.pause()
+                        # Play pause music
+                        pygame.mixer.music.load("Audio/wading_into_the_unknown.wav")
+                        pygame.mixer.music.set_volume(0.4)
+                        pygame.mixer.music.play(-1)
                 # Open inventory
                 if event.key == pygame.K_TAB and not Player.cutscene and Room != TitleScreen:
                     Inventory.open = True

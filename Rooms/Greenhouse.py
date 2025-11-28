@@ -8,6 +8,7 @@ from LightSource import LightSource
 from LightFalloff import LightFalloff
 from LightingUtils import apply_lighting, apply_falloff
 import Player
+import Pause
 
 virtual_res = (324, 219)
 virtual_screen = pygame.Surface(virtual_res)
@@ -77,6 +78,7 @@ def inBounds(x, y):
             pygame.mixer.music.set_volume(1)
         tooDarkRead.activated_time = -1
         tooDarkSee.activated_time = -1
+        Pause.musicPath = None
         return 0
     elif jumpscare:
         if not jumpscareTime.Done():

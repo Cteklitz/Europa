@@ -9,6 +9,7 @@ from LightingUtils import apply_lighting, apply_falloff
 import Player
 import math
 import Items
+import Pause
 
 virtual_res = (644, 260)
 virtual_screen = pygame.Surface(virtual_res)
@@ -101,6 +102,8 @@ def inBounds(x, y):
             # Sounds.powerAmb.stop()
             Sounds.loadMusic("Audio/Canopy.wav")
             pygame.mixer.music.set_volume(0.05)
+            Pause.musicPath = "Audio/Canopy.wav"
+            Pause.volume = 0.05
             pygame.mixer.music.play(-1)   
         return 3
     elif greenPowerDoor.rect.collidepoint((x,y)) and unlocked:
