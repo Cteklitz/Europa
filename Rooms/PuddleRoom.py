@@ -237,6 +237,7 @@ def Room(screen, screen_res, events):
                             lowerLevelFloodedText.activated_time = pygame.time.get_ticks()
                         else:
                             powerRoom = True
+                            Sounds.drain.stop()
                     
                     elif Player.checkItem(Items.electricalTape):
                         if wireRect.collidepoint(player_pos) and not wireRepaired:

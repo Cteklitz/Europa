@@ -174,6 +174,8 @@ def Room(screen, screen_res, events):
                     if waterLevels[i] != 50:
                         good = False
                 if good:
+                    if not solved:
+                        Sounds.drain.play()
                     solved = True
 
     # fill the screen with a color to wipe away anything from last frame

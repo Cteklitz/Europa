@@ -105,6 +105,9 @@ setVolume(spark4, 0.3)
 setVolume(spark5, 0.3)
 sparks = [spark1, spark2, spark3, spark4, spark5]
 
+drain = loadAudio("Audio/drain.wav")
+setVolume(drain, 0.3)
+
 radioClose = loadAudio("Audio/radio_close.wav")
 radioFar = loadAudio("Audio/radio_far.wav")
 
