@@ -39,6 +39,7 @@ thermometerOnDesk = pygame.image.load("Assets/ThermometerOnDesk.png")
 trash = pygame.image.load("Assets/Trash.png")
 trashInteractRect = trash.get_rect()
 trashInteractRect.topleft = (108,185)
+playedTrash = False
 
 leftDeskInteractRect = leftDesk.get_rect()
 leftDeskInteractRect.topleft = (25, 160)
@@ -79,7 +80,7 @@ greenPowerOn = False
 notePuzzle = False
 
 def inBounds(x, y):
-    global leftBed, rightBed, bedView, notePuzzle, deskView
+    global leftBed, rightBed, bedView, notePuzzle, deskView, playedTrash
     level, power = Objects.getPipeDungeonInfo()
     leftBedRect = leftBed.get_rect()
     leftBedRect.topleft = (37,37)
@@ -118,6 +119,7 @@ def inBounds(x, y):
             # Stop trash sounds when briefText finishes
             Sounds.TrashSounds.stop()
             notePuzzle = False
+            playedTrash = True
             return 2
         else:
             return False
@@ -129,7 +131,7 @@ def inBounds(x, y):
     return True
 
 def positionDeterminer(cameFrom):
-    global player_pos, leftBedInteractRect, rightBedInteractRect, leftDeskInteractRect
+    global player_pos, leftBedInteractRect, rightBedInteractRect, leftDeskInteractRect, playedTrash
     bedNum = Objects.getBedNumber()
     if cameFrom == "Rooms.GreenRoom":
         player_pos = pygame.Vector2(northDoor.x + northDoor.rect.width/2, northDoor.y + northDoor.rect.height + 5)
@@ -182,9 +184,10 @@ def Room(screen, screen_res, events):
                     elif BedroomNumber == 1 or BedroomNumber == 2:
                         trashEmpty.activated_time = pygame.time.get_ticks()
                     else:
-                        # Play trash searching sound during the wait time
-                        Sounds.TrashSounds.play()
-                        somethingInside.activated_time = pygame.time.get_ticks()
+                        if not playedTrash:
+                            # Play trash searching sound during the wait time
+                            Sounds.TrashSounds.play()
+                            somethingInside.activated_time = pygame.time.get_ticks()
                         notePuzzle = True          
 
     virtual_screen.fill((105,105,105))
