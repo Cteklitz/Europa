@@ -2,7 +2,7 @@ from Rooms import TitleScreen, ControlRoom, MainRoom, PinkRoom, PinkLowerWing, B
 Safe, PinkUpperWing, TrianglePuzzle, TriangleSolution, BeakerPuzzle, MscopeTable, Microscope, \
 LockedDoor, Desk, SpotDiffs, PinkPower, BlueRoom, BreakerRoom, PuddleRoom, Toolbox, BreakerPuzzle,     \
 StorageCloset, ValvePuzzle, BluePower, LockerView, PuddleView, GreenRoom, Bedroom, Greenhouse, Bathroom, BedView, \
-TornNotePuzzle, BedroomDeskView, GreenPower, YellowRoom, YellowHallway, SubRoom
+TornNotePuzzle, BedroomDeskView, GreenPower, YellowRoom, YellowHallway, SubRoom, Fishtank_puzzle, Lockbox_puzzle
 
 # Getter functions for getting information about rooms the player isn't currently in. Use the corresponding functions in Objects.py, not these, when accessing info.
 def getPipeDungeonInfo():
@@ -29,6 +29,9 @@ def getBeakerSolved():
 
 def getSpotDiffsSolved():
     return SpotDiffs.chestOpen
+
+def getLockboxSolved():
+    return Lockbox_puzzle.solved
 
 def getColorsFound():
     return MscopeTable.redFound, OrangeYellow.yellowFound, Desk.blueFound
@@ -107,13 +110,13 @@ PipeDungeon = Area(
             ControlRoom: [MainRoom],
             MainRoom: [ControlRoom, PinkRoom, BlueRoom, GreenRoom, YellowRoom],
             PinkRoom: [MainRoom, PinkLowerWing, PinkUpperWing],
-            PinkLowerWing: [PinkRoom, BookcaseView, LockedDoor, Desk, SpotDiffs, PinkPower],
-            BookcaseView: [PinkLowerWing, OrangeYellow, Safe],
+            PinkLowerWing: [PinkRoom, BookcaseView, LockedDoor, Desk, SpotDiffs, PinkPower, Fishtank_puzzle],
+            BookcaseView: [PinkLowerWing, OrangeYellow, Safe, Fishtank_puzzle],
             OrangeYellow: [BookcaseView],
             Safe: [BookcaseView],
             LockedDoor: [PinkLowerWing, PinkPower],
             Desk: [PinkLowerWing],
-            SpotDiffs: [PinkLowerWing],
+            SpotDiffs: [PinkLowerWing, Lockbox_puzzle],
             PinkUpperWing: [PinkRoom, TrianglePuzzle, TriangleSolution, BeakerPuzzle, MscopeTable],
             TrianglePuzzle: [PinkUpperWing],
             TriangleSolution: [PinkUpperWing],
@@ -141,7 +144,9 @@ PipeDungeon = Area(
             GreenPower: [GreenRoom],
             YellowRoom: [MainRoom, YellowHallway],
             YellowHallway: [YellowRoom, SubRoom],
-            SubRoom: [YellowHallway]
+            SubRoom: [YellowHallway],
+            Fishtank_puzzle: [PinkLowerWing, BookcaseView],
+            Lockbox_puzzle: [SpotDiffs]
     }
 )
 

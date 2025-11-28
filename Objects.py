@@ -209,6 +209,9 @@ def getBeakerSolved():
 def getSpotDiffsSolved():
     return Area.getSpotDiffsSolved()
 
+def getLockboxSolved():
+    return Area.getLockboxSolved()
+
 def getColorsFound():
     return Area.getColorsFound()
 

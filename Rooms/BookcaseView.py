@@ -19,7 +19,7 @@ screen2 = False
 tooDark = Objects.briefText(virtual_screen, Assets.tooDarkRead, -5, 200, 3)
 
 def inBounds(x, y):
-    global exit, tooDark, orangeYellow, safe
+    global exit, tooDark, orangeYellow, safe, fishtank
     if exit:
         exit = False
         tooDark.activated_time = -1
@@ -30,6 +30,9 @@ def inBounds(x, y):
     elif safe:
         safe = False
         return 2
+    elif fishtank:
+        fishtank = False
+        return 3
     return False
 
 bookcaseView = pygame.image.load("Assets/BookcaseView.png")
@@ -61,6 +64,7 @@ content4 = False
 cutscene = False
 orangeYellow = False
 safe = False
+fishtank = False
 
 timer1 = Objects.timer(10, False)
 timer2 = Objects.timer(5, False)
@@ -75,7 +79,7 @@ def positionDeterminer(cameFrom):
     pass
 
 def Room(screen, screen_res, events):
-    global exit, screen2, bookcaseView, Book1, Content1, book1, content1, Book2, Content2, book2, content2, Book3, Content3, book3, content3, Book4, Content4, book4, content4, cutscene, centerPos, scaled_eye, orangeYellow, orangeYellowRect, safe
+    global exit, screen2, bookcaseView, Book1, Content1, book1, content1, Book2, Content2, book2, content2, Book3, Content3, book3, content3, Book4, Content4, book4, content4, cutscene, centerPos, scaled_eye, orangeYellow, orangeYellowRect, safe, fishtank
 
     level, power = Objects.getPipeDungeonInfo()
     _, lowerWingPower = Objects.getPinkWingInfo()
@@ -134,6 +138,9 @@ def Room(screen, screen_res, events):
                                 orangeYellow = True
                             if safeRect.collidepoint((scaled_mouse_x,scaled_mouse_y)):
                                 safe = True
+                            fishtank_rect = pygame.Rect(165, 79, 80, 50)
+                            if fishtank_rect.collidepoint((scaled_mouse_x,scaled_mouse_y)):
+                                fishtank = True
                             if researchVol1Rect.contains(Point(scaled_mouse_x, scaled_mouse_y)):
                                 Sounds.book.play()
                                 screen2 = True

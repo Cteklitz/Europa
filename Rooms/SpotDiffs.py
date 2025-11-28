@@ -21,6 +21,7 @@ collected = False
 exit = False
 chestOpen = False
 played = False
+lockboxExit = False
 
 mat = False
 stem = False
@@ -51,18 +52,24 @@ chairRect4 = pygame.Rect(298,21,76,57)
 # letterRect = pygame.Rect(168,119,42,28)
 letterRect = pygame.Rect(180,117,32,6)
 
+# Lockbox interact region rectangle 
+lockboxRect = pygame.Rect(165, 110, 60, 35)
+
 def inBounds(x, y):
-    global exit
+    global exit, lockboxExit
     if exit:
         exit = False
         return 0
+    if lockboxExit:
+        lockboxExit = False
+        return 1  # Return to Lockboxpuzzle
     return False
 
 def positionDeterminer(cameFrom):
     pass
 
 def Room(screen, screen_res, events):
-    global exit, chestOpen, collected, mat, stem, corner, water, light, backgroundDiff, found, played
+    global exit, chestOpen, collected, mat, stem, corner, water, light, backgroundDiff, found, played, lockboxExit
     xScale = screen.get_width()/virtual_screen.get_width() 
     yScale = screen.get_height()/virtual_screen.get_height()
 
@@ -103,6 +110,9 @@ def Room(screen, screen_res, events):
                         if (Player.addItem(Items.letterTile)):
                             Sounds.letter.play()
                             collected = True
+                    elif lockboxRect.collidepoint(mouse_pos):
+                        global lockboxExit
+                        lockboxExit = True
                     if found == 6:
                         chestOpen = True
                         if not played:
