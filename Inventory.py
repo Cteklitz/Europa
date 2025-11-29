@@ -16,7 +16,8 @@ slotsBase = (407, 240)
 slotsbuffer = 2
 
 randomNames = ["Electric Tape", "Lighter", "STORAGE", "STATUS", "DESCRIPTION"]
-frames = 5
+descriptions = ["@@@@@ THE @@@ ONLY @@@ WAY @@@ OUT @@@@@", "@@@@@ CERTAIN @@@ DEATH @@@@@@"]
+frames = 9
 
 index = 0
 imagePositions = [
@@ -94,7 +95,7 @@ def Inventory(screen, screen_res, events):
     valvePlaced = Objects.getValvePlaced()
 
     if valvePlaced: # if the final valve has been placed
-        if frames == 5:
+        if frames == 9:
             frames = 0
             # randomize the names of the final items
             for i in range(len(randomNames)):
@@ -105,6 +106,23 @@ def Inventory(screen, screen_res, events):
                         if chars[j] == ' ': # ensure the name does not become all spaces
                             chars[j] = '%'
                 randomNames[i] = "".join(chars)
+
+            # randomize chars in tape desc
+            chars = list (descriptions[0])
+            for i in range(len(chars)):
+                #print(f"{i}: {chars[i]}")
+                if i not in range(5, 10) and i not in range(13, 19) and i not in range(22, 27) and i not in range(30, 35):
+                    chars[i] = chr(random.randint(1,128))
+            descriptions[0] = "".join(chars)
+
+            # randomize chars in lighter desc
+            chars = list (descriptions[1])
+            for i in range(len(chars)):
+                #print(f"{i}: {chars[i]}")
+                if i not in range(5, 14) and i not in range(17, 24):
+                    chars[i] = chr(random.randint(1,128))
+            descriptions[1] = "".join(chars)
+
         frames += 1
 
     # draw titles
@@ -151,7 +169,10 @@ def Inventory(screen, screen_res, events):
         pygame.draw.rect(virtual_screen, "white", selectionRects[selected], 5)
         if findIndex() < len(Player.inventory):
             font = pygame.font.Font("Assets/Minecraft.ttf", 24)
-            Assets.draw_text(virtual_screen, Player.inventory[findIndex()].description, "white", descRect, font)
+            if not valvePlaced:
+                Assets.draw_text(virtual_screen, Player.inventory[findIndex()].description, "white", descRect, font)
+            else:
+                Assets.draw_text(virtual_screen, descriptions[findIndex()], "white", descRect, font)
 
             if Player.inventory[findIndex()].buttonType == "equip":
                 if Player.checkItem(Player.inventory[findIndex()]):
