@@ -15,8 +15,8 @@ fullSlot = pygame.image.load("Assets/fullslot.png")
 slotsBase = (407, 240)
 slotsbuffer = 2
 
-randomNames = ["Electric Tape", "Lighter"]
-frames = 0
+randomNames = ["Electric Tape", "Lighter", "STORAGE", "STATUS", "DESCRIPTION"]
+frames = 5
 
 index = 0
 imagePositions = [
@@ -94,17 +94,35 @@ def Inventory(screen, screen_res, events):
     valvePlaced = Objects.getValvePlaced()
 
     if valvePlaced: # if the final valve has been placed
-        if frames == 10:
+        if frames == 5:
             frames = 0
+            # randomize the names of the final items
             for i in range(len(randomNames)):
                 chars = list(randomNames[i])
                 for j in range(len(chars)):
-                    if chars[j] != ' ': # TODO: make whether each letter changes random
-                        #chars[j] = chr(random.randint(0,255)) # TODO: find range of valid values
-                        pass
+                    if chars[j] != ' ' and random.randint(0,2) == 0: # skip space and only change each letter 1/3 times
+                        chars[j] = chr(random.randint(1,128))
+                        if chars[j] == ' ': # ensure the name does not become all spaces
+                            chars[j] = '%'
                 randomNames[i] = "".join(chars)
-                print(randomNames[i])
         frames += 1
+
+    # draw titles
+    font = pygame.font.Font("Assets/asusrog_regular.ttf", 36)
+    text = font.render(randomNames[2], False, "black")
+    textRect = text.get_rect()
+    textRect.center = (450, 50)
+    virtual_screen.blit(text, textRect)
+
+    text = font.render(randomNames[3], False, "black")
+    textRect = text.get_rect()
+    textRect.center = (139, 300)
+    virtual_screen.blit(text, textRect)
+
+    text = font.render(randomNames[4], False, "black")
+    textRect = text.get_rect()
+    textRect.center = (497, 300)
+    virtual_screen.blit(text, textRect)
 
     i = index
     for slot in imagePositions:
