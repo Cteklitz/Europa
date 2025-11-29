@@ -58,9 +58,6 @@ bandage = Objects.groundItem(300, 265, Items.bandage)
 
 # Sounds.ominousAmb.play(-1)
 
-controlsText = pygame.image.load("Assets/ControlsText.png")
-pressedH = False
-
 def inBounds(x, y):
     ctrlRmRect = pygame.Rect(220, 252, 36, 4)
     ctrlRmWallRect = pygame.Rect(208, 224, 63, 28)
@@ -208,9 +205,6 @@ def Room(screen, screen_res, events):
         apply_falloff(falloffs[len(lightSources) - 1], virtual_screen, (lightSources[i].x, lightSources[i].y))
 
     # virtual_screen.blit(dark_overlay, (0, 0))
-
-    if not pressedH:
-        virtual_screen.blit(controlsText, (40,400))
 
     Assets.scaled_draw(virtual_res, virtual_screen, screen_res, screen)
 

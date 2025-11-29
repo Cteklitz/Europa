@@ -1,4 +1,5 @@
 import pygame
+import Controls
 import Sounds
 
 virtual_res = (900, 650)
@@ -7,8 +8,10 @@ open = False
 background = pygame.image.load("Assets/Pause.png")
 resume = pygame.image.load("Assets/resume.png")
 exit = pygame.image.load("Assets/exit.png")
+controls = pygame.image.load("Assets/controlsButton.png")
 resumeRect = pygame.Rect(325, 150, 250, 75)
-exitRect = pygame.Rect(325, 250, 250, 75)
+controlsRect = pygame.Rect(325, 250, 250, 75)
+exitRect = pygame.Rect(325, 350, 250, 75)
 running = True
 
 # Variables to store current music playing so that it can resume once unpaused
@@ -52,16 +55,19 @@ def Pause(screen, screen_res, events):
                         loadMusic()
                     else:
                         pygame.mixer.music.set_volume(1)
+                elif controlsRect.collidepoint(mouse_pos):
+                    Controls.open = True
                 elif exitRect.collidepoint(mouse_pos):
                     running = False
 
 
     virtual_screen.blit(background, (0,0))
     virtual_screen.blit(resume, resumeRect)
+    virtual_screen.blit(controls, controlsRect)
     virtual_screen.blit(exit, exitRect)
 
     font = pygame.font.Font("Assets/asusrog_regular.ttf", 76)
-    text = font.render("PAUSED", False, "white")
+    text = font.render("PAUSED", False, "black")
     textRect = text.get_rect()
     textRect.center = (450, 50)
     virtual_screen.blit(text, textRect)

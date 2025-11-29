@@ -24,6 +24,7 @@ running = True
 dt = 0
 area = Area.PipeDungeon
 Room = TitleScreen
+pictureIndex = 1
 
 # Each room file must contain these three functions:
 # 1. Room(screen, screen_res, events) - Contains the loop of what is being drawn for that room, logic to update variables based on input, etc.
@@ -77,11 +78,10 @@ while running:
                 if event.key == pygame.K_TAB and not Player.cutscene and Room != TitleScreen:
                     Inventory.open = True
                     for item in Player.inventory:
-                        print(item)
-                # Open controls
-                if event.key == pygame.K_h and not Player.cutscene and Room != TitleScreen:
-                    MainRoom.pressedH = True
-                    Controls.open = True
+                        print(item)   
+                if event.key == pygame.K_p:
+                    pygame.image.save(screen, f"screenshot{pictureIndex}.png")
+                    pictureIndex += 1
 
         #Movement
         keys = pygame.key.get_pressed()

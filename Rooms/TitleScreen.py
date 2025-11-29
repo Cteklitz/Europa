@@ -99,7 +99,8 @@ def Room(screen, screen_res, events):
     screen.blit(scaled, (0, 0))
 
     if not startMusic:     
-        Sounds.loadMusic("Audio/wading_into_the_unknown.wav")
+        # Sounds.loadMusic("Audio/wading_into_the_unknown.wav")
+        Sounds.loadMusic("Audio/Europa.wav")
         pygame.mixer.music.set_volume(0.3)
         pygame.mixer.music.play(-1) 
         startMusic = True
