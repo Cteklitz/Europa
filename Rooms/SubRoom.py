@@ -29,6 +29,17 @@ rake_pos = (45, 75)
 waterCan = pygame.image.load("Assets/WaterCan.png")
 waterCan_pos = (15, 120)
 
+fuelLine = Assets.fuelLine
+fuelLineFixed = Assets.fuelLineFixed
+fuelLinePos = (34, 167)
+puddle = Assets.fuelPuddle
+puddlePos = (270,226)
+puddleUpper = Assets.fuelPuddleUpper
+puddleUpperPos = (300,207)
+
+fuelLineInteractRect = pygame.Rect(270, 200, 80, 50)
+consoleInteractRect = pygame.Rect(415, 134, 153, 134)
+
 eyeOpen = pygame.transform.scale(pygame.image.load("Assets/EyeWall.png"), (120, 85))
 eyeClosed = pygame.transform.scale(pygame.image.load("Assets/eyeClosedWall.png"), (120, 85))
 
@@ -83,7 +94,18 @@ falloff = [LightFalloff(virtual_screen.get_size(), darkness = 140)]
 background = pygame.image.load("Assets/SubRoom.png")
 exitRect = pygame.Rect(4, 175, 21, 115)
 
+fixed = False
+explode = False
+leave = False
+
 def inBounds(x, y):
+    if explode: 
+        #return 1 
+        pass
+    elif leave:
+        #return 2
+        pass
+
     if exitRect.collidepoint((x,y)):
         Sounds.whispers.stop()
         return 0
@@ -98,17 +120,35 @@ def positionDeterminer(cameFrom):
         player_pos = pygame.Vector2(exitRect.centerx + 35, exitRect.centery + 25)
 
 def Room(screen, screen_res, events):
-    global firstTime, currIndex, nextBlinkDelay, currEye, firstTime2, currIndex2, currEye2, nextBlinkDelay2, smallEyesPositions
+    global firstTime, currIndex, nextBlinkDelay, currEye, firstTime2, currIndex2, currEye2, nextBlinkDelay2, smallEyesPositions, fixed
     xScale = screen.get_width()/virtual_screen.get_width() 
     yScale = screen.get_height()/virtual_screen.get_height()
 
-
     currTime = pygame.time.get_ticks()
-    # for event in events:
-    #     if event.type == pygame.KEYDOWN:
-    #         if event.key == pygame.K_e:
+    for event in events:
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_e:
+                if fuelLineInteractRect.collidepoint(player_pos) and Player.checkItem(Items.electricalTape) and not fixed:
+                    fixed = True
+                    Sounds.tape.play()
+                elif fuelLineInteractRect.collidepoint(player_pos) and Player.checkItem(Items.lighter):
+                    explode = True
+                elif consoleInteractRect.collidepoint(player_pos) and fixed:
+                    leave = True
+                elif consoleInteractRect.collidepoint(player_pos) and not fixed:
+                    # maybe something to imply sub cannot go without repair?
+                    pass
+
     
     virtual_screen.blit(background, (0,0))
+
+    if fixed:
+        virtual_screen.blit(fuelLineFixed, fuelLinePos)
+        virtual_screen.blit(puddle, puddlePos)
+    else:
+        virtual_screen.blit(fuelLine, fuelLinePos)
+        virtual_screen.blit(puddle, puddlePos)
+        virtual_screen.blit(puddleUpper, puddleUpperPos)
 
 
     if (currTime - firstTime2 >= nextBlinkDelay2):

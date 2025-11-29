@@ -195,6 +195,11 @@ eyeLockerUnlocked = pygame.image.load("Assets/eye_locker_unlocked.png")
 lock = pygame.image.load("Assets/lock.png")
 lockInterface = pygame.image.load("Assets/eyelock_interface.png")
 
+fuelLine = pygame.image.load("Assets/fuel_line.png")
+fuelLineFixed = pygame.image.load("Assets/fuel_line_fixed.png")
+fuelPuddle = pygame.image.load("Assets/fuel_puddle.png")
+fuelPuddleUpper = pygame.image.load("Assets/fuel_puddle_upper.png")
+
 ### TEXT
 tooDarkRead = pygame.image.load("Assets/TooDark.png")
 tooDarkSee = pygame.image.load("Assets/TooDarkSee.png")
