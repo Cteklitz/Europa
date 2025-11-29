@@ -45,6 +45,8 @@ currEye2 = eyes2[1]
 currIndex = 0
 currIndex2 = 0
 
+added = False
+
 smallEyesPositions = [
     (231, 40),
     (261, 91),
@@ -92,7 +94,10 @@ def inBounds(x, y):
     return True
 
 def positionDeterminer(cameFrom):
-    global player_pos
+    global player_pos, added
+    if not added:
+        Player.events += 1
+        added = True
     if cameFrom == "Rooms.YellowHallway":
         Sounds.whispers.play(-1)
         player_pos = pygame.Vector2(exitRect.centerx + 35, exitRect.centery + 25)
@@ -138,8 +143,6 @@ def Room(screen, screen_res, events):
 
     apply_lighting(virtual_screen, wall_lights, darkness=10, ambient_color=(50, 50, 50), ambient_strength=10)
     apply_falloff(falloff, virtual_screen, light_pos)
-
-    
 
     Assets.scaled_draw(virtual_res, virtual_screen, screen_res, screen)
 

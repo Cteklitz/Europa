@@ -52,7 +52,6 @@ valveDoorInteractRect = pygame.Rect(488, 48, 64, 80)
 unlocked = False
 valvePlaced = False
 interacted = False
-played = False
 
 # outer rect
 outerRect = pygame.Rect(0,0,640,240)
@@ -85,10 +84,7 @@ def inBounds(x, y):
     return True
 
 def positionDeterminer(cameFrom):
-    global player_pos, played
-    if not played:
-        Sounds.whatAwaits.play()
-        played = True
+    global player_pos
 
     if cameFrom == "Rooms.YellowRoom":    
         player_pos = pygame.Vector2(exitDoor.x + exitDoor.rect.width/2, exitDoor.y - 5)

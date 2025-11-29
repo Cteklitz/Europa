@@ -198,6 +198,7 @@ lockInterface = pygame.image.load("Assets/eyelock_interface.png")
 ### TEXT
 tooDarkRead = pygame.image.load("Assets/TooDark.png")
 tooDarkSee = pygame.image.load("Assets/TooDarkSee.png")
+tooDark = pygame.image.load("Assets/TooDark....png")
 trashEmpty = pygame.image.load("Assets/trashEmpty.png")
 somethingInside = pygame.image.load("Assets/somethingInside.png")
 safeText = pygame.image.load("Assets/safe_text.png")

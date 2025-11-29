@@ -140,6 +140,9 @@ right_down3 = Assets.load_tileset("Assets/right_down3.png", 32, 32)
 left_down4 = Assets.load_tileset("Assets/left_down4.png", 32, 32)
 right_down4 = Assets.load_tileset("Assets/right_down4.png", 32, 32)
 
+left_down5 = Assets.load_tileset("Assets/left_down5.png", 32, 32)
+right_down5 = Assets.load_tileset("Assets/right_down5.png", 32, 32)
+
 # Top-Down Animations
 upAnimation = Assets.load_tileset("Assets/topDown_Up.png", 32, 32)
 downAnimation = Assets.load_tileset("Assets/topDown_Down.png", 32, 32)
@@ -177,8 +180,10 @@ def animatePlayer(surface, pos, xScale = 64, yScale = 64, perspective = "isometr
                     scaledImage = pygame.transform.scale(left_down2[playerIndex], (xScale, yScale))
                 elif events <= 4:
                     scaledImage = pygame.transform.scale(left_down3[playerIndex], (xScale, yScale))
-                elif events > 4:
+                elif events == 5:
                     scaledImage = pygame.transform.scale(left_down4[playerIndex], (xScale, yScale))
+                elif events == 6:
+                    scaledImage = pygame.transform.scale(left_down5[playerIndex], (xScale, yScale))
                 surface.blit(scaledImage, (pos.x-(xScale/2), pos.y-yScale+16))
             else:
                 if events == 0:
@@ -187,8 +192,10 @@ def animatePlayer(surface, pos, xScale = 64, yScale = 64, perspective = "isometr
                     scaledImage = pygame.transform.scale(right_down2[playerIndex], (xScale, yScale))
                 elif events <= 4:
                     scaledImage = pygame.transform.scale(right_down3[playerIndex], (xScale, yScale))
-                elif events > 4:
+                elif events == 5:
                     scaledImage = pygame.transform.scale(right_down4[playerIndex], (xScale, yScale))
+                elif events == 6:
+                    scaledImage = pygame.transform.scale(right_down5[playerIndex], (xScale, yScale))
                 surface.blit(scaledImage, (pos.x-(xScale/2), pos.y-yScale+16))
     else:
         if up:
