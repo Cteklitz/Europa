@@ -9,6 +9,7 @@ from LightingUtils import apply_lighting, apply_falloff
 import Player
 import math
 import Items
+import Inventory
 
 virtual_res = (640, 260)
 virtual_screen = pygame.Surface(virtual_res)
@@ -51,6 +52,7 @@ valveDoorInteractRect = pygame.Rect(488, 48, 64, 80)
 unlocked = False
 valvePlaced = False
 interacted = False
+played = False
 
 # outer rect
 outerRect = pygame.Rect(0,0,640,240)
@@ -83,7 +85,10 @@ def inBounds(x, y):
     return True
 
 def positionDeterminer(cameFrom):
-    global player_pos
+    global player_pos, played
+    if not played:
+        Sounds.whatAwaits.play()
+        played = True
 
     if cameFrom == "Rooms.YellowRoom":    
         player_pos = pygame.Vector2(exitDoor.x + exitDoor.rect.width/2, exitDoor.y - 5)
@@ -107,11 +112,17 @@ def Room(screen, screen_res, events):
                 if valveDoorInteractRect.collidepoint(player_pos):
                     if Player.checkItem(Items.valve):
                         Sounds.drawerclose.play() # maybe find sound with more oomf
-                        Player.removeItem(Items.valve)
-
-                        # TODO: remove all items, change inventory
+                        Player.removeItem(Items.valve)                       
                         valvePlaced = True
                         ValveDoor3.image = ValveDoor # change the valvedoor to have the valve
+
+                        # TODO: remove all items, change inventory
+                        Player.inventory = [] # remove all items
+                        Player.addItem(Items.electricalTape)
+                        Player.addItem(Items.lighter)
+                        
+                        Inventory.index = 0
+                        
                     elif valvePlaced:
                         interacted = True # flag to go thru the door after interacting with it
 

@@ -271,3 +271,6 @@ def getRadioOn():
 
 def toggleRadio():
     Area.toggleRadio()
+
+def getValvePlaced():
+    return Area.getValvePlaced()

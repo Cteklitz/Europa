@@ -96,6 +96,9 @@ def getRadioOn():
 def toggleRadio():
     GreenRoom.radioOn = not GreenRoom.radioOn
 
+def getValvePlaced():
+    return YellowHallway.valvePlaced
+
 class Area:
     def __init__(self, roomLayout):
         self.roomLayout = roomLayout

@@ -1,6 +1,9 @@
 import pygame
 import Assets
 import Player
+import Objects
+import Items
+import random
 
 virtual_res = (900, 650)
 #virtual_res = (1024, 720)
@@ -11,6 +14,9 @@ emptySlot = pygame.image.load("Assets/emptyslot.png")
 fullSlot = pygame.image.load("Assets/fullslot.png")
 slotsBase = (407, 240)
 slotsbuffer = 2
+
+randomNames = ["Electric Tape", "Lighter"]
+frames = 0
 
 index = 0
 imagePositions = [
@@ -43,7 +49,7 @@ descRect = pygame.Rect(353,323,510,285)
 running = True
 
 def Inventory(screen, screen_res, events):
-    global open, index, selected, running
+    global open, index, selected, running, frames
     xScale = screen.get_width()/virtual_screen.get_width() 
     yScale = screen.get_height()/virtual_screen.get_height()
 
@@ -85,16 +91,38 @@ def Inventory(screen, screen_res, events):
                     count += 1
 
     virtual_screen.blit(inventory, (0,0))
+    valvePlaced = Objects.getValvePlaced()
+
+    if valvePlaced: # if the final valve has been placed
+        if frames == 10:
+            frames = 0
+            for i in range(len(randomNames)):
+                chars = list(randomNames[i])
+                for j in range(len(chars)):
+                    if chars[j] != ' ': # TODO: make whether each letter changes random
+                        #chars[j] = chr(random.randint(0,255)) # TODO: find range of valid values
+                        pass
+                randomNames[i] = "".join(chars)
+                print(randomNames[i])
+        frames += 1
 
     i = index
     for slot in imagePositions:
         if len(Player.inventory) > i:
-            virtual_screen.blit(Player.inventory[i].inventory_sprite, slot)
-            font = pygame.font.Font("Assets/Minecraft.ttf", 24)
-            text = font.render(Player.inventory[i].name, False, "white")
-            textRect = text.get_rect()
-            textRect.center = (slot[0]+50, slot[1]+105)
-            virtual_screen.blit(text, textRect)
+            if not valvePlaced:
+                virtual_screen.blit(Player.inventory[i].inventory_sprite, slot)
+                font = pygame.font.Font("Assets/Minecraft.ttf", 24)
+                text = font.render(Player.inventory[i].name, False, "white")
+                textRect = text.get_rect()
+                textRect.center = (slot[0]+50, slot[1]+105)
+                virtual_screen.blit(text, textRect)
+            else: # print random names if valve placed
+                virtual_screen.blit(Player.inventory[i].inventory_sprite, slot)
+                font = pygame.font.Font("Assets/Minecraft.ttf", 24)
+                text = font.render(randomNames[i], False, "white")
+                textRect = text.get_rect()
+                textRect.center = (slot[0]+50, slot[1]+105)
+                virtual_screen.blit(text, textRect)
             
         if i == Player.MaxInventorySize - 1:
             i = 0
