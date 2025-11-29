@@ -17,6 +17,7 @@ import Controls
 import Pause
 import Sounds
 import Items
+import Objects
 
 screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
 screenRes = screen.get_size()
@@ -71,10 +72,12 @@ while running:
                         Pause.open = True
                         # Pause in-game audio
                         pygame.mixer.pause()
+                        valvePlaced = Objects.getValvePlaced()
                         # Play pause music
-                        pygame.mixer.music.load("Audio/wading_into_the_unknown.wav")
-                        pygame.mixer.music.set_volume(0.4)
-                        pygame.mixer.music.play(-1)
+                        if not valvePlaced: # dont play music if player is in final section after valve placed
+                            pygame.mixer.music.load("Audio/wading_into_the_unknown.wav")
+                            pygame.mixer.music.set_volume(0.4)
+                            pygame.mixer.music.play(-1)
                 # Open inventory
                 if event.key == pygame.K_TAB and not Player.cutscene and Room != TitleScreen:
                     Inventory.open = True

@@ -1,6 +1,8 @@
 import pygame
 import Controls
 import Sounds
+import Objects
+import Assets
 
 virtual_res = (900, 650)
 virtual_screen = pygame.Surface(virtual_res)
@@ -14,6 +16,14 @@ controlsRect = pygame.Rect(325, 250, 250, 75)
 exitRect = pygame.Rect(325, 350, 250, 75)
 running = True
 
+eye = Assets.eye
+oneWayOut = pygame.image.load("Assets/ONEWAYOUT.png")
+timer = Objects.timer(6.0, False)
+clicked = False
+evilAudio = Sounds.loadAudio("Audio/evil2Trimmed2.wav")
+
+played = False
+
 # Variables to store current music playing so that it can resume once unpaused
 musicPath = None
 volume = None
@@ -25,9 +35,15 @@ def loadMusic():
     pygame.mixer.music.play(-1)
 
 def Pause(screen, screen_res, events):
-    global open, running
+    global open, running, clicked, timer, played
     xScale = screen.get_width()/virtual_screen.get_width() 
     yScale = screen.get_height()/virtual_screen.get_height()
+
+    valvePlaced = Objects.getValvePlaced()
+
+    if valvePlaced and not played:
+        played = True
+        Sounds.scaryBell.play()
 
     for event in events:
         if event.type == pygame.QUIT:
@@ -55,22 +71,42 @@ def Pause(screen, screen_res, events):
                         loadMusic()
                     else:
                         pygame.mixer.music.set_volume(1)
-                elif controlsRect.collidepoint(mouse_pos):
+                elif controlsRect.collidepoint(mouse_pos) and not clicked:
                     Controls.open = True
-                elif exitRect.collidepoint(mouse_pos):
+                elif exitRect.collidepoint(mouse_pos) and not valvePlaced:
                     running = False
+                elif exitRect.collidepoint(mouse_pos) and valvePlaced and not clicked:
+                    evilAudio.play()
+                    timer.setInitial()
+                    clicked = True
 
 
     virtual_screen.blit(background, (0,0))
+    if valvePlaced:
+        virtual_screen.fill((0,0,0))
     virtual_screen.blit(resume, resumeRect)
-    virtual_screen.blit(controls, controlsRect)
-    virtual_screen.blit(exit, exitRect)
+    if not clicked:
+        virtual_screen.blit(controls, controlsRect)
+    if not valvePlaced or not clicked:
+        virtual_screen.blit(exit, exitRect)
+ 
+    if not valvePlaced:
+        font = pygame.font.Font("Assets/asusrog_regular.ttf", 76)
+        text = font.render("PAUSED", False, "black")
+        textRect = text.get_rect()
+        textRect.center = (450, 50)
+        virtual_screen.blit(text, textRect)
+    elif valvePlaced and not clicked:
+        font = pygame.font.Font("Assets/asusrog_regular.ttf", 60)
+        text = font.render("IT IS TOO LATE TO FLEE", False, "red")
+        textRect = text.get_rect()
+        textRect.center = (450, 50)
+        virtual_screen.blit(text, textRect)
+        virtual_screen.blit(eye, (180, 300))
 
-    font = pygame.font.Font("Assets/asusrog_regular.ttf", 76)
-    text = font.render("PAUSED", False, "black")
-    textRect = text.get_rect()
-    textRect.center = (450, 50)
-    virtual_screen.blit(text, textRect)
+    if not timer.Done() and clicked:
+        virtual_screen.fill((0,0,0))
+        virtual_screen.blit(oneWayOut, (203, 224))
 
     scaled = pygame.transform.scale(virtual_screen, screen_res)
     screen.blit(scaled, (0, 0))
