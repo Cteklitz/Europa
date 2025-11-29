@@ -9,6 +9,7 @@ from LightingUtils import apply_lighting, apply_falloff
 import Player
 import math
 import Items
+import Inventory
 
 virtual_res = (640, 260)
 virtual_screen = pygame.Surface(virtual_res)
@@ -46,7 +47,12 @@ ValveDoor2 = Objects.Door(288, 48, ValveDoor)
 ValveDoor3 = Objects.Door(488, 48, MissingValveDoor)
 exitDoor = Objects.Door(283, 161, exitDoorImg)
 
+valveDoorInteractRect = pygame.Rect(488, 48, 64, 80)
+
 unlocked = False
+valvePlaced = False
+interacted = False
+played = False
 
 # outer rect
 outerRect = pygame.Rect(0,0,640,240)
@@ -54,7 +60,7 @@ outerRect = pygame.Rect(0,0,640,240)
 innerRect = pygame.Rect(0,112,640,50)
 
 def inBounds(x, y):
-    global unlocked
+    global unlocked, valvePlaced, interacted
     level, power = Objects.getPipeDungeonInfo()
     bounds = pygame.Rect(innerRect.x+32,innerRect.y-8, innerRect.width-64,innerRect.height-4)
     exitWalkRect = pygame.Rect(exitDoor.x, exitDoor.y - 20, exitDoor.rect.width, exitDoor.rect.height)
@@ -67,7 +73,8 @@ def inBounds(x, y):
 
     if exitDoor.rect.collidepoint((x,y)):
         return 0
-    elif ValveDoor3.rect.collidepoint((x,y)):
+    elif valvePlaced and interacted:
+        interacted = False
         Sounds.radioFar.set_volume(0)
         Sounds.radioClose.set_volume(0)
         return 1
@@ -78,7 +85,10 @@ def inBounds(x, y):
     return True
 
 def positionDeterminer(cameFrom):
-    global player_pos
+    global player_pos, played
+    if not played:
+        Sounds.whatAwaits.play()
+        played = True
 
     if cameFrom == "Rooms.YellowRoom":    
         player_pos = pygame.Vector2(exitDoor.x + exitDoor.rect.width/2, exitDoor.y - 5)
@@ -86,7 +96,7 @@ def positionDeterminer(cameFrom):
         player_pos = pygame.Vector2(ValveDoor3.x + ValveDoor3.rect.width/2, ValveDoor3.y + 69)
 
 def Room(screen, screen_res, events):
-    global player_pos, unlocked
+    global player_pos, unlocked, valvePlaced, interacted
     level, power = Objects.getPipeDungeonInfo()
 
     xScale = screen.get_width()/virtual_screen.get_width() 
@@ -97,8 +107,24 @@ def Room(screen, screen_res, events):
             click_x_unscaled = click_x/xScale
             click_y_unscaled = click_y/yScale
             print(click_x_unscaled, click_y_unscaled)
-    #     if event.type == pygame.KEYDOWN:
-    #         if event.key == pygame.K_e:
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_e:
+                if valveDoorInteractRect.collidepoint(player_pos):
+                    if Player.checkItem(Items.valve):
+                        Sounds.drawerclose.play() # maybe find sound with more oomf
+                        Player.removeItem(Items.valve)                       
+                        valvePlaced = True
+                        ValveDoor3.image = ValveDoor # change the valvedoor to have the valve
+
+                        # TODO: remove all items, change inventory
+                        Player.inventory = [] # remove all items
+                        Player.addItem(Items.electricalTape)
+                        Player.addItem(Items.lighter)
+                        
+                        Inventory.index = 0
+                        
+                    elif valvePlaced:
+                        interacted = True # flag to go thru the door after interacting with it
 
     virtual_screen.fill((105,105,105))
     dark_overlay.fill((0, 0, 0, 150))

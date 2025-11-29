@@ -47,12 +47,12 @@ def getOpen():
     return True
 
 def getPinkPower():
-    # return PinkPower.pinkPower
     return True
+    #return PinkPower.pinkPower
 
 def getBluePower():
-    # return BluePower.bluePower
     return True
+    return BluePower.bluePower
 
 def getGreenPower():
     # return GreenPower.greenPower
@@ -65,8 +65,8 @@ def getWaterLevelsSolved():
     return ValvePuzzle.solved
 
 def getBreakerSolved():
-    # return BreakerPuzzle.solved
     return True
+    #return BreakerPuzzle.solved
 
 def RepairWire():
     PuddleRoom.wireRepaired = True
@@ -89,6 +89,15 @@ def setBedNumber(num):
 def getEyeLockerUnlocked():
     return True
     # return LockerView.unlocked
+
+def getRadioOn():
+    return GreenRoom.radioOn
+
+def toggleRadio():
+    GreenRoom.radioOn = not GreenRoom.radioOn
+
+def getValvePlaced():
+    return YellowHallway.valvePlaced
 
 class Area:
     def __init__(self, roomLayout):

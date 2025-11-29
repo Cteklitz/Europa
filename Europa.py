@@ -16,6 +16,7 @@ import Inventory
 import Controls
 import Pause
 import Sounds
+import Items
 
 screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
 screenRes = screen.get_size()
@@ -82,6 +83,8 @@ while running:
                 if event.key == pygame.K_p:
                     pygame.image.save(screen, f"screenshot{pictureIndex}.png")
                     pictureIndex += 1
+                if event.key == pygame.K_v:
+                    Player.addItem(Items.valve)
 
         #Movement
         keys = pygame.key.get_pressed()
