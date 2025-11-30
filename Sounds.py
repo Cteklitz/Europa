@@ -78,7 +78,7 @@ electricityNoise = loadAudio("Audio/ElectricityNoise.wav")
 
 pipe = loadAudio("Audio/pipe.wav")
 
-toolbox = loadAudio("Audio/toolboxOpenClose.wav")
+toolbox = pygame.mixer.Sound("Audio/toolboxOpenClose.wav")
 
 lockerOpen = loadAudio("Audio/locker_open.wav")
 lockerClose = loadAudio("Audio/locker_close.wav")
@@ -113,8 +113,8 @@ radioFar = loadAudio("Audio/radio_far.wav")
 
 curtain = loadAudio("Audio/curtain.wav")
 setVolume(curtain, 0.71)
-openClose = loadAudio("Audio/toolboxOpenClose.wav")
-setVolume(openClose, 0.71)
+openClose = pygame.mixer.Sound("Audio/toolboxOpenClose.wav")
+openClose.set_volume(0.71)
 sink = loadAudio("Audio/sink.wav")
 setVolume(sink, 0.55)
 sink2 = loadAudio("Audio/sink.wav")
@@ -141,6 +141,14 @@ explosion2 = loadAudio("Audio/explosion2.wav")
 plop = loadAudio("Audio/plop.wav")
 setVolume(plop, 0.316)
 
+blink = loadAudio("Audio/blink.wav")
+setVolume(blink, 0.20)
+
+whispers = loadAudio("Audio/whispers.wav")
+setVolume(whispers, 0.20)
+
+## MUSIC
+
 pauseMusic = loadAudio("Audio/wading_into_the_unknown.wav")
 setVolume(pauseMusic, 0.4)
 
@@ -151,9 +159,3 @@ electrician = loadAudio("Audio/Electrician.wav")
 
 valveSong = loadAudio("Audio/Glass.wav")
 setVolume(valveSong, 0.4)
-
-blink = loadAudio("Audio/blink.wav")
-setVolume(blink, 0.20)
-
-whispers = loadAudio("Audio/whispers.wav")
-setVolume(whispers, 0.20)
