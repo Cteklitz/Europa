@@ -12,6 +12,9 @@ virtual_res = (324, 219)
 virtual_screen = pygame.Surface(virtual_res)
 dark_overlay = pygame.Surface(virtual_screen.get_size(), pygame.SRCALPHA)
 
+virtual_res2 = (1195, 896)
+virtual_screen2 = pygame.Surface(virtual_res2)
+
 player_pos = pygame.Vector2(239, 180)
 
 bounds = Polygon([(39, 102), (294, 102), (305, 174), (25, 174)])
@@ -30,11 +33,16 @@ shadow = pygame.image.load("Assets/Shadow.png")
 tooDarkScale = pygame.transform.scale(Assets.tooDark, (Assets.tooDark.get_width()/1.25,Assets.tooDark.get_height()/1.25))
 tooDark = Objects.briefText(virtual_screen, tooDarkScale, 15, 180, 3)
 
+animationIndex = 0
+
 animation = []
 for i in range(1, 16):
     animation.append(pygame.image.load(f"Assets/screenshot{i}.png"))
 
+animationTimer = Objects.timer(0.5, False)
+
 played = False
+cutscene = False
 
 def inBounds(x, y):
     shadowBound = Polygon([(59,0),(0,0),(0,219),(259,219)])
@@ -54,17 +62,20 @@ def inBounds(x, y):
     return True
 
 def positionDeterminer(cameFrom):
-    global player_pos, played
+    global player_pos, played, cutscene
     if not played:
         Sounds.whatAwaits.play(-1)
         played = True
+    if Player.events == 6:
+        cutscene = True
+        animationTimer.setInitial()
     if cameFrom == "Rooms.YellowRoom":
         player_pos = pygame.Vector2(exitWalk.centerx + 2, exitWalk.centery - 20)
     if cameFrom == "Rooms.MscopeTable":
         pass
 
 def Room(screen, screen_res, events):
-    global trianglePuzzle1, trianglePuzzle2, whiteboard, beaker, table, tableboundRect
+    global cutscene, animationIndex
 
     xScale = screen.get_width()/virtual_screen.get_width() 
     yScale = screen.get_height()/virtual_screen.get_height()
@@ -83,10 +94,24 @@ def Room(screen, screen_res, events):
 
     virtual_screen.blit(shadow, (10,0))
 
+    if cutscene:
+        Player.cutscene = True
+        virtual_screen2.fill("black")
+        if animationIndex < 14:
+            if animationTimer.Done():
+                animationIndex += 1
+                animationTimer.reset()
+                animationTimer.setInitial()
+
+            virtual_screen2.blit(animation[animationIndex], (0,0))
+
     virtual_screen.blit(dark_overlay, (0, 0))
 
     tooDark.update()
 
-    Assets.scaled_draw(virtual_res, virtual_screen, screen_res, screen)
+    if Player.events == 6:
+        Assets.scaled_draw(virtual_res2, virtual_screen2, screen_res, screen)
+    else:
+        Assets.scaled_draw(virtual_res, virtual_screen, screen_res, screen)
 
     return player_pos, 3.5, 3.5  # can return movement speeds of 2, 2 since room is scaled (can pick any equal values)

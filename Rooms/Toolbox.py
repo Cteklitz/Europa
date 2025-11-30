@@ -111,6 +111,7 @@ def Room(screen, screen_res, events):
                     if (multimeter_found and found == 1 or not multimeter_found and found == 0):
                         found += 1
                         if found == 2:
+                            Player.events += 1
                             cutscene = True
                             cutscene_start = pygame.time.get_ticks()
             # opens and closes toolbox if animated eye object is not present
