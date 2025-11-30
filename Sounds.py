@@ -147,6 +147,11 @@ setVolume(pauseMusic, 0.4)
 whatAwaits = loadAudio("Audio/what_awaits.wav")
 setVolume(whatAwaits, 0.6)
 
+electrician = loadAudio("Audio/Electrician.wav")
+
+valveSong = loadAudio("Audio/Glass.wav")
+setVolume(valveSong, 0.4)
+
 blink = loadAudio("Audio/blink.wav")
 setVolume(blink, 0.20)
 

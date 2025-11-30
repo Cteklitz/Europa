@@ -382,13 +382,16 @@ nodes = [
 def inBounds(x, y):
     global exit
     if exit:
+        Sounds.electrician.stop()
         exit = False
         return 0
     return False
 
 
 def positionDeterminer(cameFrom):
-    pass
+    global solved
+    if not solved:
+        Sounds.electrician.play(-1)
 
 recently_selected = None 
 def Room(screen, screen_res, events):
@@ -559,6 +562,7 @@ def Room(screen, screen_res, events):
             if num == 0:
                 correct += 1
     if correct == 4:
+        Sounds.electrician.stop()
         solved = True
 
     if solved and not played:

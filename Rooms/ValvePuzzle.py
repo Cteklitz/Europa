@@ -39,6 +39,7 @@ def inBounds(x, y):
     doorRect = pygame.Rect(9,208,door.get_width(),door.get_height())
     consoleRect = pygame.Rect(int(virtual_screen.get_width()/2) - 64 - 16, 225, console.get_width() + 32, console.get_height())
     if doorRect.collidepoint(x,y):
+        Sounds.valveSong.stop()
         if not Objects.getBluePower():
             Sounds.powerAmb.stop()
             Sounds.ominousAmb.play(-1)
@@ -157,8 +158,10 @@ valves = [
 ]
 
 def positionDeterminer(cameFrom):
-    global player_pos
+    global player_pos, solved
     player_pos = pygame.Vector2(9 + flippedDoor.get_width(), 208 + (flippedDoor.get_height()*5/6))
+    if not solved:
+        Sounds.valveSong.play(-1)
 
 def Room(screen, screen_res, events):
     global valves, redArrow, greenArrow, solved
@@ -175,6 +178,7 @@ def Room(screen, screen_res, events):
                         good = False
                 if good:
                     if not solved:
+                        Sounds.valveSong.stop()
                         Sounds.drain.play()
                     solved = True
 
