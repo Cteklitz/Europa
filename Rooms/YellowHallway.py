@@ -86,7 +86,7 @@ def inBounds(x, y):
 def positionDeterminer(cameFrom):
     global player_pos
 
-    if cameFrom == "Rooms.YellowRoom":    
+    if cameFrom == "Rooms.DarkRoom":    
         player_pos = pygame.Vector2(exitDoor.x + exitDoor.rect.width/2, exitDoor.y - 5)
     elif cameFrom == "Rooms.SubRoom":
         player_pos = pygame.Vector2(ValveDoor3.x + ValveDoor3.rect.width/2, ValveDoor3.y + 69)

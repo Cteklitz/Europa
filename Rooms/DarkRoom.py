@@ -39,7 +39,7 @@ animation = []
 for i in range(1, 16):
     animation.append(pygame.image.load(f"Assets/screenshot{i}.png"))
 
-animationTimer = Objects.timer(0.5, False)
+animationTimer = Objects.timer(0.75, False)
 
 played = False
 cutscene = False
@@ -71,8 +71,8 @@ def positionDeterminer(cameFrom):
         animationTimer.setInitial()
     if cameFrom == "Rooms.YellowRoom":
         player_pos = pygame.Vector2(exitWalk.centerx + 2, exitWalk.centery - 20)
-    if cameFrom == "Rooms.MscopeTable":
-        pass
+    if cameFrom == "Rooms.YellowHallway":
+        player_pos = pygame.Vector2(exitRect2.x + exitRect2.width/2, exitRect2.y + 68)
 
 def Room(screen, screen_res, events):
     global cutscene, animationIndex

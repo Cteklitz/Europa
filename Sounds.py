@@ -136,6 +136,7 @@ pour = loadAudio("Audio/pour.wav")
 setVolume(pour, 0.316)
 
 explosion = loadAudio("Audio/explosion.wav")
+explosion2 = loadAudio("Audio/explosion2.wav")
 
 plop = loadAudio("Audio/plop.wav")
 setVolume(plop, 0.316)
