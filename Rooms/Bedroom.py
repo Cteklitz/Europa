@@ -169,7 +169,8 @@ def Room(screen, screen_res, events):
                 elif rightBedInteractRect.collidepoint(player_pos): # go to right bedview
                     if greenPowerOn:
                         Objects.setBedNumber(1)
-                        Sounds.setVolume(Sounds.radioClose, 0.5) # make radio volume louder when in the bedview containing the radio
+                        if BedroomNumber == 2:
+                            Sounds.setVolume(Sounds.radioClose, 0.5) # make radio volume louder when in the bedview containing the radio
                         bedView = True
                     else:
                         tooDarkSee.activated_time = pygame.time.get_ticks()
