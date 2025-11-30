@@ -107,7 +107,7 @@ def Room(screen, screen_res, events):
             if event.key == pygame.K_e:
                 if valveDoorInteractRect.collidepoint(player_pos):
                     if Player.checkItem(Items.valve):
-                        Sounds.drawerclose.play() # maybe find sound with more oomf
+                        Sounds.combo.play() # maybe find sound with more oomf
                         Player.removeItem(Items.valve)                       
                         valvePlaced = True
                         ValveDoor3.image = ValveDoor # change the valvedoor to have the valve
@@ -120,6 +120,7 @@ def Room(screen, screen_res, events):
                         Inventory.index = 0
                         
                     elif valvePlaced:
+                        Sounds.valveSound.play()
                         interacted = True # flag to go thru the door after interacting with it
 
     virtual_screen.fill((105,105,105))
