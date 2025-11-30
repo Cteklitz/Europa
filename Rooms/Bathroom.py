@@ -82,6 +82,9 @@ sink2InteractRect = pygame.Rect(sinkPos2[0], sinkPos2[1], bathroomSink.get_width
 
 def inBounds(x, y):
     global tooDarkRead
+    
+    stallBoundRect = pygame.Rect(0, 110, 210, 5)
+
     if exitRect.collidepoint((x,y)):
         level, power = Objects.getPipeDungeonInfo()
         tooDarkRead.activated_time = -1
@@ -90,6 +93,8 @@ def inBounds(x, y):
         Sounds.sink2.stop()
         return 0
     elif not bounds.contains(Point(x,y)):
+        return False
+    elif stallBoundRect.collidepoint((x,y)):
         return False
     return True
 

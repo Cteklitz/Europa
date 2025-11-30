@@ -82,17 +82,17 @@ notePuzzle = False
 def inBounds(x, y):
     global leftBed, rightBed, bedView, notePuzzle, deskView, playedTrash
     level, power = Objects.getPipeDungeonInfo()
-    leftBedRect = leftBed.get_rect()
-    leftBedRect.topleft = (37,37)
-    rightBedRect = rightBed.get_rect()
-    rightBedRect.topleft = (172,37)
+    leftBedRect = pygame.Rect(37, 37, leftBed.get_width() + 10, leftBed.get_height())
+    rightBedRect = pygame.Rect(162,37, rightBed.get_width() + 20, rightBed.get_height())
     rightDeskRect = rightDesk.get_rect()
     rightDeskRect.topleft = (148, 168)
     leftDeskRect = leftDesk.get_rect()
     leftDeskRect.topleft = (45, 168)
     #rightDeskRect.topleft = (45, 176)
     trashRect = pygame.Rect(112,190, 30, 40)
-    backWallRect = pygame.Rect(100,200, 60, 60)
+
+    bounds = pygame.Rect(61,58,134,139)
+    northDoorWalkRect = pygame.Rect(northDoor.x, northDoor.y+16, northDoor.rect.width, northDoor.rect.height)
 
     if northDoor.rect.collidepoint((x,y)):
         tooDarkSee.activated_time = -1
@@ -123,10 +123,12 @@ def inBounds(x, y):
             return 2
         else:
             return False
+    elif northDoorWalkRect.collidepoint((x,y)):
+        return True
     elif leftBedRect.collidepoint((x,y)) or rightBedRect.collidepoint((x,y)) or leftDeskRect.collidepoint(x, y) or rightDeskRect.collidepoint(x, y) \
-    or trashRect.collidepoint(x,y) or backWallRect.collidepoint(x, y):
+    or trashRect.collidepoint(x,y):
         return False
-    elif not outline.contains(Point(x,y)):
+    elif not bounds.collidepoint((x,y)):
         return False
     return True
 

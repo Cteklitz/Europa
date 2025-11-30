@@ -58,8 +58,6 @@ spark_positions = []
 hatchPosition = (90, 40)
 hatchRect = pygame.Rect(hatchPosition[0], hatchPosition[1], new_size[0], new_size[1])  # Clickable area
 
-bounds = Polygon([(48,48), (368,48), (368,208), (48,208)])
-
 def draw_electrical_effects(surface, puddle_positions):
     global electrical_timer, spark_positions
     
@@ -101,6 +99,14 @@ def inBounds(x, y):
     global powerRoom, puddleSelected
 
     level, power = Objects.getPipeDungeonInfo()
+
+    bounds = pygame.Rect(61,58,294,139)
+    southDoorWalkRect = pygame.Rect(southDoor.x, southDoor.y-16, southDoor.rect.width, southDoor.rect.height)
+    westDoorWalkRect = pygame.Rect(westDoor.x+16, westDoor.y, westDoor.rect.width, westDoor.rect.height)
+    eastDoorWalkRect = pygame.Rect(eastDoor.x-16, eastDoor.y, eastDoor.rect.width, eastDoor.rect.height)
+    topRightWallBound = pygame.Rect(topRightWall.x - 12, topRightWall.y, topRightWall.width + 12, topRightWall.height + 10)
+    bottomRightWallBound = pygame.Rect(bottomRightWall.x - 12, bottomRightWall.y - 10, bottomRightWall.width + 12, bottomRightWall.height + 10)
+
     if southDoor.rect.collidepoint((x,y)):
         cleanup()
         if not Objects.getBluePower():
@@ -130,7 +136,9 @@ def inBounds(x, y):
             Sounds.powerOnAmb.play(-1)
         powerRoom = False
         return 3
-    elif not bounds.contains(Point(x,y)) or topRightWall.collidepoint((x,y)) or bottomRightWall.collidepoint((x,y)):
+    elif southDoorWalkRect.collidepoint((x,y)) or westDoorWalkRect.collidepoint((x,y)) or eastDoorWalkRect.collidepoint((x,y)):
+        return True
+    elif not bounds.collidepoint((x,y)) or topRightWallBound.collidepoint((x,y)) or bottomRightWallBound.collidepoint((x,y)):
         return False
     else:
         # Check if puddles are cleaned up - if not, block movement through puddle area

@@ -57,7 +57,14 @@ radioOn = True
 def inBounds(x, y):
     global unlocked
     level, power = Objects.getPipeDungeonInfo()
-    bounds = pygame.Rect(48,48,544,160)
+    bounds = pygame.Rect(61,58,517,139)
+    greenhouseDoorWalkRect = pygame.Rect(greenhouseDoor.x-16, greenhouseDoor.y, greenhouseDoor.rect.width, greenhouseDoor.rect.height)
+    bathroomDoorWalkRect = pygame.Rect(bathroomDoor.x+16, bathroomDoor.y, bathroomDoor.rect.width, bathroomDoor.rect.height)
+    greenDoorWalkRect = pygame.Rect(greenDoor.x, greenDoor.y+16, greenDoor.rect.width, greenDoor.rect.height)
+    greenPowerDoorWalkRect = pygame.Rect(greenPowerDoor.x, greenPowerDoor.y+16, greenPowerDoor.rect.width, greenPowerDoor.rect.height)
+    bedroom1DoorWalkRect = pygame.Rect(bedroom1Door.x, bedroom1Door.y-16, bedroom1Door.rect.width, bedroom1Door.rect.height)
+    bedroom2DoorWalkRect = pygame.Rect(bedroom2Door.x, bedroom2Door.y-16, bedroom2Door.rect.width, bedroom2Door.rect.height)
+    bedroom3DoorWalkRect = pygame.Rect(bedroom3Door.x, bedroom3Door.y-16, bedroom1Door.rect.width, bedroom3Door.rect.height)
     # Add greenpower statement
     if (level == 3 and power) or Objects.getGreenPower():
         greenPowerOn = True
@@ -115,6 +122,9 @@ def inBounds(x, y):
             Sounds.powerAmb.stop()
             Sounds.ominousAmb.play(-1)
         return 4
+    elif greenhouseDoorWalkRect.collidepoint((x,y)) or bathroomDoorWalkRect.collidepoint((x,y)) or greenDoorWalkRect.collidepoint((x,y)) or \
+    (greenPowerDoorWalkRect.collidepoint((x,y)) and unlocked) or bedroom1DoorWalkRect.collidepoint((x,y)) or bedroom2DoorWalkRect.collidepoint((x,y)) or bedroom3DoorWalkRect.collidepoint((x,y)):
+        return True
     elif not bounds.collidepoint((x,y)):
         return False
     return True

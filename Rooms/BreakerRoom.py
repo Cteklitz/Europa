@@ -41,13 +41,18 @@ puzzle = False
 
 toolbox = False
 toolboxRect = pygame.Rect(190, 115, 19, 28)
-toolboxInteractRect = pygame.Rect(185, 110, 29, 38)
+toolboxInteractRect = pygame.Rect(176, 101, 38, 47)
+toolboxBoundRect = pygame.Rect(181, 106, 33, 42)
 
 # prevents player from walking into walls/objects
 def inBounds(x, y):
     global toolbox
     global puzzle
     global solved
+
+    bounds = pygame.Rect(61,58,134,139)
+    westDoorWalkRect = pygame.Rect(westDoor.x+16, westDoor.y, westDoor.rect.width, westDoor.rect.height)
+    northDoorWalkRect = pygame.Rect(northDoor.x, northDoor.y+16, northDoor.rect.width, northDoor.rect.height)
 
     level, power = Objects.getPipeDungeonInfo()
     if toolbox:
@@ -66,9 +71,11 @@ def inBounds(x, y):
     elif puzzle:
         puzzle = False
         return 2
-    elif not outline.contains(Point(x,y)):
+    elif westDoorWalkRect.collidepoint((x,y)) or (northDoorWalkRect.collidepoint((x,y)) and solved):
+        return True
+    elif not bounds.collidepoint((x,y)):
         return False
-    elif toolboxRect.collidepoint((x,y)):
+    elif toolboxBoundRect.collidepoint((x,y)):
         return False
     return True
 

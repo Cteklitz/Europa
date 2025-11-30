@@ -37,6 +37,9 @@ open = False
 def inBounds(x, y):
     global open
     level, power = Objects.getPipeDungeonInfo()
+    bounds = pygame.Rect(61,58,134,139)
+    blueDoorWalkRect = pygame.Rect(blueDoor.x+16, blueDoor.y, blueDoor.rect.width, blueDoor.rect.height)
+    lockedDoorWalkRect = pygame.Rect(lockedDoor.x-16, lockedDoor.y, lockedDoor.rect.width, lockedDoor.rect.height)
     if blueDoor.rect.collidepoint((x,y)):
         if (level == 2 and power) or Objects.getBluePower():
             Sounds.powerAmb.stop()
@@ -44,7 +47,11 @@ def inBounds(x, y):
         return 0
     if lockedDoor.rect.collidepoint((x,y)) and open:
         return 1
-    elif not outline.contains(Point(x,y)):
+    if blueDoorWalkRect.collidepoint((x,y)):
+        return True
+    if lockedDoorWalkRect.collidepoint((x,y)) and open:
+        return True
+    elif not bounds.collidepoint((x,y)):
         return False
     return True
 

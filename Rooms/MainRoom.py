@@ -1,7 +1,7 @@
 import pygame
 import Assets
 import Objects
-from shapely.geometry import Point, Polygon
+from shapely.geometry import Point, Polygon, box
 import Sounds
 import Items
 from LightSource import LightSource
@@ -61,6 +61,12 @@ bandage = Objects.groundItem(300, 265, Items.bandage)
 def inBounds(x, y):
     ctrlRmRect = pygame.Rect(220, 252, 36, 4)
     ctrlRmWallRect = pygame.Rect(208, 224, 63, 28)
+    playerBox = box(x-12,y-12,x+12,y+12)
+
+    pinkDoorWalkRect = pygame.Rect(pinkDoor.x+16, pinkDoor.y, pinkDoor.rect.width, pinkDoor.rect.height)
+    blueDoorWalkRect = pygame.Rect(blueDoor.x-16, blueDoor.y, blueDoor.rect.width, blueDoor.rect.height)
+    greenDoorWalkRect = pygame.Rect(greenDoor.x, greenDoor.y-16, greenDoor.rect.width, greenDoor.rect.height)
+    yellowDoorWalkRect = pygame.Rect(yellowDoor.x, yellowDoor.y+16, yellowDoor.rect.width, yellowDoor.rect.height)
 
     if ctrlRmRect.collidepoint((x,y)):
         Sounds.loadMusic("Audio/electricbuzz.wav")
@@ -92,9 +98,11 @@ def inBounds(x, y):
             Sounds.ominousAmb.stop()
             Sounds.powerAmb.play(-1)
         return 4
+    elif pinkDoorWalkRect.collidepoint((x,y)) or blueDoorWalkRect.collidepoint((x,y)) or greenDoorWalkRect.collidepoint((x,y)) or yellowDoorWalkRect.collidepoint((x,y)):
+        return True
     elif ctrlRmWallRect.collidepoint((x,y)):
         return False
-    elif not octagon.contains(Point(x,y)):
+    elif not octagon.contains(playerBox):
         return False
     return True
 
