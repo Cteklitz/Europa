@@ -120,6 +120,10 @@ max_distance = 200  # Maximum distance where sound can be heard
 fuel_sound_playing = False
 base_volume = 0.8
 
+# Track electrical tape equipping
+last_equipped_item = None
+evil_choice_played = False
+
 fixed = False
 explode = False
 leave = False
@@ -140,6 +144,25 @@ def inBounds(x, y):
     elif not bounds.contains(Point(x,y)):
         return False
     return True
+
+def check_electrical_tape_equip():
+    """Function to check for electrical tape equipping even when inventory is open"""
+    global last_equipped_item, evil_choice_played
+    
+    current_equipped = Player.equipped
+    if current_equipped != last_equipped_item:
+        if current_equipped is not None and hasattr(current_equipped, 'id') and current_equipped.id == "electricalTape":
+            # Always play the sound, regardless of previous state
+            try:
+                Sounds.EvilChoice.play()  # Use the loaded sound object directly
+                print("EvilChoice sound played!")  # Debug output
+                evil_choice_played = True
+            except Exception as e:
+                print(f"Error playing EvilChoice sound: {e}")
+        else:
+            # Reset the flag when something else is equipped or nothing is equipped
+            evil_choice_played = False
+        last_equipped_item = current_equipped
 
 def update_fuel_leak_sound():
     global fuel_sound_playing
