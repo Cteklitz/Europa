@@ -67,6 +67,7 @@ leftIndex = 0
 rightIndex = 1
 waterLevels = [30, 60, 75, 35]
 solved = False
+mute = False
 
 waterLevelSprites = Assets.load_tileset("Assets/waterLevels.png", 30, 162)
 redArrow = pygame.image.load("Assets/redArrow.png")
@@ -164,7 +165,7 @@ def positionDeterminer(cameFrom):
         Sounds.valveSong.play(-1)
 
 def Room(screen, screen_res, events):
-    global valves, redArrow, greenArrow, solved
+    global valves, redArrow, greenArrow, solved, mute
     level, power = Objects.getPipeDungeonInfo()
 
     for event in events:
@@ -181,6 +182,12 @@ def Room(screen, screen_res, events):
                         Sounds.valveSong.stop()
                         Sounds.drain.play()
                     solved = True
+            if event.key == pygame.K_m:
+                mute = not mute
+                if not mute:
+                    Sounds.valveSong.play(-1)
+                else:
+                    Sounds.valveSong.stop()
 
     # fill the screen with a color to wipe away anything from last frame
     virtual_screen.fill("gray")

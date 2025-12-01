@@ -156,6 +156,7 @@ whatAwaits = loadAudio("Audio/what_awaits.wav")
 setVolume(whatAwaits, 0.6)
 
 electrician = loadAudio("Audio/Electrician.wav")
+setVolume(electrician, 0.6)
 
 valveSong = loadAudio("Audio/Glass.wav")
 setVolume(valveSong, 0.4)

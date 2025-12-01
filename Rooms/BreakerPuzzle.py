@@ -27,6 +27,7 @@ multimeter_status = False
 # solved = True
 solved = False
 played = False
+mute = False
 
 '''
 DEV NOTES:
@@ -395,7 +396,7 @@ def positionDeterminer(cameFrom):
 
 recently_selected = None 
 def Room(screen, screen_res, events):
-    global exit, solved, beakerPuzzle, collected, recently_selected, multimeter_status, played
+    global exit, solved, beakerPuzzle, collected, recently_selected, multimeter_status, played, mute
     xScale = screen.get_width() / virtual_screen.get_width()
     yScale = screen.get_height() / virtual_screen.get_height()
 
@@ -407,6 +408,10 @@ def Room(screen, screen_res, events):
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_BACKSPACE:
                 exit = True
+            if event.key == pygame.K_m:
+                mute = not mute
+                if not mute:
+                    Sounds.electrician.play(-1)
         if event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == 1:
                 mouse_x, mouse_y = pygame.mouse.get_pos()
@@ -570,6 +575,9 @@ def Room(screen, screen_res, events):
         Sounds.loadMusic("Audio/opensesame.wav")
         pygame.mixer.music.play(start=3.0)
         
+    if mute:
+        Sounds.electrician.stop()
+    
     scaled = pygame.transform.scale(virtual_screen, screen_res)
     screen.blit(scaled, (0, 0))
 
