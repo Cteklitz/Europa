@@ -159,6 +159,16 @@ setVolume(EvilChoice, 0.6)
 RepairFuelLine = loadAudio("Audio/RepairFuelLine.wav")
 setVolume(RepairFuelLine, 0.5)
 
+engineStartup = loadAudio("Audio/engineStartup.wav")
+
+bubbles = loadAudio("Audio/bubbles.wav")
+
+blastoff = loadAudio("Audio/blastoff.wav")
+setVolume(blastoff, 0.7)
+
+DestinationEarth = loadAudio("Audio/DestinationEarth.mp3")
+setVolume(DestinationEarth, 0.5)
+
 ## MUSIC
 
 pauseMusic = loadAudio("Audio/wading_into_the_unknown.wav")
@@ -167,8 +177,12 @@ setVolume(pauseMusic, 0.4)
 whatAwaits = loadAudio("Audio/what_awaits.wav")
 setVolume(whatAwaits, 0.6)
 
+facingEternity = loadAudio("Audio/facing_eternity.wav")
+setVolume(whatAwaits, 0.6)
+
 electrician = loadAudio("Audio/Electrician.wav")
 setVolume(electrician, 0.6)
 
 valveSong = loadAudio("Audio/Glass.wav")
 setVolume(valveSong, 0.4)
+

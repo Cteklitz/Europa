@@ -19,16 +19,13 @@ virtual_res2 = (388, 343)
 virtual_screen2 = pygame.Surface(virtual_res2)
 dark_overlay2 = pygame.Surface(virtual_screen2.get_size(), pygame.SRCALPHA)
 
+virtual_res3 = (288, 211)
+virtual_screen3 = pygame.Surface(virtual_res3)
+
+virtual_res4 = (288, 136)
+virtual_screen4 = pygame.Surface(virtual_res3)
+
 player_pos = pygame.Vector2(239, 180)
-
-fertilizer = pygame.image.load("Assets/Fertilizer.png")
-fertilizer_pos = (20, 90)
-
-rake = pygame.image.load("Assets/Rake.png")
-rake_pos = (45, 75)
-
-waterCan = pygame.image.load("Assets/WaterCan.png")
-waterCan_pos = (15, 120)
 
 fuelLine = Assets.fuelLine
 fuelLineFixed = Assets.fuelLineFixed
@@ -70,11 +67,26 @@ animationIndex = 0
 animationTimer = Objects.timer(2.5, False)
 lighterTimer = Objects.timer(1.5, False)
 
+engineTimer = Objects.timer(3, False)
+animationTimer2 = Objects.timer(1, False)
+
+animation = []
+for i in range(1, 18):
+    animation.append(pygame.image.load(f"Assets/BadEndingCutscene{i}.png"))
+
+endingScroll = pygame.image.load("Assets/EndingCutscene.png")
+scrollSub = pygame.image.load("Assets/SubWhiteOutline.png")
+scrollPos = -314
+scrollTimer = Objects.timer(0.5, False)
+
 cutscene1 = False
 cutscene2 = False
 brainwashPlayed = False
 lighterPlayed = False
 explosionPlayed = False
+animate = False
+scroll = False
+eternityPlayed = False
 
 smallEyesPositions = [
     (231, 40),
@@ -201,8 +213,8 @@ def positionDeterminer(cameFrom):
         player_pos = pygame.Vector2(exitRect.centerx + 35, exitRect.centery + 25)
 
 def Room(screen, screen_res, events):
-    global firstTime, currIndex, nextBlinkDelay, currEye, firstTime2, currIndex2, currEye2, nextBlinkDelay2, smallEyesPositions, fixed, cutscene1, cutscene2, \
-        animationIndex, lighterPlayed, explosionPlayed, brainwashPlayed, playing
+    global firstTime, currIndex, nextBlinkDelay, currEye, firstTime2, currIndex2, currEye2, nextBlinkDelay2, smallEyesPositions, fixed, explode, leave, cutscene1, cutscene2, \
+        animationIndex, lighterPlayed, explosionPlayed, brainwashPlayed, playing, animate, scroll, scrollPos, eternityPlayed
     xScale = screen.get_width()/virtual_screen.get_width() 
     yScale = screen.get_height()/virtual_screen.get_height()
 
@@ -220,6 +232,7 @@ def Room(screen, screen_res, events):
                     else:
                         whyshouldi.activated_time = pygame.time.get_ticks()
                 elif fuelLineInteractRect.collidepoint(player_pos) and Player.checkItem(Items.lighter) and not (cutscene1 or cutscene2) and not fixed:
+                    explode = True
                     if Player.events != 6:
                         Player.cutscene = True
                         animationTimer.setInitial()
@@ -233,16 +246,21 @@ def Room(screen, screen_res, events):
                         whyshouldi.activated_time = pygame.time.get_ticks()
                 elif consoleInteractRect.collidepoint(player_pos):
                     if fixed:
-                        leave = True
+                        Player.cutscene = True
+                        Sounds.whispers.stop()
+                        Sounds.whatAwaits.stop()
+                        Sounds.ominousAmb.stop()
+                        Sounds.engineStartup.play()
+                        engineTimer.setInitial()
                     elif not playing:
                         Sounds.RepairFuelLine.play()
                         playing = True
                         repairFuelLineTimer.setInitial()
-                elif consoleInteractRect.collidepoint(player_pos) and not fixed:
-                    # maybe something to imply sub cannot go without repair?
-                    pass
 
     virtual_screen.blit(background, (0,0))
+    virtual_screen3.fill("black")
+    virtual_screen4.blit(endingScroll, (0, scrollPos))
+    virtual_screen4.blit(scrollSub, (0,-314))
 
     if fixed:
         virtual_screen.blit(fuelLineFixed, fuelLinePos)
@@ -296,8 +314,6 @@ def Room(screen, screen_res, events):
                 Sounds.explosion2.play()
                 explosionPlayed = True
                 virtual_screen2.fill("black")
-                # TODO: make this true when explosion noise ends
-                explode = True
         animationIndex += 1
         animationTimer.reset()
         animationTimer.setInitial()
@@ -313,10 +329,68 @@ def Room(screen, screen_res, events):
     if repairFuelLineTimer.Done():
         playing = False
 
+    if engineTimer.Done() and not leave:
+        engineTimer.reset()
+        engineTimer.setInitial()
+        leave = True
+
+    if engineTimer.Done() and leave and not eternityPlayed:
+        Sounds.facingEternity.play()
+        scrollTimer.setInitial()
+        eternityPlayed = True
+        scroll = True
+
+    if animationIndex < 16:
+        if animationTimer2.Done():
+            if animationIndex == 0:
+                Sounds.bubbles.play(-1)
+            if animationIndex == 6:
+                Sounds.setVolume(Sounds.bunsen, 0.7)
+                Sounds.bunsen.play()
+            if animationIndex == 8:
+                Sounds.accessGranted.play()
+            if animationIndex == 9:
+                Sounds.DestinationEarth.play()
+            if animationIndex == 10:
+                Sounds.setVolume(Sounds.bunsen, 1)
+                Sounds.setVolume(Sounds.EvilChoice, 1)
+                Sounds.EvilChoice.play()
+            if animationIndex == 12:
+                Sounds.bunsen.stop()
+                Sounds.blastoff.play()
+            if animationIndex == 15:
+                Sounds.bubbles.stop()
+            animationIndex += 1
+            animationTimer2.reset()
+            animationTimer2.setInitial()
+
+    if animationTimer2.Done() and animationIndex == 16 and animate:
+        animate = False
+        Sounds.EvilChoice.stop()
+        Sounds.setVolume(Sounds.facingEternity, 0.6)
+
     whyshouldi.update()
 
-    if Player.cutscene:
+    if animate:
+        virtual_screen3.blit(animation[animationIndex], (0,0))
+
+    if scrollPos < -200:
+        if scrollTimer.Done():
+            scrollPos += 1
+            scrollTimer.reset()
+            scrollTimer.setInitial()
+    else:
+        scroll = False
+        animationTimer2.setInitial()
+        animate = True
+        Sounds.setVolume(Sounds.facingEternity, 0.4)
+
+    if explode:
         Assets.scaled_draw(virtual_res2, virtual_screen2, screen_res, screen)
+    elif scroll:
+        Assets.scaled_draw(virtual_res4, virtual_screen4, screen_res, screen)
+    elif leave:
+        Assets.scaled_draw(virtual_res3, virtual_screen3, screen_res, screen)
     else:
         Assets.scaled_draw(virtual_res, virtual_screen, screen_res, screen)
 
