@@ -232,7 +232,6 @@ def Room(screen, screen_res, events):
                     else:
                         whyshouldi.activated_time = pygame.time.get_ticks()
                 elif fuelLineInteractRect.collidepoint(player_pos) and Player.checkItem(Items.lighter) and not (cutscene1 or cutscene2) and not fixed:
-                    explode = True
                     if Player.events != 6:
                         Player.cutscene = True
                         animationTimer.setInitial()
@@ -240,6 +239,7 @@ def Room(screen, screen_res, events):
                         Sounds.brainwash.play()
                         if Player.events == 0:
                             cutscene1 = True
+                            explode = True
                         else:
                             cutscene2 = True
                     else:
