@@ -99,6 +99,10 @@ firstTime = pygame.time.get_ticks()
 firstTime2 = pygame.time.get_ticks()
 nextBlinkDelay = random.randint(3000, 5000)
 nextBlinkDelay2 = random.randint(3000, 5000)
+
+repairFuelLineTimer = Objects.timer(2, True)
+playing = False
+
 bounds = Polygon([(32,224),(0,287),(227,280),(453,247),(453,224)])
 
 lit = False
@@ -198,7 +202,7 @@ def positionDeterminer(cameFrom):
 
 def Room(screen, screen_res, events):
     global firstTime, currIndex, nextBlinkDelay, currEye, firstTime2, currIndex2, currEye2, nextBlinkDelay2, smallEyesPositions, fixed, cutscene1, cutscene2, \
-        animationIndex, lighterPlayed, explosionPlayed, brainwashPlayed
+        animationIndex, lighterPlayed, explosionPlayed, brainwashPlayed, playing
     xScale = screen.get_width()/virtual_screen.get_width() 
     yScale = screen.get_height()/virtual_screen.get_height()
 
@@ -227,8 +231,13 @@ def Room(screen, screen_res, events):
                             cutscene2 = True
                     else:
                         whyshouldi.activated_time = pygame.time.get_ticks()
-                elif consoleInteractRect.collidepoint(player_pos) and fixed:
-                    leave = True
+                elif consoleInteractRect.collidepoint(player_pos):
+                    if fixed:
+                        leave = True
+                    elif not playing:
+                        Sounds.RepairFuelLine.play()
+                        playing = True
+                        repairFuelLineTimer.setInitial()
                 elif consoleInteractRect.collidepoint(player_pos) and not fixed:
                     # maybe something to imply sub cannot go without repair?
                     pass
@@ -300,6 +309,9 @@ def Room(screen, screen_res, events):
     if animationTimer.Done() and cutscene2:
         Sounds.brainwash.stop()
         Player.cutscene = False
+
+    if repairFuelLineTimer.Done():
+        playing = False
 
     whyshouldi.update()
 
