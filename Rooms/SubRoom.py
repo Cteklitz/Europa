@@ -306,6 +306,9 @@ def Room(screen, screen_res, events):
                 Sounds.whispers.stop()
                 Sounds.explosion2.play()
                 explosionPlayed = True
+                Sounds.FuelPipeLeaking.stop()
+                Sounds.whatAwaits.stop()
+                Sounds.ominousAmb.stop()
                 virtual_screen2.fill("black")
         animationIndex += 1
         animationTimer.reset()
