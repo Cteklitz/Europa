@@ -383,7 +383,7 @@ def Room(screen, screen_res, events):
         scroll = False
         animationTimer2.setInitial()
         animate = True
-        Sounds.setVolume(Sounds.facingEternity, 0.4)
+        Sounds.setVolume(Sounds.facingEternity, 0.5)
 
     if explode:
         Assets.scaled_draw(virtual_res2, virtual_screen2, screen_res, screen)

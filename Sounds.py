@@ -162,12 +162,13 @@ setVolume(RepairFuelLine, 0.5)
 engineStartup = loadAudio("Audio/engineStartup.wav")
 
 bubbles = loadAudio("Audio/bubbles.wav")
+setVolume(bubbles, 0.5)
 
 blastoff = loadAudio("Audio/blastoff.wav")
 setVolume(blastoff, 0.7)
 
 DestinationEarth = loadAudio("Audio/DestinationEarth.mp3")
-setVolume(DestinationEarth, 0.5)
+setVolume(DestinationEarth, 0.6)
 
 ## MUSIC
 
