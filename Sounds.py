@@ -150,6 +150,9 @@ setVolume(whispers, 0.20)
 FuelPipeLeaking = loadAudio("Audio/FuelPipeLeaking.wav")
 setVolume(FuelPipeLeaking, 0.3)
 
+DoorScaryNoise = loadAudio("Audio/DoorScaryNoise.wav")
+setVolume(DoorScaryNoise, 0.5)
+
 ## MUSIC
 
 pauseMusic = loadAudio("Audio/wading_into_the_unknown.wav")
