@@ -9,6 +9,7 @@ from LightFalloff import LightFalloff
 from LightingUtils import apply_lighting, apply_falloff
 import Player
 import random
+import math
 
 virtual_res = (648,357)
 virtual_screen = pygame.Surface(virtual_res)
@@ -113,6 +114,16 @@ falloff = [LightFalloff(virtual_screen.get_size(), darkness = 140)]
 background = pygame.image.load("Assets/SubRoom.png")
 exitRect = pygame.Rect(4, 175, 21, 115)
 
+# Fuel leak sound variables
+fuel_leak_pos = (270, 226)
+max_distance = 200  # Maximum distance where sound can be heard
+fuel_sound_playing = False
+base_volume = 0.8
+
+# Track electrical tape equipping
+last_equipped_item = None
+evil_choice_played = False
+
 fixed = False
 explode = False
 leave = False
@@ -134,6 +145,47 @@ def inBounds(x, y):
         return False
     return True
 
+def check_electrical_tape_equip():
+    """Function to check for electrical tape equipping even when inventory is open"""
+    global last_equipped_item, evil_choice_played
+    
+    current_equipped = Player.equipped
+    if current_equipped != last_equipped_item:
+        if current_equipped is not None and hasattr(current_equipped, 'id') and current_equipped.id == "electricalTape":
+            # Always play the sound, regardless of previous state
+            try:
+                Sounds.EvilChoice.play()  # Use the loaded sound object directly
+                print("EvilChoice sound played!")  # Debug output
+                evil_choice_played = True
+            except Exception as e:
+                print(f"Error playing EvilChoice sound: {e}")
+        else:
+            # Reset the flag when something else is equipped or nothing is equipped
+            evil_choice_played = False
+        last_equipped_item = current_equipped
+
+def update_fuel_leak_sound():
+    global fuel_sound_playing
+    
+    # distance between player and fuel leak
+    distance = math.sqrt((player_pos.x - fuel_leak_pos[0])**2 + (player_pos.y - fuel_leak_pos[1])**2)
+    
+    if distance <= max_distance and not fixed:
+        #volume based on distance
+        volume = base_volume * (1 - (distance / max_distance))
+        volume = max(0, min(1, volume))
+        
+        if not fuel_sound_playing:
+            Sounds.FuelPipeLeaking.play(-1)  # Loop the sound
+            fuel_sound_playing = True
+        
+        
+        Sounds.FuelPipeLeaking.set_volume(volume)
+    else:
+        if fuel_sound_playing:
+            Sounds.FuelPipeLeaking.stop()
+            fuel_sound_playing = False
+
 def positionDeterminer(cameFrom):
     global player_pos, added
     if not added:
@@ -149,6 +201,9 @@ def Room(screen, screen_res, events):
         animationIndex, lighterPlayed, explosionPlayed, brainwashPlayed
     xScale = screen.get_width()/virtual_screen.get_width() 
     yScale = screen.get_height()/virtual_screen.get_height()
+
+    
+    update_fuel_leak_sound()
 
     currTime = pygame.time.get_ticks()
     for event in events:

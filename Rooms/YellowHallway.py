@@ -51,6 +51,13 @@ ValveDoor3 = Objects.Door(488, 48, MissingValveDoor)
 exitDoor = Objects.Door(283, 161, exitDoorImg)
 
 valveDoorInteractRect = pygame.Rect(488, 48, 64, 80)
+valveDoor1InteractRect = pygame.Rect(88, 48, 64, 80)
+
+# Door scary noise variables
+door_sound_trigger_time = None
+door_sound_channel = None
+door_max_distance = 500
+door_sound_played = False
 
 unlocked = False
 valvePlaced = False
@@ -60,6 +67,23 @@ interacted = False
 outerRect = pygame.Rect(0,0,640,240)
 # inner rect
 innerRect = pygame.Rect(0,112,640,50)
+
+def update_door_scary_sound():
+    global door_sound_channel
+    
+    if door_sound_channel is not None:
+        # Calculate distance from player to ValveDoor1
+        door_pos = (ValveDoor1.x + ValveDoor1.rect.width/2, ValveDoor1.y + ValveDoor1.rect.height/2)
+        distance = math.sqrt((player_pos.x - door_pos[0])**2 + (player_pos.y - door_pos[1])**2)
+        
+        if distance <= door_max_distance:
+            volume = 0.5 * (1 - (distance / door_max_distance))
+            volume = max(0.1, min(0.5, volume))
+            door_sound_channel.set_volume(volume)
+        else:
+            # Stop sound if too far away
+            door_sound_channel.stop()
+            door_sound_channel = None
 
 def inBounds(x, y):
     global unlocked, valvePlaced, interacted
@@ -74,8 +98,17 @@ def inBounds(x, y):
     #greenPowerOn = True # FOR TESTING
 
     if exitDoor.rect.collidepoint((x,y)):
+
+        global door_sound_channel
+        if door_sound_channel is not None:
+            door_sound_channel.stop()
+            door_sound_channel = None
         return 0
     elif valvePlaced and interacted:
+
+        if door_sound_channel is not None:
+            door_sound_channel.stop()
+            door_sound_channel = None
         interacted = False
         Sounds.radioFar.set_volume(0)
         Sounds.radioClose.set_volume(0)
@@ -95,7 +128,7 @@ def positionDeterminer(cameFrom):
         player_pos = pygame.Vector2(ValveDoor3.x + ValveDoor3.rect.width/2, ValveDoor3.y + 69)
 
 def Room(screen, screen_res, events):
-    global player_pos, unlocked, valvePlaced, interacted
+    global player_pos, unlocked, valvePlaced, interacted, door_sound_trigger_time, door_sound_channel, door_sound_played
     level, power = Objects.getPipeDungeonInfo()
 
     xScale = screen.get_width()/virtual_screen.get_width() 
@@ -108,7 +141,11 @@ def Room(screen, screen_res, events):
             print(click_x_unscaled, click_y_unscaled)
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_e:
-                if valveDoorInteractRect.collidepoint(player_pos):
+                if valveDoor1InteractRect.collidepoint(player_pos) and not door_sound_played:
+                    #scary door sound after 1 second
+                    global door_sound_trigger_time
+                    door_sound_trigger_time = pygame.time.get_ticks() + 1000  # 1 second delay
+                elif valveDoorInteractRect.collidepoint(player_pos):
                     if Player.checkItem(Items.valve):
                         Sounds.combo.play() # maybe find sound with more oomf
                         Player.removeItem(Items.valve)                       
@@ -125,6 +162,15 @@ def Room(screen, screen_res, events):
                     elif valvePlaced:
                         Sounds.valveSound.play()
                         interacted = True # flag to go thru the door after interacting with it
+
+
+    update_door_scary_sound()
+    
+
+    if door_sound_trigger_time is not None and pygame.time.get_ticks() >= door_sound_trigger_time:
+        door_sound_channel = Sounds.DoorScaryNoise.play()
+        door_sound_trigger_time = None
+        door_sound_played = True
 
     virtual_screen.fill((105,105,105))
     dark_overlay.fill((0, 0, 0, 150))

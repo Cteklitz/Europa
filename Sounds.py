@@ -147,6 +147,15 @@ setVolume(blink, 0.20)
 whispers = loadAudio("Audio/whispers.wav")
 setVolume(whispers, 0.20)
 
+FuelPipeLeaking = loadAudio("Audio/FuelPipeLeaking.wav")
+setVolume(FuelPipeLeaking, 0.3)
+
+DoorScaryNoise = loadAudio("Audio/DoorScaryNoise.wav")
+setVolume(DoorScaryNoise, 0.5)
+
+EvilChoice = loadAudio("Audio/EvilChoice.wav")
+setVolume(EvilChoice, 0.6)
+
 ## MUSIC
 
 pauseMusic = loadAudio("Audio/wading_into_the_unknown.wav")

@@ -167,7 +167,8 @@ def positionDeterminer(cameFrom):
 def cleanup():
     #Stop electricity sound when leaving the room
     if hasattr(Room, 'electricityChannel') and Room.electricityChannel:
-        Room.electricityChannel.pause()
+        Room.electricityChannel.stop()
+        Room.electricityChannel = None
         Room.electricityPlaying = False
 
 def Room(screen, screen_res, events):
@@ -216,14 +217,10 @@ def Room(screen, screen_res, events):
             # Set stereo volumes
             Sounds.electricityNoise.set_volume(leftVolume)
             
-            if not hasattr(Room, 'electricityChannel'):
+            if not hasattr(Room, 'electricityChannel') or Room.electricityChannel is None:
                 Room.electricityChannel = Sounds.electricityNoise.play(-1)  # Loop indefinitely
-                Room.electricityChannel.pause()
-                Room.electricityPlaying = False
-            elif not Room.electricityPlaying:
-                Room.electricityChannel.unpause()
                 Room.electricityPlaying = True
-            else:
+            elif Room.electricityChannel is not None:
                 Room.electricityChannel.set_volume(leftVolume, rightVolume)
             
         else:

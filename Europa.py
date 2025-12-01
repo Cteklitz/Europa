@@ -47,6 +47,12 @@ def updateRoom(room):
 
 while running:
     events = pygame.event.get()
+    
+    # Check for electrical tape equip in SubRoom (runs even when inventory is open)
+    import Rooms.SubRoom as SubRoomModule
+    if Room == SubRoomModule:
+        SubRoomModule.check_electrical_tape_equip()
+    
     if Inventory.open:
         if not Inventory.Inventory(screen, screenRes, events):
             running = False
