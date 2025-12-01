@@ -183,8 +183,8 @@ def update_fuel_leak_sound():
             Sounds.FuelPipeLeaking.play(-1)  # Loop the sound
             fuel_sound_playing = True
         
-        
-        Sounds.FuelPipeLeaking.set_volume(volume)
+        #Sounds.FuelPipeLeaking.set_volume(volume)
+        Sounds.setVolume(Sounds.FuelPipeLeaking, volume)
     else:
         if fuel_sound_playing:
             Sounds.FuelPipeLeaking.stop()
