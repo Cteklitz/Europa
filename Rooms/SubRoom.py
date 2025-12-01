@@ -141,18 +141,11 @@ last_equipped_item = None
 evil_choice_played = False
 
 fixed = False
-explode = False
+explodeAttempt = False
 leave = False
 
 def inBounds(x, y):
-    if explode: 
-        #return 1 
-        pass
-    elif leave:
-        #return 2
-        pass
-
-    elif Player.cutscene:
+    if Player.cutscene:
         return False
     elif exitRect.collidepoint((x,y)):
         Sounds.whispers.stop()
@@ -213,7 +206,7 @@ def positionDeterminer(cameFrom):
         player_pos = pygame.Vector2(exitRect.centerx + 35, exitRect.centery + 25)
 
 def Room(screen, screen_res, events):
-    global firstTime, currIndex, nextBlinkDelay, currEye, firstTime2, currIndex2, currEye2, nextBlinkDelay2, smallEyesPositions, fixed, explode, leave, cutscene1, cutscene2, \
+    global firstTime, currIndex, nextBlinkDelay, currEye, firstTime2, currIndex2, currEye2, nextBlinkDelay2, smallEyesPositions, fixed, explodeAttempt, leave, cutscene1, cutscene2, \
         animationIndex, lighterPlayed, explosionPlayed, brainwashPlayed, playing, animate, scroll, scrollPos, eternityPlayed
     xScale = screen.get_width()/virtual_screen.get_width() 
     yScale = screen.get_height()/virtual_screen.get_height()
@@ -233,13 +226,13 @@ def Room(screen, screen_res, events):
                         whyshouldi.activated_time = pygame.time.get_ticks()
                 elif fuelLineInteractRect.collidepoint(player_pos) and Player.checkItem(Items.lighter) and not (cutscene1 or cutscene2) and not fixed:
                     if Player.events != 6:
+                        explodeAttempt = True
                         Player.cutscene = True
                         animationTimer.setInitial()
                         virtual_screen2.blit(influence, (0,0))
                         Sounds.brainwash.play()
                         if Player.events == 0:
                             cutscene1 = True
-                            explode = True
                         else:
                             cutscene2 = True
                     else:
@@ -323,8 +316,9 @@ def Room(screen, screen_res, events):
         Sounds.screech.play()
         lighterPlayed = True
 
-    if animationTimer.Done() and cutscene2:
+    if animationTimer.Done() and cutscene2 and explodeAttempt:
         Sounds.brainwash.stop()
+        explodeAttempt = False
         Player.cutscene = False
 
     if repairFuelLineTimer.Done():
@@ -386,7 +380,7 @@ def Room(screen, screen_res, events):
         animate = True
         Sounds.setVolume(Sounds.facingEternity, 0.5)
 
-    if explode:
+    if explodeAttempt:
         Assets.scaled_draw(virtual_res2, virtual_screen2, screen_res, screen)
     elif scroll:
         Assets.scaled_draw(virtual_res4, virtual_screen4, screen_res, screen)
