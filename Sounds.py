@@ -170,6 +170,8 @@ setVolume(blastoff, 0.7)
 DestinationEarth = loadAudio("Audio/DestinationEarth.mp3")
 setVolume(DestinationEarth, 0.6)
 
+screech = loadAudio("Audio/screech.wav")
+
 ## MUSIC
 
 pauseMusic = loadAudio("Audio/wading_into_the_unknown.wav")

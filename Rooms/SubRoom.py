@@ -320,6 +320,7 @@ def Room(screen, screen_res, events):
 
     if lighterTimer.Done() and not lighterPlayed:
         Sounds.lighter.play()
+        Sounds.screech.play()
         lighterPlayed = True
 
     if animationTimer.Done() and cutscene2:
