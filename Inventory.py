@@ -4,6 +4,7 @@ import Player
 import Objects
 import Items
 import random
+import Sounds
 
 virtual_res = (900, 650)
 #virtual_res = (1024, 720)
@@ -12,6 +13,15 @@ open = False
 inventory = pygame.image.load("Assets/InventoryMenu.png")
 emptySlot = pygame.image.load("Assets/emptyslot.png")
 fullSlot = pygame.image.load("Assets/fullslot.png")
+
+eyeOpen = pygame.transform.scale(pygame.image.load("Assets/EyeWall.png"), (32, 22))
+eyeClosed = pygame.transform.scale(pygame.image.load("Assets/eyeClosedWall.png"), (32, 22))
+eyes = [eyeOpen, eyeClosed]
+currEye = eyes[0]
+currIndex = 0
+firstTime = pygame.time.get_ticks()
+nextBlinkDelay = random.randint(3000, 5000)
+
 slotsBase = (407, 240)
 slotsbuffer = 2
 
@@ -50,9 +60,10 @@ descRect = pygame.Rect(353,323,510,285)
 running = True
 
 def Inventory(screen, screen_res, events):
-    global open, index, selected, running, frames
+    global open, index, selected, running, frames, currIndex, currEye, firstTime, nextBlinkDelay
     xScale = screen.get_width()/virtual_screen.get_width() 
     yScale = screen.get_height()/virtual_screen.get_height()
+    currTime = pygame.time.get_ticks()
 
     for event in events:
         if event.type == pygame.QUIT:
@@ -95,6 +106,25 @@ def Inventory(screen, screen_res, events):
     valvePlaced = Objects.getValvePlaced()
 
     if valvePlaced: # if the final valve has been placed
+        # draw eyes on border
+        if (currTime - firstTime >= nextBlinkDelay) and not Player.cutscene:
+            currIndex = (currIndex + 1) % len(eyes)
+            currEye = eyes[currIndex] # sets current eye for animation in array
+            firstTime = currTime
+        if currIndex == 1: # closed eye
+            nextBlinkDelay = random.randint(70, 120)
+            Sounds.blink.play()
+        else: # open eye
+            nextBlinkDelay = random.randint(2000, 5000)
+        for i in range(20):
+            xPos = int((inventory.get_width()/22) + (i * (inventory.get_width()/22)) + (inventory.get_width()/22 - eyeOpen.get_width()) / 2)
+            virtual_screen.blit(currEye, (xPos, 0))
+            virtual_screen.blit(currEye, (xPos, inventory.get_height() - eyeOpen.get_height()))
+        
+        for i in range (21):
+            yPos = int(i * (inventory.get_height()/21) + ((inventory.get_height()/21) - eyeOpen.get_height()) / 2)
+            virtual_screen.blit(currEye, (0, yPos))
+            virtual_screen.blit(currEye, (inventory.get_width() - eyeOpen.get_width(), yPos))
         if frames == 9:
             frames = 0
             # randomize the names of the final items
