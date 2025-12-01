@@ -41,8 +41,11 @@ falloffPartial = [LightFalloff(virtual_screen.get_size(), darkness = 75)]
 exitDoorImg = pygame.transform.scale(Assets.grayDoorSouth, (75,75))
 ValveDoor = pygame.image.load("Assets/ValveDoor.png")
 MissingValveDoor = pygame.image.load("Assets/MissingValveDoor.png")
-window = pygame.transform.scale(pygame.image.load("Assets/EmptyWindow.png"), (125, 55))
-ValveDoor1 = Objects.Door(88, 48, ValveDoor)
+window = pygame.transform.scale(pygame.image.load("Assets/EmptyWindow.png"), (275, 100))
+window2 = pygame.image.load("Assets/SubTailWindow.png")
+window3 = pygame.image.load("Assets/SubFrontWindow.png")
+
+ValveDoor1 = Objects.Door(45, 48, ValveDoor)
 ValveDoor2 = Objects.Door(288, 48, ValveDoor)
 ValveDoor3 = Objects.Door(488, 48, MissingValveDoor)
 exitDoor = Objects.Door(283, 161, exitDoorImg)
@@ -182,13 +185,12 @@ def Room(screen, screen_res, events):
         virtual_screen.blit(pygame.transform.scale(light.image, (36, 8)), light.rect)
 
     virtual_screen.blit(ValveDoor1.image, ValveDoor1.rect)
-    virtual_screen.blit(ValveDoor2.image, ValveDoor2.rect)
+    # virtual_screen.blit(ValveDoor2.image, ValveDoor2.rect)
     virtual_screen.blit(ValveDoor3.image, ValveDoor3.rect)
     virtual_screen.blit(exitDoor.image, exitDoor.rect)
-    virtual_screen.blit(window, (-42, 22))
-    virtual_screen.blit(window, (157, 22))
-    virtual_screen.blit(window, (358, 22))
-    virtual_screen.blit(window, (558, 22))
+    virtual_screen.blit(window, (-250, 11))
+    virtual_screen.blit(window2, (130, 11))
+    virtual_screen.blit(window3, (580, 11))
     Player.animatePlayer(virtual_screen, player_pos)
 
     # if not Objects.getPinkPower():
