@@ -65,7 +65,7 @@ for magnet in magnets:
 draweropen = loadAudio("Audio/draweropen.wav")
 drawerclose = loadAudio("Audio/drawerclose.wav")
 
-letter = loadAudio("Audio/opentriangle.wav")
+letter = pygame.mixer.Sound("Audio/opentriangle.wav")
 
 combo = loadAudio("Audio/combo.wav")
 
