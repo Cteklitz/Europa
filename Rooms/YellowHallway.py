@@ -147,7 +147,7 @@ def Room(screen, screen_res, events):
                     door_sound_trigger_time = pygame.time.get_ticks() + 1000  # 1 second delay
                 elif valveDoorInteractRect.collidepoint(player_pos):
                     if Player.checkItem(Items.valve):
-                        Sounds.combo.play() # maybe find sound with more oomf
+                        Sounds.thud.play() # maybe find sound with more oomf
                         Player.removeItem(Items.valve)                       
                         valvePlaced = True
                         ValveDoor3.image = ValveDoor # change the valvedoor to have the valve

@@ -153,6 +153,9 @@ setVolume(FuelPipeLeaking, 0.3)
 DoorScaryNoise = loadAudio("Audio/DoorScaryNoise.wav")
 setVolume(DoorScaryNoise, 0.5)
 
+thud = loadAudio("Audio/Thud.wav")
+setVolume(thud, 0.5)
+
 EvilChoice = loadAudio("Audio/EvilChoice.wav")
 setVolume(EvilChoice, 0.6)
 
