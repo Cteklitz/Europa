@@ -220,8 +220,6 @@ def Room(screen, screen_res, events):
     update_fuel_leak_sound()
 
     currTime = pygame.time.get_ticks()
-    if Sounds.whispers.get_num_channels() == 0:
-        Sounds.whispers.play(-1)
     for event in events:
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_e:
@@ -240,6 +238,8 @@ def Room(screen, screen_res, events):
                         Sounds.brainwash.play()
                         if Player.events == 0:
                             Player.ending = "hero"
+                            Sounds.whispers.stop()
+                            Player.stopTime()
                             cutscene1 = True
                         else:
                             cutscene2 = True
@@ -249,6 +249,7 @@ def Room(screen, screen_res, events):
                     if fixed:
                         Player.cutscene = True
                         Player.ending = "evil"
+                        Player.stopTime()
                         Sounds.whispers.stop()
                         Sounds.whatAwaits.stop()
                         Sounds.ominousAmb.stop()

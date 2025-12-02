@@ -92,9 +92,6 @@ while running:
                 # Open inventory
                 if event.key == pygame.K_TAB and not Player.cutscene and Room != TitleScreen:
                     Inventory.open = True
-                    if Objects.getValvePlaced():
-                        Sounds.whispers.stop()
-                        Sounds.whispers.play(-1)
                     for item in Player.inventory:
                         print(item)   
                 if event.key == pygame.K_p:
