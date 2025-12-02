@@ -14,14 +14,19 @@ ending = None
 
 speedrun = False
 startTime = datetime.now()
+finalTime = ""
 
 def setStartTime():
     global startTime
     startTime = datetime.now()
 
-def getGameTime():
+def stopTime():
+    global finalTime
     duration = datetime.now() - startTime
-    return str(duration)
+    finalTime = str(duration)
+
+def getGameTime():
+    return finalTime
 
 # adds an item to inventory
 def addItem(item):

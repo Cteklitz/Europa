@@ -109,6 +109,7 @@ def Room(screen, screen_res, events):
     if cutscene:
         Player.cutscene = True
         Player.ending = "dark"
+        Player.stopTime()
         virtual_screen2.fill("black")
         if animationIndex < 14:
             if animationTimer.Done():
