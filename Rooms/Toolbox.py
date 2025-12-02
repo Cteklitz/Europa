@@ -56,8 +56,9 @@ eye_squish_sound = Sounds.loadAudio("Audio/eyeSquish.wav")
 eye_squish_sound.set_volume(.5)
 pre_jumpscare_sound = Sounds.loadAudio("Audio/evil2Trimmed1.wav")
 jumpscare_sound = Sounds.loadAudio("Audio/toolboxJumpscare.wav")
-Sounds.setVolume(jumpscare_sound, 0.5)
+Sounds.setVolume(jumpscare_sound, 0.3)
 jumpscare_layer_sound = Sounds.loadAudio("Audio/evil2.wav")
+Sounds.setVolume(jumpscare_layer_sound, 0.8)
 paper_crumple_sound = Sounds.loadAudio("Audio/paperCrumple.wav")
 paper_crumple_sound.set_volume(.3)
 paper_open_sound = Sounds.loadAudio("Audio/paperOpen.wav")
@@ -83,9 +84,19 @@ def Room(screen, screen_res, events):
     curr_time = pygame.time.get_ticks()
     for event in events:
         if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_BACKSPACE or event.key == pygame.K_ESCAPE and not paper_open:
+            if (event.key == pygame.K_BACKSPACE or event.key == pygame.K_ESCAPE) and not paper_open:
                 if not Player.cutscene:
                     exit = True
+            if (event.key == pygame.K_BACKSPACE or event.key == pygame.K_ESCAPE) and paper_open and open and not Player.cutscene:
+                paper_crumple_sound.play()
+                paper_open = False
+                if (multimeter_found and found == 1 or not multimeter_found and found == 0):
+                    found += 1
+                    if found == 2:
+                        Player.events += 1
+                        cutscene = True
+                        cutscene_start = pygame.time.get_ticks()
+
         if event.type == pygame.MOUSEBUTTONDOWN:
             click_x, click_y = event.pos
             click_x_unscaled = click_x/xScale
