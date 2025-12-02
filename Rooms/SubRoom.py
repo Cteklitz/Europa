@@ -144,8 +144,13 @@ fixed = False
 explodeAttempt = False
 leave = False
 
-def inBounds(x, y):
-    if Player.cutscene:
+credits = False # True when time to go to credits
+
+def inBounds(x, y):    
+    if credits:
+        print("Going to credits")
+        return 1
+    elif Player.cutscene:
         return False
     elif exitRect.collidepoint((x,y)):
         Sounds.whispers.stop()
@@ -207,7 +212,7 @@ def positionDeterminer(cameFrom):
 
 def Room(screen, screen_res, events):
     global firstTime, currIndex, nextBlinkDelay, currEye, firstTime2, currIndex2, currEye2, nextBlinkDelay2, smallEyesPositions, fixed, explodeAttempt, leave, cutscene1, cutscene2, \
-        animationIndex, lighterPlayed, explosionPlayed, brainwashPlayed, playing, animate, scroll, scrollPos, eternityPlayed
+        animationIndex, lighterPlayed, explosionPlayed, brainwashPlayed, playing, animate, scroll, scrollPos, eternityPlayed, credits
     xScale = screen.get_width()/virtual_screen.get_width() 
     yScale = screen.get_height()/virtual_screen.get_height()
 
@@ -366,6 +371,7 @@ def Room(screen, screen_res, events):
         animate = False
         Sounds.EvilChoice.stop()
         Sounds.setVolume(Sounds.facingEternity, 0.6)
+        credits = True
 
     whyshouldi.update()
 

@@ -94,6 +94,8 @@ while running:
                     pictureIndex += 1
                 if event.key == pygame.K_v:
                     Player.addItem(Items.valve)
+                if event.key == pygame.K_t:
+                    Room = Area.Credits
 
         #Movement
         keys = pygame.key.get_pressed()

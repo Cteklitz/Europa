@@ -4,7 +4,7 @@ import Objects
 from shapely.geometry import Point, Polygon
 import Sounds
 
-virtual_res = (288, 450)
+virtual_res = (288, 1000)
 # virtual_res = (288, 115)
 virtual_screen = pygame.Surface(virtual_res)
 dark_overlay = pygame.Surface(virtual_screen.get_size(), pygame.SRCALPHA)
@@ -13,11 +13,7 @@ player_pos = pygame.Vector2(192, 128)
 
 exit = False
 
-titleScreen = pygame.image.load("Assets/titleScreen1.png")
-titleScreen2 = pygame.image.load("Assets/titleScreen2.png")
-titleScreen3 = pygame.image.load("Assets/titleScreen3.png")
-titleScreen4 = pygame.image.load("Assets/titleScreen4.png")
-titleScreen5 = pygame.image.load("Assets/titleScreen5.png")
+background = pygame.image.load("Assets/creditsScreen.png")
 
 startMusic = False 
 ts2 = False
@@ -41,82 +37,47 @@ click = Objects.timer(0.1, True)
 count = 0
 clicked = False
 
-scroll = Objects.timer(0.0175, True)
-ypos = 0
+scroll = Objects.timer(0.1, True) # TODO: make the scroll less headache inducing
+ypos = 860
+
+done = False
 
 submerge = Sounds.loadAudio("Audio/submerge.wav")
 submerge.set_volume(0.1)
 submergeTimer = Objects.timer(11, False)
 
-fromCredits = False
-
 def inBounds(x, y):
-    global exit, tooDark, startMusic, ypos
-    if exit:        
+    global exit, tooDark
+    if exit:
         exit = False
-        startMusic = False
-        ypos = 0
-        submergeTimer.initial_time = -1
         return 0
     return False
 
 def positionDeterminer(cameFrom):
-    global fromCredits
-    if cameFrom == "Rooms.Credits":
-        fromCredits = True
+    print("credits")
+    pass
 
 def Room(screen, screen_res, events):
-    global exit, startMusic, ts2, ts3, repeat, ts4, ts5, repeat2, hover, count, clicked, ypos
+    global exit, startMusic, ts2, ts3, repeat, ts4, ts5, repeat2, hover, count, clicked, ypos, done
     xScale = screen.get_width()/288
     yScale = screen.get_height()/140
 
     for event in events:
         mouse_x, mouse_y = pygame.mouse.get_pos()
         mouse_pos = (mouse_x/xScale, mouse_y/yScale)
-        if event.type == pygame.MOUSEMOTION and not clicked:
-            if startRect.collidepoint(mouse_pos):
-                hover = True
-            else:
-                hover = False
-        elif event.type == pygame.MOUSEBUTTONDOWN and not clicked:
-            if event.button == 1:
-                if startRect.collidepoint(mouse_pos):
-                    pygame.mixer.music.stop()
-                    submerge.play()
-                    click.initial_time = pygame.time.get_ticks()
-                    submergeTimer.initial_time = pygame.time.get_ticks()
 
-    virtual_screen.blit(titleScreen, (0,0))
-
-    if ts2:
-        virtual_screen.blit(titleScreen2, (0,0))
-    if ts3:
-        virtual_screen.blit(titleScreen3, (0,0))
-    if ts4:
-        virtual_screen.blit(titleScreen4, (0,0))
-    if ts5:
-        virtual_screen.blit(titleScreen5, (0,0))
-
-    if hover:
-        virtual_screen.blit(selectedStart, startRect)
+    virtual_screen.blit(background, (0,0))
 
     virtual_view = virtual_screen.subsurface((0, ypos, 288, 140))
 
     scaled = pygame.transform.scale(virtual_view, screen_res)
     screen.blit(scaled, (0, 0))
 
-    if not startMusic:     
-        # Sounds.loadMusic("Audio/wading_into_the_unknown.wav")
-        if not fromCredits:
-            Sounds.loadMusic("Audio/Europa.wav")
-            pygame.mixer.music.set_volume(0.3)
-            pygame.mixer.music.play(-1) 
-        else:
-            count = 0
-            clicked = False
-            
+    if not startMusic:
+        print("starting credits scroll")
         startMusic = True
         gap.initial_time = pygame.time.get_ticks()
+        scroll.initial_time = pygame.time.get_ticks()
 
     # Jupiter blip
     if gap.Done():
@@ -153,28 +114,17 @@ def Room(screen, screen_res, events):
             gap2.initial_time = -1
             repeat2 = True
 
-    # Button flicker on click
-    if click.Done():
-        count += 1
-        hover = not hover
-        if count < 3:
-            click.initial_time = pygame.time.get_ticks()
-        if count == 3:
-            click.initial_time = -1
-            scroll.initial_time = pygame.time.get_ticks()
-
-    # Begin scroll down
+    # Begin scroll up
     if scroll.Done():
-        if ypos == virtual_screen.get_height() - 140:
+        if ypos == 0:
             scroll.initial_time = -1
+            done = True
         else:
-            ypos += 1
+            ypos -= 1
             scroll.initial_time = pygame.time.get_ticks()
 
     # Begin game
-    if submergeTimer.Done():
-        if fromCredits:
-            quit() # idk maybe we can come up with something cooler, maybe like a msg saying "whats done is done" or smth
+    if done:
         exit = True
 
     return player_pos, xScale, yScale
