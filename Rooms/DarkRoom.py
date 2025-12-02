@@ -43,13 +43,16 @@ animationTimer = Objects.timer(0.75, False)
 
 played = False
 cutscene = False
+credits = False
 
 def inBounds(x, y):
     shadowBound = Polygon([(59,0),(0,0),(0,219),(259,219)])
-    if exitRect.collidepoint((x,y)):
+    if credits:
+        return 2
+    elif exitRect.collidepoint((x,y)):
         tooDark.activated_time = -1
         return 0
-    if exitRect2.collidepoint((x,y)):
+    elif exitRect2.collidepoint((x,y)):
         tooDark.activated_time = -1
         return 1
     elif exitWalk.collidepoint(x,y):
@@ -62,7 +65,7 @@ def inBounds(x, y):
     return True
 
 def positionDeterminer(cameFrom):
-    global player_pos, played, cutscene
+    global player_pos, played, cutscene, credits
     if not played:
         Sounds.whatAwaits.play(-1)
         played = True
@@ -75,7 +78,7 @@ def positionDeterminer(cameFrom):
         player_pos = pygame.Vector2(exitRect2.x + exitRect2.width/2, exitRect2.y + 68)
 
 def Room(screen, screen_res, events):
-    global cutscene, animationIndex
+    global cutscene, animationIndex, credits
 
     xScale = screen.get_width()/virtual_screen.get_width() 
     yScale = screen.get_height()/virtual_screen.get_height()
@@ -104,6 +107,9 @@ def Room(screen, screen_res, events):
                 animationTimer.setInitial()
 
             virtual_screen2.blit(animation[animationIndex], (0,0))
+
+        if animationIndex == 14 and animationTimer.Done():
+            credits = True
 
     virtual_screen.blit(dark_overlay, (0, 0))
 

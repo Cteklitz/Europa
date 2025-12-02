@@ -315,6 +315,7 @@ def Room(screen, screen_res, events):
                 Sounds.whatAwaits.stop()
                 Sounds.ominousAmb.stop()
                 virtual_screen2.fill("black")
+                engineTimer.setInitial()
         animationIndex += 1
         animationTimer.reset()
         animationTimer.setInitial()
@@ -332,7 +333,12 @@ def Room(screen, screen_res, events):
     if repairFuelLineTimer.Done():
         playing = False
 
-    if engineTimer.Done() and not leave:
+    if engineTimer.Done() and explosionPlayed:
+        Sounds.loadMusic("Audio/Europa.wav")
+        pygame.mixer.music.set_volume(0.3)
+        pygame.mixer.music.play(-1) 
+        credits = True
+    elif engineTimer.Done() and not leave:
         engineTimer.reset()
         engineTimer.setInitial()
         leave = True

@@ -155,7 +155,7 @@ PipeDungeon = Area(
             YellowRoom: [MainRoom, DarkRoom],
             YellowHallway: [DarkRoom, SubRoom],
             SubRoom: [YellowHallway, Credits],
-            DarkRoom: [YellowRoom, YellowHallway],
+            DarkRoom: [YellowRoom, YellowHallway, Credits],
             Fishtank_puzzle: [PinkLowerWing, BookcaseView],
             Lockbox_puzzle: [SpotDiffs],
             Credits: [TitleScreen]
