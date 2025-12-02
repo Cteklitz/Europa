@@ -246,6 +246,7 @@ def Room(screen, screen_res, events):
                 elif consoleInteractRect.collidepoint(player_pos):
                     if fixed:
                         Player.cutscene = True
+                        Player.ending = "evil"
                         Sounds.whispers.stop()
                         Sounds.whatAwaits.stop()
                         Sounds.ominousAmb.stop()
