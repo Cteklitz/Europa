@@ -32,6 +32,8 @@ background = pygame.image.load("Assets/DarkRoom.png")
 shadow = pygame.image.load("Assets/Shadow.png")
 tooDarkScale = pygame.transform.scale(Assets.tooDark, (Assets.tooDark.get_width()/1.25,Assets.tooDark.get_height()/1.25))
 tooDark = Objects.briefText(virtual_screen, tooDarkScale, 15, 180, 3)
+noUseText = pygame.image.load("Assets/noUse.png")
+noUse = Objects.briefText(virtual_screen, noUseText, 0, 150, 3)
 
 animationIndex = 0
 
@@ -51,15 +53,22 @@ def inBounds(x, y):
         return 2
     elif exitRect.collidepoint((x,y)):
         tooDark.activated_time = -1
-        return 0
+        if not Objects.getValvePlaced():
+            return 0
     elif exitRect2.collidepoint((x,y)):
         tooDark.activated_time = -1
+        noUse.activated_time = -1
         return 1
     elif exitWalk.collidepoint(x,y):
-        return True
-    elif not bounds.contains(Point(x,y)):
+        if not Objects.getValvePlaced():
+            return True
+        else:
+            tooDark.activated_time = -1
+            noUse.activated_time = pygame.time.get_ticks()
+    if not bounds.contains(Point(x,y)):
         return False
     elif shadowBound.contains(Point(x,y)):
+        noUse.activated_time = -1
         tooDark.activated_time = pygame.time.get_ticks()
         return False
     return True
@@ -115,6 +124,7 @@ def Room(screen, screen_res, events):
     virtual_screen.blit(dark_overlay, (0, 0))
 
     tooDark.update()
+    noUse.update()
 
     if Player.events == 7:
         Assets.scaled_draw(virtual_res2, virtual_screen2, screen_res, screen)
