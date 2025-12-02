@@ -88,16 +88,15 @@ def Room(screen, screen_res, events):
         algae.fill((0, 0, 0, 0))
         
         # Use final algae position and size
-        algae_rect = pygame.Rect(172, 230, 2119, 1023)
-        base_algae = pygame.Surface((algae_rect.width, algae_rect.height), pygame.SRCALPHA)
+        base_algae = pygame.Surface((GLASS_RECT.width, GLASS_RECT.height), pygame.SRCALPHA)
         base_algae.fill((*ALGAE_COLOR, 252))
         
-        algae.blit(base_algae, (algae_rect.left, algae_rect.top))
+        algae.blit(base_algae, (GLASS_RECT.left, GLASS_RECT.top))
 
         DARK_ALGAE = (60, 100, 40)
         for _ in range(200):
-            x = algae_rect.left + random.randint(0, algae_rect.width - 4)
-            y = algae_rect.top + random.randint(0, algae_rect.height - 4)
+            x = GLASS_RECT.left + random.randint(0, GLASS_RECT.width - 4)
+            y = GLASS_RECT.top + random.randint(0, GLASS_RECT.height - 4)
         
             pygame.draw.rect(algae, (*DARK_ALGAE, 252), pygame.Rect(x, y, 4, 4))
 
