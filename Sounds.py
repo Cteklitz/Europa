@@ -156,7 +156,7 @@ DoorScaryNoise = loadAudio("Audio/DoorScaryNoise.wav")
 setVolume(DoorScaryNoise, 0.5)
 
 thud = loadAudio("Audio/Thud.wav")
-setVolume(thud, 0.5)
+setVolume(thud, 0.2)
 
 EvilChoice = loadAudio("Audio/EvilChoice.wav")
 setVolume(EvilChoice, 0.6)
