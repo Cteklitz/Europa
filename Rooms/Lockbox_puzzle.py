@@ -36,6 +36,7 @@ def inBounds(x, y):
     if exit:
         exit = False
         played = False
+        solved = False
         return 0
     return False
 

@@ -57,11 +57,8 @@ scaledDesk = pygame.transform.scale(Desk, (Desk.get_width(), Desk.get_height()/2
 scaledDesk2 = pygame.transform.scale(Desk2, (Desk2.get_width(), Desk2.get_height()/2))
 deskRange = pygame.Rect(100, 66, scaledDesk.get_width(), scaledDesk.get_height())
 Table = pygame.image.load("Assets/lowerWingTable.png")
-Table2 = pygame.image.load("Assets/lowerWingTable2.png")
 scaledTable = pygame.transform.scale(Table, (Table.get_width()*1.5, Table.get_height()/1.2))
-scaledTable2 = pygame.transform.scale(Table2, (Table2.get_width()*1.5, Table2.get_height()/1.2))
 tableRect = pygame.Rect(212,138,430,30)
-tableRect2 = pygame.Rect(292,110,350,45)
 tableRange = pygame.Rect(292,160,350,16)
 scaledTooDarkSee = pygame.transform.scale(Assets.tooDarkSee, (Assets.tooDarkSee.get_width()*1.5, Assets.tooDarkSee.get_height()/1.2))
 tooDarkSee = Objects.briefText(virtual_screen, scaledTooDarkSee, 170, 160, 3)
@@ -118,7 +115,7 @@ def inBounds(x, y):
         return False
     if deskRect.collidepoint((x,y)):
         return False
-    if tableRect.collidepoint((x,y)) or tableRect2.collidepoint((x,y)):
+    if tableRect.collidepoint((x,y)):
         return False
     return True
 
@@ -144,8 +141,6 @@ def Room(screen, screen_res, events):
     bookcaseRange = pygame.Rect(792,140,104,56)
 
     _, _, blueFound = Objects.getColorsFound()
-
-    spotdiffssolved = Objects.getSpotDiffsSolved()
 
     for event in events:
         if event.type == pygame.KEYDOWN:
@@ -234,10 +229,7 @@ def Room(screen, screen_res, events):
     virtual_screen.blit(scaledLockedDoor, (23, 65, scaledLockedDoor.get_width(),scaledLockedDoor.get_height()))
 
     if(player_pos.y >= 143):
-        if not spotdiffssolved:
-            virtual_screen.blit(scaledTable, (220,65))
-        else:
-            virtual_screen.blit(scaledTable2, (220,65))
+        virtual_screen.blit(scaledTable, (220,65))
 
     if(player_pos.y < 148):
         Player.animatePlayer(virtual_screen, player_pos, 160, 64)
@@ -253,10 +245,7 @@ def Room(screen, screen_res, events):
         Player.animatePlayer(virtual_screen, player_pos, 160, 64)
 
     if(player_pos.y < 143):
-        if not spotdiffssolved:
-            virtual_screen.blit(scaledTable, (220,65))
-        else:
-            virtual_screen.blit(scaledTable2, (220,65))
+        virtual_screen.blit(scaledTable, (220,65))
 
     virtual_screen.blit(dark_overlay, (0, 0))
 
