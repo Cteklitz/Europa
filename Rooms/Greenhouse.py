@@ -64,6 +64,8 @@ keycard = Objects.groundItem(281, 135, Items.greenKeycard)
 jumpscare = False
 jumpscareTime = Objects.timer(5, False)
 
+added = False
+
 def inBounds(x, y):
     global tooDarkRead, jumpscare
     hogweedRect = hogweed.get_rect()
@@ -103,7 +105,7 @@ def positionDeterminer(cameFrom):
         player_pos = pygame.Vector2(exitRect.centerx + 15, exitRect.centery + 10)
 
 def Room(screen, screen_res, events):
-    global trianglePuzzle1, trianglePuzzle2, whiteboard, beaker, table, tableboundRect, tooDarkRead, lit, flytrapDead, jumpscare
+    global tooDarkRead, lit, flytrapDead, jumpscare, added
 
     xScale = screen.get_width()/virtual_screen.get_width() 
     yScale = screen.get_height()/virtual_screen.get_height()
@@ -129,6 +131,9 @@ def Room(screen, screen_res, events):
                         Player.removeItem(Items.herbicide)
                         flytrapDead = True
                     else:
+                        if not added:
+                            Player.events += 1
+                            added = True
                         jumpscare = True
                         jumpscareTime.initial_time = pygame.time.get_ticks()
                         pygame.mixer.music.stop()

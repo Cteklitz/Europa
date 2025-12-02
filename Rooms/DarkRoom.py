@@ -116,7 +116,7 @@ def Room(screen, screen_res, events):
 
     tooDark.update()
 
-    if Player.events == 6:
+    if Player.events == 7:
         Assets.scaled_draw(virtual_res2, virtual_screen2, screen_res, screen)
     else:
         Assets.scaled_draw(virtual_res, virtual_screen, screen_res, screen)

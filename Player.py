@@ -105,9 +105,9 @@ def getStatus():
         return 2
     elif events <= 4:
         return 3
-    elif events == 5:
+    elif events <= 6:
         return 4
-    elif events == 6:
+    elif events == 7:
         return 5
 
 class timer:

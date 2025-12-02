@@ -224,13 +224,13 @@ def Room(screen, screen_res, events):
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_e:
                 if fuelLineInteractRect.collidepoint(player_pos) and Player.checkItem(Items.electricalTape) and not fixed:
-                    if Player.events != 6:
+                    if Player.events != 7:
                         fixed = True
                         Sounds.tape.play()
                     else:
                         whyshouldi.activated_time = pygame.time.get_ticks()
                 elif fuelLineInteractRect.collidepoint(player_pos) and Player.checkItem(Items.lighter) and not (cutscene1 or cutscene2) and not fixed:
-                    if Player.events != 6:
+                    if Player.events != 7:
                         explodeAttempt = True
                         Player.cutscene = True
                         animationTimer.setInitial()
