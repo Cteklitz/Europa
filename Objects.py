@@ -239,6 +239,9 @@ def getBluePower():
 def getGreenPower():
     return Area.getGreenPower()
 
+def getYellowDoorOpen():
+    return Area.getYellowDoorOpen()
+
 def getWaterLevelsSolved():
     return Area.getWaterLevelsSolved()
 

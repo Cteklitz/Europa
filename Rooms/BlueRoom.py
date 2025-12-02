@@ -41,7 +41,7 @@ def inBounds(x, y):
     blueDoorWalkRect = pygame.Rect(blueDoor.x+16, blueDoor.y, blueDoor.rect.width, blueDoor.rect.height)
     lockedDoorWalkRect = pygame.Rect(lockedDoor.x-16, lockedDoor.y, lockedDoor.rect.width, lockedDoor.rect.height)
     if blueDoor.rect.collidepoint((x,y)):
-        if (level == 2 and power) or Objects.getBluePower():
+        if ((level == 2 and power) or Objects.getBluePower()) and not Objects.getYellowDoorOpen():
             Sounds.powerAmb.stop()
             Sounds.ominousAmb.play(-1)
         return 0

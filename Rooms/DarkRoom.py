@@ -54,6 +54,8 @@ def inBounds(x, y):
     elif exitRect.collidepoint((x,y)):
         tooDark.activated_time = -1
         if not Objects.getValvePlaced():
+            Sounds.ominousAmb.stop()
+            Sounds.powerAmb.play(-1)
             return 0
     elif exitRect2.collidepoint((x,y)):
         tooDark.activated_time = -1

@@ -73,9 +73,14 @@ def inBounds(x, y):
     yellowLit = (level == 4 and power)
 
     if y > 384:
+        if (power and level == 4) and not Objects.getYellowDoorOpen():
+            Sounds.powerAmb.stop()
+            Sounds.ominousAmb.play(-1)
         return 0
     elif doorRect.collidepoint((x,y)):
         # if pinkLit and blueLit and greenLit and yellowLit:
+            Sounds.powerAmb.stop()
+            Sounds.ominousAmb.play(-1)
             return 1
     elif x < 16 or x > 336:
         return False

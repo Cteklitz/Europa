@@ -78,25 +78,25 @@ def inBounds(x, y):
         return 0
     elif pinkDoor.rect.collidepoint((x,y)):
         level, power = Objects.getPipeDungeonInfo()
-        if power and level == 1 or Objects.getPinkPower():
+        if (power and level == 1 or Objects.getPinkPower()) and not Objects.getYellowDoorOpen():
             Sounds.ominousAmb.stop()
             Sounds.powerAmb.play(-1)
         return 1
     elif blueDoor.rect.collidepoint((x,y)):
         level, power = Objects.getPipeDungeonInfo()
-        if power and level == 2 or Objects.getBluePower():
+        if (power and level == 2 or Objects.getBluePower()) and not Objects.getYellowDoorOpen():
             Sounds.ominousAmb.stop()
             Sounds.powerAmb.play(-1)
         return 2
     elif greenDoor.rect.collidepoint((x,y)):
         level, power = Objects.getPipeDungeonInfo()
-        if (power and level == 3) or Objects.getGreenPower():
+        if ((power and level == 3) or Objects.getGreenPower()) and not Objects.getYellowDoorOpen():
             Sounds.ominousAmb.stop()
             Sounds.powerAmb.play(-1)
         return 3
     elif yellowDoor.rect.collidepoint((x,y)):
         level, power = Objects.getPipeDungeonInfo()
-        if (power and level == 4) and Objects.getGreenPower() and Objects.getBluePower() and Objects.getPinkPower():
+        if (power and level == 4) and not Objects.getYellowDoorOpen():
             Sounds.ominousAmb.stop()
             Sounds.powerAmb.play(-1)
         return 4

@@ -62,6 +62,9 @@ def getGreenPower():
     # return GreenPower.greenPower
     return True
 
+def getYellowDoorOpen():
+    return getPinkPower() and getBluePower() and getGreenPower() and ControlRoom.power and ControlRoom.level == 4
+
 def getLetterCount():
     return LockedDoor.letterCount
 

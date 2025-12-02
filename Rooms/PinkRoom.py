@@ -69,7 +69,7 @@ def inBounds(x, y):
     northDoorWalkRect = pygame.Rect(northDoor.x, northDoor.y+16, northDoor.rect.width, northDoor.rect.height)
     southDoorWalkRect = pygame.Rect(southDoor.x, southDoor.y-16, southDoor.rect.width, southDoor.rect.height)
     if pinkDoor.rect.collidepoint((x,y)):
-        if level == 1 and power or Objects.getPinkPower():
+        if (level == 1 and power or Objects.getPinkPower()) and not Objects.getYellowDoorOpen():
             Sounds.powerAmb.stop()
             Sounds.ominousAmb.play(-1)
         return 0

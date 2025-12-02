@@ -7,6 +7,7 @@ from LightingUtils import apply_lighting, apply_falloff
 import Player
 import Sounds
 import Pause
+import Objects
 
 pipePuzzle = [
     [2,1,2,6,6],
@@ -266,10 +267,15 @@ falloff = [LightFalloff(virtual_screen.get_size(), darkness = 100)]
 def Room(screen, screen_res, events):
     global level, floor
 
+    pinkLit = (level == 1 and power) or Objects.getPinkPower()
+    blueLit = (level == 2 and power) or Objects.getBluePower()
+    greenLit = (level == 3 and power) or Objects.getGreenPower()
+    yellowLit = (level == 4 and power)
+
     # poll for events
     for event in events:
         if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_e:
+            if event.key == pygame.K_e and not (pinkLit and blueLit and greenLit and yellowLit):
                 valve.check_collision(player_pos, solved)
                 for key, switch in switches.items():
                     pressed = switch.check_collision(player_pos)
@@ -278,6 +284,15 @@ def Room(screen, screen_res, events):
                         for switch2 in switches.values():
                             if switch2 != switch:
                                 switch2.image = switch2.tileset[0]
+
+                pinkLit = (level == 1 and power) or Objects.getPinkPower()
+                blueLit = (level == 2 and power) or Objects.getBluePower()
+                greenLit = (level == 3 and power) or Objects.getGreenPower()
+                yellowLit = (level == 4 and power)
+
+                if pinkLit and blueLit and greenLit and yellowLit:
+                    Sounds.ominousAmb.stop()
+                    Sounds.powerAmb.play(-1)
 
     # fill the screen with a color to wipe away anything from last frame
     virtual_screen.fill("gray")

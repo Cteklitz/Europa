@@ -75,7 +75,7 @@ def inBounds(x, y):
     if greenDoor.rect.collidepoint((x,y)): # Go to main area
         Sounds.radioFar.stop()
         Sounds.radioClose.stop()
-        if (level == 3 and power) or Objects.getGreenPower():
+        if ((level == 3 and power) or Objects.getGreenPower()) and not Objects.getYellowDoorOpen():
             Sounds.powerAmb.stop()
             Sounds.ominousAmb.play(-1)
         return 0
