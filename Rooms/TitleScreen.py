@@ -116,7 +116,7 @@ def Room(screen, screen_res, events):
 
     if submergeTimer.Done() and Player.ending != None:
         font = pygame.font.SysFont("Impact", 30)
-        text = font.render("WHATS DONE IS DONE", False, "red")
+        text = font.render("WHAT'S DONE IS DONE", False, "red")
         textRect = text.get_rect()
         textRect.center = (144, 380)
         virtual_screen.blit(text, textRect)
