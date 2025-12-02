@@ -19,6 +19,12 @@ exit = False
 
 clearedFraction = 0.0
 
+
+algae_x_offset = 0
+algae_y_offset = 0
+algae_width_offset = 0
+algae_height_offset = 0
+
 algae = None
 
 # Pre-load squeegee image
@@ -33,7 +39,7 @@ except Exception as e:
     pygame.draw.rect(squeegee_img, (100, 100, 100), (0, 0, 144, 18))
 
 def Room(screen, screen_res, events):
-    global player_pos, exit, algae, clearedFraction
+    global player_pos, exit, algae, clearedFraction, algae_x_offset, algae_y_offset, algae_width_offset, algae_height_offset
     pygame.mouse.set_visible(False)
 
     DIG_RADIUS = 21
@@ -89,8 +95,20 @@ def Room(screen, screen_res, events):
         algae = pygame.Surface(WINDOW_RES, pygame.SRCALPHA)
         algae.fill((0, 0, 0, 0))
         
-        # Use final algae position and size
-        algae_rect = pygame.Rect(172, 233, 2119, 1018)
+        print(f"Current resolution: {WINDOW_RES[0]}x{WINDOW_RES[1]}")
+        
+        base_width = 2560
+        base_height = 1440
+        
+        scale_x = WINDOW_RES[0] / base_width
+        scale_y = WINDOW_RES[1] / base_height
+        
+        algae_x = int(172 * scale_x) + algae_x_offset
+        algae_y = int(233 * scale_y) + algae_y_offset
+        algae_width = int(2119 * scale_x) + algae_width_offset
+        algae_height = int(1019 * scale_y) + algae_height_offset
+        
+        algae_rect = pygame.Rect(algae_x, algae_y, algae_width, algae_height)
         base_algae = pygame.Surface((algae_rect.width, algae_rect.height), pygame.SRCALPHA)
         base_algae.fill((*ALGAE_COLOR, 252))
         
