@@ -103,6 +103,16 @@ def toggleRadio():
 def getValvePlaced():
     return YellowHallway.valvePlaced
 
+def getAlgaeCleaned():
+    per = Fishtank_puzzle.clearedFraction
+    if per > 0.80:
+        return True
+    else:
+        return False
+    
+def getSqueegeeCollected():
+    return SpotDiffs.squeegeeCollected
+
 class Area:
     def __init__(self, roomLayout):
         self.roomLayout = roomLayout

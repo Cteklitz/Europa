@@ -4,6 +4,7 @@ import random
 import math
 import Player
 import Items
+import Inventory
 
 pygame.init()
 
@@ -16,6 +17,13 @@ bg_img = pygame.transform.scale(bg_img, WINDOW_RES)
 player_pos = pygame.Vector2(192, 128)
 exit = False
 
+clearedFraction = 0.0
+
+
+algae_x_offset = 0
+algae_y_offset = 0
+algae_width_offset = 0
+algae_height_offset = 0
 
 algae = None
 
@@ -31,7 +39,7 @@ except Exception as e:
     pygame.draw.rect(squeegee_img, (100, 100, 100), (0, 0, 144, 18))
 
 def Room(screen, screen_res, events):
-    global player_pos, exit, algae
+    global player_pos, exit, algae, clearedFraction, algae_x_offset, algae_y_offset, algae_width_offset, algae_height_offset
     pygame.mouse.set_visible(False)
 
     DIG_RADIUS = 21
@@ -87,8 +95,21 @@ def Room(screen, screen_res, events):
         algae = pygame.Surface(WINDOW_RES, pygame.SRCALPHA)
         algae.fill((0, 0, 0, 0))
         
-        # Use final algae position and size
-        base_algae = pygame.Surface((GLASS_RECT.width, GLASS_RECT.height), pygame.SRCALPHA)
+        print(f"Current resolution: {WINDOW_RES[0]}x{WINDOW_RES[1]}")
+        
+        base_width = 2560
+        base_height = 1440
+        
+        scale_x = WINDOW_RES[0] / base_width
+        scale_y = WINDOW_RES[1] / base_height
+        
+        algae_x = int(172 * scale_x) + algae_x_offset
+        algae_y = int(233 * scale_y) + algae_y_offset
+        algae_width = int(2119 * scale_x) + algae_width_offset
+        algae_height = int(1019 * scale_y) + algae_height_offset
+        
+        algae_rect = pygame.Rect(algae_x, algae_y, algae_width, algae_height)
+        base_algae = pygame.Surface((algae_rect.width, algae_rect.height), pygame.SRCALPHA)
         base_algae.fill((*ALGAE_COLOR, 252))
         
         algae.blit(base_algae, (GLASS_RECT.left, GLASS_RECT.top))
@@ -113,12 +134,14 @@ def Room(screen, screen_res, events):
         return True
 
     def cleared_fraction_in_box():
+        global clearedFraction
         if algae is None:
             return 0.0
         sub = algae.subsurface(BOX_RECT).copy()
         sub_mask = pygame.mask.from_surface(sub)
         remaining = sub_mask.count()
         total = BOX_RECT.width * BOX_RECT.height
+        clearedFraction = 1.0 - (remaining / total)
         return 1.0 - (remaining / total)
 
     particles = []
@@ -232,18 +255,34 @@ def Room(screen, screen_res, events):
 
     while running:
         dt = clock.tick(60)
-        for e in pygame.event.get():
+        events = pygame.event.get()
+        
+        if Inventory.open:
+            pygame.mouse.set_visible(True)
+            if not Inventory.Inventory(screen, screen.get_size(), events):
+                running = False
+            pygame.display.flip()
+            continue
+        
+        pygame.mouse.set_visible(False)
+            
+        for e in events:
             if e.type == pygame.QUIT:
                 running = False
             elif e.type == pygame.KEYDOWN:
                 if e.key == pygame.K_ESCAPE or e.key == pygame.K_BACKSPACE:
                     running = False
                     exit = True
+                elif e.key == pygame.K_TAB:
+                    Inventory.open = True
                 elif e.key == pygame.K_b:
                     show_box_outline = not show_box_outline
             elif e.type == pygame.MOUSEBUTTONDOWN and e.button == 1:
                 dragging = True
                 prev_vmx, prev_vmy = None, None
+            elif e.type == pygame.MOUSEBUTTONDOWN and e.button == 3:
+                running = False
+                exit = True
             elif e.type == pygame.MOUSEBUTTONUP and e.button == 1:
                 dragging = False
                 prev_vmx, prev_vmy = None, None
@@ -367,5 +406,5 @@ def inBounds(x=None, y=None):
         global exit
         if 'exit' in globals() and exit:
             exit = False
-            return 0
+            return 1
         return False
