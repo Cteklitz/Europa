@@ -65,7 +65,7 @@ for magnet in magnets:
 draweropen = loadAudio("Audio/draweropen.wav")
 drawerclose = loadAudio("Audio/drawerclose.wav")
 
-letter = pygame.mixer.Sound("Audio/opentriangle.wav")
+letter = loadAudio("Audio/opentriangle.wav") # include .wav
 
 combo = loadAudio("Audio/combo.wav")
 
@@ -78,7 +78,7 @@ electricityNoise = loadAudio("Audio/ElectricityNoise.wav")
 
 pipe = loadAudio("Audio/pipe.wav")
 
-toolbox = pygame.mixer.Sound("Audio/toolboxOpenClose.wav")
+toolbox = loadAudio("Audio/toolboxOpenClose.wav") # include .wav
 
 lockerOpen = loadAudio("Audio/locker_open.wav")
 lockerClose = loadAudio("Audio/locker_close.wav")
@@ -113,7 +113,7 @@ radioFar = loadAudio("Audio/radio_far.wav")
 
 curtain = loadAudio("Audio/curtain.wav")
 setVolume(curtain, 0.71)
-openClose = pygame.mixer.Sound("Audio/toolboxOpenClose.wav")
+openClose = loadAudio("Audio/toolboxOpenClose.wav") # include .wav
 openClose.set_volume(0.71)
 sink = loadAudio("Audio/sink.wav")
 setVolume(sink, 0.55)
