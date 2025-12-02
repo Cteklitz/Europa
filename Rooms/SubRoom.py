@@ -220,6 +220,8 @@ def Room(screen, screen_res, events):
     update_fuel_leak_sound()
 
     currTime = pygame.time.get_ticks()
+    if Sounds.whispers.get_num_channels() == 0:
+        Sounds.whispers.play(-1)
     for event in events:
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_e:

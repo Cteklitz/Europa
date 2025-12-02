@@ -5,7 +5,7 @@ import Objects
 import Items
 import random
 import Sounds
-
+import Area
 virtual_res = (900, 650)
 #virtual_res = (1024, 720)
 virtual_screen = pygame.Surface(virtual_res)
@@ -78,6 +78,7 @@ def Inventory(screen, screen_res, events):
             if event.key == pygame.K_ESCAPE:
                 open = False
             if event.key == pygame.K_TAB or event.key == pygame.K_BACKSPACE:
+                Sounds.whispers.stop()
                 open = False
         elif event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == 1:
