@@ -135,8 +135,9 @@ def Room(screen, screen_res, events):
                         pygame.mixer.music.set_volume(1)
                         roar = pygame.mixer.Sound("Audio/roar.mp3")
                         roar.play()
-                elif(keycard.check_collision(player_pos)):
-                     Sounds.pickup.play()
+                elif(flytrapDead):
+                     if keycard.check_collision(player_pos):
+                        Sounds.pickup.play()
 
     virtual_screen.blit(background, (0,0))
     virtual_screen.blit(hogweed, (34, 26))
