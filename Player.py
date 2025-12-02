@@ -8,7 +8,8 @@ inventory = []
 MaxInventorySize = 20 # MUST ALWAYS BE DIVISIBLE BY 4!!!!
 equipped = None
 cutscene = False
-events = 0
+events = 6
+ending = None
 
 # adds an item to inventory
 def addItem(item):

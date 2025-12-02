@@ -237,6 +237,7 @@ def Room(screen, screen_res, events):
                         virtual_screen2.blit(influence, (0,0))
                         Sounds.brainwash.play()
                         if Player.events == 0:
+                            Player.ending = "hero"
                             cutscene1 = True
                         else:
                             cutscene2 = True

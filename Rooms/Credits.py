@@ -3,6 +3,7 @@ import Assets
 import Objects
 from shapely.geometry import Point, Polygon
 import Sounds
+import Player
 
 virtual_res = (288, 1000)
 # virtual_res = (288, 115)
@@ -13,7 +14,11 @@ player_pos = pygame.Vector2(192, 128)
 
 exit = False
 
-background = pygame.image.load("Assets/creditsScreen.png")
+heroBackground = pygame.image.load("Assets/creditsScreenHERO.png")
+darkBackground = pygame.image.load("Assets/creditsScreenDARK.png")
+evilBackground = pygame.image.load("Assets/creditsScreenEVIL.png")
+
+background = evilBackground
 
 startMusic = False 
 ts2 = False
@@ -54,8 +59,12 @@ def inBounds(x, y):
     return False
 
 def positionDeterminer(cameFrom):
+    global background
     print("credits")
-    pass
+    if Player.ending == "dark":
+        background = darkBackground
+    elif Player.ending == "hero":
+        background = heroBackground
 
 def Room(screen, screen_res, events):
     global exit, startMusic, ts2, ts3, repeat, ts4, ts5, repeat2, hover, count, clicked, ypos, done
