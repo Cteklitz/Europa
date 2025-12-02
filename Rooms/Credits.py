@@ -37,7 +37,7 @@ click = Objects.timer(0.1, True)
 count = 0
 clicked = False
 
-scroll = Objects.timer(0.1, True) # TODO: make the scroll less headache inducing
+scroll = Objects.timer(0.05, True) # TODO: make the scroll less headache inducing
 ypos = 860
 
 done = False

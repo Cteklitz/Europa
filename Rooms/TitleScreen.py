@@ -48,6 +48,9 @@ submerge = Sounds.loadAudio("Audio/submerge.wav")
 submerge.set_volume(0.1)
 submergeTimer = Objects.timer(11, False)
 
+textTimer = Objects.timer(10, False)
+textStarted = False
+
 fromCredits = False
 
 def inBounds(x, y):
@@ -66,7 +69,7 @@ def positionDeterminer(cameFrom):
         fromCredits = True
 
 def Room(screen, screen_res, events):
-    global exit, startMusic, ts2, ts3, repeat, ts4, ts5, repeat2, hover, count, clicked, ypos
+    global exit, startMusic, ts2, ts3, repeat, ts4, ts5, repeat2, hover, count, clicked, ypos, textStarted
     xScale = screen.get_width()/288
     yScale = screen.get_height()/140
 
@@ -99,6 +102,13 @@ def Room(screen, screen_res, events):
 
     if hover:
         virtual_screen.blit(selectedStart, startRect)
+
+    if submergeTimer.Done():
+        font = pygame.font.SysFont("Impact", 30)
+        text = font.render("WHATS DONE IS DONE", False, "red")
+        textRect = text.get_rect()
+        textRect.center = (144, 380)
+        virtual_screen.blit(text, textRect)
 
     virtual_view = virtual_screen.subsurface((0, ypos, 288, 140))
 
@@ -174,7 +184,12 @@ def Room(screen, screen_res, events):
     # Begin game
     if submergeTimer.Done():
         if fromCredits:
-            quit() # idk maybe we can come up with something cooler, maybe like a msg saying "whats done is done" or smth
-        exit = True
+            if not textStarted:
+                textTimer.setInitial()
+                textStarted = True
+            if textTimer.Done():
+                quit()
+        else:
+            exit = True
 
     return player_pos, xScale, yScale
