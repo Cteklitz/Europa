@@ -126,7 +126,7 @@ def Room(screen, screen_res, events):
                                         solved = False
                                 if solved:
                                     Sounds.letter.play()
-                elif letterRect.collidepoint(mouse_pos):
+                elif letterRect.collidepoint(mouse_pos) and not collected:
                     if (Player.addItem(Items.letterTile)):
                         Sounds.letter.play()
                         collected = True
