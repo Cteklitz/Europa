@@ -280,3 +280,6 @@ def getValvePlaced():
 
 def getAlgaeCleaned():
     return Area.getAlgaeCleaned()
+
+def getSqueegeeCollected():
+    return Area.getSqueegeeCollected()

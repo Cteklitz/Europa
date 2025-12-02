@@ -109,6 +109,9 @@ def getAlgaeCleaned():
         return True
     else:
         return False
+    
+def getSqueegeeCollected():
+    return SpotDiffs.squeegeeCollected
 
 class Area:
     def __init__(self, roomLayout):
