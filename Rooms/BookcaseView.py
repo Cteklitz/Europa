@@ -38,6 +38,8 @@ def inBounds(x, y):
 
 bookcaseView = pygame.image.load("Assets/BookcaseView.png")
 bookcaseView2 = pygame.image.load("Assets/BookcaseView2.png")
+bookcaseViewClean = pygame.image.load("Assets/BookcaseViewClean.png")
+bookcaseView2Clean = pygame.image.load("Assets/BookcaseView2Clean.png")
 Book1 = pygame.image.load("Assets/ResearchVol1.png")
 Content1 = pygame.image.load("Assets/ResearchVol1Content.png")
 Book2 = pygame.image.load("Assets/ResearchVol2.png")
@@ -66,6 +68,7 @@ cutscene = False
 orangeYellow = False
 safe = False
 fishtank = False
+viewedContent3 = False
 
 timer1 = Objects.timer(10, False)
 timer2 = Objects.timer(5, False)
@@ -80,7 +83,8 @@ def positionDeterminer(cameFrom):
     pass
 
 def Room(screen, screen_res, events):
-    global exit, screen2, bookcaseView, Book1, Content1, book1, content1, Book2, Content2, book2, content2, Book3, Content3, book3, content3, Book4, Content4, book4, content4, cutscene, centerPos, scaled_eye, orangeYellow, orangeYellowRect, safe, fishtank
+    global exit, screen2, bookcaseView, Book1, Content1, book1, content1, Book2, Content2, book2, content2, Book3, Content3, book3, content3, \
+        Book4, Content4, book4, content4, cutscene, centerPos, scaled_eye, orangeYellow, orangeYellowRect, safe, fishtank, viewedContent3
 
     level, power = Objects.getPipeDungeonInfo()
     _, lowerWingPower = Objects.getPinkWingInfo()
@@ -99,6 +103,8 @@ def Room(screen, screen_res, events):
     bigBookRect = Polygon([(257,3), (835,3), (835,855), (257,855)])
     orangeYellowRect = pygame.Rect(207,162,52,29)
     safeRect = pygame.Rect(136,222,89,36)
+
+    algaeCleaned = Objects.getAlgaeCleaned()
 
     for event in events:
         if event.type == pygame.KEYDOWN:
@@ -171,6 +177,7 @@ def Room(screen, screen_res, events):
                                 Sounds.page.play()
                                 content2 = True
                             if book3:
+                                viewedContent3 = True
                                 Sounds.powerAmb.stop()
                                 Sounds.heartbeat.play(-1)
                                 Sounds.page.play()
@@ -191,9 +198,15 @@ def Room(screen, screen_res, events):
     #     Assets.punch_light_hole(virtual_screen, dark_overlay, (virtual_screen.get_width()/2, virtual_screen.get_height()/2), 500, (100, 0, 100))
 
     if not cutscene:
-        virtual_screen.blit(bookcaseView, (0, 0))
+        if algaeCleaned:
+            virtual_screen.blit(bookcaseViewClean, (0, 0))
+        else:
+            virtual_screen.blit(bookcaseView, (0, 0))
     else:
-        virtual_screen.blit(bookcaseView2, (0, 0))
+        if algaeCleaned:
+            virtual_screen.blit(bookcaseView2Clean, (0, 0))
+        else:
+            virtual_screen.blit(bookcaseView2, (0, 0))
 
     if book1:
         virtual_screen2.blit(Book1, (0, 0))

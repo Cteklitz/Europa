@@ -16,6 +16,7 @@ bg_img = pygame.transform.scale(bg_img, WINDOW_RES)
 player_pos = pygame.Vector2(192, 128)
 exit = False
 
+clearedFraction = 0.0
 
 algae = None
 
@@ -31,7 +32,7 @@ except Exception as e:
     pygame.draw.rect(squeegee_img, (100, 100, 100), (0, 0, 144, 18))
 
 def Room(screen, screen_res, events):
-    global player_pos, exit, algae
+    global player_pos, exit, algae, clearedFraction
     pygame.mouse.set_visible(False)
 
     DIG_RADIUS = 21
@@ -114,12 +115,14 @@ def Room(screen, screen_res, events):
         return True
 
     def cleared_fraction_in_box():
+        global clearedFraction
         if algae is None:
             return 0.0
         sub = algae.subsurface(BOX_RECT).copy()
         sub_mask = pygame.mask.from_surface(sub)
         remaining = sub_mask.count()
         total = BOX_RECT.width * BOX_RECT.height
+        clearedFraction = 1.0 - (remaining / total)
         return 1.0 - (remaining / total)
 
     particles = []
