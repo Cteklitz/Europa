@@ -262,6 +262,9 @@ def Room(screen, screen_res, events):
             elif e.type == pygame.MOUSEBUTTONDOWN and e.button == 1:
                 dragging = True
                 prev_vmx, prev_vmy = None, None
+            elif e.type == pygame.MOUSEBUTTONDOWN and e.button == 3:
+                running = False
+                exit = True
             elif e.type == pygame.MOUSEBUTTONUP and e.button == 1:
                 dragging = False
                 prev_vmx, prev_vmy = None, None
@@ -385,5 +388,5 @@ def inBounds(x=None, y=None):
         global exit
         if 'exit' in globals() and exit:
             exit = False
-            return 0
+            return 1
         return False
