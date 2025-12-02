@@ -27,12 +27,14 @@ blueLight1 = LightSource(401 + 16, 192 + 16, radius=50, strength=100, color=(0,1
 blueLight2 = LightSource(401 + 16, 256 + 16, radius=50, strength=100, color=(0,162,232))
 greenLight1 = LightSource(192 + 16, 398 + 16, radius=50, strength=100, color=(181, 230, 29))
 greenLight2 = LightSource(256 + 16, 398 + 16, radius=50, strength=100, color=(181, 230, 29))
+yellowLight1 = LightSource(192 + 16, 44 + 16, radius=50, strength=100, color=(120, 120, 0))
+yellowLight2 = LightSource(256 + 16, 44 + 16, radius=50, strength=100, color=(120, 120, 0))
 
 # this is to allow for a dynamic amount of lights to be on without affecting the room brightness
 # falloffs[n] is the falloff for when there are n lights in the room, it should be applied to each of the n lights 
 # also this solution sucks! makes the game take super long to launch since calcing the darkness is slow
 # will try and think of a way to fix it ig
-max_lights = 9
+max_lights = 10
 darkness = 180
 falloffs = []
 for i in range(1, max_lights):
@@ -207,6 +209,9 @@ def Room(screen, screen_res, events):
     if greenPower or (pipeDungeonInfo[0] == 3 and pipeDungeonInfo[1] == True): # checks if the green door should be lit
         lightSources.append(greenLight1)
         lightSources.append(greenLight2)
+    if (pipeDungeonInfo[0] == 4 and pipeDungeonInfo[1] == True): # checks if the yellow door should be lit
+        lightSources.append(yellowLight1)
+        lightSources.append(yellowLight2)
     
     apply_lighting(virtual_screen, lightSources, darkness=10, ambient_color=(50, 50, 50), ambient_strength=10)
     for i in range(len(lightSources)): # apply falloff for each light in lightSources
