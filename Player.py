@@ -2,6 +2,7 @@ import pygame
 import Items
 import Assets
 import Objects
+from datetime import datetime
 
 health = 100
 inventory = []
@@ -10,6 +11,17 @@ equipped = None
 cutscene = False
 events = 0
 ending = None
+
+speedrun = False
+startTime = datetime.now()
+
+def setStartTime():
+    global startTime
+    startTime = datetime.now()
+
+def getGameTime():
+    duration = datetime.now() - startTime
+    return str(duration)
 
 # adds an item to inventory
 def addItem(item):

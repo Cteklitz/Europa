@@ -89,6 +89,9 @@ def Room(screen, screen_res, events):
                     submerge.play()
                     click.initial_time = pygame.time.get_ticks()
                     submergeTimer.initial_time = pygame.time.get_ticks()
+        elif event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_s:
+                Player.speedrun = not Player.speedrun           
 
     virtual_screen.blit(titleScreen, (0,0))
 
@@ -103,6 +106,13 @@ def Room(screen, screen_res, events):
 
     if hover:
         virtual_screen.blit(selectedStart, startRect)
+
+    if Player.speedrun:
+        font = pygame.font.SysFont("Impact", 18)
+        text = font.render("Speedrun Mode Enabled", False, "white")
+        textRect = text.get_rect()
+        textRect.center = (144, 7)
+        virtual_screen.blit(text, textRect)
 
     if submergeTimer.Done() and Player.ending != None:
         font = pygame.font.SysFont("Impact", 30)
@@ -191,6 +201,8 @@ def Room(screen, screen_res, events):
             if textTimer.Done():
                 quit()
         else:
+            if Player.speedrun:
+                Player.setStartTime()
             exit = True
 
     return player_pos, xScale, yScale

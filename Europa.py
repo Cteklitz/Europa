@@ -96,6 +96,8 @@ while running:
                     Player.addItem(Items.valve)
                 if event.key == pygame.K_t:
                     Room = Area.Credits
+                if event.key == pygame.K_l:
+                    print(Player.getGameTime())
 
         #Movement
         keys = pygame.key.get_pressed()
