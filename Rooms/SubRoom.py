@@ -240,6 +240,7 @@ def Room(screen, screen_res, events):
                         Sounds.brainwash.play()
                         if Player.events == 0:
                             Player.ending = "hero"
+                            Sounds.whispers.stop()
                             Player.stopTime()
                             cutscene1 = True
                         else:
