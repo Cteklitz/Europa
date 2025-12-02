@@ -186,6 +186,10 @@ setVolume(whatAwaits, 0.6)
 electrician = loadAudio("Audio/Electrician.wav")
 setVolume(electrician, 0.6)
 
-valveSong = loadAudio("Audio/Glass.wav")
+ogValveSong = loadAudio("Audio/Glass.wav")
+setVolume(ogValveSong, 0.4)
+
+valveSong = loadAudio("Audio/Bronze.wav")
 setVolume(valveSong, 0.4)
+
 
