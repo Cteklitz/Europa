@@ -103,6 +103,13 @@ def inBounds(x, y):
     return False
 
 def positionDeterminer(cameFrom):
+    global luckyNumber, luckyNumber2, luckyRect, benzene
+    if Player.speedrun: # set spawns if speedrun mode on, remove rng from speedrun
+        luckyNumber = 1
+        luckyNumber2 = 2
+        luckyRect = pygame.Rect(drawers[luckyNumber-1].rect.x+14, drawers[luckyNumber-1].rect.y, 11,5)
+        benzene = Objects.groundItem(drawers[luckyNumber2 - 1].x + 12, drawers[luckyNumber2 - 1].y, Items.benzene)
+
     if cameFrom == "Rooms.PinkUpperWing":
         if not correctIngredients:
             if bunsen and on:

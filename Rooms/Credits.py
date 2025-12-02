@@ -51,6 +51,8 @@ submerge = Sounds.loadAudio("Audio/submerge.wav")
 submerge.set_volume(0.1)
 submergeTimer = Objects.timer(11, False)
 
+time = ""
+
 def inBounds(x, y):
     global exit, tooDark
     if exit:
@@ -59,15 +61,14 @@ def inBounds(x, y):
     return False
 
 def positionDeterminer(cameFrom):
-    global background
-    print("credits")
+    global background, time
     if Player.ending == "dark":
         background = darkBackground
     elif Player.ending == "hero":
         background = heroBackground
 
 def Room(screen, screen_res, events):
-    global exit, startMusic, ts2, ts3, repeat, ts4, ts5, repeat2, hover, count, clicked, ypos, done
+    global exit, startMusic, ts2, ts3, repeat, ts4, ts5, repeat2, hover, count, clicked, ypos, done, time
     xScale = screen.get_width()/288
     yScale = screen.get_height()/140
 
@@ -76,6 +77,15 @@ def Room(screen, screen_res, events):
         mouse_pos = (mouse_x/xScale, mouse_y/yScale)
 
     virtual_screen.blit(background, (0,0))
+
+    if Player.speedrun:
+        if time == "":
+            time = Player.getGameTime()
+        font = pygame.font.SysFont("Calibri", 10)
+        text = font.render(f"Speedrun Time: {time}", False, "white")
+        textRect = text.get_rect()
+        textRect.topleft = (3, ypos + 3)
+        virtual_screen.blit(text, textRect)
 
     virtual_view = virtual_screen.subsurface((0, ypos, 288, 140))
 
