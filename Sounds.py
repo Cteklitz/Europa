@@ -4,16 +4,16 @@ globalVolume = 1.0
 
 def loadAudio(filename):
     try:
-        # Try to load .ogg
-        base_name = filename.replace(".wav", "").replace(".mp3", "")
-        ogg_filename = f"Compressed_{base_name}.ogg"
-        sound = pygame.mixer.Sound(ogg_filename)
+        # try to load .wav
+        sound = pygame.mixer.Sound(filename)
         sound.set_volume(globalVolume ** 2)
         return sound
     except:
-        # If .ogg fails, try the original file in "Raw Audio/" directory
-        try:
-            sound = pygame.mixer.Sound(filename)
+        try:            
+            # Try to load .ogg if .wav fails
+            base_name = filename.replace(".wav", "").replace(".mp3", "")
+            ogg_filename = f"Compressed_{base_name}.ogg"
+            sound = pygame.mixer.Sound(ogg_filename)
             sound.set_volume(globalVolume ** 2)
             return sound
         except:
@@ -21,12 +21,12 @@ def loadAudio(filename):
 
 def loadMusic(filename):
     try:
-        base_name = filename.replace(".wav", "").replace(".mp3", "")
-        ogg_filename = f"Compressed_{base_name}.ogg"
-        pygame.mixer.music.load(ogg_filename)
+        pygame.mixer.music.load(filename)
     except:
         try:
-            pygame.mixer.music.load(filename)
+            base_name = filename.replace(".wav", "").replace(".mp3", "")
+            ogg_filename = f"Compressed_{base_name}.ogg"
+            pygame.mixer.music.load(ogg_filename)       
         except:
             raise
 
