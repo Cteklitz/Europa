@@ -66,8 +66,13 @@ while running:
         player_pos, xSpeedScale, ySpeedScale = area.getPos(screen, screenRes, events, Room)
 
         for event in events:
+            if event.type == pygame.MOUSEBUTTONDOWN: # send backspace when pressing right click to let right click back out of first person screens
+                if event.button == 3:
+                    backspace_event = pygame.event.Event(pygame.KEYDOWN, key=pygame.K_BACKSPACE, unicode='\\b', mod=pygame.KMOD_NONE)
+                    pygame.event.post(backspace_event)
+            
             if event.type == pygame.QUIT:
-                    running = False
+                    running = False            
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE and not Player.cutscene:
                     if Room == TitleScreen:
