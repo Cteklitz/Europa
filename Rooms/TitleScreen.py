@@ -3,6 +3,7 @@ import Assets
 import Objects
 from shapely.geometry import Point, Polygon
 import Sounds
+import Player
 
 virtual_res = (288, 450)
 # virtual_res = (288, 115)
@@ -103,7 +104,7 @@ def Room(screen, screen_res, events):
     if hover:
         virtual_screen.blit(selectedStart, startRect)
 
-    if submergeTimer.Done():
+    if submergeTimer.Done() and Player.ending != None:
         font = pygame.font.SysFont("Impact", 30)
         text = font.render("WHATS DONE IS DONE", False, "red")
         textRect = text.get_rect()

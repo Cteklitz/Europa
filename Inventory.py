@@ -14,6 +14,12 @@ inventory = pygame.image.load("Assets/InventoryMenu.png")
 emptySlot = pygame.image.load("Assets/emptyslot.png")
 fullSlot = pygame.image.load("Assets/fullslot.png")
 
+status1 = pygame.image.load("Assets/status1.png")
+status2 = pygame.image.load("Assets/status2.png")
+status3 = pygame.image.load("Assets/status3.png")
+status4 = pygame.image.load("Assets/status4.png")
+status5 = pygame.image.load("Assets/status5.png")
+
 eyeOpen = pygame.transform.scale(pygame.image.load("Assets/EyeWall.png"), (32, 22))
 eyeClosed = pygame.transform.scale(pygame.image.load("Assets/eyeClosedWall.png"), (32, 22))
 eyes = [eyeOpen, eyeClosed]
@@ -217,6 +223,19 @@ def Inventory(screen, screen_res, events):
             virtual_screen.blit(emptySlot, (slotsBase[0] + (i * (slotsbuffer + emptySlot.get_width())), slotsBase[1]))
         else:
             virtual_screen.blit(fullSlot, (slotsBase[0] + (i * (slotsbuffer + emptySlot.get_width())), slotsBase[1]))
+
+    status = Player.getStatus()
+
+    if status == 1:
+        virtual_screen.blit(status1, (42,314))
+    if status == 2:
+        virtual_screen.blit(status2, (42,314))
+    if status == 3:
+        virtual_screen.blit(status3, (42,314))
+    if status == 4:
+        virtual_screen.blit(status4, (42,314))
+    if status == 5:
+        virtual_screen.blit(status5, (42,314))
 
     scaled = pygame.transform.scale(virtual_screen, screen_res)
     screen.blit(scaled, (0, 0))
