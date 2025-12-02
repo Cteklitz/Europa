@@ -277,3 +277,6 @@ def toggleRadio():
 
 def getValvePlaced():
     return Area.getValvePlaced()
+
+def getAlgaeCleaned():
+    return Area.getAlgaeCleaned()

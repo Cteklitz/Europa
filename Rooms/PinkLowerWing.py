@@ -44,6 +44,8 @@ table = False
 
 Bookcase = pygame.image.load("Assets/Bookcase.png")
 Bookcase2 = pygame.image.load("Assets/Bookcase2.png")
+BookcaseClean = pygame.image.load("Assets/BookcaseClean.png")
+Bookcase2Clean = pygame.image.load("Assets/Bookcase2Clean.png")
 Lit = pygame.image.load("Assets/WindowLit.png")
 scaledLit = pygame.transform.scale(Lit, (396, 68))
 unlit = pygame.image.load("Assets/WindowUnlit.png")
@@ -230,18 +232,30 @@ def Room(screen, screen_res, events):
 
     if(player_pos.y >= 143):
         virtual_screen.blit(scaledTable, (220,65))
-
+    algaeCleaned = Objects.getAlgaeCleaned()
     if(player_pos.y < 148):
         Player.animatePlayer(virtual_screen, player_pos, 160, 64)
         if not Objects.getCutscene():
-            virtual_screen.blit(Bookcase, (800,100,96,96))
+            if algaeCleaned:
+                virtual_screen.blit(BookcaseClean, (800,100,96,96))
+            else:
+                virtual_screen.blit(Bookcase, (800,100,96,96))
         else:
-            virtual_screen.blit(Bookcase2, (800,100,96,96))
+            if algaeCleaned:
+                virtual_screen.blit(Bookcase2Clean, (800,100,96,96))
+            else:
+                virtual_screen.blit(Bookcase2, (800,100,96,96))
     else:
         if not Objects.getCutscene():
-            virtual_screen.blit(Bookcase, (800,100,96,96))
+            if algaeCleaned:
+                virtual_screen.blit(BookcaseClean, (800,100,96,96))
+            else:
+                virtual_screen.blit(Bookcase, (800,100,96,96))
         else:
-            virtual_screen.blit(Bookcase2, (800,100,96,96))
+            if algaeCleaned:
+                virtual_screen.blit(Bookcase2Clean, (800,100,96,96))
+            else:
+                virtual_screen.blit(Bookcase2, (800,100,96,96))
         Player.animatePlayer(virtual_screen, player_pos, 160, 64)
 
     if(player_pos.y < 143):
