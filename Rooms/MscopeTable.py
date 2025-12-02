@@ -184,20 +184,9 @@ def Room(screen, screen_res, events):
                         Sounds.bunsen.set_volume(.35)
                         Sounds.bunsen.play(loops = -1)
                         bunsen = True
-                if bunsen and not correctIngredients:
-                    if switchRect.collidepoint(mouse_pos):
-                        Sounds.switchSound.play()
-                        if not on:
-                            Sounds.bunsen.stop()
-                            Sounds.bunsen.set_volume(0.35)
-                            Sounds.bunsen.play(loops = -1)
-                        else:
-                            Sounds.bunsen.stop()
-                            Sounds.bunsen.set_volume(.2)
-                            Sounds.bunsen.play()
-                        on = not on
+                if bunsen and not correctIngredients: 
                         # adds ingredient to beaker
-                    elif bunsenRect.collidepoint(mouse_pos) and bunsen:
+                    if bunsenRect.collidepoint(mouse_pos) and bunsen:
                         if Player.checkItem(Items.bleach):
                             herbicideIngredients["bleach"] = amountFilled + 1
                             heatIndex = 2
@@ -205,6 +194,7 @@ def Room(screen, screen_res, events):
                             beakerLiquidTint = (40, 40, 40, 100)
                             beakerLiquid.fill(beakerLiquidTint, special_flags=pygame.BLEND_ADD)
                             Sounds.pour.play()
+                            amountFilled += 1
                             Player.equipped = None
                         elif Player.checkItem(Items.hogweedLeaf):
                             herbicideIngredients["leaf"] = amountFilled + 1
@@ -213,6 +203,7 @@ def Room(screen, screen_res, events):
                             beakerLiquidTint = (150, 0, 150, 120)
                             beakerLiquid.fill(beakerLiquidTint, special_flags=pygame.BLEND_SUB)
                             Sounds.plop.play()
+                            amountFilled += 1
                             Player.equipped = None
                         elif Player.checkItem(Items.brokenThermometer):
                             herbicideIngredients["mercury"] = amountFilled + 1
@@ -221,6 +212,7 @@ def Room(screen, screen_res, events):
                             beakerLiquidTint = (0, 150, 150, 120)
                             beakerLiquid.fill(beakerLiquidTint, special_flags=pygame.BLEND_SUB)
                             Sounds.pour.play()
+                            amountFilled += 1
                             Player.equipped = None
                         elif Player.checkItem(Items.benzene):
                             herbicideIngredients["benzene"] = amountFilled + 1
@@ -229,16 +221,26 @@ def Room(screen, screen_res, events):
                             beakerLiquidTint = (40, 40, 40, 100)
                             beakerLiquid.fill(beakerLiquidTint, special_flags=pygame.BLEND_ADD)
                             Sounds.pour.play()
+                            amountFilled += 1
                             Player.equipped = None
                         elif Player.checkItem(Items.poppy):
                             herbicideIngredients = {"leaf": 0, "bleach": 0, "benzene": 0, "mercury": 0}
                             beakerLiquidTint = (0, 150, 150, 120)
                             beakerLiquid.fill(beakerLiquidTint, special_flags=pygame.BLEND_SUB)
                             Sounds.plop.play()
+                            amountFilled += 1
                             Player.equipped = None
                         else:
-                            break
-                        amountFilled += 1
+                            Sounds.switchSound.play()
+                            if not on:
+                                Sounds.bunsen.stop()
+                                Sounds.bunsen.set_volume(0.35)
+                                Sounds.bunsen.play(loops = -1)
+                            else:
+                                Sounds.bunsen.stop()
+                                Sounds.bunsen.set_volume(.2)
+                                Sounds.bunsen.play()
+                            on = not on
                         if herbicideIngredients == {"bleach": 3, "leaf": 1, "benzene": 2, "mercury":4} and   \
                         heat == [False, False, True, True]:
                             correctIngredients = True
