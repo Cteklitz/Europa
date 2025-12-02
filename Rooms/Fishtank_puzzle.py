@@ -4,6 +4,7 @@ import random
 import math
 import Player
 import Items
+import Inventory
 
 pygame.init()
 
@@ -88,7 +89,7 @@ def Room(screen, screen_res, events):
         algae.fill((0, 0, 0, 0))
         
         # Use final algae position and size
-        algae_rect = pygame.Rect(172, 230, 2119, 1023)
+        algae_rect = pygame.Rect(172, 233, 2119, 1018)
         base_algae = pygame.Surface((algae_rect.width, algae_rect.height), pygame.SRCALPHA)
         base_algae.fill((*ALGAE_COLOR, 252))
         
@@ -233,13 +234,26 @@ def Room(screen, screen_res, events):
 
     while running:
         dt = clock.tick(60)
-        for e in pygame.event.get():
+        events = pygame.event.get()
+        
+        if Inventory.open:
+            pygame.mouse.set_visible(True)
+            if not Inventory.Inventory(screen, screen.get_size(), events):
+                running = False
+            pygame.display.flip()
+            continue
+        
+        pygame.mouse.set_visible(False)
+            
+        for e in events:
             if e.type == pygame.QUIT:
                 running = False
             elif e.type == pygame.KEYDOWN:
                 if e.key == pygame.K_ESCAPE or e.key == pygame.K_BACKSPACE:
                     running = False
                     exit = True
+                elif e.key == pygame.K_TAB:
+                    Inventory.open = True
                 elif e.key == pygame.K_b:
                     show_box_outline = not show_box_outline
             elif e.type == pygame.MOUSEBUTTONDOWN and e.button == 1:
