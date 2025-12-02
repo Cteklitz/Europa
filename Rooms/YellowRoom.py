@@ -64,10 +64,19 @@ falloff = [LightFalloff((virtual_res[0], virtual_res[1]), darkness = 25)]
 def inBounds(x, y):
     doorRect = openDoor.get_rect()
     doorRect.topleft = (112,128)
+
+    level, power = Objects.getPipeDungeonInfo()
+
+    pinkLit = (level == 1 and power) or Objects.getPinkPower()
+    blueLit = (level == 2 and power) or Objects.getBluePower()
+    greenLit = (level == 3 and power) or Objects.getGreenPower()
+    yellowLit = (level == 4 and power)
+
     if y > 384:
         return 0
     elif doorRect.collidepoint((x,y)):
-        return 1
+        # if pinkLit and blueLit and greenLit and yellowLit:
+            return 1
     elif x < 16 or x > 336:
         return False
     elif x < 64:
