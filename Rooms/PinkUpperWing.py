@@ -79,6 +79,12 @@ tooDarkSee = Objects.briefText(virtual_screen, tooDarkSeeScale, 15, 180, 3)
 guy = pygame.image.load("Assets/guy.png")
 flame = pygame.image.load("Assets/BunsenFireZoomedOut.png")
 
+lockedDoorRect = pygame.Rect(30,165,36,44)
+sarasNotHomeText = pygame.image.load("Assets/sara's not home.png")
+sarasNotHome = Objects.briefText(virtual_screen, sarasNotHomeText, 0, 135, 3)
+nobodysHomeText = pygame.image.load("Assets/nobody's home.png")
+nobodysHome = Objects.briefText(virtual_screen, nobodysHomeText, 0, 135, 3)
+
 def inBounds(x, y):
     global trianglePuzzle1, trianglePuzzle2, beaker, tableRect, table, tooDarkRead
     if exitRect.collidepoint((x,y)):
@@ -90,17 +96,27 @@ def inBounds(x, y):
             Sounds.powerAmb.play(-1)
         tooDarkRead.activated_time = -1
         tooDarkSee.activated_time = -1
+        sarasNotHome.activated_time = -1
+        nobodysHome.activated_time = -1
         return 0
     elif trianglePuzzle2:
+        sarasNotHome.activated_time = -1
+        nobodysHome.activated_time = -1
         trianglePuzzle2 = False
         return 1
     elif trianglePuzzle1:
+        sarasNotHome.activated_time = -1
+        nobodysHome.activated_time = -1
         trianglePuzzle1 = False
         return 2
     elif beaker:
+        sarasNotHome.activated_time = -1
+        nobodysHome.activated_time = -1
         beaker = False
         return 3
     elif table:
+        sarasNotHome.activated_time = -1
+        nobodysHome.activated_time = -1
         table = False
         return 4
     elif exitWalk.collidepoint(x,y):
@@ -157,6 +173,12 @@ def Room(screen, screen_res, events):
                     if tableboundRect.collidepoint(player_pos):
                         Sounds.bunsen.stop()
                         table = True
+                    if lockedDoorRect.collidepoint(player_pos):
+                        beaker = False
+                        if Objects.getViewedContent3():
+                            sarasNotHome.activated_time = pygame.time.get_ticks()
+                        else:
+                            nobodysHome.activated_time = pygame.time.get_ticks()
             if event.key == pygame.K_BACKSPACE:
                 if whiteboard:
                     whiteboard = False
@@ -251,6 +273,9 @@ def Room(screen, screen_res, events):
     if not lit and not Objects.getPinkPower():
         tooDarkRead.update()
         tooDarkSee.update()
+
+    sarasNotHome.update()
+    nobodysHome.update()
 
     if not whiteboard:
         Assets.scaled_draw(virtual_res, virtual_screen, screen_res, screen)
