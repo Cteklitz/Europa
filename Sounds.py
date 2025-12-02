@@ -4,16 +4,16 @@ globalVolume = 1.0
 
 def loadAudio(filename):
     try:
-        # Try to load .ogg
-        base_name = filename.replace(".wav", "").replace(".mp3", "")
-        ogg_filename = f"Compressed_{base_name}.ogg"
-        sound = pygame.mixer.Sound(ogg_filename)
+        # try to load .wav
+        sound = pygame.mixer.Sound(filename)
         sound.set_volume(globalVolume ** 2)
         return sound
     except:
-        # If .ogg fails, try the original file in "Raw Audio/" directory
-        try:
-            sound = pygame.mixer.Sound(filename)
+        try:            
+            # Try to load .ogg if .wav fails
+            base_name = filename.replace(".wav", "").replace(".mp3", "")
+            ogg_filename = f"Compressed_{base_name}.ogg"
+            sound = pygame.mixer.Sound(ogg_filename)
             sound.set_volume(globalVolume ** 2)
             return sound
         except:
@@ -21,12 +21,12 @@ def loadAudio(filename):
 
 def loadMusic(filename):
     try:
-        base_name = filename.replace(".wav", "").replace(".mp3", "")
-        ogg_filename = f"Compressed_{base_name}.ogg"
-        pygame.mixer.music.load(ogg_filename)
+        pygame.mixer.music.load(filename)
     except:
         try:
-            pygame.mixer.music.load(filename)
+            base_name = filename.replace(".wav", "").replace(".mp3", "")
+            ogg_filename = f"Compressed_{base_name}.ogg"
+            pygame.mixer.music.load(ogg_filename)       
         except:
             raise
 
@@ -65,7 +65,7 @@ for magnet in magnets:
 draweropen = loadAudio("Audio/draweropen.wav")
 drawerclose = loadAudio("Audio/drawerclose.wav")
 
-letter = pygame.mixer.Sound("Audio/opentriangle.wav")
+letter = loadAudio("Audio/opentriangle.wav") # include .wav
 
 combo = loadAudio("Audio/combo.wav")
 
@@ -78,7 +78,7 @@ electricityNoise = loadAudio("Audio/ElectricityNoise.wav")
 
 pipe = loadAudio("Audio/pipe.wav")
 
-toolbox = pygame.mixer.Sound("Audio/toolboxOpenClose.wav")
+toolbox = loadAudio("Audio/toolboxOpenClose.wav") # include .wav
 
 lockerOpen = loadAudio("Audio/locker_open.wav")
 lockerClose = loadAudio("Audio/locker_close.wav")
@@ -113,7 +113,7 @@ radioFar = loadAudio("Audio/radio_far.wav")
 
 curtain = loadAudio("Audio/curtain.wav")
 setVolume(curtain, 0.71)
-openClose = pygame.mixer.Sound("Audio/toolboxOpenClose.wav")
+openClose = loadAudio("Audio/toolboxOpenClose.wav") # include .wav
 openClose.set_volume(0.71)
 sink = loadAudio("Audio/sink.wav")
 setVolume(sink, 0.55)
