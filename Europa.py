@@ -103,6 +103,8 @@ while running:
                     Room = Area.Credits
                 if event.key == pygame.K_l:
                     print(Player.getGameTime())
+                if event.key == pygame.K_o:
+                    Player.events += 1
 
         #Movement
         keys = pygame.key.get_pressed()

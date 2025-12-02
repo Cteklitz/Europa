@@ -78,7 +78,7 @@ def positionDeterminer(cameFrom):
     if not played:
         Sounds.whatAwaits.play(-1)
         played = True
-    if Player.events == 6:
+    if Player.events == 7:
         cutscene = True
         animationTimer.setInitial()
     if cameFrom == "Rooms.YellowRoom":

@@ -46,6 +46,7 @@ powerAmb = loadAudio("Audio/powerambience-1.wav")
 setVolume(powerAmb, 0.89)
 
 brainwash = loadAudio("Audio/weird noises.-2.wav")
+setVolume(brainwash, 0.3)
 book = loadAudio("Audio/book.wav")
 page = loadAudio("Audio/page.wav")
 
@@ -137,6 +138,7 @@ setVolume(pour, 0.316)
 
 explosion = loadAudio("Audio/explosion.wav")
 explosion2 = loadAudio("Audio/explosion2.wav")
+setVolume(explosion2, 0.6)
 
 plop = loadAudio("Audio/plop.wav")
 setVolume(plop, 0.316)
@@ -154,7 +156,7 @@ DoorScaryNoise = loadAudio("Audio/DoorScaryNoise.wav")
 setVolume(DoorScaryNoise, 0.5)
 
 thud = loadAudio("Audio/Thud.wav")
-setVolume(thud, 0.5)
+setVolume(thud, 0.2)
 
 EvilChoice = loadAudio("Audio/EvilChoice.wav")
 setVolume(EvilChoice, 0.6)
@@ -174,6 +176,7 @@ DestinationEarth = loadAudio("Audio/DestinationEarth.mp3")
 setVolume(DestinationEarth, 0.6)
 
 screech = loadAudio("Audio/screech.wav")
+setVolume(screech, 0.5)
 
 ## MUSIC
 
