@@ -66,6 +66,7 @@ cutscene = False
 orangeYellow = False
 safe = False
 fishtank = False
+viewedContent3 = False
 
 timer1 = Objects.timer(10, False)
 timer2 = Objects.timer(5, False)
@@ -80,7 +81,8 @@ def positionDeterminer(cameFrom):
     pass
 
 def Room(screen, screen_res, events):
-    global exit, screen2, bookcaseView, Book1, Content1, book1, content1, Book2, Content2, book2, content2, Book3, Content3, book3, content3, Book4, Content4, book4, content4, cutscene, centerPos, scaled_eye, orangeYellow, orangeYellowRect, safe, fishtank
+    global exit, screen2, bookcaseView, Book1, Content1, book1, content1, Book2, Content2, book2, content2, Book3, Content3, book3, content3, \
+        Book4, Content4, book4, content4, cutscene, centerPos, scaled_eye, orangeYellow, orangeYellowRect, safe, fishtank, viewedContent3
 
     level, power = Objects.getPipeDungeonInfo()
     _, lowerWingPower = Objects.getPinkWingInfo()
@@ -171,6 +173,7 @@ def Room(screen, screen_res, events):
                                 Sounds.page.play()
                                 content2 = True
                             if book3:
+                                viewedContent3 = True
                                 Sounds.powerAmb.stop()
                                 Sounds.heartbeat.play(-1)
                                 Sounds.page.play()

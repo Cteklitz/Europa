@@ -43,6 +43,9 @@ def getColorsPlaced():
 def getSelected():
     return MscopeTable.selected
 
+def getViewedContent3():
+    return BookcaseView.viewedContent3
+
 def getOpen():
     #return LockedDoor.solved
     return True

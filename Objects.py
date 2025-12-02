@@ -221,6 +221,9 @@ def getColorsPlaced():
 def getSelected():
     return Area.getSelected()
 
+def getViewedContent3():
+    return Area.getViewedContent3()
+
 def getLetterCount():
     return Area.getLetterCount()
 
