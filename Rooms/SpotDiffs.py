@@ -18,6 +18,7 @@ background3 = pygame.image.load("Assets/spotDiffs3.png")
 
 found = 0
 collected = False
+squeegeeCollected = False
 exit = False
 goodEye = False
 played = False
@@ -71,6 +72,9 @@ letterRect = pygame.Rect(180,117,32,6)
 # Lockbox interact region rectangle 
 lockboxRect = pygame.Rect(165, 110, 60, 35)
 
+# Squeegee pickup rectangle
+squeegeeRect = pygame.Rect(185, 145, 30, 15)
+
 eye_squish_sound = Sounds.loadAudio("Audio/eyeSquish.wav")
 eye_squish_sound.set_volume(.5)
 
@@ -88,7 +92,7 @@ def positionDeterminer(cameFrom):
     pass
 
 def Room(screen, screen_res, events):
-    global exit, goodEye, collected, mat, stem, corner, water, light, backgroundDiff, found, played, lockboxExit
+    global exit, goodEye, collected, squeegeeCollected, mat, stem, corner, water, light, backgroundDiff, found, played, lockboxExit
     xScale = screen.get_width()/virtual_screen.get_width() 
     yScale = screen.get_height()/virtual_screen.get_height()
 
@@ -134,6 +138,10 @@ def Room(screen, screen_res, events):
                     elif lockboxRect.collidepoint(mouse_pos):
                         global lockboxExit
                         lockboxExit = True
+                    elif squeegeeRect.collidepoint(mouse_pos) and not squeegeeCollected:
+                        if (Player.addItem(Items.squeegee)):
+                            Sounds.pickup.play()
+                            squeegeeCollected = True
                     if found == 6 and not goodEye:
                         goodEye = True
                         goodEYEtext.activated_time = pygame.time.get_ticks()
@@ -157,6 +165,10 @@ def Room(screen, screen_res, events):
             index += 1
 
     goodEYEtext.update()
+
+    # Draw squeegee sprite if not collected
+    if not squeegeeCollected:
+        virtual_screen.blit(Assets.squeegeeGround, squeegeeRect.topleft)
 
     scaled = pygame.transform.scale(virtual_screen, screen_res)
     screen.blit(scaled, (0, 0))

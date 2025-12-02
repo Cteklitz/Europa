@@ -44,4 +44,6 @@ lighter = Item("lighter", "Lighter", "A device that produces a small flame", Ass
 
 herbicide = Item("herbicide", "Herbicide", "A concoction fatal to many plants", Assets.herbicide, Assets.herbicide, "equip")
 
+squeegee = Item("squeegee", "Squeegee", "A cleaning tool with a flat rubber blade used to scrape away green growth and grime", Assets.squeegeeInv, Assets.squeegeeGround, "equip")
+
 valve = Item("valve", "Valve Handle", "A steel valve handle, used to rotate stuff", Assets.airlockValveInv, Assets.airlockValve, "equip") # TODO: Add bigger valve sprite for inventory

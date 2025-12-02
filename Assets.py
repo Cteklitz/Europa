@@ -257,5 +257,8 @@ lighterBed = pygame.image.load("Assets/LighterBed.png")
 
 herbicide = pygame.image.load("Assets/herbicide.png")
 
+squeegeeInv = pygame.transform.scale(pygame.image.load("Assets/Squeegee.png"), (pygame.image.load("Assets/Squeegee.png").get_width() * 3, pygame.image.load("Assets/Squeegee.png").get_height() * 3))
+squeegeeGround = pygame.image.load("Assets/Squeegee.png")
+
 airlockValve = pygame.image.load("Assets/airlock_valve.png")
 airlockValveInv = pygame.image.load("Assets/airlock_valve_inv.png")

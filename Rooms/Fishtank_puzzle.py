@@ -2,6 +2,8 @@ import pygame
 import sys
 import random
 import math
+import Player
+import Items
 
 pygame.init()
 
@@ -85,18 +87,17 @@ def Room(screen, screen_res, events):
         algae = pygame.Surface(WINDOW_RES, pygame.SRCALPHA)
         algae.fill((0, 0, 0, 0))
         
-        
-        base_algae = pygame.Surface((GLASS_RECT.width, GLASS_RECT.height), pygame.SRCALPHA)
+        # Use final algae position and size
+        algae_rect = pygame.Rect(172, 230, 2119, 1023)
+        base_algae = pygame.Surface((algae_rect.width, algae_rect.height), pygame.SRCALPHA)
         base_algae.fill((*ALGAE_COLOR, 252))
         
-        
-        algae.blit(base_algae, (GLASS_RECT.left, GLASS_RECT.top))
+        algae.blit(base_algae, (algae_rect.left, algae_rect.top))
 
-        
         DARK_ALGAE = (60, 100, 40)
         for _ in range(200):
-            x = GLASS_RECT.left + random.randint(0, GLASS_RECT.width - 4)
-            y = GLASS_RECT.top + random.randint(0, GLASS_RECT.height - 4)
+            x = algae_rect.left + random.randint(0, algae_rect.width - 4)
+            y = algae_rect.top + random.randint(0, algae_rect.height - 4)
         
             pygame.draw.rect(algae, (*DARK_ALGAE, 252), pygame.Rect(x, y, 4, 4))
 
@@ -113,6 +114,8 @@ def Room(screen, screen_res, events):
         return True
 
     def cleared_fraction_in_box():
+        if algae is None:
+            return 0.0
         sub = algae.subsurface(BOX_RECT).copy()
         sub_mask = pygame.mask.from_surface(sub)
         remaining = sub_mask.count()
@@ -255,45 +258,47 @@ def Room(screen, screen_res, events):
         BRUSH_RADIUS = int(DIG_RADIUS * 2)
 
         if dragging:
-            if prev_vmx is not None and prev_vmy is not None:
-                prev_mx = int(prev_vmx * xScale)
-                prev_my = int(prev_vmy * yScale)
-                dx = mx - prev_mx
-                dy = my - prev_my
-                if abs(dx) > 2 or abs(dy) > 2:
-                    target_angle = get_angle(prev_mx, prev_my, mx, my)
-                    angle = smooth_angle_transition(angle, target_angle)
-                    last_angle = angle
-            else:
-                
-                angle = smooth_angle_transition(angle, last_angle)
+            # Only allow cleaning if squeegee is equipped
+            if Player.equipped is not None and Player.equipped.id == "squeegee":
+                if prev_vmx is not None and prev_vmy is not None:
+                    prev_mx = int(prev_vmx * xScale)
+                    prev_my = int(prev_vmy * yScale)
+                    dx = mx - prev_mx
+                    dy = my - prev_my
+                    if abs(dx) > 2 or abs(dy) > 2:
+                        target_angle = get_angle(prev_mx, prev_my, mx, my)
+                        angle = smooth_angle_transition(angle, target_angle)
+                        last_angle = angle
+                else:
+                    # 
+                    angle = smooth_angle_transition(angle, last_angle)
 
-            if prev_vmx is not None and prev_vmy is not None:
-                dx = vmx - prev_vmx
-                dy = vmy - prev_vmy
-                dist = max(abs(dx), abs(dy))
-                if dist > 0:
-                    for i in range(dist + 1):
-                        x = int(prev_vmx + dx * i / dist)
-                        y = int(prev_vmy + dy * i / dist) + DIG_OFFSET_Y
-                        if GLASS_RECT.collidepoint(x, y):
+                if prev_vmx is not None and prev_vmy is not None:
+                    dx = vmx - prev_vmx
+                    dy = vmy - prev_vmy
+                    dist = max(abs(dx), abs(dy))
+                    if dist > 0:
+                        for i in range(dist + 1):
+                            x = int(prev_vmx + dx * i / dist)
+                            y = int(prev_vmy + dy * i / dist) + DIG_OFFSET_Y
+                            if GLASS_RECT.collidepoint(x, y):
+                                # 
+                                squeegee_clean((x, y), (prev_vmx, prev_vmy + DIG_OFFSET_Y), BRUSH_RADIUS)
+                                if random.random() < PARTICLE_SPAWN_CHANCE:
+                                    spawn_sand_particles((x, y), PARTICLE_COUNT)
+                    else:
+                        if GLASS_RECT.collidepoint(vmx, vmy + DIG_OFFSET_Y):
+                            squeegee_clean((vmx, vmy + DIG_OFFSET_Y), None, BRUSH_RADIUS)
                             
-                            squeegee_clean((x, y), (prev_vmx, prev_vmy + DIG_OFFSET_Y), BRUSH_RADIUS)
                             if random.random() < PARTICLE_SPAWN_CHANCE:
-                                spawn_sand_particles((x, y), PARTICLE_COUNT)
+                                spawn_sand_particles((vmx, vmy + DIG_OFFSET_Y), PARTICLE_COUNT)
                 else:
                     if GLASS_RECT.collidepoint(vmx, vmy + DIG_OFFSET_Y):
                         squeegee_clean((vmx, vmy + DIG_OFFSET_Y), None, BRUSH_RADIUS)
                         
                         if random.random() < PARTICLE_SPAWN_CHANCE:
-                            spawn_sand_particles((vmx, vmy + DIG_OFFSET_Y), PARTICLE_COUNT)
-            else:
-                if GLASS_RECT.collidepoint(vmx, vmy + DIG_OFFSET_Y):
-                    squeegee_clean((vmx, vmy + DIG_OFFSET_Y), None, BRUSH_RADIUS)
-                    
-                    if random.random() < PARTICLE_SPAWN_CHANCE:
-                        spawn_sand_particles((vmx, vmy + DIG_OFFSET_Y), BRUSH_RADIUS)
-            prev_vmx, prev_vmy = vmx, vmy
+                            spawn_sand_particles((vmx, vmy + DIG_OFFSET_Y), BRUSH_RADIUS)
+                prev_vmx, prev_vmy = vmx, vmy
         else:
             prev_vmx, prev_vmy = None, None
             
@@ -306,7 +311,8 @@ def Room(screen, screen_res, events):
         
         virtual.fill((0, 0, 0))
         virtual.blit(bg_img, (0, 0))
-        virtual.blit(algae, (0, 0))
+        if algae is not None:
+            virtual.blit(algae, (0, 0))
 
         
         if dragging:
@@ -334,10 +340,11 @@ def Room(screen, screen_res, events):
         center_y = (screen_height - surf_height) // 2
         screen.blit(scaled, (center_x, center_y))
 
-        
-        rotated_squeegee = pygame.transform.rotate(squeegee_img, -angle)
-        rect = rotated_squeegee.get_rect(center=(mx, my))
-        screen.blit(rotated_squeegee, rect.topleft)
+        # Only show squeegee if it's equipped
+        if Player.equipped is not None and Player.equipped.id == "squeegee":
+            rotated_squeegee = pygame.transform.rotate(squeegee_img, -angle)
+            rect = rotated_squeegee.get_rect(center=(mx, my))
+            screen.blit(rotated_squeegee, rect.topleft)
 
         pygame.display.flip()
 
