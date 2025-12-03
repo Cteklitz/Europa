@@ -50,7 +50,7 @@ greenhouseDoor = Objects.Door(592, 112, Assets.grayDoorEast)
 greenPowerDoor = Objects.Door(400,16, Assets.grayDoorNorth)
 
 unlocked = False
-keycardScannerInteractRect = pygame.Rect(greenPowerDoor.rect.x+32,greenPowerDoor.rect.y+32,25,6)
+keycardScannerInteractRect = pygame.Rect(greenPowerDoor.rect.x+32,greenPowerDoor.rect.y+32,25,12)
 
 radioOn = True
 
