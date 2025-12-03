@@ -239,7 +239,7 @@ def Room(screen, screen_res, events):
                             if solved and not gaveup:
                                 channel1 = pygame.mixer.find_channel(True)
                                 channel1.play(girlLaughing)
-                elif letterRect.collidepoint((scaled_mouse_x, scaled_mouse_y)) and not collected:
+                elif letterRect.collidepoint((scaled_mouse_x, scaled_mouse_y)) and not collected and solved and played:
                     if (Player.addItem(Items.letterTile)):
                         opentriangleSound.play()
                         collected = True
