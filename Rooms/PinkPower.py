@@ -11,7 +11,7 @@ import Player
 pinkPower = False
 played = False
 
-switchSound = pygame.mixer.Sound("Audio/switch.wav")
+switchSound = Sounds.loadAudio("Audio/switch.wav")
 
 powerSoundTimer = Objects.timer(1.5, False)
 pulseTimer = Objects.timer(0.099, True)

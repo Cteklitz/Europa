@@ -15,7 +15,7 @@ redPetriInv = pygame.image.load("Assets/redpetriInv.png")
 bluePetriInv = pygame.image.load("Assets/bluepetriInv.png")
 yellowPetriInv = pygame.image.load("Assets/yellowpetriInv.png")
 
-pinkKeycard = Item("pinkKeycard", "Pink Keycard", "Seems to be a keycard for a pink area", Assets.pinkKeycard, Assets.pinkKeycardGround, "equip")
+greenKeycard = Item("greenKeycard", "Green Keycard", "Seems to be a keycard... that is green", Assets.greenKeycard, Assets.greenKeycardGround, "equip")
 
 bandage = Item("bandage", "Bandage", "A roll of gauze used for covering wounds to stop bleeding", Assets.bandage, Assets.bandageGround, "use")
 
@@ -30,5 +30,20 @@ mop = Item("mop", "Mop", "A standard mop used to clean floors", Assets.mopInv, A
 
 multimeter = Item("multimeter", "Multimeter", "An electrical instrument used to measure things such as voltage, current, and resistance", Assets.multiInv, Assets.multiInv, "equip")
 
-brokenThermometer = Item("brokenThermometer", "Broken Thermometer", "A damaged thermometer that no longer functions properly, leaking with mercury", Assets.brokenThermometerInv, Assets.brokenThermometerGround, "equip")
+brokenThermometer = Item("brokenThermometer", "Thermometer", "A damaged thermometer that no longer functions properly, leaking with mercury", Assets.brokenThermometerInv, Assets.brokenThermometerGround, "equip")
 
+bleach = Item("bleachInv", "Bleach", "A solution of sodium hypochlorite in water commonly used in laundry and household cleaning", Assets.bleachInv, Assets.bleachGround, "equip")
+
+hogweedLeaf = Item("hogweedLeaf", "Hogweed Leaf", "Leaf of a large, invasive plant with a toxic sap containing furanocoumarins", Assets.hogweedLeaf, Assets.hogweedPlant, "equip")
+
+poppy = Item("poppy", "Poppy", "A poppy flower. An ingredient frequently used in John Thompson's experiments.", Assets.poppy, Assets.poppyBush, "equip")
+
+benzene = Item("benzene", "Benzene", "A colorless, flammable chemical", Assets.benzeneInv, Assets.benzeneDrawer, "equip")
+
+lighter = Item("lighter", "Lighter", "A device that produces a small flame", Assets.lighterInv, Assets.lighterBed, "equip")
+
+herbicide = Item("herbicide", "Herbicide", "A concoction fatal to many plants", Assets.herbicide, Assets.herbicide, "equip")
+
+squeegee = Item("squeegee", "Squeegee", "A cleaning tool with a flat rubber blade used to scrape away green growth and grime", Assets.squeegeeInv, Assets.squeegeeGround, "equip")
+
+valve = Item("valve", "Valve Handle", "A steel valve handle, used to rotate stuff", Assets.airlockValveInv, Assets.airlockValve, "equip") # TODO: Add bigger valve sprite for inventory

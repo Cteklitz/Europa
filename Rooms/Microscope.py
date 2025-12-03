@@ -31,7 +31,7 @@ timer3 = Objects.timer(5, False)
 timer4 = Objects.timer(5, False)
 timer5 = Objects.timer(4.5, False)
 
-spooky = pygame.mixer.Sound("Audio/microscope.wav")
+spooky = Sounds.loadAudio("Audio/microscope.wav")
 
 def inBounds(x, y):
     global exit
@@ -62,6 +62,7 @@ def Room(screen, screen_res, events):
             if not play:
                 Sounds.powerAmb.stop()
                 spooky.play()
+                Player.events += 1
                 play = True
             virtual_screen.blit(eye1, (0,0))
             timer1.setInitial()

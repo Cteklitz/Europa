@@ -39,6 +39,7 @@ def inBounds(x, y):
     doorRect = pygame.Rect(9,208,door.get_width(),door.get_height())
     consoleRect = pygame.Rect(int(virtual_screen.get_width()/2) - 64 - 16, 225, console.get_width() + 32, console.get_height())
     if doorRect.collidepoint(x,y):
+        Sounds.valveSong.stop()
         if not Objects.getBluePower():
             Sounds.powerAmb.stop()
             Sounds.ominousAmb.play(-1)
@@ -66,6 +67,7 @@ leftIndex = 0
 rightIndex = 1
 waterLevels = [30, 60, 75, 35]
 solved = False
+mute = False
 
 waterLevelSprites = Assets.load_tileset("Assets/waterLevels.png", 30, 162)
 redArrow = pygame.image.load("Assets/redArrow.png")
@@ -157,11 +159,13 @@ valves = [
 ]
 
 def positionDeterminer(cameFrom):
-    global player_pos
+    global player_pos, solved
     player_pos = pygame.Vector2(9 + flippedDoor.get_width(), 208 + (flippedDoor.get_height()*5/6))
+    if not solved:
+        Sounds.valveSong.play(-1)
 
 def Room(screen, screen_res, events):
-    global valves, redArrow, greenArrow, solved
+    global valves, redArrow, greenArrow, solved, mute
     level, power = Objects.getPipeDungeonInfo()
 
     for event in events:
@@ -174,7 +178,16 @@ def Room(screen, screen_res, events):
                     if waterLevels[i] != 50:
                         good = False
                 if good:
+                    if not solved:
+                        Sounds.valveSong.stop()
+                        Sounds.drain.play()
                     solved = True
+            if event.key == pygame.K_m:
+                mute = not mute
+                if not mute:
+                    Sounds.valveSong.play(-1)
+                else:
+                    Sounds.valveSong.stop()
 
     # fill the screen with a color to wipe away anything from last frame
     virtual_screen.fill("gray")

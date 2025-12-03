@@ -77,10 +77,18 @@ tooDarkRead = Objects.briefText(virtual_screen, tooDarkReadScale, 10, 180, 3)
 tooDarkSeeScale = pygame.transform.scale(Assets.tooDarkSee, (Assets.tooDarkSee.get_width()/1.25,Assets.tooDarkSee.get_height()/1.25))
 tooDarkSee = Objects.briefText(virtual_screen, tooDarkSeeScale, 15, 180, 3)
 guy = pygame.image.load("Assets/guy.png")
+flame = pygame.image.load("Assets/BunsenFireZoomedOut.png")
+
+lockedDoorRect = pygame.Rect(30,165,36,44)
+sarasNotHomeText = pygame.image.load("Assets/sara's not home.png")
+sarasNotHome = Objects.briefText(virtual_screen, sarasNotHomeText, 0, 135, 3)
+nobodysHomeText = pygame.image.load("Assets/nobody's home.png")
+nobodysHome = Objects.briefText(virtual_screen, nobodysHomeText, 0, 135, 3)
 
 def inBounds(x, y):
     global trianglePuzzle1, trianglePuzzle2, beaker, tableRect, table, tooDarkRead
     if exitRect.collidepoint((x,y)):
+        Sounds.bunsen.stop()
         level, power = Objects.getPipeDungeonInfo()
         upperWingPower, _ = Objects.getPinkWingInfo()
         if level == 1 and power and not upperWingPower and not Objects.getPinkPower():
@@ -88,17 +96,27 @@ def inBounds(x, y):
             Sounds.powerAmb.play(-1)
         tooDarkRead.activated_time = -1
         tooDarkSee.activated_time = -1
+        sarasNotHome.activated_time = -1
+        nobodysHome.activated_time = -1
         return 0
     elif trianglePuzzle2:
+        sarasNotHome.activated_time = -1
+        nobodysHome.activated_time = -1
         trianglePuzzle2 = False
         return 1
     elif trianglePuzzle1:
+        sarasNotHome.activated_time = -1
+        nobodysHome.activated_time = -1
         trianglePuzzle1 = False
         return 2
     elif beaker:
+        sarasNotHome.activated_time = -1
+        nobodysHome.activated_time = -1
         beaker = False
         return 3
     elif table:
+        sarasNotHome.activated_time = -1
+        nobodysHome.activated_time = -1
         table = False
         return 4
     elif exitWalk.collidepoint(x,y):
@@ -117,6 +135,13 @@ def positionDeterminer(cameFrom):
     global player_pos
     if cameFrom == "Rooms.PinkRoom":
         player_pos = pygame.Vector2(exitWalk.centerx + 2, exitWalk.centery - 5)
+        if (Objects.getBunsenOn()):
+            Sounds.bunsen.set_volume(.1)
+            Sounds.bunsen.play(loops = -1)
+    if cameFrom == "Rooms.MscopeTable":
+        if (Objects.getBunsenOn()):
+            Sounds.bunsen.set_volume(.1)
+            Sounds.bunsen.play(loops = -1)
 
 def Room(screen, screen_res, events):
     global trianglePuzzle1, trianglePuzzle2, whiteboard, beaker, table, tableboundRect, tooDarkRead
@@ -146,10 +171,21 @@ def Room(screen, screen_res, events):
                     if beakerRect.collidepoint(player_pos):
                         beaker = True
                     if tableboundRect.collidepoint(player_pos):
+                        Sounds.bunsen.stop()
                         table = True
+                    if lockedDoorRect.collidepoint(player_pos):
+                        beaker = False
+                        if Objects.getViewedContent3():
+                            sarasNotHome.activated_time = pygame.time.get_ticks()
+                        else:
+                            nobodysHome.activated_time = pygame.time.get_ticks()
             if event.key == pygame.K_BACKSPACE:
                 if whiteboard:
                     whiteboard = False
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if event.button == 1:
+                mouse_x, mouse_y = pygame.mouse.get_pos()
+                mouse_pos = (mouse_x/xScale, mouse_y/yScale)
 
     virtual_screen.blit(background, (0,0))
     virtual_screen2.fill((195, 195, 195))
@@ -194,7 +230,8 @@ def Room(screen, screen_res, events):
     red, yellow, blue = Objects.getColorsPlaced()
     if player_pos.y > 125:
         virtual_screen.blit(mscopetableScale, (105, 100))
-
+        if Objects.getBunsenOn():
+            virtual_screen.blit(flame, (194, 110))
         if red:
             virtual_screen.blit(smolRed, (150, 121))
         if yellow:
@@ -224,10 +261,6 @@ def Room(screen, screen_res, events):
     virtual_screen.blit(circleLight, circleLight.get_rect(center=light_pos2))
 
     virtual_screen2.blit(whiteboardzoom, (10,20))
-    
-    if not lit and not Objects.getPinkPower():
-        tooDarkRead.update()
-        tooDarkSee.update()
 
     if not lit:
         virtual_screen.blit(dark_overlay, (0, 0))
@@ -236,6 +269,13 @@ def Room(screen, screen_res, events):
         apply_lighting(virtual_screen, wall_lights, darkness=10, ambient_color=(50, 50, 50), ambient_strength=10)
         apply_falloff(falloff, virtual_screen, light_pos)
         apply_falloff(falloff, virtual_screen, light_pos2)
+
+    if not lit and not Objects.getPinkPower():
+        tooDarkRead.update()
+        tooDarkSee.update()
+
+    sarasNotHome.update()
+    nobodysHome.update()
 
     if not whiteboard:
         Assets.scaled_draw(virtual_res, virtual_screen, screen_res, screen)

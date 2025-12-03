@@ -52,15 +52,18 @@ curr_index = 0
 curr_eye = eyes[0]
 
 # sounds
-eye_squish_sound = pygame.mixer.Sound("Audio/eyeSquish.wav")
-pre_jumpscare_sound = pygame.mixer.Sound("Audio/evil2Trimmed1.wav")
-jumpscare_sound = pygame.mixer.Sound("Audio/toolboxJumpscare.wav")
-jumpscare_layer_sound = pygame.mixer.Sound("Audio/evil2.wav")
-paper_crumple_sound = pygame.mixer.Sound("Audio/paperCrumple.wav")
-paper_open_sound = pygame.mixer.Sound("Audio/paperOpen.wav")
-toolbox_open_close_sound = pygame.mixer.Sound("Audio/toolboxOpenClose.wav")
+eye_squish_sound = Sounds.loadAudio("Audio/eyeSquish.wav")
+eye_squish_sound.set_volume(.5)
+pre_jumpscare_sound = Sounds.loadAudio("Audio/evil2Trimmed1.wav")
+jumpscare_sound = Sounds.loadAudio("Audio/toolboxJumpscare.wav")
+Sounds.setVolume(jumpscare_sound, 0.3)
+jumpscare_layer_sound = Sounds.loadAudio("Audio/evil2.wav")
+Sounds.setVolume(jumpscare_layer_sound, 0.8)
+paper_crumple_sound = Sounds.loadAudio("Audio/paperCrumple.wav")
+paper_crumple_sound.set_volume(.3)
+paper_open_sound = Sounds.loadAudio("Audio/paperOpen.wav")
+paper_open_sound.set_volume(.3)
 
-pre_jumpscare_sound.set_volume(.05) # make audio quieter prejumpscare
 
 def positionDeterminer(cameFrom):
     pass
@@ -81,8 +84,19 @@ def Room(screen, screen_res, events):
     curr_time = pygame.time.get_ticks()
     for event in events:
         if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_BACKSPACE or event.key == pygame.K_ESCAPE and not paper_open:
-                exit = True
+            if (event.key == pygame.K_BACKSPACE or event.key == pygame.K_ESCAPE) and not paper_open:
+                if not Player.cutscene:
+                    exit = True
+            if (event.key == pygame.K_BACKSPACE or event.key == pygame.K_ESCAPE) and paper_open and open and not Player.cutscene:
+                paper_crumple_sound.play()
+                paper_open = False
+                if (multimeter_found and found == 1 or not multimeter_found and found == 0):
+                    found += 1
+                    if found == 2:
+                        Player.events += 1
+                        cutscene = True
+                        cutscene_start = pygame.time.get_ticks()
+
         if event.type == pygame.MOUSEBUTTONDOWN:
             click_x, click_y = event.pos
             click_x_unscaled = click_x/xScale
@@ -94,10 +108,11 @@ def Room(screen, screen_res, events):
                         multimeter_found = True
                         found += 1
                         if found == 2:
+                            Player.events += 1
                             cutscene = True
                             cutscene_start = pygame.time.get_ticks()
             # Opens and closes paper
-            elif crumpled_paper_click_rect.collidepoint((click_x_unscaled, click_y_unscaled)) and open:
+            elif crumpled_paper_click_rect.collidepoint((click_x_unscaled, click_y_unscaled)) and open and not Player.cutscene:
                 if (not paper_open):
                     paper_open_sound.play()
                     paper_open = True
@@ -107,18 +122,19 @@ def Room(screen, screen_res, events):
                     if (multimeter_found and found == 1 or not multimeter_found and found == 0):
                         found += 1
                         if found == 2:
+                            Player.events += 1
                             cutscene = True
                             cutscene_start = pygame.time.get_ticks()
             # opens and closes toolbox if animated eye object is not present
-            elif(285 < click_x < 1310 and 350 < click_y < 855) and not paper_open and found!=2:
+            elif(285 < click_x < 1310 and 350 < click_y < 855) and not paper_open and found!=2 and not Player.cutscene:
                 if(open):
-                    toolbox_open_close_sound.play()
+                    Sounds.openClose.play()
                     open = False
                 else:
-                    toolbox_open_close_sound.play()
+                    Sounds.openClose.play()
                     open = True
             # plays squished sound if eye clicked
-            elif eye_click_rect.collidepoint((click_x_unscaled, click_y_unscaled)) and found == 2:
+            elif eye_click_rect.collidepoint((click_x_unscaled, click_y_unscaled)) and found == 2 and not Player.cutscene:
                 eye_squish_sound.play()
     if (not open):
         virtual_screen.blit(closed_toolbox, toolbox_rect)
@@ -163,7 +179,7 @@ def Room(screen, screen_res, events):
                 eye_closed_temp = pygame.transform.scale(eye_closed, (280, 280))
                 closed_eye_rect = eye_closed_temp.get_rect(center=(virtual_res[0] / 2, virtual_res[1] / 2))
                 virtual_screen.blit(eye_closed_temp, closed_eye_rect)
-            elif (curr_time - cutscene_start < 13000):
+            elif (curr_time - cutscene_start < 14000):
                 if (not played):
                     pre_jumpscare_sound.stop()
                     channel1 = pygame.mixer.find_channel(True)
@@ -172,7 +188,7 @@ def Room(screen, screen_res, events):
                     channel2.play(jumpscare_sound)
                     played = True
                 virtual_screen.blit(eye_open, open_eye_rect)
-            elif (curr_time - cutscene_start < 16000):
+            elif (curr_time - cutscene_start < 18000):
                 virtual_screen.blit(jumpscare_text, (0, 0))
             else:
                 Player.cutscene = False

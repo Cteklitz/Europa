@@ -1,14 +1,14 @@
 import pygame
 import Assets
 import Objects
-from shapely.geometry import Point, Polygon
+from shapely.geometry import Point, Polygon, box
 import Sounds
 import Items
 from LightSource import LightSource
 from LightFalloff import LightFalloff
 from LightingUtils import apply_lighting, apply_falloff
 import Player
-
+import Pause
 
 virtual_res = (480, 480)
 
@@ -25,12 +25,16 @@ pinkLight1 = LightSource(63, 207, radius=50, strength=100, color=(120,0,120))
 pinkLight2 = LightSource(63, 273, radius=50, strength=100, color=(120,0,120))
 blueLight1 = LightSource(401 + 16, 192 + 16, radius=50, strength=100, color=(0,162,232))
 blueLight2 = LightSource(401 + 16, 256 + 16, radius=50, strength=100, color=(0,162,232))
+greenLight1 = LightSource(192 + 16, 398 + 16, radius=50, strength=100, color=(181, 230, 29))
+greenLight2 = LightSource(256 + 16, 398 + 16, radius=50, strength=100, color=(181, 230, 29))
+yellowLight1 = LightSource(192 + 16, 44 + 16, radius=50, strength=100, color=(120, 120, 0))
+yellowLight2 = LightSource(256 + 16, 44 + 16, radius=50, strength=100, color=(120, 120, 0))
 
 # this is to allow for a dynamic amount of lights to be on without affecting the room brightness
 # falloffs[n] is the falloff for when there are n lights in the room, it should be applied to each of the n lights 
 # also this solution sucks! makes the game take super long to launch since calcing the darkness is slow
 # will try and think of a way to fix it ig
-max_lights = 6
+max_lights = 10
 darkness = 180
 falloffs = []
 for i in range(1, max_lights):
@@ -50,48 +54,66 @@ lights = [
 pinkDoor = Objects.Door(15, 224, Assets.pinkDoorWest)
 blueDoor = Objects.Door(433, 224, Assets.blueDoorEast)
 greenDoor = Objects.Door(224, 430, Assets.greenDoorSouth)
-orangeDoor = Objects.Door(224, 12, Assets.orangeDoorNorth)
+yellowDoor = Objects.Door(224, 12, Assets.orangeDoorNorth)
 
-pinkKeycard = Objects.groundItem(150, 150, Items.pinkKeycard)
 bandage = Objects.groundItem(300, 265, Items.bandage)
 
-Sounds.ominousAmb.play(-1)
+# Sounds.ominousAmb.play(-1)
 
 def inBounds(x, y):
     ctrlRmRect = pygame.Rect(220, 252, 36, 4)
     ctrlRmWallRect = pygame.Rect(208, 224, 63, 28)
+    playerBox = box(x-12,y-12,x+12,y+12)
+
+    pinkDoorWalkRect = pygame.Rect(pinkDoor.x+16, pinkDoor.y, pinkDoor.rect.width, pinkDoor.rect.height)
+    blueDoorWalkRect = pygame.Rect(blueDoor.x-16, blueDoor.y, blueDoor.rect.width, blueDoor.rect.height)
+    greenDoorWalkRect = pygame.Rect(greenDoor.x, greenDoor.y-16, greenDoor.rect.width, greenDoor.rect.height)
+    yellowDoorWalkRect = pygame.Rect(yellowDoor.x, yellowDoor.y+16, yellowDoor.rect.width, yellowDoor.rect.height)
 
     if ctrlRmRect.collidepoint((x,y)):
-        pygame.mixer.music.load("Audio/electricbuzz.wav")
+        Sounds.loadMusic("Audio/electricbuzz.wav")
         pygame.mixer.music.play(-1)
+        Pause.musicPath = "Audio/electricbuzz.wav"
+        Pause.volume = 1
         return 0
     elif pinkDoor.rect.collidepoint((x,y)):
         level, power = Objects.getPipeDungeonInfo()
-        if power and level == 1 or Objects.getPinkPower():
+        if (power and level == 1 or Objects.getPinkPower()) and not Objects.getYellowDoorOpen():
             Sounds.ominousAmb.stop()
             Sounds.powerAmb.play(-1)
         return 1
     elif blueDoor.rect.collidepoint((x,y)):
         level, power = Objects.getPipeDungeonInfo()
-        if power and level == 2 or Objects.getBluePower():
+        if (power and level == 2 or Objects.getBluePower()) and not Objects.getYellowDoorOpen():
             Sounds.ominousAmb.stop()
             Sounds.powerAmb.play(-1)
         return 2
     elif greenDoor.rect.collidepoint((x,y)):
         level, power = Objects.getPipeDungeonInfo()
-        if power and level == 3:
+        if ((power and level == 3) or Objects.getGreenPower()) and not Objects.getYellowDoorOpen():
             Sounds.ominousAmb.stop()
             Sounds.powerAmb.play(-1)
         return 3
+    elif yellowDoor.rect.collidepoint((x,y)):
+        level, power = Objects.getPipeDungeonInfo()
+        if (power and level == 4) and not Objects.getYellowDoorOpen():
+            Sounds.ominousAmb.stop()
+            Sounds.powerAmb.play(-1)
+        return 4
+    elif pinkDoorWalkRect.collidepoint((x,y)) or blueDoorWalkRect.collidepoint((x,y)) or greenDoorWalkRect.collidepoint((x,y)) or yellowDoorWalkRect.collidepoint((x,y)):
+        return True
     elif ctrlRmWallRect.collidepoint((x,y)):
         return False
-    elif not octagon.contains(Point(x,y)):
+    elif not octagon.contains(playerBox):
         return False
     return True
 
 def positionDeterminer(cameFrom):
     global player_pos
     ctrlRmRect = pygame.Rect(220, 252, 36, 4)
+    if cameFrom == "Rooms.TitleScreen":
+        pygame.mixer.music.set_volume(1)
+        Sounds.ominousAmb.play(-1)
     if cameFrom == "Rooms.ControlRoom":
         player_pos = pygame.Vector2(ctrlRmRect.x + ctrlRmRect.width/2, ctrlRmRect.y + ctrlRmRect.height+5)
     if cameFrom == "Rooms.PinkRoom":
@@ -110,13 +132,11 @@ def Room(screen, screen_res, events):
         pygame.draw.line(virtual_screen, "black", octagon1[i], octagon2[i], 1)
 
     # draw ground items
-    Objects.groundItem.draw(pinkKeycard, virtual_screen)
     Objects.groundItem.draw(bandage, virtual_screen)
 
     for event in events:
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_e:
-                pinkKeycard.check_collision(player_pos)
                 bandage.check_collision(player_pos)
 
     lastType = 0
@@ -162,7 +182,7 @@ def Room(screen, screen_res, events):
     virtual_screen.blit(pinkDoor.image, pinkDoor.rect)
     virtual_screen.blit(blueDoor.image, blueDoor.rect)
     virtual_screen.blit(greenDoor.image, greenDoor.rect)
-    virtual_screen.blit(orangeDoor.image, orangeDoor.rect)
+    virtual_screen.blit(yellowDoor.image, yellowDoor.rect)
 
     if player_pos.y < 240:
         Player.animatePlayer(virtual_screen, player_pos, 32, 32, "top-down")
@@ -174,6 +194,7 @@ def Room(screen, screen_res, events):
     pipeDungeonInfo = Objects.getPipeDungeonInfo()
     pinkPower = Objects.getPinkPower()
     bluePower = Objects.getBluePower()
+    greenPower = Objects.getGreenPower()
 
     # clear colored lights from lightSources
     while (len(lightSources) > 1):
@@ -185,12 +206,18 @@ def Room(screen, screen_res, events):
     if bluePower or (pipeDungeonInfo[0] == 2 and pipeDungeonInfo[1] == True): # checks if the blue door should be lit
         lightSources.append(blueLight1)
         lightSources.append(blueLight2)
+    if greenPower or (pipeDungeonInfo[0] == 3 and pipeDungeonInfo[1] == True): # checks if the green door should be lit
+        lightSources.append(greenLight1)
+        lightSources.append(greenLight2)
+    if (pipeDungeonInfo[0] == 4 and pipeDungeonInfo[1] == True): # checks if the yellow door should be lit
+        lightSources.append(yellowLight1)
+        lightSources.append(yellowLight2)
     
     apply_lighting(virtual_screen, lightSources, darkness=10, ambient_color=(50, 50, 50), ambient_strength=10)
     for i in range(len(lightSources)): # apply falloff for each light in lightSources
         apply_falloff(falloffs[len(lightSources) - 1], virtual_screen, (lightSources[i].x, lightSources[i].y))
 
-    #virtual_screen.blit(dark_overlay, (0, 0))
+    # virtual_screen.blit(dark_overlay, (0, 0))
 
     Assets.scaled_draw(virtual_res, virtual_screen, screen_res, screen)
 

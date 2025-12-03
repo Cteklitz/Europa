@@ -57,7 +57,7 @@ def draw_text(surface, text, color, rect, font):
 
     y_offset = 0
     for line in lines:
-        line_surf = font.render(line, True, color)
+        line_surf = font.render(line, False, color)
         surface.blit(line_surf, (rect.x, rect.y + y_offset))
         y_offset += font.get_height()
 
@@ -144,11 +144,6 @@ for i in range(14):
     squished = pygame.transform.scale(pipes[i], (41, 11))
     squishedPipes2.append(squished)
 
-tooDarkRead = pygame.image.load("Assets/TooDark.png")
-tooDarkSee = pygame.image.load("Assets/TooDarkSee.png")
-trashEmpty = pygame.image.load("Assets/trashEmpty.png")
-somethingInside = pygame.image.load("Assets/somethingInside.png")
-
 letterTiles = load_tileset("Assets/letters.png", 21, 41)
 numberTiles = load_tileset("Assets/numbers.png", 21, 41)
 
@@ -159,15 +154,66 @@ equipButton = pygame.image.load("Assets/equipButton.png")
 unequipButton = pygame.image.load("Assets/unequipButton.png")
 
 breakerBox = pygame.image.load("Assets/breaker.png")
+spark1 = pygame.image.load("Assets/spark1.png")
+spark2 = pygame.image.load("Assets/spark2.png")
+spark3 = pygame.image.load("Assets/spark3.png")
+spark4 = pygame.image.load("Assets/spark4.png")
+spark5 = pygame.image.load("Assets/spark5.png")
+spark6 = pygame.image.load("Assets/spark6.png")
+spark7 = pygame.image.load("Assets/spark7.png")
+spark8 = pygame.image.load("Assets/spark8.png")
+spark9 = pygame.image.load("Assets/spark9.png")
+sparks = [spark1, spark2, spark3, spark4, spark5, spark6, spark7, spark8, spark9]
 
 locker = pygame.image.load("Assets/locker.png")
+toolboxGround = pygame.image.load("Assets/ToolboxGround.png")
+
+puddle1 = pygame.image.load("Assets/Puddle1.png")
+puddle2 = pygame.image.load("Assets/Puddle2.png")
+puddle3 = pygame.image.load("Assets/Puddle3.png")
+
+trianglePuzzleCorner = pygame.image.load("Assets/trianglePuzzleCorner.png")
+trianglePuzzleBackground = pygame.image.load("Assets/trianglePuzzleBackground.png")
 
 bedBackgroundLeft = pygame.image.load("Assets/BedView.png")
 bedBackgroundRight = pygame.transform.flip(bedBackgroundLeft, True, False)
 
+radioOn = pygame.image.load("Assets/radio.png")
+radioOff = pygame.image.load("Assets/radioOff.png")
+
+eye = pygame.image.load("Assets/EYE.png")
+movingEyes = []
+for i in range(1, 9):
+    movingEyes.append(pygame.image.load(f"Assets/movingEYE{i}.png"))
+
+keycardScanner = pygame.image.load("Assets/keycardScanner.png")
+
+lockerViewClosed = pygame.image.load("Assets/LockerViewClosed.png")
+lockerViewOpen = pygame.image.load("Assets/LockerViewOpen.png")
+eyeLocker = pygame.image.load("Assets/eye_locker.png")
+eyeLockerUnlocked = pygame.image.load("Assets/eye_locker_unlocked.png")
+lock = pygame.image.load("Assets/lock.png")
+lockInterface = pygame.image.load("Assets/eyelock_interface.png")
+
+fuelLine = pygame.image.load("Assets/fuel_line.png")
+fuelLineFixed = pygame.image.load("Assets/fuel_line_fixed.png")
+fuelPuddle = pygame.image.load("Assets/fuel_puddle.png")
+fuelPuddleUpper = pygame.image.load("Assets/fuel_puddle_upper.png")
+
+### TEXT
+tooDarkRead = pygame.image.load("Assets/TooDark.png")
+tooDarkSee = pygame.image.load("Assets/TooDarkSee.png")
+tooDark = pygame.image.load("Assets/TooDark....png")
+whyshouldi = pygame.image.load("Assets/whyshouldi.png")
+trashEmpty = pygame.image.load("Assets/trashEmpty.png")
+somethingInside = pygame.image.load("Assets/somethingInside.png")
+safeText = pygame.image.load("Assets/safe_text.png")
+
 ### ITEMS
 pinkKeycard = pygame.image.load("Assets/pink_keycard.png")
 pinkKeycardGround = pygame.image.load("Assets/pink_keycard_ground.png")
+greenKeycard = pygame.image.load("Assets/green_keycard.png")
+greenKeycardGround = pygame.image.load("Assets/green_keycard_ground.png")
 
 bandage = pygame.image.load("Assets/bandage.png")
 bandageGround = pygame.image.load("Assets/bandage_ground.png")
@@ -192,14 +238,27 @@ brokenThermometerGround = pygame.image.load("Assets/BrokenThermometerInv.png")
 
 letterTile = pygame.image.load("Assets/letter_tile.png")
 
-trianglePuzzleCorner = pygame.image.load("Assets/trianglePuzzleCorner.png")
-trianglePuzzleBackground = pygame.image.load("Assets/trianglePuzzleBackground.png")
-
-toolboxGround = pygame.image.load("Assets/ToolboxGround.png")
 multiInv = pygame.image.load("Assets/multimeterInv.png")
 multimeter = pygame.image.load("Assets/multimeter.png")
 multimeter_toggled = pygame.image.load("Assets/multimeter_flipped.png")
 
-puddle1 = pygame.image.load("Assets/Puddle1.png")
-puddle2 = pygame.image.load("Assets/Puddle2.png")
-puddle3 = pygame.image.load("Assets/Puddle3.png")
+bleachInv = pygame.image.load("Assets/bleachInv.png")
+bleachGround = pygame.image.load("Assets/bleachGround.png")
+hogweedLeaf = pygame.image.load("Assets/hogweedLeafInv.png")
+hogweedPlant = pygame.image.load("Assets/GiantHogweed.png")
+poppy = pygame.image.load("Assets/Poppy.png")
+poppyBush = pygame.image.load("Assets/PoppyBush.png")
+
+benzeneInv = pygame.image.load("Assets/BenzeneInv.png")
+benzeneDrawer = pygame.image.load("Assets/BenzeneDrawer.png")
+
+lighterInv = pygame.image.load("Assets/LighterInv.png")
+lighterBed = pygame.image.load("Assets/LighterBed.png")
+
+herbicide = pygame.image.load("Assets/herbicide.png")
+
+squeegeeInv = pygame.transform.scale(pygame.image.load("Assets/Squeegee.png"), (pygame.image.load("Assets/Squeegee.png").get_width() * 3, pygame.image.load("Assets/Squeegee.png").get_height() * 3))
+squeegeeGround = pygame.image.load("Assets/Squeegee.png")
+
+airlockValve = pygame.image.load("Assets/airlock_valve.png")
+airlockValveInv = pygame.image.load("Assets/airlock_valve_inv.png")

@@ -5,6 +5,9 @@ from LightSource import LightSource
 from LightFalloff import LightFalloff
 from LightingUtils import apply_lighting, apply_falloff
 import Player
+import Sounds
+import Pause
+import Objects
 
 pipePuzzle = [
     [2,1,2,6,6],
@@ -124,9 +127,9 @@ def draw_map(screen, tiles, map_data, xpos, ypos):
             y = ypos + row_idx * TILE_H
             screen.blit(tile_surf, (x, y))
 
-pipeSound = pygame.mixer.Sound("Audio/pipe.wav")
-valveSound = pygame.mixer.Sound("Audio/valve.wav")
-switchSound = pygame.mixer.Sound("Audio/switch.wav")
+pipeSound = Sounds.loadAudio("Audio/pipe.wav")
+valveSound = Sounds.loadAudio("Audio/valve.wav")
+switchSound = Sounds.loadAudio("Audio/switch.wav")
 
 circleLight = pygame.image.load("Assets/CircleLight.png")
 
@@ -143,16 +146,17 @@ class Valve:
     def check_collision(self, player_pos, solved):
         in_range = (self.x - 8 < player_pos.x < self.x + 40) and (self.y - 8 < player_pos.y < self.y + 40)
 
-        if in_range and self.activated_time == -1:
-            valveSound.play()
-            self.image = Assets.valveSprites[1]
+        if in_range and self.activated_time == -1:          
             if not solved:
+                valveSound.play()
+                self.image = Assets.valveSprites[1]
                 changed = rotatePipes(pipePuzzle)
                 if changed:
                     pipeSound.play()
                 checkSolution(pipePuzzle, solution)
             else:
-                self.action()
+                pass
+                #self.action()
             self.activated_time = pygame.time.get_ticks()
 
     def update(self):
@@ -203,6 +207,7 @@ class Switch:
 def inBounds(x, y):
     if y > 384:
         pygame.mixer.music.stop()
+        Pause.musicPath = None
         return 0
     if x < 16 or x > 336:
         return False
@@ -262,10 +267,15 @@ falloff = [LightFalloff(virtual_screen.get_size(), darkness = 100)]
 def Room(screen, screen_res, events):
     global level, floor
 
+    pinkLit = (level == 1 and power) or Objects.getPinkPower()
+    blueLit = (level == 2 and power) or Objects.getBluePower()
+    greenLit = (level == 3 and power) or Objects.getGreenPower()
+    yellowLit = (level == 4 and power)
+
     # poll for events
     for event in events:
         if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_e:
+            if event.key == pygame.K_e and not (pinkLit and blueLit and greenLit and yellowLit):
                 valve.check_collision(player_pos, solved)
                 for key, switch in switches.items():
                     pressed = switch.check_collision(player_pos)
@@ -274,6 +284,15 @@ def Room(screen, screen_res, events):
                         for switch2 in switches.values():
                             if switch2 != switch:
                                 switch2.image = switch2.tileset[0]
+
+                pinkLit = (level == 1 and power) or Objects.getPinkPower()
+                blueLit = (level == 2 and power) or Objects.getBluePower()
+                greenLit = (level == 3 and power) or Objects.getGreenPower()
+                yellowLit = (level == 4 and power)
+
+                if pinkLit and blueLit and greenLit and yellowLit:
+                    Sounds.ominousAmb.stop()
+                    Sounds.powerAmb.play(-1)
 
     # fill the screen with a color to wipe away anything from last frame
     virtual_screen.fill("gray")
