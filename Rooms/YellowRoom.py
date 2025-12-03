@@ -78,7 +78,7 @@ def inBounds(x, y):
             Sounds.ominousAmb.play(-1)
         return 0
     elif doorRect.collidepoint((x,y)):
-        # if pinkLit and blueLit and greenLit and yellowLit:
+        if pinkLit and blueLit and greenLit and yellowLit:
             Sounds.powerAmb.stop()
             Sounds.ominousAmb.play(-1)
             return 1

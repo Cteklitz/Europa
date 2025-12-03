@@ -25,7 +25,7 @@ def getTriangleSolved():
     return TrianglePuzzle.solved
 
 def getBeakerSolved():
-    # return BeakerPuzzle.solved
+    return BeakerPuzzle.solved
     return True
 
 def getSpotDiffsSolved():
@@ -47,19 +47,19 @@ def getViewedContent3():
     return BookcaseView.viewedContent3
 
 def getOpen():
-    #return LockedDoor.solved
+    return LockedDoor.solved
     return True
 
 def getPinkPower():
-    return True
-    #return PinkPower.pinkPower
+    #return True
+    return PinkPower.pinkPower
 
 def getBluePower():
-    return True
+    #return True
     return BluePower.bluePower
 
 def getGreenPower():
-    # return GreenPower.greenPower
+    return GreenPower.greenPower
     return True
 
 def getYellowDoorOpen():
@@ -72,8 +72,8 @@ def getWaterLevelsSolved():
     return ValvePuzzle.solved
 
 def getBreakerSolved():
-    return True
-    #return BreakerPuzzle.solved
+    #return True
+    return BreakerPuzzle.solved
 
 def RepairWire():
     PuddleRoom.wireRepaired = True
@@ -94,8 +94,8 @@ def setBedNumber(num):
     BedView.bedNumber = num
 
 def getEyeLockerUnlocked():
-    return True
-    # return LockerView.unlocked
+    #return True
+    return LockerView.unlocked
 
 def getRadioOn():
     return GreenRoom.radioOn

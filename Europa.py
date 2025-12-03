@@ -91,12 +91,11 @@ while running:
                             pygame.mixer.music.play(-1)
                 # Open inventory
                 if event.key == pygame.K_TAB and not Player.cutscene and Room != TitleScreen:
-                    Inventory.open = True
-                    for item in Player.inventory:
-                        print(item)   
+                    Inventory.open = True  
                 if event.key == pygame.K_p:
                     pygame.image.save(screen, f"screenshot{pictureIndex}.png")
                     pictureIndex += 1
+                '''
                 if event.key == pygame.K_v:
                     Player.addItem(Items.valve)
                 if event.key == pygame.K_t:
@@ -105,6 +104,7 @@ while running:
                     print(Player.getGameTime())
                 if event.key == pygame.K_o:
                     Player.events += 1
+                '''
 
         #Movement
         keys = pygame.key.get_pressed()
