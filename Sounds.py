@@ -126,6 +126,9 @@ accessGranted = loadAudio("Audio/accessgranted.mp3")
 bunsen = loadAudio("Audio/bunsen.wav")
 lighter = loadAudio("Audio/lighter.wav")
 
+flytrapDeath = loadAudio("Audio/flytrapDeath.wav")
+setVolume(flytrapDeath, 0.4)
+
 unlock = loadAudio("Audio/unlock.wav")
 
 scary = loadAudio("Audio/scary.wav")

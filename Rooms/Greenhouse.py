@@ -129,6 +129,7 @@ def Room(screen, screen_res, events):
                 elif(flytrapInteractRect.collidepoint(player_pos) and Player.checkItem(Items.herbicide)):
                     if not lit:
                         Player.removeItem(Items.herbicide)
+                        Sounds.flytrapDeath.play()
                         flytrapDead = True
                     else:
                         if not added:
