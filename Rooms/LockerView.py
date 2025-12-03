@@ -32,6 +32,7 @@ yellowElectricalTape = pygame.image.load("Assets/tape_lockerview.png")
 numberTiles = Assets.numberTiles
 lockInterface = Assets.lockInterface
 valve = Assets.airlockValve
+lockerDoor = pygame.image.load("Assets/lockerDoor.png")
 
 tapeRect = pygame.Rect(tape_pos[0], tape_pos[1], 16, 16)
 mopRect = pygame.Rect(mop_pos[0], mop_pos[1], 60, 100)
@@ -88,6 +89,7 @@ def Room(screen, screen_res, events):
                     interface = False
                 else:
                     Sounds.lockerClose.play()
+                    open = False
                     exit = True
         if event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == 1:
@@ -177,8 +179,10 @@ def Room(screen, screen_res, events):
         virtual_screen.blit(scaled_mop, mop_pos)
     if not tapeCollected:
         virtual_screen.blit(yellowElectricalTape, tape_pos)
-    if open and not valveCollected:
-        virtual_screen.blit(valve, valveRect)
+    if open:
+        if not valveCollected:
+            virtual_screen.blit(valve, valveRect)
+        virtual_screen.blit(lockerDoor, (79,12))
 
     if interface:
         virtual_screen.blit(lockInterface, lockInterfaceRect)
