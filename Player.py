@@ -5,7 +5,7 @@ import Objects
 from datetime import datetime
 
 health = 100
-inventory = []
+inventory = [Items.herbicide]
 MaxInventorySize = 20 # MUST ALWAYS BE DIVISIBLE BY 4!!!!
 equipped = None
 cutscene = False

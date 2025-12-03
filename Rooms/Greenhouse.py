@@ -88,6 +88,8 @@ def inBounds(x, y):
         else:
             jumpscare = False
             jumpscareTime.initial_time = -1
+            Pause.musicPath = None
+            Player.cutscene = False
             return 0
     elif not bounds.contains(Point(x,y)):
         return False
@@ -137,9 +139,10 @@ def Room(screen, screen_res, events):
                             added = True
                         jumpscare = True
                         jumpscareTime.initial_time = pygame.time.get_ticks()
+                        Player.cutscene = True
                         pygame.mixer.music.stop()
                         pygame.mixer.music.set_volume(1)
-                        roar = pygame.mixer.Sound("Audio/roar.mp3")
+                        roar = Sounds.loadAudio("Audio/roar.mp3")
                         roar.play()
                 elif(flytrapDead):
                      if keycard.check_collision(player_pos):
