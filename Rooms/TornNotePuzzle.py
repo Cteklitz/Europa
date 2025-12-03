@@ -71,7 +71,7 @@ def Room(screen, screen_res, events):
     virtual_screen.fill((0,0,0))
     dark_overlay.fill((0, 0, 0, 150))
 
-    for i in range(0, len(rects)):
+    for i in range(len(rects)-1, -1, -1):
         virtual_screen.blit(pieces[i], rects[i])
 
     scaled = pygame.transform.scale(virtual_screen, screen_res)
