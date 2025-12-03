@@ -2,12 +2,31 @@ import pygame
 import Items
 import Assets
 import Objects
+from datetime import datetime
 
 health = 100
 inventory = []
-MaxInventorySize = 7
+MaxInventorySize = 20 # MUST ALWAYS BE DIVISIBLE BY 4!!!!
 equipped = None
 cutscene = False
+events = 0
+ending = None
+
+speedrun = False
+startTime = datetime.now()
+finalTime = ""
+
+def setStartTime():
+    global startTime
+    startTime = datetime.now()
+
+def stopTime():
+    global finalTime
+    duration = datetime.now() - startTime
+    finalTime = str(duration)
+
+def getGameTime():
+    return finalTime
 
 # adds an item to inventory
 def addItem(item):
@@ -95,6 +114,18 @@ def consumeItem(index):
     else:
         print(str(index) + " is not a valid inventory value")
         return False
+    
+def getStatus():
+    if events == 0:
+        return 1
+    elif events <= 2:
+        return 2
+    elif events <= 4:
+        return 3
+    elif events <= 6:
+        return 4
+    elif events == 7:
+        return 5
 
 class timer:
     def __init__(self, seconds, repeat):
@@ -130,6 +161,18 @@ right_down = Assets.load_tileset("Assets/right_down.png", 32, 32)
 left_up = Assets.load_tileset("Assets/left_up.png", 32, 32)
 right_up = Assets.load_tileset("Assets/right_up.png", 32, 32)
 
+left_down2 = Assets.load_tileset("Assets/left_down2.png", 32, 32)
+right_down2 = Assets.load_tileset("Assets/right_down2.png", 32, 32)
+
+left_down3 = Assets.load_tileset("Assets/left_down3.png", 32, 32)
+right_down3 = Assets.load_tileset("Assets/right_down3.png", 32, 32)
+
+left_down4 = Assets.load_tileset("Assets/left_down4.png", 32, 32)
+right_down4 = Assets.load_tileset("Assets/right_down4.png", 32, 32)
+
+left_down5 = Assets.load_tileset("Assets/left_down5.png", 32, 32)
+right_down5 = Assets.load_tileset("Assets/right_down5.png", 32, 32)
+
 # Top-Down Animations
 upAnimation = Assets.load_tileset("Assets/topDown_Up.png", 32, 32)
 downAnimation = Assets.load_tileset("Assets/topDown_Down.png", 32, 32)
@@ -160,11 +203,30 @@ def animatePlayer(surface, pos, xScale = 64, yScale = 64, perspective = "isometr
                 scaledImage = pygame.transform.scale(right_up[playerIndex], (xScale, yScale))
                 surface.blit(scaledImage, (pos.x-(xScale/2), pos.y-yScale+16))
         else:
+            status = getStatus()
             if left:
-                scaledImage = pygame.transform.scale(left_down[playerIndex], (xScale, yScale))
+                if status == 1:
+                    scaledImage = pygame.transform.scale(left_down[playerIndex], (xScale, yScale))
+                elif status == 2:
+                    scaledImage = pygame.transform.scale(left_down2[playerIndex], (xScale, yScale))
+                elif status == 3:
+                    scaledImage = pygame.transform.scale(left_down3[playerIndex], (xScale, yScale))
+                elif status == 4:
+                    scaledImage = pygame.transform.scale(left_down4[playerIndex], (xScale, yScale))
+                elif status == 5:
+                    scaledImage = pygame.transform.scale(left_down5[playerIndex], (xScale, yScale))
                 surface.blit(scaledImage, (pos.x-(xScale/2), pos.y-yScale+16))
             else:
-                scaledImage = pygame.transform.scale(right_down[playerIndex], (xScale, yScale))
+                if status == 1:
+                    scaledImage = pygame.transform.scale(right_down[playerIndex], (xScale, yScale))
+                elif status == 2:
+                    scaledImage = pygame.transform.scale(right_down2[playerIndex], (xScale, yScale))
+                elif status == 3:
+                    scaledImage = pygame.transform.scale(right_down3[playerIndex], (xScale, yScale))
+                elif status == 4:
+                    scaledImage = pygame.transform.scale(right_down4[playerIndex], (xScale, yScale))
+                elif status == 5:
+                    scaledImage = pygame.transform.scale(right_down5[playerIndex], (xScale, yScale))
                 surface.blit(scaledImage, (pos.x-(xScale/2), pos.y-yScale+16))
     else:
         if up:

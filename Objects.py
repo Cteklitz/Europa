@@ -10,18 +10,24 @@ class groundItem:
         self.x = xpos
         self.y = ypos
         self.item = item
+        self.width = item[4].get_width()
+        self.height = item[4].get_height()
         self.rect = item.ground_sprite.get_rect(topleft=(xpos, ypos))
         self.collected = False
 
     def check_collision(self, player_pos):
-        in_range = (self.x - 8 < player_pos.x < self.x + 8) and (self.y - 8 < player_pos.y < self.y + 8)
+        in_range = (self.x - 3 < player_pos.x < self.x + self.width + 3) and (self.y - 3 < player_pos.y < self.y + self.height + 3)
 
         if in_range and not self.collected:
             if (Player.addItem(self.item)):
                 self.collected = True
+                return True
             else:
                 print("Inventory is full!")
+                return False
                 # TODO: Add proper inventory is full msg
+        
+        return False
 
     def draw(self, virtual_screen):
         if (self.collected == False):
@@ -97,7 +103,8 @@ class Light:
 
     def update(self):
         level, power = Area.getPipeDungeonInfo()
-        if (level == self.type and power) or (self.type == 1 and Area.getPinkPower()) or (self.type == 2 and Area.getBluePower()):
+        if (level == self.type and power) or (self.type == 1 and Area.getPinkPower()) or (self.type == 2 and Area.getBluePower()) \
+        or (self.type == 3 and Area.getGreenPower()):
             self.image = Assets.tiles[self.type]
             return True
         else:
@@ -202,6 +209,9 @@ def getBeakerSolved():
 def getSpotDiffsSolved():
     return Area.getSpotDiffsSolved()
 
+def getLockboxSolved():
+    return Area.getLockboxSolved()
+
 def getColorsFound():
     return Area.getColorsFound()
 
@@ -210,6 +220,9 @@ def getColorsPlaced():
 
 def getSelected():
     return Area.getSelected()
+
+def getViewedContent3():
+    return Area.getViewedContent3()
 
 def getLetterCount():
     return Area.getLetterCount()
@@ -222,6 +235,12 @@ def getPinkPower():
 
 def getBluePower():
     return Area.getBluePower()
+
+def getGreenPower():
+    return Area.getGreenPower()
+
+def getYellowDoorOpen():
+    return Area.getYellowDoorOpen()
 
 def getWaterLevelsSolved():
     return Area.getWaterLevelsSolved()
@@ -246,3 +265,24 @@ def getBedNumber():
 
 def setBedNumber(num):
     Area.setBedNumber(num)
+
+def getEyeLockerUnlocked():
+    return Area.getEyeLockerUnlocked()
+
+def getBunsenOn():
+    return Area.getBunsenOn()
+
+def getRadioOn():
+    return Area.getRadioOn()
+
+def toggleRadio():
+    Area.toggleRadio()
+
+def getValvePlaced():
+    return Area.getValvePlaced()
+
+def getAlgaeCleaned():
+    return Area.getAlgaeCleaned()
+
+def getSqueegeeCollected():
+    return Area.getSqueegeeCollected()

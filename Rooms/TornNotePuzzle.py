@@ -5,7 +5,8 @@ from shapely.geometry import Point, Polygon
 import Sounds
 import random
 
-virtual_res = (1800,1200)
+# virtual_res = (1800,1200)
+virtual_res = (2200,1600)
 virtual_screen = pygame.Surface(virtual_res)
 dark_overlay = pygame.Surface(virtual_screen.get_size(), pygame.SRCALPHA)
 
@@ -18,7 +19,7 @@ rects = []
 for i in range(1, 25):
     pieces.append(pygame.image.load(f"Assets/tornPiece{i}.png"))
     rects.append(pieces[i-1].get_rect())
-    rects[i-1].center = (random.randint(800,1000), random.randint(500,700))
+    rects[i-1].center = (random.randint(1000,1200), random.randint(700,900))
 
 dragging = False
 dragRect = -1

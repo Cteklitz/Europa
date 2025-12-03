@@ -37,14 +37,21 @@ open = False
 def inBounds(x, y):
     global open
     level, power = Objects.getPipeDungeonInfo()
+    bounds = pygame.Rect(61,58,134,139)
+    blueDoorWalkRect = pygame.Rect(blueDoor.x+16, blueDoor.y, blueDoor.rect.width, blueDoor.rect.height)
+    lockedDoorWalkRect = pygame.Rect(lockedDoor.x-16, lockedDoor.y, lockedDoor.rect.width, lockedDoor.rect.height)
     if blueDoor.rect.collidepoint((x,y)):
-        if (level == 2 and power) or Objects.getBluePower():
+        if ((level == 2 and power) or Objects.getBluePower()) and not Objects.getYellowDoorOpen():
             Sounds.powerAmb.stop()
             Sounds.ominousAmb.play(-1)
         return 0
     if lockedDoor.rect.collidepoint((x,y)) and open:
         return 1
-    elif not outline.contains(Point(x,y)):
+    if blueDoorWalkRect.collidepoint((x,y)):
+        return True
+    if lockedDoorWalkRect.collidepoint((x,y)) and open:
+        return True
+    elif not bounds.collidepoint((x,y)):
         return False
     return True
 
@@ -85,14 +92,14 @@ def Room(screen, screen_res, events):
     virtual_screen.blit(blueDoor.image, blueDoor.rect)
 
     # TODO: Door always open for testing. Change before final version
-    open = True
+    # open = True
     lockedDoor.image = Assets.grayDoorEast
-    # if pink and blue:
-    #     open = True
-    #     lockedDoor.image = Assets.grayDoorEast
-    # else:
-    #     open = False
-    #     lockedDoor.image = Assets.lockedDoorEast
+    if pink and blue:
+        open = True
+        lockedDoor.image = Assets.grayDoorEast
+    else:
+        open = False
+        lockedDoor.image = Assets.lockedDoorEast
     
     virtual_screen.blit(lockedDoor.image, lockedDoor.rect)
 

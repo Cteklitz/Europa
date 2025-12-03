@@ -12,8 +12,14 @@ import random
 
 virtual_res = (250, 150)
 virtual_screen = pygame.Surface(virtual_res)
+virtual_res2 = (750, 450)
+virtual_screen2 = pygame.Surface(virtual_res2)
 player_pos = pygame.Vector2(192, 128)
 dark_overlay = pygame.Surface(virtual_screen.get_size(), pygame.SRCALPHA)
+dark_overlay2 = pygame.Surface(virtual_screen2.get_size(), pygame.SRCALPHA)
+
+soundTimer = Objects.timer(Sounds.scary.get_length() - 1.0, False)
+textTimer = Objects.timer(5.0, False)
 
 bedNumber = 0 # 0 for left bed, 1 for right bed
 exit = False
@@ -23,6 +29,19 @@ lightsOn = True
 backgroundLeft = Assets.bedBackgroundLeft
 backgroundRight = Assets.bedBackgroundRight
 
+radioOn = Assets.radioOn
+radioOff = Assets.radioOff
+radioRect = pygame.Rect(97,94,37,32)
+
+text = Assets.safeText
+
+playedSpooky = False
+
+spookyDone = False
+
+spookyBackground = pygame.image.load("Assets/scaryBedView.png")
+spookyBackgroundAfter = pygame.image.load("Assets/scaryBedViewAfter.png")
+lighter = Objects.groundItem(55, 95, Items.lighter)
 def positionDeterminer(cameFrom):
     pass
 
@@ -34,15 +53,24 @@ def inBounds(x, y):
     return False
 
 def Room(screen, screen_res, events):
-    global exit, lightsOn
+    global exit, lightsOn, playedSpooky, spookyDone, soundTimer, textTimer
     virtual_screen.fill((159, 161, 160))
+    # virtual_screen2.fill((159, 161, 160))
     xScale = screen.get_width()/virtual_screen.get_width() 
     yScale = screen.get_height()/virtual_screen.get_height()
 
-    dark_overlay.fill((0, 0, 0, 100))
+    radioStatus = Objects.getRadioOn()
 
-    Sounds.radioFar.play()
-    Sounds.radioClose.play()
+    level, power = Objects.getPipeDungeonInfo()
+    # Add greenpower statement
+    if level == 3 and power:
+        greenPowerOn = True
+    else:
+        greenPowerOn = False
+    #greenPowerOn = True # FOR TESTING
+
+    dark_overlay.fill((0, 0, 0, 100))
+    dark_overlay2.fill((0, 0, 0, 100))
 
     bedroom = Objects.getBedroomNumber()
     if bedNumber == 0:
@@ -50,14 +78,36 @@ def Room(screen, screen_res, events):
     else:
         virtual_screen.blit(backgroundRight, backgroundRight.get_rect())
 
+    virtual_screen2.blit(spookyBackground, spookyBackground.get_rect())
+    if spookyDone:
+        virtual_screen2.fill((159, 161, 160))
+        virtual_screen2.blit(spookyBackgroundAfter, spookyBackground.get_rect())
+
+    scaledEye = pygame.transform.scale(Assets.eye, (Assets.eye.get_width()/4, Assets.eye.get_height()/4))
+    #virtual_screen2.blit(scaledEye, (360,90), Assets.eye.get_rect())
+
     for event in events:
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_BACKSPACE or event.key == pygame.K_ESCAPE:
-                exit = True
+                if playedSpooky and not spookyDone:
+                    pass
+                else:
+                    exit = True
         if event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == 1:
-                print(f"{bedroom}: {bedNumber}")
-                pass
+                if bedroom == 2:
+                    if bedNumber == 1:
+                        mouse_x, mouse_y = pygame.mouse.get_pos()
+                        mouse_pos = (mouse_x/xScale, mouse_y/yScale)
+                        if radioRect.collidepoint(mouse_pos) and greenPowerOn:
+                            Objects.toggleRadio()
+                            Sounds.combo.play()
+                            if radioStatus:
+                                Sounds.radioClose.stop()
+                                Sounds.radioFar.stop()
+                            else:
+                                Sounds.radioClose.play(-1)
+                                Sounds.radioFar.play(-1)
 
     # location specfic things
     match bedroom:
@@ -68,7 +118,16 @@ def Room(screen, screen_res, events):
                 case 0: # left bed
                     pass
                 case 1: # right bed
-                    pass
+                    for event in events:
+                        if event.type == pygame.MOUSEBUTTONDOWN:
+                            click_x, click_y = event.pos
+                            click_x_unscaled = click_x/xScale
+                            click_y_unscaled = click_y/yScale
+                            mouse_pos = pygame.Vector2(click_x_unscaled, click_y_unscaled)
+                            if lighter.check_collision(mouse_pos):
+                                Sounds.pickup.play()
+                    Objects.groundItem.draw(lighter, virtual_screen)
+
         case 2: # Bedroom 2
             # light flickering
             lightRng = random.randint(0, 100)
@@ -77,23 +136,43 @@ def Room(screen, screen_res, events):
 
                 # play flicker sound
                 lightRng = random.randint(1,5)
-                match lightRng:
-                    case 1:
-                        Sounds.spark1.play()
-                    case 2:
-                        Sounds.spark2.play()
-                    case 3:
-                        Sounds.spark3.play()
-                    case 4:
-                        Sounds.spark4.play()
-                    case 5:
-                        Sounds.spark5.play()
+                if greenPowerOn:
+                    match lightRng:
+                        case 1:
+                            Sounds.spark1.play()
+                        case 2:
+                            Sounds.spark2.play()
+                        case 3:
+                            Sounds.spark3.play()
+                        case 4:
+                            Sounds.spark4.play()
+                        case 5:
+                            Sounds.spark5.play()
 
             match bedNumber:
                 case 0: # left bed
-                    pass
+                    if not playedSpooky: # initiate spooky cutscene
+                        Player.cutscene = True
+                        Player.events += 1
+                        Sounds.scary.play()
+                        playedSpooky = True
+                        soundTimer.setInitial()
+                        Sounds.radioFar.set_volume(0.07)
+                    if soundTimer.Done() and not textTimer.Done(): # go from sound part to text part of cutscene
+                        Sounds.scary.stop()
+                        textTimer.setInitial()
+                        Sounds.radioFar.set_volume(0.15)
+                    if textTimer.Done() and not spookyDone: # finish cutscene
+                        spookyDone = True
+                        Player.cutscene = False
                 case 1: # right bed
-                    pass
+                    if greenPowerOn:
+                        if radioStatus:
+                            virtual_screen.blit(radioOn, (97,94))
+                        else:
+                            virtual_screen.blit(radioOff, (97,94))
+                    else:
+                        virtual_screen.blit(radioOff, (97,94))
         case 3: # Bedroom 3
             lightsOn = True
 
@@ -103,14 +182,23 @@ def Room(screen, screen_res, events):
                 case 1: # right bed
                     pass        
 
+    if not greenPowerOn:
+        lightsOn = False
 
     if not lightsOn:
         virtual_screen.blit(dark_overlay, (0, 0))
+        virtual_screen2.blit(dark_overlay2, (0, 0))
 
     lightRng = random.randint(0, 100)
     if not lightsOn and lightRng < 30:
         lightsOn = True
 
-    scaled = pygame.transform.scale(virtual_screen, screen_res)
+    if soundTimer.Done() and not textTimer.Done() and not spookyDone: # text for cutscene
+        virtual_screen.blit(text, (0,0))
+        scaled = pygame.transform.scale(virtual_screen, screen_res)
+    elif bedNumber == 0 and bedroom == 2: # spooky bg (its a different res so needs a different virtual screen)
+        scaled = pygame.transform.scale(virtual_screen2, screen_res)
+    else: # normal scene
+        scaled = pygame.transform.scale(virtual_screen, screen_res)
     screen.blit(scaled, (0, 0))
     return player_pos, xScale, yScale

@@ -31,6 +31,7 @@ lights = [
 leftBed = pygame.image.load("Assets/leftBed.png")
 rightBed = pygame.image.load("Assets/rightBed.png")
 leftDesk = pygame.image.load("Assets/leftBedroomDesk.png")
+leftBookDesk = pygame.image.load("Assets/leftBedroomBookDesk.png")
 rightDesk = pygame.image.load("Assets/rightBedroomDesk.png")
 thermometerOnDesk = pygame.image.load("Assets/ThermometerOnDesk.png")
 
@@ -38,6 +39,7 @@ thermometerOnDesk = pygame.image.load("Assets/ThermometerOnDesk.png")
 trash = pygame.image.load("Assets/Trash.png")
 trashInteractRect = trash.get_rect()
 trashInteractRect.topleft = (108,185)
+playedTrash = False
 
 leftDeskInteractRect = leftDesk.get_rect()
 leftDeskInteractRect.topleft = (25, 160)
@@ -78,46 +80,60 @@ greenPowerOn = False
 notePuzzle = False
 
 def inBounds(x, y):
-    global leftBed, rightBed, bedView, notePuzzle, deskView
+    global leftBed, rightBed, bedView, notePuzzle, deskView, playedTrash
     level, power = Objects.getPipeDungeonInfo()
-    leftBedRect = leftBed.get_rect()
-    leftBedRect.topleft = (37,37)
-    rightBedRect = rightBed.get_rect()
-    rightBedRect.topleft = (172,37)
+    leftBedRect = pygame.Rect(37, 37, leftBed.get_width() + 10, leftBed.get_height())
+    rightBedRect = pygame.Rect(162,37, rightBed.get_width() + 20, rightBed.get_height())
     rightDeskRect = rightDesk.get_rect()
     rightDeskRect.topleft = (148, 168)
     leftDeskRect = leftDesk.get_rect()
     leftDeskRect.topleft = (45, 168)
     #rightDeskRect.topleft = (45, 176)
     trashRect = pygame.Rect(112,190, 30, 40)
-    backWallRect = pygame.Rect(100,200, 60, 60)
+
+    bounds = pygame.Rect(61,58,134,139)
+    northDoorWalkRect = pygame.Rect(northDoor.x, northDoor.y+16, northDoor.rect.width, northDoor.rect.height)
 
     if northDoor.rect.collidepoint((x,y)):
         tooDarkSee.activated_time = -1
         trashEmpty.activated_time = -1
         somethingInside.activated_time = -1
+        # Stop any playing trash sounds when leaving room
+        Sounds.TrashSounds.stop()
+        if BedroomNumber == 2:
+            if (level == 3 and power) or Objects.getGreenPower():
+                Sounds.ominousAmb.stop()
+                Sounds.powerAmb.play(-1)
         return 0
     elif bedView:
+        trashEmpty.activated_time = -1
         bedView = False
         return 1
     elif deskView:
+        trashEmpty.activated_time = -1
         deskView = False
         return 3  # Return BedroomDeskView
     elif notePuzzle:
+        trashEmpty.activated_time = -1
         if somethingInside.activated_time == -1:
+            # Stop trash sounds when briefText finishes
+            Sounds.TrashSounds.stop()
             notePuzzle = False
+            playedTrash = True
             return 2
         else:
             return False
+    elif northDoorWalkRect.collidepoint((x,y)):
+        return True
     elif leftBedRect.collidepoint((x,y)) or rightBedRect.collidepoint((x,y)) or leftDeskRect.collidepoint(x, y) or rightDeskRect.collidepoint(x, y) \
-    or trashRect.collidepoint(x,y) or backWallRect.collidepoint(x, y):
+    or trashRect.collidepoint(x,y):
         return False
-    elif not outline.contains(Point(x,y)):
+    elif not bounds.collidepoint((x,y)):
         return False
     return True
 
 def positionDeterminer(cameFrom):
-    global player_pos, leftBedInteractRect, rightBedInteractRect, leftDeskInteractRect
+    global player_pos, leftBedInteractRect, rightBedInteractRect, leftDeskInteractRect, playedTrash
     bedNum = Objects.getBedNumber()
     if cameFrom == "Rooms.GreenRoom":
         player_pos = pygame.Vector2(northDoor.x + northDoor.rect.width/2, northDoor.y + northDoor.rect.height + 5)
@@ -129,42 +145,53 @@ def positionDeterminer(cameFrom):
         player_pos = pygame.Vector2(leftBedInteractRect.x + 40, leftBedInteractRect.y + 44)
     else: # came from right bed view
         player_pos = pygame.Vector2(rightBedInteractRect.x + 8, rightBedInteractRect.y + 44)
+        if BedroomNumber == 2:
+            Sounds.setVolume(Sounds.radioClose, 0.4) # set radio volume back to normal if came from the bedview containing radio, as it was increased when viewing
 
 def Room(screen, screen_res, events):
     global bedView, lightsOn, greenPowerOn, notePuzzle, deskView
     level, power = Objects.getPipeDungeonInfo()
 
-    Sounds.radioFar.play()
-    Sounds.radioClose.play()
-
     # Add greenpower statement
-    if level == 3 and power:
+    if (level == 3 and power) or Objects.getGreenPower():
         greenPowerOn = True
     else:
         greenPowerOn = False
-
-    greenPowerOn = True # FOR TESTING
+    #greenPowerOn = True # FOR TESTING
 
     for event in events:
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_e:
-                # TODO: Only enter bedview if green power is on
                 if leftBedInteractRect.collidepoint(player_pos): # go to left bedview
-                    Objects.setBedNumber(0)
-                    bedView = True
+                    if greenPowerOn:
+                        Objects.setBedNumber(0)
+                        bedView = True
+                    else:
+                        tooDarkSee.activated_time = pygame.time.get_ticks()
                 elif rightBedInteractRect.collidepoint(player_pos): # go to right bedview
-                    Objects.setBedNumber(1)
-                    bedView = True
-                elif leftDeskInteractRect.collidepoint(player_pos) and BedroomNumber == 1: # go to bedroom 1 desk view
-                    deskView = True
+                    if greenPowerOn:
+                        Objects.setBedNumber(1)
+                        if BedroomNumber == 2:
+                            Sounds.setVolume(Sounds.radioClose, 0.5) # make radio volume louder when in the bedview containing the radio
+                        bedView = True
+                    else:
+                        tooDarkSee.activated_time = pygame.time.get_ticks()
+                elif leftDeskInteractRect.collidepoint(player_pos) and (BedroomNumber == 1 or BedroomNumber == 3): # go to desk view
+                    if greenPowerOn:
+                        deskView = True
+                    else:
+                        tooDarkSee.activated_time = pygame.time.get_ticks()
                 elif trashInteractRect.collidepoint(player_pos):
                     if not greenPowerOn:
                         tooDarkSee.activated_time = pygame.time.get_ticks()
                     elif BedroomNumber == 1 or BedroomNumber == 2:
                         trashEmpty.activated_time = pygame.time.get_ticks()
                     else:
-                        somethingInside.activated_time = pygame.time.get_ticks()
-                        notePuzzle = True
+                        if not playedTrash:
+                            # Play trash searching sound during the wait time
+                            Sounds.TrashSounds.play()
+                            somethingInside.activated_time = pygame.time.get_ticks()
+                        notePuzzle = True          
 
     virtual_screen.fill((105,105,105))
     dark_overlay.fill((0, 0, 0, 150))
@@ -204,7 +231,10 @@ def Room(screen, screen_res, events):
     virtual_screen.blit(leftBed, (37,37))
     virtual_screen.blit(rightBed, (172,37))
     virtual_screen.blit(rightDesk, (148,168))
-    virtual_screen.blit(leftDesk, (45,168))
+    if BedroomNumber == 3:
+        virtual_screen.blit(leftBookDesk, (45,168))
+    else:
+        virtual_screen.blit(leftDesk, (45,168))
     
     # Draw thermometer on desk only if not collected and in bedroom 1
     if BedroomNumber == 1 and not BedroomDeskView.thermometerCollected:
@@ -223,19 +253,20 @@ def Room(screen, screen_res, events):
         if lightRng < 2:
             lightsOn = False
 
+            if greenPowerOn:
             # play flicker sound
-            lightRng = random.randint(1,5)
-            match lightRng:
-                case 1:
-                    Sounds.spark1.play()
-                case 2:
-                    Sounds.spark2.play()
-                case 3:
-                    Sounds.spark3.play()
-                case 4:
-                    Sounds.spark4.play()
-                case 5:
-                    Sounds.spark5.play()
+                lightRng = random.randint(1,5)
+                match lightRng:
+                    case 1:
+                        Sounds.spark1.play()
+                    case 2:
+                        Sounds.spark2.play()
+                    case 3:
+                        Sounds.spark3.play()
+                    case 4:
+                        Sounds.spark4.play()
+                    case 5:
+                        Sounds.spark5.play()
     elif BedroomNumber == 3:
         lightsOn = True
 

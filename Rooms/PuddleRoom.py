@@ -58,8 +58,6 @@ spark_positions = []
 hatchPosition = (90, 40)
 hatchRect = pygame.Rect(hatchPosition[0], hatchPosition[1], new_size[0], new_size[1])  # Clickable area
 
-bounds = Polygon([(48,48), (368,48), (368,208), (48,208)])
-
 def draw_electrical_effects(surface, puddle_positions):
     global electrical_timer, spark_positions
     
@@ -101,9 +99,16 @@ def inBounds(x, y):
     global powerRoom, puddleSelected
 
     level, power = Objects.getPipeDungeonInfo()
+
+    bounds = pygame.Rect(61,58,294,139)
+    southDoorWalkRect = pygame.Rect(southDoor.x, southDoor.y-16, southDoor.rect.width, southDoor.rect.height)
+    westDoorWalkRect = pygame.Rect(westDoor.x+16, westDoor.y, westDoor.rect.width, westDoor.rect.height)
+    eastDoorWalkRect = pygame.Rect(eastDoor.x-16, eastDoor.y, eastDoor.rect.width, eastDoor.rect.height)
+    topRightWallBound = pygame.Rect(topRightWall.x - 12, topRightWall.y, topRightWall.width + 12, topRightWall.height + 10)
+    bottomRightWallBound = pygame.Rect(bottomRightWall.x - 12, bottomRightWall.y - 10, bottomRightWall.width + 12, bottomRightWall.height + 10)
+
     if southDoor.rect.collidepoint((x,y)):
         cleanup()
-        Sounds.electricityNoise.stop()
         if not Objects.getBluePower():
             Sounds.ominousAmb.stop()
             Sounds.powerAmb.play(-1)
@@ -131,7 +136,9 @@ def inBounds(x, y):
             Sounds.powerOnAmb.play(-1)
         powerRoom = False
         return 3
-    elif not bounds.contains(Point(x,y)) or topRightWall.collidepoint((x,y)) or bottomRightWall.collidepoint((x,y)):
+    elif southDoorWalkRect.collidepoint((x,y)) or westDoorWalkRect.collidepoint((x,y)) or eastDoorWalkRect.collidepoint((x,y)):
+        return True
+    elif not bounds.collidepoint((x,y)) or topRightWallBound.collidepoint((x,y)) or bottomRightWallBound.collidepoint((x,y)):
         return False
     else:
         # Check if puddles are cleaned up - if not, block movement through puddle area
@@ -161,6 +168,7 @@ def cleanup():
     #Stop electricity sound when leaving the room
     if hasattr(Room, 'electricityChannel') and Room.electricityChannel:
         Room.electricityChannel.stop()
+        Room.electricityChannel = None
         Room.electricityPlaying = False
 
 def Room(screen, screen_res, events):
@@ -209,15 +217,11 @@ def Room(screen, screen_res, events):
             # Set stereo volumes
             Sounds.electricityNoise.set_volume(leftVolume)
             
-            if not hasattr(Room, 'electricityChannel'):
-                Room.electricityChannel = Sounds.electricityNoise.play(5)  # Loop indefinitely
-                Room.electricityPlaying = False
-            if not Room.electricityPlaying and distance <= maxDistance:
-                Room.electricityChannel = Sounds.electricityNoise.play(-1)  # Restart if stopped
+            if not hasattr(Room, 'electricityChannel') or Room.electricityChannel is None:
+                Room.electricityChannel = Sounds.electricityNoise.play(-1)  # Loop indefinitely
                 Room.electricityPlaying = True
-            
-        
-            Room.electricityChannel.set_volume(leftVolume, rightVolume)
+            elif Room.electricityChannel is not None:
+                Room.electricityChannel.set_volume(leftVolume, rightVolume)
             
         else:
             #stop the sound if too far away
@@ -238,10 +242,12 @@ def Room(screen, screen_res, events):
                             lowerLevelFloodedText.activated_time = pygame.time.get_ticks()
                         else:
                             powerRoom = True
+                            Sounds.drain.stop()
                     
                     elif Player.checkItem(Items.electricalTape):
                         if wireRect.collidepoint(player_pos) and not wireRepaired:
-                            Sounds.tape.play()
+                            channel1 = pygame.mixer.Channel(5)
+                            channel1.play(Sounds.tape)
                             wireRepaired = True
                     elif puddleRegion.collidepoint(player_pos):
                         # Check if puddles are already cleaned

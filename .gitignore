@@ -2,3 +2,7 @@
 /__pycache__
 *.pyc
 *.pyc
+/dist
+Europa.zip
+/build
+*.spec

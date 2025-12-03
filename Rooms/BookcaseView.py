@@ -4,6 +4,7 @@ import Objects
 from shapely.geometry import Point, Polygon
 import Sounds
 import Player
+import Pause
 
 virtual_res = (384,271)
 virtual_screen = pygame.Surface(virtual_res)
@@ -19,7 +20,7 @@ screen2 = False
 tooDark = Objects.briefText(virtual_screen, Assets.tooDarkRead, -5, 200, 3)
 
 def inBounds(x, y):
-    global exit, tooDark, orangeYellow, safe
+    global exit, tooDark, orangeYellow, safe, fishtank
     if exit:
         exit = False
         tooDark.activated_time = -1
@@ -30,10 +31,15 @@ def inBounds(x, y):
     elif safe:
         safe = False
         return 2
+    elif fishtank:
+        fishtank = False
+        return 3
     return False
 
 bookcaseView = pygame.image.load("Assets/BookcaseView.png")
 bookcaseView2 = pygame.image.load("Assets/BookcaseView2.png")
+bookcaseViewClean = pygame.image.load("Assets/BookcaseViewClean.png")
+bookcaseView2Clean = pygame.image.load("Assets/BookcaseView2Clean.png")
 Book1 = pygame.image.load("Assets/ResearchVol1.png")
 Content1 = pygame.image.load("Assets/ResearchVol1Content.png")
 Book2 = pygame.image.load("Assets/ResearchVol2.png")
@@ -61,6 +67,8 @@ content4 = False
 cutscene = False
 orangeYellow = False
 safe = False
+fishtank = False
+viewedContent3 = False
 
 timer1 = Objects.timer(10, False)
 timer2 = Objects.timer(5, False)
@@ -69,13 +77,14 @@ timer4 = Objects.timer(4, False)
 timer5 = Objects.timer(6, False)
 timer6 = Objects.timer(0, False)
 timer7 = Objects.timer(0.01, True)
-timer8 = Objects.timer(1, False)
+timer8 = Objects.timer(1.13, False)
 
 def positionDeterminer(cameFrom):
     pass
 
 def Room(screen, screen_res, events):
-    global exit, screen2, bookcaseView, Book1, Content1, book1, content1, Book2, Content2, book2, content2, Book3, Content3, book3, content3, Book4, Content4, book4, content4, cutscene, centerPos, scaled_eye, orangeYellow, orangeYellowRect, safe
+    global exit, screen2, bookcaseView, Book1, Content1, book1, content1, Book2, Content2, book2, content2, Book3, Content3, book3, content3, \
+        Book4, Content4, book4, content4, cutscene, centerPos, scaled_eye, orangeYellow, orangeYellowRect, safe, fishtank, viewedContent3
 
     level, power = Objects.getPipeDungeonInfo()
     _, lowerWingPower = Objects.getPinkWingInfo()
@@ -94,6 +103,8 @@ def Room(screen, screen_res, events):
     bigBookRect = Polygon([(257,3), (835,3), (835,855), (257,855)])
     orangeYellowRect = pygame.Rect(207,162,52,29)
     safeRect = pygame.Rect(136,222,89,36)
+
+    algaeCleaned = Objects.getAlgaeCleaned()
 
     for event in events:
         if event.type == pygame.KEYDOWN:
@@ -115,6 +126,7 @@ def Room(screen, screen_res, events):
                         if book4:
                             pygame.mixer.music.stop()
                             Sounds.powerAmb.play(-1)
+                            Pause.musicPath = None
                             book4 = False
                         screen2 = False
                     else:
@@ -134,6 +146,9 @@ def Room(screen, screen_res, events):
                                 orangeYellow = True
                             if safeRect.collidepoint((scaled_mouse_x,scaled_mouse_y)):
                                 safe = True
+                            fishtank_rect = pygame.Rect(165, 79, 80, 50)
+                            if fishtank_rect.collidepoint((scaled_mouse_x,scaled_mouse_y)):
+                                fishtank = True
                             if researchVol1Rect.contains(Point(scaled_mouse_x, scaled_mouse_y)):
                                 Sounds.book.play()
                                 screen2 = True
@@ -148,8 +163,10 @@ def Room(screen, screen_res, events):
                                 book3 = True
                             elif THETRUTHRect.contains(Point(scaled_mouse_x, scaled_mouse_y)) and not cutscene:
                                 Sounds.powerAmb.stop()
-                                pygame.mixer.music.load("Audio/dark ambience.wav")
+                                Sounds.loadMusic("Audio/dark ambience.wav")
                                 pygame.mixer.music.play(-1)
+                                Pause.musicPath = "Audio/dark ambience.wav"
+                                Pause.volume = 1
                                 screen2 = True
                                 book4 = True
                         elif bigBookRect.contains(Point(scaled_mouse_x2, scaled_mouse_y2)):
@@ -160,6 +177,7 @@ def Room(screen, screen_res, events):
                                 Sounds.page.play()
                                 content2 = True
                             if book3:
+                                viewedContent3 = True
                                 Sounds.powerAmb.stop()
                                 Sounds.heartbeat.play(-1)
                                 Sounds.page.play()
@@ -169,18 +187,26 @@ def Room(screen, screen_res, events):
                                 Sounds.page.play()
                                 content4 = True
                                 Player.cutscene = True
+                                Player.events += 1
+                                Pause.musicPath = None
 
     virtual_screen.fill("gray")
     virtual_screen2.fill("black")
     dark_overlay.fill((0, 0, 0, 150))
 
-    if lit or Objects.getPinkPower():
-        Assets.punch_light_hole(virtual_screen, dark_overlay, (virtual_screen.get_width()/2, virtual_screen.get_height()/2), 500, (100, 0, 100))
+    # if lit or Objects.getPinkPower():
+    #     Assets.punch_light_hole(virtual_screen, dark_overlay, (virtual_screen.get_width()/2, virtual_screen.get_height()/2), 500, (100, 0, 100))
 
     if not cutscene:
-        virtual_screen.blit(bookcaseView, (0, 0))
+        if algaeCleaned:
+            virtual_screen.blit(bookcaseViewClean, (0, 0))
+        else:
+            virtual_screen.blit(bookcaseView, (0, 0))
     else:
-        virtual_screen.blit(bookcaseView2, (0, 0))
+        if algaeCleaned:
+            virtual_screen.blit(bookcaseView2Clean, (0, 0))
+        else:
+            virtual_screen.blit(bookcaseView2, (0, 0))
 
     if book1:
         virtual_screen2.blit(Book1, (0, 0))
@@ -230,7 +256,7 @@ def Room(screen, screen_res, events):
                                 Sounds.brainwash.stop()
                                 level, power = Objects.getPipeDungeonInfo()
                                 _, lowerWingPower = Objects.getPinkWingInfo()
-                                if level == 1 and power and lowerWingPower:
+                                if (level == 1 and power and lowerWingPower) or Objects.getPinkPower():
                                     Sounds.ominousAmb.stop()
                                     Sounds.powerAmb.play(-1)
                                 else:
@@ -245,7 +271,8 @@ def Room(screen, screen_res, events):
         if timer6.Done():
             virtual_screen2.blit(Onewayout, (0,0))
 
-    virtual_screen.blit(dark_overlay, (0, 0))
+    if not (lit or Objects.getPinkPower()):
+        virtual_screen.blit(dark_overlay, (0, 0))
 
     if not lit and not Objects.getPinkPower():
         tooDark.update()

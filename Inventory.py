@@ -1,12 +1,39 @@
 import pygame
 import Assets
 import Player
-
+import Objects
+import Items
+import random
+import Sounds
+import Area
 virtual_res = (900, 650)
 #virtual_res = (1024, 720)
 virtual_screen = pygame.Surface(virtual_res)
 open = False
 inventory = pygame.image.load("Assets/InventoryMenu.png")
+emptySlot = pygame.image.load("Assets/emptyslot.png")
+fullSlot = pygame.image.load("Assets/fullslot.png")
+
+status1 = pygame.image.load("Assets/status1.png")
+status2 = pygame.image.load("Assets/status2.png")
+status3 = pygame.image.load("Assets/status3.png")
+status4 = pygame.image.load("Assets/status4.png")
+status5 = pygame.image.load("Assets/status5.png")
+
+eyeOpen = pygame.transform.scale(pygame.image.load("Assets/EyeWall.png"), (32, 22))
+eyeClosed = pygame.transform.scale(pygame.image.load("Assets/eyeClosedWall.png"), (32, 22))
+eyes = [eyeOpen, eyeClosed]
+currEye = eyes[0]
+currIndex = 0
+firstTime = pygame.time.get_ticks()
+nextBlinkDelay = random.randint(3000, 5000)
+
+slotsBase = (407, 240)
+slotsbuffer = 2
+
+randomNames = ["Electric Tape", "Lighter", "STORAGE", "STATUS", "DESCRIPTION"]
+descriptions = ["@@@@@ THE @@@ ONLY @@@ WAY @@@ OUT @@@@@", "@@@@@ CERTAIN @@@ DEATH @@@@@@"]
+frames = 9
 
 index = 0
 imagePositions = [
@@ -36,14 +63,21 @@ equipRect = pygame.Rect(685,550,170,53)
 
 descRect = pygame.Rect(353,323,510,285)
 
+running = True
+
 def Inventory(screen, screen_res, events):
-    global open, index, selected
+    global open, index, selected, running, frames, currIndex, currEye, firstTime, nextBlinkDelay
     xScale = screen.get_width()/virtual_screen.get_width() 
     yScale = screen.get_height()/virtual_screen.get_height()
+    currTime = pygame.time.get_ticks()
 
     for event in events:
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_TAB:
+        if event.type == pygame.QUIT:
+            running = False      
+        elif event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_ESCAPE:
+                open = False
+            if event.key == pygame.K_TAB or event.key == pygame.K_BACKSPACE:
                 open = False
         elif event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == 1:
@@ -51,14 +85,14 @@ def Inventory(screen, screen_res, events):
                 mouse_pos = (mouse_x/xScale, mouse_y/yScale)
                 if leftArrowRect.collidepoint(mouse_pos):
                     if index == 0:
-                        index = Player.MaxInventorySize - 1
+                        index = Player.MaxInventorySize - 4
                     else: 
-                        index = index - 1
+                        index = index - 4
                 if rightArrowRect.collidepoint(mouse_pos):
-                    if index == Player.MaxInventorySize - 1:
+                    if index == Player.MaxInventorySize - 4:
                         index = 0
                     else:
-                        index = index + 1
+                        index = index + 4
                 if findIndex() < len(Player.inventory):
                     if equipRect.collidepoint(mouse_pos) and Player.inventory[findIndex()].buttonType == "equip":
                         Player.consumeItem(findIndex())
@@ -75,16 +109,92 @@ def Inventory(screen, screen_res, events):
                     count += 1
 
     virtual_screen.blit(inventory, (0,0))
+    valvePlaced = Objects.getValvePlaced()
+
+    if valvePlaced: # if the final valve has been placed
+        # draw eyes on border
+        if (currTime - firstTime >= nextBlinkDelay) and not Player.cutscene:
+            currIndex = (currIndex + 1) % len(eyes)
+            currEye = eyes[currIndex] # sets current eye for animation in array
+            firstTime = currTime
+        if currIndex == 1: # closed eye
+            nextBlinkDelay = random.randint(70, 120)
+            Sounds.blink.play()
+        else: # open eye
+            nextBlinkDelay = random.randint(2000, 5000)
+        for i in range(20):
+            xPos = int((inventory.get_width()/22) + (i * (inventory.get_width()/22)) + (inventory.get_width()/22 - eyeOpen.get_width()) / 2)
+            virtual_screen.blit(currEye, (xPos, 0))
+            virtual_screen.blit(currEye, (xPos, inventory.get_height() - eyeOpen.get_height()))
+        
+        for i in range (21):
+            yPos = int(i * (inventory.get_height()/21) + ((inventory.get_height()/21) - eyeOpen.get_height()) / 2)
+            virtual_screen.blit(currEye, (0, yPos))
+            virtual_screen.blit(currEye, (inventory.get_width() - eyeOpen.get_width(), yPos))
+        if frames == 9:
+            frames = 0
+            # randomize the names of the final items
+            for i in range(len(randomNames)):
+                chars = list(randomNames[i])
+                for j in range(len(chars)):
+                    if chars[j] != ' ' and random.randint(0,2) == 0: # skip space and only change each letter 1/3 times
+                        chars[j] = chr(random.randint(1,128))
+                        if chars[j] == ' ': # ensure the name does not become all spaces
+                            chars[j] = '%'
+                randomNames[i] = "".join(chars)
+
+            # randomize chars in tape desc
+            chars = list (descriptions[0])
+            for i in range(len(chars)):
+                #print(f"{i}: {chars[i]}")
+                if i not in range(5, 10) and i not in range(13, 19) and i not in range(22, 27) and i not in range(30, 35):
+                    chars[i] = chr(random.randint(1,128))
+            descriptions[0] = "".join(chars)
+
+            # randomize chars in lighter desc
+            chars = list (descriptions[1])
+            for i in range(len(chars)):
+                #print(f"{i}: {chars[i]}")
+                if i not in range(5, 14) and i not in range(17, 24):
+                    chars[i] = chr(random.randint(1,128))
+            descriptions[1] = "".join(chars)
+
+        frames += 1
+
+    # draw titles
+    font = pygame.font.Font("Assets/asusrog_regular.ttf", 36)
+    text = font.render(randomNames[2], False, "black")
+    textRect = text.get_rect()
+    textRect.center = (450, 50)
+    virtual_screen.blit(text, textRect)
+
+    text = font.render(randomNames[3], False, "black")
+    textRect = text.get_rect()
+    textRect.center = (139, 300)
+    virtual_screen.blit(text, textRect)
+
+    text = font.render(randomNames[4], False, "black")
+    textRect = text.get_rect()
+    textRect.center = (497, 300)
+    virtual_screen.blit(text, textRect)
 
     i = index
     for slot in imagePositions:
         if len(Player.inventory) > i:
-            virtual_screen.blit(Player.inventory[i].inventory_sprite, slot)
-            font = pygame.font.Font("Assets/Minecraft.ttf", 24)
-            text = font.render(Player.inventory[i].name, True, "white")
-            textRect = text.get_rect()
-            textRect.center = (slot[0]+50, slot[1]+105)
-            virtual_screen.blit(text, textRect)
+            if not valvePlaced:
+                virtual_screen.blit(Player.inventory[i].inventory_sprite, slot)
+                font = pygame.font.Font("Assets/Minecraft.ttf", 24)
+                text = font.render(Player.inventory[i].name, False, "white")
+                textRect = text.get_rect()
+                textRect.center = (slot[0]+50, slot[1]+105)
+                virtual_screen.blit(text, textRect)
+            else: # print random names if valve placed
+                virtual_screen.blit(Player.inventory[i].inventory_sprite, slot)
+                font = pygame.font.Font("Assets/Minecraft.ttf", 24)
+                text = font.render(randomNames[i], False, "white")
+                textRect = text.get_rect()
+                textRect.center = (slot[0]+50, slot[1]+105)
+                virtual_screen.blit(text, textRect)
             
         if i == Player.MaxInventorySize - 1:
             i = 0
@@ -95,7 +205,10 @@ def Inventory(screen, screen_res, events):
         pygame.draw.rect(virtual_screen, "white", selectionRects[selected], 5)
         if findIndex() < len(Player.inventory):
             font = pygame.font.Font("Assets/Minecraft.ttf", 24)
-            Assets.draw_text(virtual_screen, Player.inventory[findIndex()].description, "white", descRect, font)
+            if not valvePlaced:
+                Assets.draw_text(virtual_screen, Player.inventory[findIndex()].description, "white", descRect, font)
+            else:
+                Assets.draw_text(virtual_screen, descriptions[findIndex()], "white", descRect, font)
 
             if Player.inventory[findIndex()].buttonType == "equip":
                 if Player.checkItem(Player.inventory[findIndex()]):
@@ -105,5 +218,26 @@ def Inventory(screen, screen_res, events):
             else:
                     virtual_screen.blit(Assets.useButton, useRect)
 
+    for i in range(int(Player.MaxInventorySize / 4)):
+        if index not in range (i * 4, (i + 1) * 4):
+            virtual_screen.blit(emptySlot, (slotsBase[0] + (i * (slotsbuffer + emptySlot.get_width())), slotsBase[1]))
+        else:
+            virtual_screen.blit(fullSlot, (slotsBase[0] + (i * (slotsbuffer + emptySlot.get_width())), slotsBase[1]))
+
+    status = Player.getStatus()
+
+    if status == 1:
+        virtual_screen.blit(status1, (42,314))
+    if status == 2:
+        virtual_screen.blit(status2, (42,314))
+    if status == 3:
+        virtual_screen.blit(status3, (42,314))
+    if status == 4:
+        virtual_screen.blit(status4, (42,314))
+    if status == 5:
+        virtual_screen.blit(status5, (42,314))
+
     scaled = pygame.transform.scale(virtual_screen, screen_res)
     screen.blit(scaled, (0, 0))
+
+    return running

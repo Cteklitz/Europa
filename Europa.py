@@ -10,9 +10,14 @@ pygame.init()
 pygame.mixer.init()
 
 import Area
-from Rooms import MainRoom
+from Rooms import TitleScreen, MainRoom
 import Player
 import Inventory
+import Controls
+import Pause
+import Sounds
+import Items
+import Objects
 
 screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
 screenRes = screen.get_size()
@@ -20,7 +25,8 @@ clock = pygame.time.Clock()
 running = True
 dt = 0
 area = Area.PipeDungeon
-Room = MainRoom
+Room = TitleScreen
+pictureIndex = 1
 
 # Each room file must contain these three functions:
 # 1. Room(screen, screen_res, events) - Contains the loop of what is being drawn for that room, logic to update variables based on input, etc.
@@ -41,45 +47,87 @@ def updateRoom(room):
 
 while running:
     events = pygame.event.get()
+    
+    # Check for electrical tape equip in SubRoom (runs even when inventory is open)
+    import Rooms.SubRoom as SubRoomModule
+    if Room == SubRoomModule:
+        SubRoomModule.check_electrical_tape_equip()
+    
     if Inventory.open:
-        Inventory.Inventory(screen, screenRes, events)
+        if not Inventory.Inventory(screen, screenRes, events):
+            running = False
+    elif Controls.open:
+        if not Controls.Controls(screen, screenRes, events):
+            running = False
+    elif Pause.open:
+        if not Pause.Pause(screen, screenRes, events):
+            running = False
     else:
         player_pos, xSpeedScale, ySpeedScale = area.getPos(screen, screenRes, events, Room)
 
         for event in events:
+            if event.type == pygame.MOUSEBUTTONDOWN: # send backspace when pressing right click to let right click back out of first person screens
+                if event.button == 3:
+                    backspace_event = pygame.event.Event(pygame.KEYDOWN, key=pygame.K_BACKSPACE, unicode='\\b', mod=pygame.KMOD_NONE)
+                    pygame.event.post(backspace_event)
+            
             if event.type == pygame.QUIT:
-                    running = False
+                    running = False            
             elif event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE:
-                    running = False
+                if event.key == pygame.K_ESCAPE and not Player.cutscene:
+                    if Room == TitleScreen:
+                        # Quit game
+                        running = False
+                    else:
+                        # Open pause menu
+                        Pause.open = True
+                        # Pause in-game audio
+                        pygame.mixer.pause()
+                        valvePlaced = Objects.getValvePlaced()
+                        # Play pause music
+                        if not valvePlaced: # dont play music if player is in final section after valve placed
+                            pygame.mixer.music.load("Audio/wading_into_the_unknown.wav")
+                            pygame.mixer.music.set_volume(0.4)
+                            pygame.mixer.music.play(-1)
                 # Open inventory
-                if event.key == pygame.K_TAB and not Player.cutscene:
-                    Inventory.open = True
-                    for item in Player.inventory:
-                        print(item)
+                if event.key == pygame.K_TAB and not Player.cutscene and Room != TitleScreen:
+                    Inventory.open = True  
+                if event.key == pygame.K_p:
+                    pygame.image.save(screen, f"screenshot{pictureIndex}.png")
+                    pictureIndex += 1
+                '''
+                if event.key == pygame.K_v:
+                    Player.addItem(Items.valve)
+                if event.key == pygame.K_t:
+                    Room = Area.Credits
+                if event.key == pygame.K_l:
+                    print(Player.getGameTime())
+                if event.key == pygame.K_o:
+                    Player.events += 1
+                '''
 
         #Movement
         keys = pygame.key.get_pressed()
         x = player_pos.x
         y = player_pos.y
         Player.moving = False
-        if keys[pygame.K_s]:
+        if keys[pygame.K_s] or keys[pygame.K_DOWN]:
             Player.down = True
             y = y + 250 * dt / ySpeedScale
             Player.moving = True
         else:
             Player.down = False
-        if keys[pygame.K_a]:
+        if keys[pygame.K_a] or keys[pygame.K_LEFT]:
             Player.left = True
             Player.right = False
             x = x - 250 * dt / xSpeedScale
             Player.moving = True
-        if keys[pygame.K_d]:
+        if keys[pygame.K_d] or keys[pygame.K_RIGHT]:
             Player.left = False
             Player.right = True
             x = x + 250 * dt / xSpeedScale
             Player.moving = True
-        if keys[pygame.K_w]:
+        if keys[pygame.K_w] or keys[pygame.K_UP]:
             Player.up = True
             y = y - 250 * dt / ySpeedScale
             Player.moving = True

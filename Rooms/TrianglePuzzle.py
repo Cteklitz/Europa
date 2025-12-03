@@ -49,10 +49,10 @@ scaledEye = pygame.transform.scale(eye, (eye.get_width()*2, eye.get_height()))
 lucky = pygame.image.load("Assets/lucky.png")
 expected = pygame.image.load("Assets/expected.png")
 
-opentriangleSound = pygame.mixer.Sound("Audio/opentriangle.wav")
-girlLaughing = pygame.mixer.Sound("Audio/girlLaughing.wav")
+opentriangleSound = Sounds.loadAudio("Audio/opentriangle.wav")
+girlLaughing = Sounds.loadAudio("Audio/girlLaughing.wav")
 girlLaughing.set_volume(0.5)
-clapping = pygame.mixer.Sound("Audio/clapping.wav")
+clapping = Sounds.loadAudio("Audio/clapping.wav")
 
 giveupRect = pygame.Rect(190, 410, giveup.get_width(), giveup.get_height())
 
@@ -216,6 +216,7 @@ def Room(screen, screen_res, events):
                     if giveupRect.collidepoint(scaled_mouse_x, scaled_mouse_y):
                         solved = True
                         gaveup = True
+                        Player.events += 1
                         clapping.play()
                         timer2.setInitial()
                         for key in trianglePuzzle:
@@ -236,8 +237,9 @@ def Room(screen, screen_res, events):
                                 if i != triangle:
                                     solved = False
                             if solved and not gaveup:
-                                girlLaughing.play()
-                elif letterRect.collidepoint((scaled_mouse_x, scaled_mouse_y)):
+                                channel1 = pygame.mixer.find_channel(True)
+                                channel1.play(girlLaughing)
+                elif letterRect.collidepoint((scaled_mouse_x, scaled_mouse_y)) and not collected:
                     if (Player.addItem(Items.letterTile)):
                         opentriangleSound.play()
                         collected = True

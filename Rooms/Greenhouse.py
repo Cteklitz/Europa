@@ -1,12 +1,14 @@
 import pygame
 import Assets
 import Objects
+import Items
 from shapely.geometry import Point, Polygon
 import Sounds
 from LightSource import LightSource
 from LightFalloff import LightFalloff
 from LightingUtils import apply_lighting, apply_falloff
 import Player
+import Pause
 
 virtual_res = (324, 219)
 virtual_screen = pygame.Surface(virtual_res)
@@ -18,10 +20,20 @@ dark_overlay2 = pygame.Surface(virtual_screen2.get_size(), pygame.SRCALPHA)
 
 player_pos = pygame.Vector2(239, 180)
 
+fertilizer = pygame.image.load("Assets/Fertilizer.png")
+fertilizer_pos = (20, 90)
+
+rake = pygame.image.load("Assets/Rake.png")
+rake_pos = (45, 75)
+
+waterCan = pygame.image.load("Assets/WaterCan.png")
+waterCan_pos = (15, 120)
+
 bounds = Polygon([(19,110),(298,110),(308,181), (308,203), (16,203), (16,181)])
 
 exitRect = pygame.Rect(10, 141, 10, 44)
 
+lit = False
 light_pos = (70, 50)
 light_pos2 = (240, 50)
 wall_lights = [
@@ -30,24 +42,60 @@ wall_lights = [
 ]
 falloff = [LightFalloff(virtual_screen.get_size(), darkness = 140)]
 
+# load assets
 background = pygame.image.load("Assets/Greenhouse.png")
+hogweed = pygame.image.load("Assets/GiantHogweed.png")
 tooDarkReadScale = pygame.transform.scale(Assets.tooDarkRead, (Assets.tooDarkRead.get_width()/1.25,Assets.tooDarkRead.get_height()/1.25))
 tooDarkRead = Objects.briefText(virtual_screen, tooDarkReadScale, 10, 180, 3)
 tooDarkSeeScale = pygame.transform.scale(Assets.tooDarkSee, (Assets.tooDarkSee.get_width()/1.25,Assets.tooDarkSee.get_height()/1.25))
 tooDarkSee = Objects.briefText(virtual_screen, tooDarkSeeScale, 15, 180, 3)
 
+hogweedLeaf = Objects.groundItem(34, 26, Items.hogweedLeaf)
+poppy = Objects.groundItem(155, 100, Items.poppy)
+flytrap = pygame.image.load("Assets/VenusFlytrap.png")
+sleepingFlytrap = pygame.image.load("Assets/VenusFlytrapSleeping.png")
+flytrapRect = flytrap.get_rect()
+flytrapRect.topleft = (238, 30)
+flytrapInteractRect = pygame.Rect(234, 26, flytrap.get_width() + 8, flytrap.get_height() + 8)
+deadFlytrap = pygame.image.load("Assets/DeadVenusFlytrap.png")
+
+flytrapDead = False
+keycard = Objects.groundItem(281, 135, Items.greenKeycard)
+jumpscare = False
+jumpscareTime = Objects.timer(5, False)
+
+added = False
+
 def inBounds(x, y):
-    global tooDarkRead
+    global tooDarkRead, jumpscare
+    hogweedRect = hogweed.get_rect()
+    hogweedRect.topleft = (34, 26)
+    poppyRect = Assets.poppyBush.get_rect()
+    poppyRect.topleft = (155, 100)
+
     if exitRect.collidepoint((x,y)):
         level, power = Objects.getPipeDungeonInfo()
-        upperWingPower, _ = Objects.getPinkWingInfo()
-        if level == 1 and power and not upperWingPower and not Objects.getPinkPower():
-            Sounds.ominousAmb.stop()
-            Sounds.powerAmb.play(-1)
+        if (level == 3 and power) or Objects.getGreenPower():
+            pygame.mixer.music.stop()
+            pygame.mixer.music.set_volume(1)
         tooDarkRead.activated_time = -1
         tooDarkSee.activated_time = -1
+        Pause.musicPath = None
         return 0
+    elif jumpscare:
+        if not jumpscareTime.Done():
+            return False
+        else:
+            jumpscare = False
+            jumpscareTime.initial_time = -1
+            return 0
     elif not bounds.contains(Point(x,y)):
+        return False
+    elif hogweedRect.collidepoint(x,y):
+        return False
+    elif poppyRect.collidepoint(x,y):
+        return False
+    elif flytrapRect.collidepoint(x,y):
         return False
     return True
 
@@ -57,26 +105,68 @@ def positionDeterminer(cameFrom):
         player_pos = pygame.Vector2(exitRect.centerx + 15, exitRect.centery + 10)
 
 def Room(screen, screen_res, events):
-    global trianglePuzzle1, trianglePuzzle2, whiteboard, beaker, table, tableboundRect, tooDarkRead
+    global tooDarkRead, lit, flytrapDead, jumpscare, added
 
     xScale = screen.get_width()/virtual_screen.get_width() 
     yScale = screen.get_height()/virtual_screen.get_height()
     level, power = Objects.getPipeDungeonInfo()
     upperWingPower, _ = Objects.getPinkWingInfo()
-    lit = (upperWingPower and level == 1 and power) or Objects.getPinkPower()
+    level, power = Objects.getPipeDungeonInfo()
 
-    # for event in events:
-    #     if event.type == pygame.KEYDOWN:
-    #         if event.key == pygame.K_e:
+    # Add greenpower statement
+    if (level == 3 and power) or Objects.getGreenPower():
+        lit = True
+    else:
+        lit = False
+
+    for event in events:
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_e:
+                if (hogweedLeaf.check_collision(player_pos)):
+                    Sounds.pickup.play()
+                elif(poppy.check_collision(player_pos)):
+                     Sounds.pickup.play()
+                elif(flytrapInteractRect.collidepoint(player_pos) and Player.checkItem(Items.herbicide)):
+                    if not lit:
+                        Player.removeItem(Items.herbicide)
+                        flytrapDead = True
+                    else:
+                        if not added:
+                            Player.events += 1
+                            added = True
+                        jumpscare = True
+                        jumpscareTime.initial_time = pygame.time.get_ticks()
+                        pygame.mixer.music.stop()
+                        pygame.mixer.music.set_volume(1)
+                        roar = pygame.mixer.Sound("Audio/roar.mp3")
+                        roar.play()
+                elif(flytrapDead):
+                     if keycard.check_collision(player_pos):
+                        Sounds.pickup.play()
 
     virtual_screen.blit(background, (0,0))
+    virtual_screen.blit(hogweed, (34, 26))
+    virtual_screen.blit(Assets.poppyBush, (155, 100))
+    if not flytrapDead:
+        if lit:
+            virtual_screen.blit(flytrap, (238, 30))
+        else:
+            virtual_screen.blit(sleepingFlytrap, (238, 30))
+    else:
+        virtual_screen.blit(deadFlytrap, (237, 31))
+        Objects.groundItem.draw(keycard, virtual_screen)
+    
+    virtual_screen.blit(fertilizer, fertilizer_pos)
+    virtual_screen.blit(waterCan, waterCan_pos)
+    virtual_screen.blit(rake, rake_pos)
+    
     virtual_screen2.fill((195, 195, 195))
     if not lit:
         dark_overlay.fill((0, 0, 0, 150))
         dark_overlay2.fill((0, 0, 0, 150))
 
     Player.animatePlayer(virtual_screen, player_pos)
-    
+
     if not lit and not Objects.getPinkPower():
         tooDarkRead.update()
         tooDarkSee.update()
@@ -87,6 +177,14 @@ def Room(screen, screen_res, events):
     else:
         apply_lighting(virtual_screen, wall_lights, darkness=10, ambient_color=(50, 50, 50), ambient_strength=10)
         apply_falloff(falloff, virtual_screen, light_pos)
+
+    if jumpscare:
+        eye_open = pygame.transform.scale(pygame.image.load('Assets/EYE.png'), (500, 460))
+        open_eye_rect = eye_open.get_rect()
+        open_eye_rect.center = (324/2 - 4, 219/2 - 5)
+        virtual_screen.blit(eye_open, open_eye_rect)
+        teeth = pygame.image.load("Assets/jumpscareTeeth.png")
+        virtual_screen.blit(teeth, (0,0))
 
     Assets.scaled_draw(virtual_res, virtual_screen, screen_res, screen)
 

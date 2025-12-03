@@ -64,8 +64,12 @@ valve = Objects.TopDownValve(96, 112, divertWater)
 def inBounds(x, y):
     level, power = Objects.getPipeDungeonInfo()
     valveRect = pygame.Rect(93,113,34,20)
+    bounds = pygame.Rect(61,58,134,139)
+    pinkDoorWalkRect = pygame.Rect(pinkDoor.x-16, pinkDoor.y, pinkDoor.rect.width, pinkDoor.rect.height)
+    northDoorWalkRect = pygame.Rect(northDoor.x, northDoor.y+16, northDoor.rect.width, northDoor.rect.height)
+    southDoorWalkRect = pygame.Rect(southDoor.x, southDoor.y-16, southDoor.rect.width, southDoor.rect.height)
     if pinkDoor.rect.collidepoint((x,y)):
-        if level == 1 and power or Objects.getPinkPower():
+        if (level == 1 and power or Objects.getPinkPower()) and not Objects.getYellowDoorOpen():
             Sounds.powerAmb.stop()
             Sounds.ominousAmb.play(-1)
         return 0
@@ -79,9 +83,13 @@ def inBounds(x, y):
             Sounds.powerAmb.stop()
             Sounds.ominousAmb.play(-1)
         return 2
+    elif pinkDoorWalkRect.collidepoint((x,y)) or northDoorWalkRect.collidepoint((x,y)) or southDoorWalkRect.collidepoint((x,y)):
+        return True
     elif valveRect.collidepoint((x,y)):
         return False
-    elif not outline.contains(Point(x,y)):
+    # elif not outline.contains(Point(x,y)):
+    #     return False
+    if not bounds.collidepoint((x,y)):
         return False
     return True
 

@@ -27,6 +27,7 @@ multimeter_status = False
 # solved = True
 solved = False
 played = False
+mute = False
 
 '''
 DEV NOTES:
@@ -229,6 +230,12 @@ class OperatorNode(Node):
                 return False
             if self.selected_prong == 2:
                 self.connection_below = other
+                # only evaluate if all connections are filled  (doesn't look very pretty, but it should work)
+                if len(self.connections_above) == self.num_inputs_allowed and self.connections_above[0] is not None:
+                    if self.num_inputs_allowed == 2 and self.connections_above[1] is not None:
+                        self.evaluate_operation(*self.connections_above)  # evaluate operation and store result
+                    elif self.num_inputs_allowed == 1:
+                        self.evaluate_operation(*self.connections_above)                
             else:
                 print(f"OPERATOR Connect-Back to OUTPUT: selected operator--{self}--prong #{self.selected_prong}, "
                       f"but connection below is {self.connection_below}")
@@ -376,17 +383,20 @@ nodes = [
 def inBounds(x, y):
     global exit
     if exit:
+        Sounds.electrician.stop()
         exit = False
         return 0
     return False
 
 
 def positionDeterminer(cameFrom):
-    pass
+    global solved
+    if not solved:
+        Sounds.electrician.play(-1)
 
 recently_selected = None 
 def Room(screen, screen_res, events):
-    global exit, solved, beakerPuzzle, collected, recently_selected, multimeter_status, played
+    global exit, solved, beakerPuzzle, collected, recently_selected, multimeter_status, played, mute
     xScale = screen.get_width() / virtual_screen.get_width()
     yScale = screen.get_height() / virtual_screen.get_height()
 
@@ -398,6 +408,10 @@ def Room(screen, screen_res, events):
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_BACKSPACE:
                 exit = True
+            if event.key == pygame.K_m:
+                mute = not mute
+                if not mute:
+                    Sounds.electrician.play(-1)
         if event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == 1:
                 mouse_x, mouse_y = pygame.mouse.get_pos()
@@ -456,6 +470,27 @@ def Room(screen, screen_res, events):
             if node.connection_below is not None:
                 pygame.draw.line(virtual_screen, color_array[wire_count], (node.rect.left + 3, node.rect.top + 15), (node.connection_below.rect.left + 5, node.connection_below.rect.top + 1), width=2)
         wire_count += 1  # iterate here so each operator gets own wire color (6<11, don't worry about access errors)
+
+    # draw sparks
+    for node in nodes:
+        if node != recently_selected:
+            sparkRng = random.randint(0,600)
+            if node.node_height == 1: # input node
+                if node.connection_below == None: # only draw spark if no wire connected
+                    if sparkRng < 1:
+                        sparkRng = random.randint(0, len(Assets.sparks) - 1)
+                        virtual_screen.blit(Assets.sparks[sparkRng], (node.rect.topleft[0] + 4, node.rect.topleft[1] + 12))
+                        sparkRng = random.randint(0, len(Sounds.sparks) - 1)
+                        Sounds.sparks[sparkRng].play()
+            elif node.node_height == 2: # operator node
+                if len(node.connections_above) > 1 and node.connections_above[0] is not None: # only draw spark if connections above full
+                    if node.connection_below == None: # only draw spark if no wire connected
+                        if sparkRng < 1:
+                            sparkRng = random.randint(0, len(Assets.sparks) - 1)
+                            virtual_screen.blit(Assets.sparks[sparkRng], (node.rect.topleft[0] + 2, node.rect.topleft[1] + 15))
+                            sparkRng = random.randint(0, len(Sounds.sparks) - 1)
+                            Sounds.sparks[sparkRng].play()
+
 
     # draw wire from current selected node to mouse
     if recently_selected is not None:
@@ -532,13 +567,17 @@ def Room(screen, screen_res, events):
             if num == 0:
                 correct += 1
     if correct == 4:
+        Sounds.electrician.stop()
         solved = True
 
     if solved and not played:
         played = True
-        pygame.mixer.music.load("Audio/opensesame.wav")
+        Sounds.loadMusic("Audio/opensesame.wav")
         pygame.mixer.music.play(start=3.0)
         
+    if mute:
+        Sounds.electrician.stop()
+    
     scaled = pygame.transform.scale(virtual_screen, screen_res)
     screen.blit(scaled, (0, 0))
 
