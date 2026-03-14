@@ -171,7 +171,7 @@ def Room(screen, screen_res, events):
                 elif rightBedInteractRect.collidepoint(player_pos): # go to right bedview
                     if greenPowerOn:
                         Objects.setBedNumber(1)
-                        if BedroomNumber == 2:
+                        if BedroomNumber == 2 and greenPowerOn:
                             Sounds.setVolume(Sounds.radioClose, 0.5) # make radio volume louder when in the bedview containing the radio
                         bedView = True
                     else:
